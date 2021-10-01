@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/emuone">
+        <file>Images/Actions/Exit.png</file>
+        <file>Images/Actions/CloseVm.png</file>
+        <file>Images/Actions/NewVm.png</file>
+        <file>Images/Actions/OpenVm.png</file>
+        <file>Images/Actions/StartVm.png</file>
+        <file>Images/Actions/StopVm.png</file>
+        <file>Images/Actions/SuspendVm.png</file>
+        <file>Images/Actions/ResumeVm.png</file>
+        <file>Images/Actions/ConfigureVm.png</file>
+    </qresource>
+</RCC>
