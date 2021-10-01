@@ -4,24 +4,17 @@ TEMPLATE = lib
 CONFIG += c++17
 
 INCLUDEPATH += ..
-DEFINES += EMUONECORE_LIBRARY
+DEFINES += EMUONEIBM360_LIBRARY
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    Architecture.cpp \
-    Component.cpp \
+    Ibm360Architecture.cpp \
     Plugin.cpp
 
 HEADERS += \
     API.hpp \
-    Architecture.hpp \
-    Classes.hpp \
-    Component.hpp \
-    ComponentCategory.hpp \
-    ComponentType.hpp \
-    Exceptions.hpp \
-    Template.hpp \
-    VirtualAppliance.hpp
+    API.hpp \
+    Architecture.hpp
 
 CONFIG(debug,debug|release) DESTDIR = ../../../Bin/Debug
 CONFIG(release,debug|release) DESTDIR = ../../../Bin/Release
@@ -31,3 +24,6 @@ unix {
     target.path = /usr/lib
 }
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    Ibm360.qrc

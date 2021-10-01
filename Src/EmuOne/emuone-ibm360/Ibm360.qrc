@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/emuone/Ibm360">
+        <file>Images/ArchitectureLarge.png</file>
+        <file>Images/ArchitectureSmall.png</file>
+    </qresource>
+</RCC>

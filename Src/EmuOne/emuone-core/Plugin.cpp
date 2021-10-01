@@ -1,7 +1,7 @@
 //
 //  emuone-core/Plugin.cpp
 //
-//  The emuone-coreplugin
+//  The emuone-core plugin
 //
 //////////
 #include "emuone-core/API.hpp"

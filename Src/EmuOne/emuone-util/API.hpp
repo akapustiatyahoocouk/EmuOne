@@ -11,9 +11,11 @@
 #include <QtCore/qglobal.h>
 #include <QCoreApplication>
 #include <QDir>
+#include <QException>
 #include <QIcon>
 #include <QLibrary>
 #include <QSet>
+#include <QSettings>
 
 //////////
 //  emuone-util components
