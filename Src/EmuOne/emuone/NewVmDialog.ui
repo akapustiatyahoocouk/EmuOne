@@ -71,7 +71,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>...</string>
+      <string>Browse</string>
      </property>
     </widget>
    </item>
@@ -135,7 +135,7 @@
    <sender>_buttonBox</sender>
    <signal>accepted()</signal>
    <receiver>NewVmDialog</receiver>
-   <slot>accept()</slot>
+   <slot>_accept()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>248</x>
@@ -151,7 +151,7 @@
    <sender>_buttonBox</sender>
    <signal>rejected()</signal>
    <receiver>NewVmDialog</receiver>
-   <slot>reject()</slot>
+   <slot>_reject()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>316</x>
@@ -195,9 +195,62 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>_nameLineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>NewVmDialog</receiver>
+   <slot>_nameLineEditTextChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>218</x>
+     <y>105</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>176</x>
+     <y>100</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_locationLineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>NewVmDialog</receiver>
+   <slot>_locationLineEditTextChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>175</x>
+     <y>134</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>176</x>
+     <y>100</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_browseButton</sender>
+   <signal>clicked()</signal>
+   <receiver>NewVmDialog</receiver>
+   <slot>_browse()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>304</x>
+     <y>134</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>176</x>
+     <y>100</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>_architectureComboBoxCurrentIndexChanged(int)</slot>
   <slot>_templateComboBoxCurrentIndexChanged(int)</slot>
+  <slot>_accept()</slot>
+  <slot>_reject()</slot>
+  <slot>_nameLineEditTextChanged(QString)</slot>
+  <slot>_locationLineEditTextChanged(QString)</slot>
+  <slot>_browse()</slot>
  </slots>
 </ui>

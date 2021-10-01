@@ -1,4 +1,4 @@
-QT += core gui
+QT += core gui widgets
 
 TEMPLATE = lib
 CONFIG += c++17

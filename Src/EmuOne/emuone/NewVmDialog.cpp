@@ -140,4 +140,43 @@ void NewVmDialog::_templateComboBoxCurrentIndexChanged(int /*index*/)
     _refresh();
 }
 
+void NewVmDialog::_nameLineEditTextChanged(const QString &)
+{
+    _refresh();
+}
+
+void NewVmDialog::_locationLineEditTextChanged(const QString &)
+{
+    _refresh();
+}
+
+void NewVmDialog::_browse()
+{
+    QString location = QFileDialog::getSaveFileName(this, "New VM location", "", "EmuOne VM file (*." + VirtualAppliance::PreferredExtension + ")");
+    QFileInfo fileInfo(location);
+    if (fileInfo.suffix().isEmpty())
+    {
+        location += "." + VirtualAppliance::PreferredExtension;
+    }
+    ui->_locationLineEdit->setText(location);
+}
+
+void NewVmDialog::_accept()
+{
+    _virtualApplianceType =
+            ui->_virtualMachineRadioButton->isChecked() ?
+                (VirtualApplianceType*)VirtualMachine::Type::getInstance() :
+                (VirtualApplianceType*)RemoteTerminal::Type::getInstance();
+    _virtualApplianceArchitecture = _getSelectedArchitecture();
+    _virtualApplianceTemplate = _getSelectedTemplate();
+    _virtualApplianceName = ui->_nameLineEdit->text();
+    _virtualApplianceLocation = ui->_locationLineEdit->text();
+    accept();
+}
+
+void NewVmDialog::_reject()
+{
+    reject();
+}
+
 //  End of emuone/NewVmDialog.cpp

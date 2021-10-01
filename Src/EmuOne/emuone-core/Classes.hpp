@@ -13,6 +13,8 @@ class EMUONE_CORE_EXPORT RemoteTerminalTemplate;
 class EMUONE_CORE_EXPORT ComponentCategory;
 class EMUONE_CORE_EXPORT ComponentType;
 class EMUONE_CORE_EXPORT VirtualAppliance;
+class EMUONE_CORE_EXPORT VirtualMachine;
+class EMUONE_CORE_EXPORT RemoteTerminal;
 
 using ArchitectureList = QList<Architecture*>;
 using VirtualApplianceTemplateList = QList<VirtualApplianceTemplate*>;

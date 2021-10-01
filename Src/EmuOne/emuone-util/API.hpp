@@ -12,6 +12,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QException>
+#include <QFileDialog>
 #include <QIcon>
 #include <QLibrary>
 #include <QSet>

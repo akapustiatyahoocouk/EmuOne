@@ -1,4 +1,4 @@
-QT += gui
+QT += core gui widgets
 
 TEMPLATE = lib
 CONFIG += c++17
@@ -13,7 +13,9 @@ SOURCES += \
     Architecture.cpp \
     Component.cpp \
     Plugin.cpp \
-    VirtualAppliance.cpp
+    RemoteTerminal.cpp \
+    VirtualAppliance.cpp \
+    VirtualMachine.cpp
 
 HEADERS += \
     API.hpp \
@@ -34,3 +36,6 @@ unix {
     target.path = /usr/lib
 }
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    core.qrc

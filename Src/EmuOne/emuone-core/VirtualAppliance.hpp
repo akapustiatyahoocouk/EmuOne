@@ -7,10 +7,32 @@
 #pragma once
 
 //////////
+//  A "type" of a virtual appliance
+class EMUONE_CORE_EXPORT VirtualApplianceType : public StockObject
+{
+    CANNOT_ASSIGN_OR_COPY_CONSTRUCT(VirtualApplianceType)
+
+    //////////
+    //  Construction/destruction
+public:
+    VirtualApplianceType() {}
+    virtual ~VirtualApplianceType() {}
+};
+
+//////////
 //  A generic VA
 class EMUONE_CORE_EXPORT VirtualAppliance
 {
     CANNOT_ASSIGN_OR_COPY_CONSTRUCT(VirtualAppliance)
+
+    friend class VirtualMachine;
+    friend class RemoteTerminal;
+
+    //////////
+    //  Constants
+public:
+    //  The preferred extension for VA configuration files (without leading '.')
+    static const QString    PreferredExtension;
 
     //////////
     //  Construction/destruction
@@ -23,11 +45,13 @@ public:
 public:
     static bool                 isValidName(const QString & name);
 
+    virtual VirtualApplianceType *  getType() const = 0;
+
     QString                     getName() const { return _name; }
     void                        setName(const QString & name);
     QString                     getLocation() { return _location; }
     Architecture *              getArchitecture() const { return _architecture; }
-    VirtualApplianceTemplate *  getTemplate() const { return _template; }
+    virtual VirtualApplianceTemplate *  getTemplate() const { return _template; }
 
     //////////
     //  Implementation
@@ -45,6 +69,28 @@ class EMUONE_CORE_EXPORT VirtualMachine : public VirtualAppliance
     CANNOT_ASSIGN_OR_COPY_CONSTRUCT(VirtualMachine)
 
     //////////
+    //  Types
+public:
+    class Type : public VirtualApplianceType
+    {
+        DECLARE_SINGLETON(Type)
+
+        //////////
+        //  StockObject
+    public:
+        virtual QString     getMnemonic() const override;
+        virtual QString     getDisplayName() const override;
+        virtual QIcon       getSmallIcon() const override;
+        virtual QIcon       getLargeIcon() const override;
+
+        //////////
+        //  Implementation
+    private:
+        mutable QIcon       _smallIcon;
+        mutable QIcon       _largeIcon;
+    };
+
+    //////////
     //  Construction/destruction
 public:
     VirtualMachine(const QString & name, const QString & location, Architecture * architecture, VirtualMachineTemplate * virtualMachineTemplate);
@@ -53,7 +99,8 @@ public:
     //////////
     //  VirtualAppliance
 public:
-    VirtualMachineTemplate *  getTemplate() const { return dynamic_cast<VirtualMachineTemplate*>(VirtualAppliance::getTemplate()); }
+    virtual VirtualApplianceType *  getType() const override;
+    virtual VirtualMachineTemplate *getTemplate() const override;
 };
 
 //////////
@@ -61,6 +108,28 @@ public:
 class EMUONE_CORE_EXPORT RemoteTerminal : public VirtualAppliance
 {
     CANNOT_ASSIGN_OR_COPY_CONSTRUCT(RemoteTerminal)
+
+    //////////
+    //  Types
+public:
+    class Type : public VirtualApplianceType
+    {
+        DECLARE_SINGLETON(Type)
+
+        //////////
+        //  StockObject
+    public:
+        virtual QString     getMnemonic() const override;
+        virtual QString     getDisplayName() const override;
+        virtual QIcon       getSmallIcon() const override;
+        virtual QIcon       getLargeIcon() const override;
+
+        //////////
+        //  Implementation
+    private:
+        mutable QIcon       _smallIcon;
+        mutable QIcon       _largeIcon;
+    };
 
     //////////
     //  Construction/destruction
@@ -71,7 +140,8 @@ public:
     //////////
     //  VirtualAppliance
 public:
-    RemoteTerminalTemplate *  getTemplate() const { return dynamic_cast<RemoteTerminalTemplate*>(VirtualAppliance::getTemplate()); }
+    virtual VirtualApplianceType *  getType() const override;
+    virtual RemoteTerminalTemplate *getTemplate() const override;
 };
 
 //  End of emuone-core/VirtualAppliance.hpp
