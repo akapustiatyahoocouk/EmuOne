@@ -9,12 +9,14 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 
 SOURCES += \
     Ibm360Architecture.cpp \
-    Plugin.cpp
+    Plugin.cpp \
+    VirtualMachineTemplates.cpp
 
 HEADERS += \
     API.hpp \
     API.hpp \
-    Architecture.hpp
+    Architecture.hpp \
+    Templates.hpp
 
 CONFIG(debug,debug|release) DESTDIR = ../../../Bin/Debug
 CONFIG(release,debug|release) DESTDIR = ../../../Bin/Release

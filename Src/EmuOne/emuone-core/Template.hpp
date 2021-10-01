@@ -17,6 +17,18 @@ class EMUONE_CORE_EXPORT VirtualApplianceTemplate : public StockObject
 public:
     VirtualApplianceTemplate() {}
     virtual ~VirtualApplianceTemplate() {}
+
+    //////////
+    //  StockObject
+public:
+    virtual QIcon       getSmallIcon() const override { return getArchitecture()->getSmallIcon(); }
+    virtual QIcon       getLargeIcon() const override { return getArchitecture()->getLargeIcon(); }
+
+    //////////
+    //  Operations
+public:
+    //  The Architecture to which this VA template belongs.
+    virtual Architecture *  getArchitecture() const = 0;
 };
 
 //////////

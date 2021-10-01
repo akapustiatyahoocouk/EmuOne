@@ -24,6 +24,8 @@ public:
     virtual void initialise()
     {
         Architecture::registerArchitecture(Ibm360Architecture::getInstance());
+
+        Ibm360Architecture::getInstance()->addVirtualMachineTemplate(Ibm360H40VirtualMachineTemplate::getInstance());
     }
 };
 

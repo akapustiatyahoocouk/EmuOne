@@ -31,7 +31,15 @@ private:
 
     //  Helpers
     void                _refresh();
+    void                _refreshTemplatesList();
     Architecture *      _getSelectedArchitecture();
+    VirtualApplianceTemplate *  _getSelectedTemplate();
+
+    //////////
+    //  Event handflers
+private slots:
+    void                _architectureComboBoxCurrentIndexChanged(int index);
+    void                _templateComboBoxCurrentIndexChanged(int index);
 };
 
 //  End of emuone/NewVmDialog.hpp

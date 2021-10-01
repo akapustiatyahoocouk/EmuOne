@@ -21,9 +21,9 @@ public:
     //////////
     //  Operations
 public:
-    void                        addVirtualApplianceTemplate(VirtualApplianceTemplate * virtualApplianceTemplate);
-    void                        addVirtualMachineTemplate(VirtualMachineTemplate * virtualMachineTemplate);
-    void                        addRemoteTerminalTemplate(RemoteTerminalTemplate * remoteTerminalTemplate);
+    bool                        addVirtualApplianceTemplate(VirtualApplianceTemplate * virtualApplianceTemplate);
+    bool                        addVirtualMachineTemplate(VirtualMachineTemplate * virtualMachineTemplate);
+    bool                        addRemoteTerminalTemplate(RemoteTerminalTemplate * remoteTerminalTemplate);
 
     VirtualApplianceTemplateList    getVirtualApplianceTemplates() const { return _virtualApplianceTemplates; }
     VirtualMachineTemplateList      getVirtualMachineTemplates() const { return _virtualMachineTemplates; }

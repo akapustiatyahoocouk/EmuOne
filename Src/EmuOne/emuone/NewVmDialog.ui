@@ -163,5 +163,41 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>_architectureComboBox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>NewVmDialog</receiver>
+   <slot>_architectureComboBoxCurrentIndexChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>218</x>
+     <y>47</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>176</x>
+     <y>100</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_templateComboBox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>NewVmDialog</receiver>
+   <slot>_templateComboBoxCurrentIndexChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>218</x>
+     <y>76</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>176</x>
+     <y>100</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>_architectureComboBoxCurrentIndexChanged(int)</slot>
+  <slot>_templateComboBoxCurrentIndexChanged(int)</slot>
+ </slots>
 </ui>

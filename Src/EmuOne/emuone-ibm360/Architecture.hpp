@@ -21,7 +21,7 @@ public:
     //////////
     //  Implementation
 private:
-    mutable QIcon      _smallIcon;
+    mutable QIcon       _smallIcon;
     mutable QIcon       _largeIcon;
 };
 

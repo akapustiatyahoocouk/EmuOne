@@ -20,4 +20,6 @@
 #endif
 
 #include "emuone-ibm360/Architecture.hpp"
+#include "emuone-ibm360/Templates.hpp"
+
 //  End of emuone-ibm360/API.hpp
