@@ -6,6 +6,8 @@ CONFIG += c++17
 INCLUDEPATH += ..
 DEFINES += EMUONEIBM360_LIBRARY
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+QMAKE_CXXFLAGS += -zdefs
+QMAKE_LFLAGS += -zdefs
 
 SOURCES += \
     Ibm360Architecture.cpp \
