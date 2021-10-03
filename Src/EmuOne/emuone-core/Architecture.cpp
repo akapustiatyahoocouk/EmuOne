@@ -26,8 +26,32 @@ bool Architecture::addVirtualMachineTemplate(VirtualMachineTemplate * virtualMac
     return virtualMachineTemplate == registeredTemplate;
 }
 
-//void Architecture::addRemoteTerminalTemplate(RemoteTerminalTemplate * remoteTerminalTemplate);
-//VirtualApplianceTemplate * Architecture::findVirtualApplianceTemplate(const QString & mnemonic) const;
+bool Architecture::addRemoteTerminalTemplate(RemoteTerminalTemplate * remoteTerminalTemplate)
+{
+    Q_ASSERT(remoteTerminalTemplate != nullptr);
+
+    RemoteTerminalTemplate * registeredTemplate = findRemoteTerminalTemplate(remoteTerminalTemplate->getMnemonic());
+    if (registeredTemplate == nullptr)
+    {
+        _virtualApplianceTemplates.append(remoteTerminalTemplate);
+        _remoteTerminalTemplates.append(remoteTerminalTemplate);
+        return true;
+    }
+    return remoteTerminalTemplate == registeredTemplate;
+}
+
+VirtualApplianceTemplate * Architecture::findVirtualApplianceTemplate(const QString & mnemonic) const
+{
+    for (VirtualApplianceTemplate * virtualApplianceTemplate : _virtualApplianceTemplates)
+    {
+        if (virtualApplianceTemplate->getMnemonic() == mnemonic)
+        {
+            return virtualApplianceTemplate;
+        }
+    }
+    return nullptr;
+}
+
 VirtualMachineTemplate * Architecture::findVirtualMachineTemplate(const QString & mnemonic) const
 {
     for (VirtualMachineTemplate * virtualMachineTemplate : _virtualMachineTemplates)
@@ -40,7 +64,17 @@ VirtualMachineTemplate * Architecture::findVirtualMachineTemplate(const QString 
     return nullptr;
 }
 
-//RemoteTerminalTemplate * Architecture::findRemoteTerminalTemplate(const QString & mnemonic) const;
+RemoteTerminalTemplate * Architecture::findRemoteTerminalTemplate(const QString & mnemonic) const
+{
+    for (RemoteTerminalTemplate * remoteTerminalTemplate : _remoteTerminalTemplates)
+    {
+        if (remoteTerminalTemplate->getMnemonic() == mnemonic)
+        {
+            return remoteTerminalTemplate;
+        }
+    }
+    return nullptr;
+}
 
 //////////
 //  Registry

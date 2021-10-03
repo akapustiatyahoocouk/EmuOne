@@ -20,6 +20,8 @@ HEADERS += \
     Architecture.hpp \
     Templates.hpp
 
+LIBS += -L../../../Bin/Debug -lemuone-core -lemuone-util
+
 CONFIG(debug,debug|release) DESTDIR = ../../../Bin/Debug
 CONFIG(release,debug|release) DESTDIR = ../../../Bin/Release
 
