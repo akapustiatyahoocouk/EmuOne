@@ -67,9 +67,80 @@ void MainWindow::_savePosition()
     }
 }
 
+void MainWindow::_loadVirtualAppliances()
+{
+    QSettings settings("Aka", "EmuOne");
+    int count = settings.value("VirtualAppliances/Count", 0).toInt();
+    for (int i = 0; i < count; i++)
+    {
+        QString location = settings.value("VirtualAppliances/Location" + QString::number(i), "").toString();
+        if (_findVirtualApplianceByLocation(location) == nullptr)
+        {
+            try
+            {
+                _virtualAppliances.append(VirtualAppliance::load(location));
+            }
+            catch (VirtualApplianceException & ex)
+            {   //  OOPS! Suppress, though
+            }
+        }
+    }
+}
+
+void MainWindow::_saveVirtualAppliances()
+{
+    QSettings settings("Aka", "EmuOne");
+    settings.setValue("VirtualAppliances/Count", _virtualAppliances.size());
+    for (int i = 0; i < _virtualAppliances.size(); i++)
+    {
+        settings.setValue("VirtualAppliances/Location" + QString::number(i), _virtualAppliances[i]->getLocation());
+    }
+}
+
 VirtualAppliance * MainWindow::_getSelectedVirtualAppliance() const
 {
-    return nullptr;
+    if (_virtualAppliances.size() != ui->vmListWidget->count())
+    {
+        const_cast<MainWindow*>(this)->_refreshVirtualAppliancesList();
+    }
+    int rowIndex = ui->vmListWidget->currentRow();
+    return (rowIndex >= 0) ? _virtualAppliances[rowIndex] : nullptr;
+}
+
+void MainWindow::_setSelectedVirtualAppliance(VirtualAppliance * virtualAppliance)
+{
+    _refreshVirtualAppliancesList();
+    for (int i = 0; i < _virtualAppliances.size(); i++)
+    {
+        if (_virtualAppliances[i] == virtualAppliance)
+        {
+            ui->vmListWidget->setCurrentRow(i);
+            break;
+        }
+    }
+}
+
+void MainWindow::_refreshVirtualAppliancesList()
+{
+    //  Make sure the VM list has a proper number of items...
+    while (_virtualAppliances.size() < ui->vmListWidget->count())
+    {   //  Too many items in the list widget
+        delete ui->vmListWidget->takeItem(0);
+    }
+    while (_virtualAppliances.size() > ui->vmListWidget->count())
+    {   //  Too few items in the list widget
+        ui->vmListWidget->addItem(".");
+    }
+    //  ...with correct properties
+    for (int i = 0; i < _virtualAppliances.size(); i++)
+    {
+        QListWidgetItem * item = ui->vmListWidget->item(i);
+        QString text = _virtualAppliances[i]->getName() +
+                       " (" + _virtualAppliances[i]->getType()->getDisplayName() + ")";
+        //  TODO state
+        item->setText(text);
+        item->setIcon(_virtualAppliances[i]->getArchitecture()->getSmallIcon());
+    }
 }
 
 void MainWindow::_refresh()
@@ -79,12 +150,58 @@ void MainWindow::_refresh()
     this->ui->actionCloseVm->setEnabled(virtualAppliance != nullptr);
 }
 
+VirtualAppliance * MainWindow::_findVirtualApplianceByLocation(const QString & location)
+{
+    for (VirtualAppliance * virtualAppliance : _virtualAppliances)
+    {
+        if (virtualAppliance->getLocation() == location)
+        {
+            return virtualAppliance;
+        }
+    }
+    return nullptr;
+}
+
 //////////
 //  Event handlers
 void MainWindow::_onNewVmTriggered()
 {
     NewVmDialog newVmDialog(this);
-    newVmDialog.exec();
+    if (newVmDialog.exec() == QDialog::DialogCode::Accepted)
+    {   //  Create a new VA
+        VirtualAppliance * virtualAppliance =
+            newVmDialog.getVirtualApplianceType()->createVirtualAppliance(
+                newVmDialog.getVirtualApplianceName(),
+                newVmDialog.getVirtualApplianceLocation(),
+                newVmDialog.getVirtualApplianceArchitecture(),
+                newVmDialog.getVirtualApplianceTemplate());
+        try
+        {
+            virtualAppliance->save();
+        }
+        catch (VirtualApplianceException & ex)
+        {   //  OOPS! Report & abort
+            QMessageBox msgBox;
+            msgBox.setText(ex.getMessage());
+            msgBox.exec();
+            return;
+        }
+        //  If there already exists a VA with the same "location"< stop & drop it
+        VirtualAppliance * existingVirtualAppliance = _findVirtualApplianceByLocation(newVmDialog.getVirtualApplianceLocation());
+        if (existingVirtualAppliance != nullptr)
+        {
+            _virtualAppliances.removeOne(existingVirtualAppliance);
+            delete existingVirtualAppliance;
+        }
+        //  Add & sort
+        _virtualAppliances.append(virtualAppliance);
+        std::sort(_virtualAppliances.begin(), _virtualAppliances.end(),
+                  [](const VirtualAppliance * a, const VirtualAppliance * b) -> bool { return a->getName() < b->getName(); });
+        _refreshVirtualAppliancesList();
+        _refresh();
+        //  Select newly creates VA as "current"
+        _setSelectedVirtualAppliance(virtualAppliance);
+    }
 }
 
 void MainWindow::_onOpenVmTriggered()

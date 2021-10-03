@@ -1,4 +1,4 @@
-QT += core gui widgets
+QT += core gui widgets xml
 
 TEMPLATE = lib
 CONFIG += c++17
@@ -15,6 +15,7 @@ SOURCES += \
     Plugin.cpp \
     RemoteTerminal.cpp \
     VirtualAppliance.cpp \
+    VirtualApplianceType.cpp \
     VirtualMachine.cpp
 
 HEADERS += \

@@ -11,10 +11,12 @@
 #include <QtCore/qglobal.h>
 #include <QCoreApplication>
 #include <QDir>
+#include <QDomDocument>
 #include <QException>
 #include <QFileDialog>
 #include <QIcon>
 #include <QLibrary>
+#include <QMessageBox>
 #include <QSet>
 #include <QSettings>
 

@@ -63,4 +63,11 @@ QIcon VirtualMachine::Type::getLargeIcon() const
     return _largeIcon;
 }
 
+VirtualMachine * VirtualMachine::Type::createVirtualAppliance(const QString & name, const QString & location, Architecture * architecture, VirtualApplianceTemplate * virtualApplianceTemplate)
+{
+    VirtualMachineTemplate * virtualMachineTemplate = dynamic_cast<VirtualMachineTemplate*>(virtualApplianceTemplate);
+    Q_ASSERT(virtualMachineTemplate != nullptr);
+    return new VirtualMachine(name, location, architecture, virtualMachineTemplate);
+}
+
 //  End of emuone-core/VirtualMachine.cpp

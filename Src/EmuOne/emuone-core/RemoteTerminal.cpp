@@ -63,4 +63,11 @@ QIcon RemoteTerminal::Type::getLargeIcon() const
     return _largeIcon;
 }
 
+RemoteTerminal * RemoteTerminal::Type::createVirtualAppliance(const QString & name, const QString & location, Architecture * architecture, VirtualApplianceTemplate * virtualApplianceTemplate)
+{
+    RemoteTerminalTemplate * remoteTerminalTemplate = dynamic_cast<RemoteTerminalTemplate*>(virtualApplianceTemplate);
+    Q_ASSERT(remoteTerminalTemplate != nullptr);
+    return new RemoteTerminal(name, location, architecture, remoteTerminalTemplate);
+}
+
 //  End of emuone-core/RemoteTerminal.cpp

@@ -17,6 +17,17 @@ class EMUONE_CORE_EXPORT VirtualApplianceType : public StockObject
 public:
     VirtualApplianceType() {}
     virtual ~VirtualApplianceType() {}
+
+    //////////
+    //  Operations
+public:
+    //  Creates a new VA of this type, initially without any components
+    virtual VirtualAppliance *  createVirtualAppliance(const QString & name, const QString & location, Architecture * architecture, VirtualApplianceTemplate * virtualApplianceTemplate) = 0;
+
+    //////////
+    //  Registry
+public:
+    static VirtualApplianceType *   findByMnemonic(const QString & mnemonic);
 };
 
 //////////
@@ -53,6 +64,14 @@ public:
     Architecture *              getArchitecture() const { return _architecture; }
     virtual VirtualApplianceTemplate *  getTemplate() const { return _template; }
 
+    //  Saves tis VA's configuration to the "location" XML file.
+    //  Throws VirtualApplianceException if an error occurs.
+    void                        save() const;
+
+    //  Loads a VA's configuration from the "location" XML file.
+    //  Throws VirtualApplianceException if an error occurs.
+    static VirtualAppliance *   load(const QString & location);
+
     //////////
     //  Implementation
 private:
@@ -82,6 +101,11 @@ public:
         virtual QString     getDisplayName() const override;
         virtual QIcon       getSmallIcon() const override;
         virtual QIcon       getLargeIcon() const override;
+
+        //////////
+        //  VirtualApplianceType
+    public:
+        virtual VirtualMachine *    createVirtualAppliance(const QString & name, const QString & location, Architecture * architecture, VirtualApplianceTemplate * virtualApplianceTemplate) override;
 
         //////////
         //  Implementation
@@ -123,6 +147,11 @@ public:
         virtual QString     getDisplayName() const override;
         virtual QIcon       getSmallIcon() const override;
         virtual QIcon       getLargeIcon() const override;
+
+        //////////
+        //  VirtualApplianceType
+    public:
+        virtual RemoteTerminal *    createVirtualAppliance(const QString & name, const QString & location, Architecture * architecture, VirtualApplianceTemplate * virtualApplianceTemplate) override;
 
         //////////
         //  Implementation
