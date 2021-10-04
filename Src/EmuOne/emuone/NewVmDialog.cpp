@@ -153,6 +153,10 @@ void NewVmDialog::_locationLineEditTextChanged(const QString &)
 void NewVmDialog::_browse()
 {
     QString location = QFileDialog::getSaveFileName(this, "New VM location", "", "EmuOne VM file (*." + VirtualAppliance::PreferredExtension + ")");
+    if (location.isEmpty())
+    {   //  User has cancelled the dialog
+        return;
+    }
     QFileInfo fileInfo(location);
     if (fileInfo.suffix().isEmpty())
     {

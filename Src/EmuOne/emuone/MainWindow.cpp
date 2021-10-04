@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     _loadPosition();
+    _loadVirtualAppliances();
 
     //  Done
     _trackPositionChanges = true;
@@ -197,6 +198,7 @@ void MainWindow::_onNewVmTriggered()
         _virtualAppliances.append(virtualAppliance);
         std::sort(_virtualAppliances.begin(), _virtualAppliances.end(),
                   [](const VirtualAppliance * a, const VirtualAppliance * b) -> bool { return a->getName() < b->getName(); });
+        _saveVirtualAppliances();
         _refreshVirtualAppliancesList();
         _refresh();
         //  Select newly creates VA as "current"
@@ -206,6 +208,39 @@ void MainWindow::_onNewVmTriggered()
 
 void MainWindow::_onOpenVmTriggered()
 {
+    QString location = QFileDialog::getOpenFileName(this, "VM location", "", "EmuOne VM file (*." + VirtualAppliance::PreferredExtension + ")");
+    if (location.isEmpty())
+    {   //  User has cancelled the dialog
+        return;
+    }
+    //  Is there already an open VA with the same "location" ?
+    VirtualAppliance * virtualAppliance = _findVirtualApplianceByLocation(location);
+    if (virtualAppliance != nullptr)
+    {   //  Yes - just select it as "current"
+        this->_setSelectedVirtualAppliance(virtualAppliance);
+        return;
+    }
+    //  Open...
+    try
+    {
+        virtualAppliance = VirtualAppliance::load(location);
+    }
+    catch (VirtualApplianceException & ex)
+    {   //  OOPS! Report & abort
+        QMessageBox msgBox;
+        msgBox.setText(ex.getMessage());
+        msgBox.exec();
+        return;
+    }
+    //  Add & sort
+    _virtualAppliances.append(virtualAppliance);
+    std::sort(_virtualAppliances.begin(), _virtualAppliances.end(),
+              [](const VirtualAppliance * a, const VirtualAppliance * b) -> bool { return a->getName() < b->getName(); });
+    _saveVirtualAppliances();
+    _refreshVirtualAppliancesList();
+    _refresh();
+    //  Select newly creates VA as "current"
+    _setSelectedVirtualAppliance(virtualAppliance);
 }
 
 void MainWindow::_onCloseVmTriggered()
