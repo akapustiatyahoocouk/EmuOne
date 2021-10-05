@@ -54,8 +54,8 @@
        <string>Resume</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>Images/Actions/ResumeVm.png</normaloff>Images/Actions/ResumeVm.png</iconset>
+       <iconset resource="emuone.qrc">
+        <normaloff>:/emuone/Images/Actions/ResumeVm.png</normaloff>:/emuone/Images/Actions/ResumeVm.png</iconset>
       </property>
      </widget>
     </item>
@@ -364,11 +364,28 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>vmListWidget</sender>
+   <signal>currentRowChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>_onVmListCurrentRowChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>140</x>
+     <y>154</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>135</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>_onNewVmTriggered()</slot>
   <slot>_onOpenVmTriggered()</slot>
   <slot>_onCloseVmTriggered()</slot>
   <slot>_onExitTriggered()</slot>
+  <slot>_onVmListCurrentRowChanged(int)</slot>
  </slots>
 </ui>

@@ -12,6 +12,8 @@ class EMUONE_CORE_EXPORT Component
 {
     CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Component)
 
+    friend class VirtualAppliance;
+
     //////////
     //  Construction/destruction
 public:
@@ -24,6 +26,9 @@ public:
     //  Operations
 public:
     static bool         isValidName(const QString & name);
+
+    //  Returns the type of this component.
+    virtual ComponentType * getType() const = 0;
 
     //  Returns the name of this component.
     QString             getName() const { return _name; }

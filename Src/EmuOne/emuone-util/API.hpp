@@ -17,6 +17,7 @@
 #include <QIcon>
 #include <QLibrary>
 #include <QMessageBox>
+#include <QRecursiveMutex>
 #include <QSet>
 #include <QSettings>
 

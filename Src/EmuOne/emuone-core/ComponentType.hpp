@@ -19,10 +19,20 @@ public:
     virtual ~ComponentType() {}
 
     //////////
+    //  StockObject
+public:
+    virtual QIcon       getSmallIcon() const override { return getCategory()->getSmallIcon(); }
+    virtual QIcon       getLargeIcon() const override { return getCategory()->getLargeIcon(); }
+
+    //////////
     //  Operations
 public:
     //  Returns the category to which this component type belongs.
     virtual ComponentCategory * getCategory() const = 0;
+
+    //  Checks if components of this type are "compatible with" (i.e. can be
+    //  used directly by) virtual appliances of the specified "architecture"
+    virtual bool                isCompatibleWith(Architecture * architecture) const = 0;
 };
 
 //  End of emuone-core/ComponentType.hpp

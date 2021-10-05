@@ -14,6 +14,7 @@ SOURCES += \
     Component.cpp \
     Plugin.cpp \
     RemoteTerminal.cpp \
+    StandardComponentCategories.cpp \
     VirtualAppliance.cpp \
     VirtualApplianceType.cpp \
     VirtualMachine.cpp

@@ -11,6 +11,7 @@ QMAKE_LFLAGS += -zdefs
 
 SOURCES += \
     Ibm360Architecture.cpp \
+    Ibm360Storage.cpp \
     Plugin.cpp \
     VirtualMachineTemplates.cpp
 
@@ -18,6 +19,7 @@ HEADERS += \
     API.hpp \
     API.hpp \
     Architecture.hpp \
+    Storage.hpp \
     Templates.hpp
 
 LIBS += -L../../../Bin/Debug -lemuone-core -lemuone-util

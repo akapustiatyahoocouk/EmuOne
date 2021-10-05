@@ -46,6 +46,17 @@ public:
     static const QString    PreferredExtension;
 
     //////////
+    //  Types
+public:
+    //  Possible VA states
+    enum class State
+    {
+        Stopped,    //  no runtime state, no saved state, not running
+        Running,    //  runtime state exists, no saved state, running
+        Suspended   //  no runtime state, saved state exists, not running
+    };
+
+    //////////
     //  Construction/destruction
 public:
     VirtualAppliance(const QString & name, const QString & location, Architecture * architecture, VirtualApplianceTemplate * virtualApplianceTemplate);
@@ -72,6 +83,23 @@ public:
     //  Throws VirtualApplianceException if an error occurs.
     static VirtualAppliance *   load(const QString & location);
 
+    //  Adds the specified "component" to this VA.
+    //  Throws VirtualApplianceException if the componentn cannot be added.
+    virtual void                addComponent(Component * component);
+
+    //  Remove the specified "component" from this VA (if possible).
+    //  Throws VirtualApplianceException if the componentn cannot be removed.
+    virtual void                removeComponent(Component * component);
+
+    //////////
+    //  Operations (state control)
+public:
+    State                       getState() const;
+    void                        start();    //  throws VirtualApplianceException
+    void                        stop();
+    void                        suspend();  //  throws VirtualApplianceException
+    void                        resume();   //  throws VirtualApplianceException
+
     //////////
     //  Implementation
 private:
@@ -79,6 +107,14 @@ private:
     const QString               _location;      //  always the full path to a .VA file
     Architecture *const         _architecture;  //  ...of this VA
     VirtualApplianceTemplate *const _template;      //  ...from which this VA was created
+
+    State                       _state = State::Stopped;
+    mutable QRecursiveMutex     _stateGuard;
+
+    ComponentList               _components;    //  "add()"'ed to this VA
+    ComponentList               _compatibleComponents;  //  These "_components" which are directly compatible with this VA
+    ComponentList               _adaptedComponents;     //  These "_components" which had to be "adapted" to this this VA
+    AdaptorList                 _adaptors;              //  One for each of "_adaptedComponents"
 };
 
 //////////

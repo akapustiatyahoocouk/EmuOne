@@ -22,4 +22,6 @@
 #include "emuone-ibm360/Architecture.hpp"
 #include "emuone-ibm360/Templates.hpp"
 
+#include "emuone-ibm360/Storage.hpp"
+
 //  End of emuone-ibm360/API.hpp

@@ -59,6 +59,7 @@ private slots:
     void                    _onOpenVmTriggered();
     void                    _onCloseVmTriggered();
     void                    _onExitTriggered();
+    void                    _onVmListCurrentRowChanged(int);
 };
 
 //  End of emuone/MainWindow.hpp

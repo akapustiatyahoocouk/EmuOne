@@ -122,4 +122,93 @@ VirtualAppliance * VirtualAppliance::load(const QString & location)
     return virtualAppliance;
 }
 
+void VirtualAppliance::addComponent(Component * component)
+{
+    Q_ASSERT(component != nullptr);
+
+    QMutexLocker locker(&_stateGuard);
+    if (_state != State::Stopped)
+    {
+        throw VirtualApplianceException("Virtual appliance must be Stopped");
+    }
+
+    if (_components.contains(component))
+    {   //  No harm done
+        return;
+    }
+    if (component->_virtualAppliance != nullptr)
+    {   //  OOPS!
+        throw VirtualApplianceException("Component already in use");
+    }
+
+    //  Is the "component" compatble with this VA's architecture ?
+    if (component->getType()->isCompatibleWith(_architecture))
+    {   //  Yes!
+        _components.append(component);
+        _compatibleComponents.append(component);
+        return;
+    }
+
+    //  Is the "component" adaptable to this architecture ?
+    //  TODO
+
+    //  Give uo
+    throw VirtualApplianceException(component->getType()->getDisplayName() + " is not compatible with " + _architecture->getDisplayName());
+}
+
+void VirtualAppliance::removeComponent(Component * component)
+{
+    Q_ASSERT(component != nullptr);
+
+    QMutexLocker locker(&_stateGuard);
+    if (_state != State::Stopped)
+    {
+        throw VirtualApplianceException("Virtual appliance must be Stopped");
+    }
+
+    if (!_components.contains(component) || component->_virtualAppliance != this)
+    {   //  No harm done
+        return;
+    }
+
+    //  Is the "component" compatble with this VA's architecture ?
+    if (_compatibleComponents.contains(component))
+    {
+        _components.removeOne(component);
+        _compatibleComponents.removeOne(component);
+        return;
+    }
+
+    //  Is the "component" adaptable to this architecture ?
+    //  TODO
+
+    //  Give up
+}
+
+//////////
+//  Operations (state control)
+VirtualAppliance::State VirtualAppliance::getState() const
+{
+    QMutexLocker locker(&_stateGuard);
+    return _state;
+}
+
+void VirtualAppliance::start()
+{
+}
+
+void VirtualAppliance::stop()
+{
+}
+
+void VirtualAppliance::suspend()
+{
+    throw VirtualApplianceException("Not yet implemented");
+}
+
+void VirtualAppliance::resume()
+{
+    throw VirtualApplianceException("Not yet implemented");
+}
+
 //  End of emuone-core/VirtualAppliance.cpp

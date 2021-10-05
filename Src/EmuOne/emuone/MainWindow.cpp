@@ -149,6 +149,18 @@ void MainWindow::_refresh()
     VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
 
     this->ui->actionCloseVm->setEnabled(virtualAppliance != nullptr);
+
+    this->ui->actionStartVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() == VirtualAppliance::State::Stopped);
+    this->ui->actionStopVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() != VirtualAppliance::State::Stopped);
+    this->ui->actionSuspendVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() == VirtualAppliance::State::Running);
+    this->ui->actionResumeVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() == VirtualAppliance::State::Suspended);
+    this->ui->actionConfigureVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() == VirtualAppliance::State::Stopped);
+
+    this->ui->startButton->setEnabled(this->ui->actionStartVm->isEnabled());
+    this->ui->stopButton->setEnabled(this->ui->actionStopVm->isEnabled());
+    this->ui->suspendButton->setEnabled(this->ui->actionSuspendVm->isEnabled());
+    this->ui->resumeButton->setEnabled(this->ui->actionResumeVm->isEnabled());
+    this->ui->configureButton->setEnabled(this->ui->actionConfigureVm->isEnabled());
 }
 
 VirtualAppliance * MainWindow::_findVirtualApplianceByLocation(const QString & location)
@@ -250,6 +262,11 @@ void MainWindow::_onCloseVmTriggered()
 void MainWindow::_onExitTriggered()
 {
     QApplication::quit();
+}
+
+void MainWindow::_onVmListCurrentRowChanged(int)
+{
+    _refresh();
 }
 
 //  End of emuone/MainWindow.cpp
