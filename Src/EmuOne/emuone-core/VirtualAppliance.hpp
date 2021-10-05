@@ -39,7 +39,7 @@ class EMUONE_CORE_EXPORT VirtualAppliance
     friend class VirtualMachine;
     friend class RemoteTerminal;
 
-    //////////
+    //////////JWT
     //  Constants
 public:
     //  The preferred extension for VA configuration files (without leading '.')
@@ -91,12 +91,14 @@ public:
     //  Throws VirtualApplianceException if the componentn cannot be removed.
     virtual void                removeComponent(Component * component);
 
-    //////////
-    //  Operations (state control)
+    ComponentList               getComponents() const;
+    ComponentList               getComponents(ComponentCategory * componentCategory);
+
+    //  Operations (state control) - all thread-safe
 public:
     State                       getState() const;
     void                        start();    //  throws VirtualApplianceException
-    void                        stop();
+    void                        stop() noexcept;
     void                        suspend();  //  throws VirtualApplianceException
     void                        resume();   //  throws VirtualApplianceException
 
@@ -111,10 +113,18 @@ private:
     State                       _state = State::Stopped;
     mutable QRecursiveMutex     _stateGuard;
 
-    ComponentList               _components;    //  "add()"'ed to this VA
+    ComponentList               _components;            //  "add()"'ed to this VA
     ComponentList               _compatibleComponents;  //  These "_components" which are directly compatible with this VA
     ComponentList               _adaptedComponents;     //  These "_components" which had to be "adapted" to this this VA
     AdaptorList                 _adaptors;              //  One for each of "_adaptedComponents"
+
+    //  Helpers
+    void                        _connectComponents();
+    void                        _initialiseComponents();
+    void                        _startComponents();
+    void                        _stopComponents();
+    void                        _deinitialiseComponents();
+    void                        _disconnectComponents();
 };
 
 //////////

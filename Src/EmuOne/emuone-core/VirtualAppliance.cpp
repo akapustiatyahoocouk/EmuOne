@@ -185,6 +185,26 @@ void VirtualAppliance::removeComponent(Component * component)
     //  Give up
 }
 
+ComponentList VirtualAppliance::getComponents() const
+{
+    return _components;
+}
+
+ComponentList VirtualAppliance::getComponents(ComponentCategory * componentCategory)
+{
+    Q_ASSERT(componentCategory != nullptr);
+
+    ComponentList result;
+    for (auto component : _components)
+    {
+        if (component->getType()->getCategory() == componentCategory)
+        {
+            result.append(component);
+        }
+    }
+    return result;
+}
+
 //////////
 //  Operations (state control)
 VirtualAppliance::State VirtualAppliance::getState() const
@@ -195,20 +215,191 @@ VirtualAppliance::State VirtualAppliance::getState() const
 
 void VirtualAppliance::start()
 {
+    QMutexLocker locker(&_stateGuard);
+
+    if (_state != State::Stopped)
+    {   //  OOPS! Can't!
+        return;
+    }
+
+    try
+    {
+        _connectComponents();
+        _initialiseComponents();
+        _startComponents();
+    }
+    catch (...)
+    {   //  OOPS! Cleanup & re-throw
+        _stopComponents();
+        _deinitialiseComponents();
+        _disconnectComponents();
+    }
+
+    _state = State::Running;
 }
 
-void VirtualAppliance::stop()
+void VirtualAppliance::stop() noexcept
 {
+    QMutexLocker locker(&_stateGuard);
+
+    if (_state == State::Stopped)
+    {   //  OOPS! Can't!
+        return;
+    }
+
+    _stopComponents();
+    _deinitialiseComponents();
+    _disconnectComponents();
+
+    _state = State::Stopped;
+
+    //  TODO is the VA was "suspended", must also delete the saved "runtime state"
 }
 
 void VirtualAppliance::suspend()
 {
+    QMutexLocker locker(&_stateGuard);
     throw VirtualApplianceException("Not yet implemented");
 }
 
 void VirtualAppliance::resume()
 {
+    QMutexLocker locker(&_stateGuard);
     throw VirtualApplianceException("Not yet implemented");
+}
+
+//////////
+//  Implementation helpers
+void VirtualAppliance::_connectComponents()
+{
+    try
+    {
+        for (Component * component : _components)
+        {
+            Q_ASSERT(component->getState() == Component::State::Constructed);
+            component->connect();
+            Q_ASSERT(component->getState() == Component::State::Connected);
+        }
+        for (Adaptor * adaptor : _adaptors)
+        {
+            Q_ASSERT(adaptor->getState() == Component::State::Constructed);
+            adaptor->connect();
+            Q_ASSERT(adaptor->getState() == Component::State::Connected);
+        }
+    }
+    catch (...)
+    {   //  OOPS! Rollback and re-throw
+        _disconnectComponents();
+        throw;
+    }
+}
+
+void VirtualAppliance::_initialiseComponents()
+{
+    try
+    {
+        for (Component * component : _components)
+        {
+            Q_ASSERT(component->getState() == Component::State::Connected);
+            component->initialise();
+            Q_ASSERT(component->getState() == Component::State::Initialised);
+        }
+        for (Adaptor * adaptor : _adaptors)
+        {
+            Q_ASSERT(adaptor->getState() == Component::State::Connected);
+            adaptor->initialise();
+            Q_ASSERT(adaptor->getState() == Component::State::Initialised);
+        }
+    }
+    catch (...)
+    {   //  OOPS! Rollback and re-throw
+        _deinitialiseComponents();
+        throw;
+    }
+}
+
+void VirtualAppliance::_startComponents()
+{
+    try
+    {
+        for (Component * component : _components)
+        {
+            Q_ASSERT(component->getState() == Component::State::Initialised);
+            component->start();
+            Q_ASSERT(component->getState() == Component::State::Running);
+        }
+        for (Adaptor * adaptor : _adaptors)
+        {
+            Q_ASSERT(adaptor->getState() == Component::State::Initialised);
+            adaptor->start();
+            Q_ASSERT(adaptor->getState() == Component::State::Running);
+        }
+    }
+    catch (...)
+    {   //  OOPS! Rollback and re-throw
+        _stopComponents();
+        throw;
+    }
+}
+
+void VirtualAppliance::_stopComponents()
+{
+    for (Adaptor * adaptor : _adaptors)
+    {
+        if (adaptor->getState() == Component::State::Running)
+        {
+            adaptor->stop();
+            Q_ASSERT(adaptor->getState() == Component::State::Initialised);
+        }
+        for (Component * component : _components)
+        {
+            if (component->getState() == Component::State::Running)
+            {
+                component->stop();
+                Q_ASSERT(component->getState() == Component::State::Initialised);
+            }
+        }
+    }
+}
+
+void VirtualAppliance::_deinitialiseComponents()
+{
+    for (Adaptor * adaptor : _adaptors)
+    {
+        if (adaptor->getState() == Component::State::Initialised)
+        {
+            adaptor->deinitialise();
+            Q_ASSERT(adaptor->getState() == Component::State::Connected);
+        }
+        for (Component * component : _components)
+        {
+            if (component->getState() == Component::State::Initialised)
+            {
+                component->deinitialise();
+                Q_ASSERT(component->getState() == Component::State::Connected);
+            }
+        }
+    }
+}
+
+void VirtualAppliance::_disconnectComponents()
+{
+    for (Adaptor * adaptor : _adaptors)
+    {
+        if (adaptor->getState() == Component::State::Connected)
+        {
+            adaptor->disconnect();
+            Q_ASSERT(adaptor->getState() == Component::State::Constructed);
+        }
+        for (Component * component : _components)
+        {
+            if (component->getState() == Component::State::Connected)
+            {
+                component->disconnect();
+                Q_ASSERT(component->getState() == Component::State::Constructed);
+            }
+        }
+    }
 }
 
 //  End of emuone-core/VirtualAppliance.cpp

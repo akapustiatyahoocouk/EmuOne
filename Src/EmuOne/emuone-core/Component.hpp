@@ -15,6 +15,18 @@ class EMUONE_CORE_EXPORT Component
     friend class VirtualAppliance;
 
     //////////
+    //  Types
+public:
+    //  Possible states of a Component
+    enum class State
+    {
+        Constructed,    //  Componet is constructed, but not connected to other Components, has no "runtime state" and is not "running"
+        Connected,      //  Componet is constructed and connected to other Components, but has no "runtime state" and is not "running"
+        Initialised,    //  Componet is constructed, connected to other Components and has "runtime state" but is not "running"
+        Running         //  Componet is constructed, connected to other Components, has "runtime state" and is "running"
+    };
+
+    //////////
     //  Construction/destruction
 public:
     //  Constructs the component.
@@ -38,10 +50,44 @@ public:
     void                setName(const QString & name);
 
     //////////
+    //  Operations (state control) - all thread-safe
+public:
+    virtual State       getState() const = 0;
+    virtual void        connect() = 0;      //  throws VirtualApplianceException
+    virtual void        initialise() = 0;   //  throws VirtualApplianceException;
+    virtual void        start() = 0;        //  throws VirtualApplianceException
+    virtual void        stop() noexcept = 0;
+    virtual void        deinitialise() noexcept = 0;
+    virtual void        disconnect() noexcept = 0;
+
+    //////////
     //  Implementation
 private:
     QString             _name;
     VirtualAppliance *  _virtualAppliance = nullptr;    //  ...to which this component belongs; null == nojne
+};
+
+//////////
+//  A special kind of "component" that adapts another Component to an unfamiliar Architecture
+class EMUONE_CORE_EXPORT Adaptor : public Component
+{
+    CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Adaptor)
+
+    //////////
+    //  Construction/destruction
+public:
+    explicit Adaptor(Component * adaptedComponent);
+    virtual ~Adaptor();
+
+    //////////
+    //  Operations
+public:
+    Component *         getAdaptedComponent() const { return _adaptedComponent; }
+
+    //////////
+    //  Implementation
+private:
+    Component *         _adaptedComponent;
 };
 
 //  End of emuone-core/Component.hpp

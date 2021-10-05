@@ -1,7 +1,7 @@
 //
 //  emuone/NewVmDialog.cpp
 //
-//  "Main UI frame"New VM" dialog
+//  "New VM" dialog
 //
 //////////
 #include "emuone/API.hpp"

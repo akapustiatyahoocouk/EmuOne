@@ -23,6 +23,9 @@ public:
 public:
     virtual void initialise()
     {
+        ComponentCategory::registerComponentCategory(StandardComponentCategories::Memory::getInstance());
+        ComponentCategory::registerComponentCategory(StandardComponentCategories::Processors::getInstance());
+        ComponentCategory::registerComponentCategory(StandardComponentCategories::Terminals::getInstance());
     }
 };
 

@@ -380,6 +380,166 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionStartVm</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>_onStartVmTriggered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>135</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionStopVm</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>_onStopVmTriggered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>135</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSuspendVm</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>_onSuspendVmTriggered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>135</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionResumeVm</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>_onResumeVmTriggered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>135</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionConfigureVm</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>_onConfigureVmTriggered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>135</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>startButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>_onStartVmTriggered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>324</x>
+     <y>74</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>135</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>stopButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>_onStopVmTriggered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>324</x>
+     <y>102</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>135</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>suspendButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>_onSuspendVmTriggered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>324</x>
+     <y>144</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>135</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>resumeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>_onResumeVmTriggered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>324</x>
+     <y>172</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>135</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>configureButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>_onConfigureVmTriggered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>324</x>
+     <y>214</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>135</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>_onNewVmTriggered()</slot>
@@ -387,5 +547,10 @@
   <slot>_onCloseVmTriggered()</slot>
   <slot>_onExitTriggered()</slot>
   <slot>_onVmListCurrentRowChanged(int)</slot>
+  <slot>_onStartVmTriggered()</slot>
+  <slot>_onStopVmTriggered()</slot>
+  <slot>_onSuspendVmTriggered()</slot>
+  <slot>_onResumeVmTriggered()</slot>
+  <slot>_onConfigureVmTriggered()</slot>
  </slots>
 </ui>

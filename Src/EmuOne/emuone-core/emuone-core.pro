@@ -12,6 +12,7 @@ QMAKE_LFLAGS += -zdefs
 SOURCES += \
     Architecture.cpp \
     Component.cpp \
+    ComponentCategory.cpp \
     Plugin.cpp \
     RemoteTerminal.cpp \
     StandardComponentCategories.cpp \

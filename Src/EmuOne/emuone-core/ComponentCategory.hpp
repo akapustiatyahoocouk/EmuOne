@@ -25,6 +25,15 @@ public:
     //  Returns an unordered list of all known component types that belong
     //  to this component category
     ComponentTypeList   getComponentTypes() const;
+
+    //////////
+    //  Registry
+public:
+    static ComponentCategoryList    getAll();
+    static ComponentCategory *      findByMnemonic(const QString & mnemonic);
+    static bool                     registerComponentCategory(ComponentCategory * componentCategory);
+private:
+    static ComponentCategoryList    _registry;
 };
 
 //////////
@@ -51,7 +60,45 @@ public:
         //////////
         //  Implementation
     private:
-        mutable QIcon      _smallIcon;
+        mutable QIcon       _smallIcon;
+        mutable QIcon       _largeIcon;
+    };
+
+    class EMUONE_CORE_EXPORT Processors : public ComponentCategory
+    {
+        DECLARE_SINGLETON(Processors)
+
+        //////////
+        //  StockObject
+    public:
+        virtual QString     getMnemonic() const override;
+        virtual QString     getDisplayName() const override;
+        virtual QIcon       getSmallIcon() const override;
+        virtual QIcon       getLargeIcon() const override;
+
+        //////////
+        //  Implementation
+    private:
+        mutable QIcon       _smallIcon;
+        mutable QIcon       _largeIcon;
+    };
+
+    class EMUONE_CORE_EXPORT Terminals : public ComponentCategory
+    {
+        DECLARE_SINGLETON(Terminals)
+
+        //////////
+        //  StockObject
+    public:
+        virtual QString     getMnemonic() const override;
+        virtual QString     getDisplayName() const override;
+        virtual QIcon       getSmallIcon() const override;
+        virtual QIcon       getLargeIcon() const override;
+
+        //////////
+        //  Implementation
+    private:
+        mutable QIcon       _smallIcon;
         mutable QIcon       _largeIcon;
     };
 };

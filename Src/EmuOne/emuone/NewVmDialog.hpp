@@ -8,9 +8,7 @@
 #include "emuone/API.hpp"
 #include <QDialog>
 
-namespace Ui {
-class NewVmDialog;
-}
+namespace Ui { class NewVmDialog; }
 
 //////////
 //  "New VM" dialog

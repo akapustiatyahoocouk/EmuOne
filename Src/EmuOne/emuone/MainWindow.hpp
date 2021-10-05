@@ -8,9 +8,7 @@
 #include "emuone/API.hpp"
 #include <QMainWindow>
 
-QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
 
 //////////
 //  The main UI frame
@@ -59,6 +57,11 @@ private slots:
     void                    _onOpenVmTriggered();
     void                    _onCloseVmTriggered();
     void                    _onExitTriggered();
+    void                    _onStartVmTriggered();
+    void                    _onStopVmTriggered();
+    void                    _onSuspendVmTriggered();
+    void                    _onResumeVmTriggered();
+    void                    _onConfigureVmTriggered();
     void                    _onVmListCurrentRowChanged(int);
 };
 

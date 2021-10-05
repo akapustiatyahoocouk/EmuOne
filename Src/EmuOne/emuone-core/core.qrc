@@ -6,5 +6,9 @@
         <file>Images/VirtualMachineSmall.png</file>
         <file>Images/MemoryLarge.png</file>
         <file>Images/MemorySmall.png</file>
+        <file>Images/ProcessorsLarge.png</file>
+        <file>Images/ProcessorsSmall.png</file>
+        <file>Images/TerminalsLarge.png</file>
+        <file>Images/TerminalsSmall.png</file>
     </qresource>
 </RCC>

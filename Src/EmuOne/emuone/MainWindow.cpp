@@ -138,7 +138,17 @@ void MainWindow::_refreshVirtualAppliancesList()
         QListWidgetItem * item = ui->vmListWidget->item(i);
         QString text = _virtualAppliances[i]->getName() +
                        " (" + _virtualAppliances[i]->getType()->getDisplayName() + ")";
-        //  TODO state
+        switch (_virtualAppliances[i]->getState())
+        {
+            case VirtualAppliance::State::Stopped:
+                break;
+            case VirtualAppliance::State::Running:
+                text += " (running)";
+                break;
+            case VirtualAppliance::State::Suspended:
+                text += " (suspended)";
+                break;
+        }
         item->setText(text);
         item->setIcon(_virtualAppliances[i]->getArchitecture()->getSmallIcon());
     }
@@ -209,7 +219,7 @@ void MainWindow::_onNewVmTriggered()
         //  Add & sort
         _virtualAppliances.append(virtualAppliance);
         std::sort(_virtualAppliances.begin(), _virtualAppliances.end(),
-                  [](const VirtualAppliance * a, const VirtualAppliance * b) -> bool { return a->getName() < b->getName(); });
+                  [](auto a, auto b) -> bool { return a->getName() < b->getName(); });
         _saveVirtualAppliances();
         _refreshVirtualAppliancesList();
         _refresh();
@@ -247,7 +257,7 @@ void MainWindow::_onOpenVmTriggered()
     //  Add & sort
     _virtualAppliances.append(virtualAppliance);
     std::sort(_virtualAppliances.begin(), _virtualAppliances.end(),
-              [](const VirtualAppliance * a, const VirtualAppliance * b) -> bool { return a->getName() < b->getName(); });
+              [](auto a, auto b) -> bool { return a->getName() < b->getName(); });
     _saveVirtualAppliances();
     _refreshVirtualAppliancesList();
     _refresh();
@@ -262,6 +272,92 @@ void MainWindow::_onCloseVmTriggered()
 void MainWindow::_onExitTriggered()
 {
     QApplication::quit();
+}
+
+void MainWindow::_onStartVmTriggered()
+{
+    try
+    {
+        VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
+        if (virtualAppliance != nullptr)
+        {
+            virtualAppliance->start();
+            _refreshVirtualAppliancesList();
+            _refresh();
+        }
+    }
+    catch (VirtualApplianceException & ex)
+    {
+        QMessageBox msgBox;
+        msgBox.setText(ex.getMessage());
+        msgBox.exec();
+    }
+}
+
+void MainWindow::_onStopVmTriggered()
+{
+    VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
+    if (virtualAppliance != nullptr)
+    {
+        virtualAppliance->stop();
+        _refreshVirtualAppliancesList();
+        _refresh();
+    }
+}
+
+void MainWindow::_onSuspendVmTriggered()
+{
+    try
+    {
+        VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
+        if (virtualAppliance != nullptr)
+        {
+            virtualAppliance->suspend();
+            _refreshVirtualAppliancesList();
+            _refresh();
+        }
+    }
+    catch (VirtualApplianceException & ex)
+    {
+        QMessageBox msgBox;
+        msgBox.setText(ex.getMessage());
+        msgBox.exec();
+    }
+}
+
+void MainWindow::_onResumeVmTriggered()
+{
+    try
+    {
+        VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
+        if (virtualAppliance != nullptr)
+        {
+            virtualAppliance->resume();
+            _refreshVirtualAppliancesList();
+            _refresh();
+        }
+    }
+    catch (VirtualApplianceException & ex)
+    {
+        QMessageBox msgBox;
+        msgBox.setText(ex.getMessage());
+        msgBox.exec();
+    }
+}
+
+void MainWindow::_onConfigureVmTriggered()
+{
+    VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
+    if (virtualAppliance != nullptr)
+    {
+        ConfigureVmDialog dlg(virtualAppliance, this);
+        if (dlg.exec() == QDialog::DialogCode::Accepted)
+        {   //  VA may have been renamed!
+            _refreshVirtualAppliancesList();
+            _refresh();
+            _setSelectedVirtualAppliance(virtualAppliance);
+        }
+    }
 }
 
 void MainWindow::_onVmListCurrentRowChanged(int)
