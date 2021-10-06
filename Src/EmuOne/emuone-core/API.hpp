@@ -21,11 +21,14 @@
 #include "emuone-core/Classes.hpp"
 #include "emuone-core/Exceptions.hpp"
 
+#include "emuone-core/MemorySize.hpp"
+
 #include "emuone-core/Architecture.hpp"
 #include "emuone-core/Template.hpp"
 #include "emuone-core/ComponentCategory.hpp"
 #include "emuone-core/ComponentType.hpp"
 #include "emuone-core/Component.hpp"
+#include "emuone-core/ComponentEditor.hpp"
 
 #include "emuone-core/VirtualAppliance.hpp"
 

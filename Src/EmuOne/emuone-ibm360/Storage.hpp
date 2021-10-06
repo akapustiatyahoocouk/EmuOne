@@ -6,11 +6,15 @@
 //////////
 #pragma once
 
+class EMUONE_IBM360_EXPORT Ibm360StorageEditor;
+
 //////////
 //  The IBM/360 storage
 class EMUONE_IBM360_EXPORT Ibm360Storage : public Component
 {
     CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Ibm360Storage)
+
+    friend class Ibm360StorageEditor;
 
     //////////
     //  Types
@@ -37,13 +41,15 @@ public:
     //////////
     //  Construction/destruction
 public:
-    Ibm360Storage(const QString & name, uint32_t size);
+    Ibm360Storage(const QString & name, const MemorySize & size);
     virtual ~Ibm360Storage();
 
     //////////
     //  Component
 public:
     virtual ComponentType * getType() const override;
+    virtual ComponentEditor*createEditor(QWidget * parent) override;
+    virtual QString     getShortStatus() const override;
 
     //////////
     //  Component (state control) - all thread-safe
@@ -57,10 +63,18 @@ public:
     virtual void        disconnect() noexcept override;
 
     //////////
+    //  Operations
+public:
+    static bool         isValidSize(const MemorySize & size);
+
+    //////////
     //  Implementation
 private:
+    State               _state = State::Constructed;
+    mutable QRecursiveMutex _stateGuard;
+
     //  Component configuration
-    uint32_t            _size;
+    MemorySize          _size;
 };
 
 //  End of emuone-ibm360/Storage.hpp

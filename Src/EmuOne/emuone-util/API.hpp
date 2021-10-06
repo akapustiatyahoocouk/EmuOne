@@ -21,6 +21,7 @@
 #include <QRecursiveMutex>
 #include <QSet>
 #include <QSettings>
+#include <QWidget>
 
 //////////
 //  emuone-util components

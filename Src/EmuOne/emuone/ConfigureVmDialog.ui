@@ -275,11 +275,45 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>_componentsTreeWidget</sender>
+   <signal>itemSelectionChanged()</signal>
+   <receiver>ConfigureVmDialog</receiver>
+   <slot>_componentsTreeWidgetItemSelectionChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>147</x>
+     <y>266</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>277</x>
+     <y>227</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_componentNameLineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>ConfigureVmDialog</receiver>
+   <slot>_componentNameLineEditTextChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>440</x>
+     <y>179</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>277</x>
+     <y>227</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>_accept()</slot>
   <slot>_reject()</slot>
   <slot>_addComponentPushButtonClicked()</slot>
   <slot>_removeComponentPushButtonClicked()</slot>
+  <slot>_componentsTreeWidgetItemSelectionChanged()</slot>
+  <slot>_componentNameLineEditTextChanged(QString)</slot>
  </slots>
 </ui>

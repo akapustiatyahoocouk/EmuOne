@@ -13,6 +13,7 @@ class EMUONE_CORE_EXPORT RemoteTerminalTemplate;
 class EMUONE_CORE_EXPORT ComponentCategory;
 class EMUONE_CORE_EXPORT ComponentType;
 class EMUONE_CORE_EXPORT Component;
+class EMUONE_CORE_EXPORT ComponentEditor;
 class EMUONE_CORE_EXPORT Adaptor;
 class EMUONE_CORE_EXPORT VirtualAppliance;
 class EMUONE_CORE_EXPORT VirtualMachine;

@@ -13,7 +13,9 @@ SOURCES += \
     Architecture.cpp \
     Component.cpp \
     ComponentCategory.cpp \
+    ComponentEditor.cpp \
     ComponentType.cpp \
+    MemorySize.cpp \
     Plugin.cpp \
     RemoteTerminal.cpp \
     StandardComponentCategories.cpp \
@@ -27,8 +29,10 @@ HEADERS += \
     Classes.hpp \
     Component.hpp \
     ComponentCategory.hpp \
+    ComponentEditor.hpp \
     ComponentType.hpp \
     Exceptions.hpp \
+    MemorySize.hpp \
     Template.hpp \
     VirtualAppliance.hpp
 

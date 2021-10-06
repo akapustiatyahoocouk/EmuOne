@@ -27,6 +27,9 @@ public:
 private:
     Ui::ConfigureVmDialog * ui;
     VirtualAppliance *      _virtualAppliance;
+    bool                    _refreshUnderway = false;
+
+    QMap<Component*, ComponentEditor*>  _componentEditors;
 
     class _AddComponentAction : public QAction
     {
@@ -60,8 +63,10 @@ private:
     //////////
     //  Event handlers
 private slots:
+    void                    _componentsTreeWidgetItemSelectionChanged();
     void                    _addComponentPushButtonClicked();
     void                    _removeComponentPushButtonClicked();
+    void                    _componentNameLineEditTextChanged(const QString &);
     void                    _accept();
     void                    _reject();
 };

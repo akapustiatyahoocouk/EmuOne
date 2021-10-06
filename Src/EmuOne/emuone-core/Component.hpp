@@ -49,6 +49,13 @@ public:
     //  Throws "VirtualApplianceException" if the new "name" is not a valid component name.
     void                setName(const QString & name);
 
+    //  Creates a new "editor" widget for editing properties of this Component.
+    //  Returns "nullptr" if this component has no properties to edit.
+    virtual ComponentEditor *   createEditor(QWidget * parent) = 0;
+
+    //  Returns a short message describing this Component's status
+    virtual QString     getShortStatus() const = 0;
+
     //////////
     //  Operations (state control) - all thread-safe
 public:

@@ -93,6 +93,7 @@ public:
 
     ComponentList               getComponents() const;
     ComponentList               getComponents(ComponentCategory * componentCategory);
+    AdaptorList                 getAdaptors() const { return _adaptors; }
 
     //  Operations (state control) - all thread-safe
 public:

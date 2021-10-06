@@ -8,7 +8,7 @@
 
 //////////
 //  Construction/destruction
-Ibm360Storage::Ibm360Storage(const QString & name, uint32_t size)
+Ibm360Storage::Ibm360Storage(const QString & name, const MemorySize & size)
     :   Component(name),
         _size(size)
 {
@@ -23,6 +23,110 @@ Ibm360Storage::~Ibm360Storage()
 ComponentType * Ibm360Storage::getType() const
 {
     return Ibm360Storage::Type::getInstance();
+}
+
+ComponentEditor * Ibm360Storage::createEditor(QWidget * parent)
+{
+    return new Ibm360StorageEditor(this, parent);
+}
+
+QString Ibm360Storage::getShortStatus() const
+{
+    return _size.toDisplayString();
+}
+
+//////////
+//  Component (state control) - all thread-safe
+Component::State Ibm360Storage::getState() const
+{
+    QMutexLocker lock(&_stateGuard);
+    return _state;
+}
+
+void Ibm360Storage::connect()
+{
+    QMutexLocker lock(&_stateGuard);
+
+    if (_state != State::Constructed)
+    {   //  OOPS! Can't make this state transiton!
+        return;
+    }
+
+    //  Done
+    _state = State::Connected;
+}
+
+void Ibm360Storage::initialise()
+{
+    QMutexLocker lock(&_stateGuard);
+
+    if (_state != State::Connected)
+    {   //  OOPS! Can't make this state transiton!
+        return;
+    }
+
+    //  Done
+    _state = State::Initialised;
+}
+
+void Ibm360Storage::start()
+{
+    QMutexLocker lock(&_stateGuard);
+
+    if (_state != State::Initialised)
+    {   //  OOPS! Can't make this state transiton!
+        return;
+    }
+
+    //  Done
+    _state = State::Running;
+}
+
+void Ibm360Storage::stop() noexcept
+{
+    QMutexLocker lock(&_stateGuard);
+
+    if (_state != State::Running)
+    {   //  OOPS! Can't make this state transiton!
+        return;
+    }
+
+    //  Done
+    _state = State::Initialised;
+}
+
+void Ibm360Storage::deinitialise() noexcept
+{
+    QMutexLocker lock(&_stateGuard);
+
+    if (_state != State::Initialised)
+    {   //  OOPS! Can't make this state transiton!
+        return;
+    }
+
+
+    //  Done
+    _state = State::Connected;
+}
+
+void Ibm360Storage::disconnect() noexcept
+{
+    QMutexLocker lock(&_stateGuard);
+
+    if (_state != State::Connected)
+    {   //  OOPS! Can't make this state transiton!
+        return;
+    }
+
+    //  Done
+    _state = State::Constructed;
+}
+
+//////////
+//  Operations
+bool Ibm360Storage::isValidSize(const MemorySize & size)
+{
+    return (size.toBytes() % 2048) == 0 && size.toBytes() >= (4 * 1024) && size.toBytes() <= (16 * 1024 * 1024);
 }
 
 //////////
@@ -53,7 +157,7 @@ bool Ibm360Storage::Type::isCompatibleWith(Architecture * architecture) const
 
 Ibm360Storage * Ibm360Storage::Type::createComponent()
 {
-    return new Ibm360Storage("Main storage", 128 * 1024);
+    return new Ibm360Storage("Main storage", MemorySize(MemorySize::Unit::KB, 128));
 }
 
 //  End of emuone-360/Ibm360Storage.cpp

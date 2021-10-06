@@ -12,6 +12,7 @@ QMAKE_LFLAGS += -zdefs
 SOURCES += \
     Ibm360Architecture.cpp \
     Ibm360Storage.cpp \
+    Ibm360StorageEditor.cpp \
     Plugin.cpp \
     VirtualMachineTemplates.cpp
 
@@ -19,6 +20,7 @@ HEADERS += \
     API.hpp \
     API.hpp \
     Architecture.hpp \
+    Ibm360StorageEditor.hpp \
     Storage.hpp \
     Templates.hpp
 
@@ -35,3 +37,6 @@ unix {
 
 RESOURCES += \
     Ibm360.qrc
+
+FORMS += \
+    Ibm360StorageEditor.ui
