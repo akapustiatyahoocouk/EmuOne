@@ -35,6 +35,12 @@ private:
     Ui::Ibm360StorageEditor *ui;
     Ibm360Storage *     _ibm360Storage;
     bool                _refreshUnderway = false;
+
+    //////////
+    //  Event handlers
+private slots:
+    void                _sizeLineEditTextChanged(const QString &);
+    void                _sizeUnitComboBoxCurrentIndexChanged(int);
 };
 
 //  End of emuone-ibm360/NewVmDialog.hpp

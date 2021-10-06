@@ -48,5 +48,42 @@
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>_sizeLineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>Ibm360StorageEditor</receiver>
+   <slot>_sizeLineEditTextChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>116</x>
+     <y>21</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>119</x>
+     <y>44</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_sizeUnitComboBox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>Ibm360StorageEditor</receiver>
+   <slot>_sizeUnitComboBoxCurrentIndexChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>205</x>
+     <y>21</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>119</x>
+     <y>44</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>_sizeLineEditTextChanged(QString)</slot>
+  <slot>_sizeUnitComboBoxCurrentIndexChanged(int)</slot>
+ </slots>
 </ui>

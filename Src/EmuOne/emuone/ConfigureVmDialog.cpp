@@ -31,6 +31,7 @@ ConfigureVmDialog::ConfigureVmDialog(VirtualAppliance * virtualAppliance, QWidge
         {
             componentEditor->setVisible(false);
             _componentEditors.insert(component, componentEditor);
+            connect(componentEditor, &ComponentEditor::componentConfigurationChanged, this, &ConfigureVmDialog::_componentConfigurationChanged);
         }
     }
     for (Adaptor * adaptor : virtualAppliance->getAdaptors())
@@ -39,12 +40,15 @@ ConfigureVmDialog::ConfigureVmDialog(VirtualAppliance * virtualAppliance, QWidge
         {
             componentEditor->setVisible(false);
             _componentEditors.insert(adaptor, componentEditor);
+            connect(componentEditor, &ComponentEditor::componentConfigurationChanged, this, &ConfigureVmDialog::_componentConfigurationChanged);
         }
     }
 
     //  Done
     _refreshComponentsTree();
     _refresh();
+
+    ui->_componentsTreeWidget->expandAll();
 }
 
 ConfigureVmDialog::~ConfigureVmDialog()
@@ -89,7 +93,6 @@ void ConfigureVmDialog::_refreshComponentsTree()
         for (int j = 0; j < components.size(); j++)
         {
             QTreeWidgetItem * componentItem = componentCategoryItem->child(j);
-            qDebug() << "Name of component " << components[j] << " is " << components[j]->getName();
             componentItem->setText(0, components[j]->getName() + " " + components[j]->getShortStatus() + " (" + components[j]->getType()->getDisplayName() + ")");
             componentItem->setIcon(0, components[j]->getType()->getSmallIcon());
             componentItem->setData(0, Qt::ItemDataRole::UserRole, QVariant::fromValue(static_cast<void*>(components[j])));
@@ -219,7 +222,9 @@ Component * ConfigureVmDialog::_addComponent(ComponentType * componentType)
         //  Are there editor(s) involved ?
         if (ComponentEditor * componentEditor = component->createEditor(ui->_componentEditorsScrollArea))
         {
+            componentEditor->setVisible(false);
             _componentEditors.insert(component, componentEditor);
+            connect(componentEditor, &ComponentEditor::componentConfigurationChanged, this, &ConfigureVmDialog::_componentConfigurationChanged);
         }
         //  TODO if the "component" is "adapted", there may be an editor for the "adaptor"
         //  Update UI
@@ -263,13 +268,17 @@ void ConfigureVmDialog::_componentNameLineEditTextChanged(const QString &)
     {
         if (Component * selectedComponent = _getSelectedComponent())
         {
-            qDebug() << "Old name of component " << selectedComponent << " is " << selectedComponent->getName();
             selectedComponent->setName(ui->_componentNameLineEdit->text());
-            qDebug() << "New name of component " << selectedComponent << " is " << selectedComponent->getName();
             _refreshComponentsTree();
             _setSelectedComponent(selectedComponent);   //  because component name may have changed!
         }
     }
+}
+
+void ConfigureVmDialog::_componentConfigurationChanged(Component * component)
+{
+    _refreshComponentsTree();
+    _setSelectedComponent(component);   //  because component "name "short status" may have changed!
 }
 
 void ConfigureVmDialog::_accept()

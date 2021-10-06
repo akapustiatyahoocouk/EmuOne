@@ -68,6 +68,17 @@ public:
     virtual void        disconnect() noexcept = 0;
 
     //////////
+    //  Operations (serialisation)
+public:
+    //  Serialises this Component's configuration by setting the
+    //  "configurationElement"'s attributes appropriately
+    virtual void        serialiseConfiguration(QDomElement & configurationElement) const = 0;
+
+    //  De-serialises this Component's configuration by analysing the
+    //  "configurationElement"'s attributes as necessary
+    virtual void        deserialiseConfiguration(QDomElement & configurationElement) = 0;
+
+    //////////
     //  Implementation
 private:
     QString             _name;

@@ -52,6 +52,39 @@ QString MemorySize::toDisplayString() const
     }
 }
 
+MemorySize MemorySize::fromString(const QString & s, const MemorySize & defaultValue)
+{
+    QString numberOfUnitsString = s;
+    Unit unit = Unit::B;
+    if (s.endsWith("GB"))
+    {
+        unit = Unit::GB;
+        numberOfUnitsString = numberOfUnitsString.left(numberOfUnitsString.length() - 2);
+    }
+    else if (s.endsWith("MB"))
+    {
+        unit = Unit::MB;
+        numberOfUnitsString = numberOfUnitsString.left(numberOfUnitsString.length() - 2);
+    }
+    else if (s.endsWith("KB"))
+    {
+        unit = Unit::KB;
+        numberOfUnitsString = numberOfUnitsString.left(numberOfUnitsString.length() - 2);
+    }
+    else if (s.endsWith("B"))
+    {
+        unit = Unit::B;
+        numberOfUnitsString = numberOfUnitsString.left(numberOfUnitsString.length() - 1);
+    }
+
+    uint64_t numberOfUnits = numberOfUnitsString.toUInt();
+    if (numberOfUnits > 0)
+    {
+        return MemorySize(unit, numberOfUnits);
+    }
+    return defaultValue;
+}
+
 //////////
 //  Helper functions
 uint64_t getUnitValue(MemorySize::Unit unit)

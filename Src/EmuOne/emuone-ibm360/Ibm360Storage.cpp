@@ -123,10 +123,33 @@ void Ibm360Storage::disconnect() noexcept
 }
 
 //////////
+//  Component (serialisation)
+void Ibm360Storage::serialiseConfiguration(QDomElement & configurationElement) const
+{
+    configurationElement.setAttribute("Size", _size.toString());
+}
+
+void Ibm360Storage::deserialiseConfiguration(QDomElement & configurationElement)
+{
+    QString sizeString = configurationElement.attribute("Size", _size.toString());
+    _size = MemorySize::fromString(sizeString, _size);
+}
+
+//////////
 //  Operations
 bool Ibm360Storage::isValidSize(const MemorySize & size)
 {
     return (size.toBytes() % 2048) == 0 && size.toBytes() >= (4 * 1024) && size.toBytes() <= (16 * 1024 * 1024);
+}
+
+bool Ibm360Storage::setSize(const MemorySize & size)
+{
+    if (isValidSize(size))
+    {
+        _size = size;
+        return true;
+    }
+    return false;
 }
 
 //////////

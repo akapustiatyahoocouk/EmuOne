@@ -20,8 +20,8 @@ HEADERS += \
     API.hpp \
     API.hpp \
     Architecture.hpp \
+    Ibm360Storage.hpp \
     Ibm360StorageEditor.hpp \
-    Storage.hpp \
     Templates.hpp
 
 LIBS += -L../../../Bin/Debug -lemuone-core -lemuone-util

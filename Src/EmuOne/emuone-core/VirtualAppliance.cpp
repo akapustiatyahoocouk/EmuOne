@@ -51,6 +51,19 @@ void VirtualAppliance::save() const
     rootElement.setAttribute("Architecture", _architecture->getMnemonic());
     rootElement.setAttribute("Template", _template->getMnemonic());
 
+    //  Create & populate component nodes
+    for (Component * component : _components)
+    {
+        QDomElement componentElement = domDocument.createElement("Component");
+        rootElement.appendChild(componentElement);
+        componentElement.setAttribute("Type", component->getType()->getMnemonic());
+        componentElement.setAttribute("Name", component->getName());
+        //  ...and its configuration too
+        QDomElement configurationElement = domDocument.createElement("Configuration");
+        componentElement.appendChild(configurationElement);
+        component->serialiseConfiguration(configurationElement);
+    }
+
     //  Save
     QFile file(_location);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -117,6 +130,42 @@ VirtualAppliance * VirtualAppliance::load(const QString & location)
                                                      location,
                                                      architecture,
                                                      virtualApplianceTemplate);
+
+    //  Create components
+    for (QDomElement componentElement = rootElement.firstChildElement();
+         !componentElement.isNull();
+         componentElement = componentElement.nextSiblingElement())
+    {
+        if (componentElement.tagName() != "Component")
+        {   //  Ignore this one
+            continue;
+        }
+        //  Instantiate the Component...
+        QString componentTypeMnemonic = componentElement.attribute("Type");
+        QString componentName = componentElement.attribute("Name");
+        ComponentType * componentType = ComponentType::findByMnemonic(componentTypeMnemonic);
+        if (componentType == nullptr)
+        {   //  OOPS!
+            throw VirtualApplianceException("Unsupported component type " + componentTypeMnemonic);
+        }
+        if (!Component::isValidName(componentName))
+        {   //  OOPS!
+            throw VirtualApplianceException("Invalid component name " + componentName);
+        }
+        Component * component = componentType->createComponent();
+        component->setName(componentName);
+        //  ...and load its configuration
+        for (QDomElement configurationElement = componentElement.firstChildElement();
+             !configurationElement.isNull();
+             configurationElement = configurationElement.nextSiblingElement())
+        {
+            if (configurationElement.tagName() == "Configuration")
+            {
+                component->deserialiseConfiguration(configurationElement);
+            }
+        }
+        virtualAppliance->addComponent(component);
+    }
 
     //  Done
     return virtualAppliance;

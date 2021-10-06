@@ -30,7 +30,10 @@ public:
     //  of the edited component.
     virtual void    refresh() = 0;
 
+    //////////
+    //  Signals
 signals:
+    void            componentConfigurationChanged(Component * component);
 
     //////////
     //  Implementation

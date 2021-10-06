@@ -1,5 +1,5 @@
 //
-//  emuone-ibm360/Storage.hpp
+//  emuone-ibm360/Ibm360Storage.hpp
 //
 //  IBM/360 storage
 //
@@ -63,9 +63,18 @@ public:
     virtual void        disconnect() noexcept override;
 
     //////////
+    //  Component (serialisation)
+public:
+    virtual void        serialiseConfiguration(QDomElement & configurationElement) const override;
+    virtual void        deserialiseConfiguration(QDomElement & configurationElement) override;
+
+    //////////
     //  Operations
 public:
     static bool         isValidSize(const MemorySize & size);
+
+    MemorySize          getSize() const { return _size; }
+    bool                setSize(const MemorySize & size);
 
     //////////
     //  Implementation
@@ -77,4 +86,4 @@ private:
     MemorySize          _size;
 };
 
-//  End of emuone-ibm360/Storage.hpp
+//  End of emuone-ibm360/Ibm360Storage.hpp

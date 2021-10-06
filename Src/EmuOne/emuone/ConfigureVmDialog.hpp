@@ -67,6 +67,7 @@ private slots:
     void                    _addComponentPushButtonClicked();
     void                    _removeComponentPushButtonClicked();
     void                    _componentNameLineEditTextChanged(const QString &);
+    void                    _componentConfigurationChanged(Component * component);
     void                    _accept();
     void                    _reject();
 };

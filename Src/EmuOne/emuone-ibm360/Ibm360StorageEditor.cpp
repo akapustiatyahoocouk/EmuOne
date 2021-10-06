@@ -52,4 +52,42 @@ void Ibm360StorageEditor::refresh()
     _refreshUnderway = false;
 }
 
+//////////
+//  Event handlers
+void Ibm360StorageEditor::_sizeLineEditTextChanged(const QString &)
+{
+    if (!_refreshUnderway)
+    {
+        MemorySize::Unit unit = (ui->_sizeUnitComboBox->currentIndex() == 0) ? MemorySize::Unit::KB : MemorySize::Unit::MB;
+        uint64_t numberOfUnits = ui->_sizeLineEdit->text().toUInt();
+        if (numberOfUnits > 0)
+        {   //  Parsed successfully
+            MemorySize newSize(unit, numberOfUnits);
+            if (Ibm360Storage::isValidSize(newSize))
+            {   //  Use it
+                _ibm360Storage->_size = newSize;
+                emit componentConfigurationChanged(getComponent());
+            }
+        }
+    }
+}
+
+void Ibm360StorageEditor::_sizeUnitComboBoxCurrentIndexChanged(int)
+{
+    if (!_refreshUnderway)
+    {
+        MemorySize::Unit unit = (ui->_sizeUnitComboBox->currentIndex() == 0) ? MemorySize::Unit::KB : MemorySize::Unit::MB;
+        uint64_t numberOfUnits = ui->_sizeLineEdit->text().toUInt();
+        if (numberOfUnits > 0)
+        {   //  Parsed successfully
+            MemorySize newSize(unit, numberOfUnits);
+            if (Ibm360Storage::isValidSize(newSize))
+            {   //  Use it
+                _ibm360Storage->_size = newSize;
+                emit componentConfigurationChanged(getComponent());
+            }
+        }
+    }
+}
+
 //  End of emuone-360/Ibm360StorageEditor.cpp
