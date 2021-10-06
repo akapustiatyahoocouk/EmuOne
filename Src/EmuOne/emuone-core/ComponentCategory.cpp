@@ -10,6 +10,18 @@ ComponentCategoryList ComponentCategory::_registry;
 
 //////////
 //  Operations
+ComponentTypeList ComponentCategory::getComponentTypes() const
+{
+    ComponentTypeList result;
+    for (ComponentType * componentType : ComponentType::getAll())
+    {
+        if (componentType->getCategory() == this)
+        {
+            result.append(componentType);
+        }
+    }
+    return result;
+}
 
 //////////
 //  Registry

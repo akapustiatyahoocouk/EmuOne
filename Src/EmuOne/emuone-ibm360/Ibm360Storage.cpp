@@ -7,6 +7,18 @@
 #include "emuone-ibm360/API.hpp"
 
 //////////
+//  Construction/destruction
+Ibm360Storage::Ibm360Storage(const QString & name, uint32_t size)
+    :   Component(name),
+        _size(size)
+{
+}
+
+Ibm360Storage::~Ibm360Storage()
+{
+}
+
+//////////
 //  Component
 ComponentType * Ibm360Storage::getType() const
 {
@@ -37,6 +49,11 @@ ComponentCategory * Ibm360Storage::Type::getCategory() const
 bool Ibm360Storage::Type::isCompatibleWith(Architecture * architecture) const
 {
     return architecture == Ibm360Architecture::getInstance();
+}
+
+Ibm360Storage * Ibm360Storage::Type::createComponent()
+{
+    return new Ibm360Storage("Main storage", 128 * 1024);
 }
 
 //  End of emuone-360/Ibm360Storage.cpp

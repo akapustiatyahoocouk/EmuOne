@@ -26,6 +26,8 @@ public:
         Architecture::registerArchitecture(Ibm360Architecture::getInstance());
 
         Ibm360Architecture::getInstance()->addVirtualMachineTemplate(Ibm360H40VirtualMachineTemplate::getInstance());
+
+        ComponentType::registerComponentType(Ibm360Storage::Type::getInstance());
     }
 };
 

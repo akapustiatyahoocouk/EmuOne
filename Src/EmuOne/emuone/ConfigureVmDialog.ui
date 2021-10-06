@@ -142,8 +142,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>251</width>
-           <height>188</height>
+           <width>240</width>
+           <height>187</height>
           </rect>
          </property>
         </widget>
@@ -157,12 +157,20 @@
      <property name="text">
       <string>Add component</string>
      </property>
+     <property name="icon">
+      <iconset resource="emuone.qrc">
+       <normaloff>:/emuone/Images/Actions/Add.png</normaloff>:/emuone/Images/Actions/Add.png</iconset>
+     </property>
     </widget>
    </item>
    <item row="6" column="1">
     <widget class="QPushButton" name="_removeComponentPushButton">
      <property name="text">
       <string>Remove component</string>
+     </property>
+     <property name="icon">
+      <iconset resource="emuone.qrc">
+       <normaloff>:/emuone/Images/Actions/Remove.png</normaloff>:/emuone/Images/Actions/Remove.png</iconset>
      </property>
     </widget>
    </item>
@@ -199,7 +207,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="emuone.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

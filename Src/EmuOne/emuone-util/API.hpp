@@ -16,6 +16,7 @@
 #include <QFileDialog>
 #include <QIcon>
 #include <QLibrary>
+#include <QMenu>
 #include <QMessageBox>
 #include <QRecursiveMutex>
 #include <QSet>

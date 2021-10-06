@@ -13,6 +13,7 @@ SOURCES += \
     Architecture.cpp \
     Component.cpp \
     ComponentCategory.cpp \
+    ComponentType.cpp \
     Plugin.cpp \
     RemoteTerminal.cpp \
     StandardComponentCategories.cpp \

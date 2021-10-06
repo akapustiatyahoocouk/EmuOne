@@ -31,18 +31,36 @@ public:
     public:
         virtual ComponentCategory * getCategory() const override;
         virtual bool        isCompatibleWith(Architecture * architecture) const override;
+        virtual Ibm360Storage * createComponent() override;
     };
 
     //////////
     //  Construction/destruction
 public:
-    Ibm360Storage(uint32_t size);
+    Ibm360Storage(const QString & name, uint32_t size);
     virtual ~Ibm360Storage();
 
     //////////
     //  Component
 public:
     virtual ComponentType * getType() const override;
+
+    //////////
+    //  Component (state control) - all thread-safe
+public:
+    virtual State       getState() const override;
+    virtual void        connect() override;
+    virtual void        initialise() override;
+    virtual void        start() override;
+    virtual void        stop() noexcept override;
+    virtual void        deinitialise() noexcept override;
+    virtual void        disconnect() noexcept override;
+
+    //////////
+    //  Implementation
+private:
+    //  Component configuration
+    uint32_t            _size;
 };
 
 //  End of emuone-ibm360/Storage.hpp
