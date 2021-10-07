@@ -35,4 +35,11 @@ namespace core
 //  UI classes cannot be namespaced in QT
 class EMUONE_CORE_EXPORT ComponentEditor;
 
+class EMUONE_CORE_EXPORT FullScreenWidgetImpl;
+namespace core
+{
+    using FullScreenWidget = ::FullScreenWidgetImpl;
+    using FullScreenWidgetList = QList<FullScreenWidget*>;
+}
+
 //  End of emuone-core/Classes.hpp

@@ -6,20 +6,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>413</width>
-    <height>243</height>
+    <width>447</width>
+    <height>292</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>413</width>
+     <width>447</width>
      <height>20</height>
     </rect>
    </property>

@@ -15,6 +15,7 @@ SOURCES += \
     ComponentCategory.cpp \
     ComponentEditor.cpp \
     ComponentType.cpp \
+    FullScreenWidgetImpl.cpp \
     MemorySize.cpp \
     Plugin.cpp \
     RemoteTerminal.cpp \
@@ -33,6 +34,7 @@ HEADERS += \
     ComponentType.hpp \
     ComponentUi.hpp \
     Exceptions.hpp \
+    FullScreenWidgetImpl.hpp \
     MemorySize.hpp \
     Template.hpp \
     VirtualAppliance.hpp

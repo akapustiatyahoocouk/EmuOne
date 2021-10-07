@@ -6,6 +6,8 @@
 //////////
 #pragma once
 
+class Ibm2741FullScreenWidget;
+
 namespace ibm360
 {
     //////////
@@ -34,6 +36,28 @@ namespace ibm360
             virtual core::ComponentCategory *   getCategory() const override;
             virtual bool        isCompatibleWith(core::Architecture * architecture) const override;
             virtual Ibm2741 *   createComponent() override;
+        };
+
+        //  The "UI" of IBM 2741 terminal
+        class Ui : public core::ComponentUi
+        {
+            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Ui)
+
+            //////////
+            //  Construction/destruction
+        public:
+            explicit Ui(Ibm2741 * ibm2741);
+            virtual ~Ui();
+
+            //////////
+            //  core::ComponentUi
+        public:
+            virtual core::FullScreenWidgetList  getFullScreenWidgets() override;
+
+            //////////
+            //  Implementation
+        private:
+            Ibm2741FullScreenWidget *   _fullScreenWidget;
         };
 
         //////////

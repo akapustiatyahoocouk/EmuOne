@@ -14,6 +14,7 @@ SOURCES += \
     Device.cpp \
     Ibm2741.cpp \
     Ibm2741Editor.cpp \
+    Ibm2741FullScreenWidget.cpp \
     Ibm360StorageEditor.cpp \
     Plugin.cpp \
     Storage.cpp \
@@ -27,6 +28,7 @@ HEADERS += \
     Features.hpp \
     Ibm2741.hpp \
     Ibm2741Editor.hpp \
+    Ibm2741FullScreenWidget.hpp \
     Ibm360StorageEditor.hpp \
     Storage.hpp \
     Templates.hpp
@@ -47,4 +49,5 @@ RESOURCES += \
 
 FORMS += \
     Ibm2741Editor.ui \
+    Ibm2741FullScreenWidget.ui \
     Ibm360StorageEditor.ui

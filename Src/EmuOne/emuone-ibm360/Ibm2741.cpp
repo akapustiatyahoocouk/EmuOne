@@ -37,7 +37,7 @@ QString Ibm2741::getShortStatus() const
 
 core::ComponentUi * Ibm2741::createUi()
 {
-    return nullptr;
+    return new Ibm2741::Ui(this);
 }
 
 //////////
@@ -168,6 +168,25 @@ bool Ibm2741::Type::isCompatibleWith(core::Architecture * architecture) const
 Ibm2741 * Ibm2741::Type::createComponent()
 {
     return new Ibm2741("IBM 2741", 0x000);
+}
+
+//////////
+//  Ibm2741::Ui
+Ibm2741::Ui::Ui(Ibm2741 * ibm2741)
+    :   core::ComponentUi(ibm2741),
+        _fullScreenWidget(new Ibm2741FullScreenWidget(ibm2741))
+{
+}
+
+Ibm2741::Ui::~Ui()
+{
+}
+
+core::FullScreenWidgetList Ibm2741::Ui::getFullScreenWidgets()
+{
+    core::FullScreenWidgetList result;
+    result.append(_fullScreenWidget);
+    return result;
 }
 
 //  End of emuone-360/Ibm2741.cpp

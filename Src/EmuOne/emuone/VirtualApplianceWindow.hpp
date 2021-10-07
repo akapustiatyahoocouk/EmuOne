@@ -28,6 +28,7 @@ public:
     //  QWidget
 protected:
     virtual void        closeEvent(QCloseEvent * event) override;
+    virtual void        resizeEvent(QResizeEvent * event) override;
 
     //////////
     //  Implementation
@@ -36,6 +37,10 @@ private:
     core::VirtualAppliance *const   _virtualAppliance;
 
     QMap<core::Component*,core::ComponentUi*>   _uiMap;
+    QWidget *           _fullScreenWidget = nullptr;
+
+    //  Helpers
+    void                _resizeControls();
 
     //////////
     //  Event handlers

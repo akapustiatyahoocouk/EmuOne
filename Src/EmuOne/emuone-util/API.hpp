@@ -19,6 +19,7 @@
 #include <QLibrary>
 #include <QMenu>
 #include <QMessageBox>
+#include <QPainter>
 #include <QRecursiveMutex>
 #include <QSet>
 #include <QSettings>

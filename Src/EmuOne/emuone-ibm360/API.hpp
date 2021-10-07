@@ -27,7 +27,9 @@
 #include "emuone-ibm360/Ibm360StorageEditor.hpp"
 
 #include "emuone-ibm360/Device.hpp"
+
 #include "emuone-ibm360/Ibm2741.hpp"
 #include "emuone-ibm360/Ibm2741Editor.hpp"
+#include "emuone-ibm360/Ibm2741FullScreenWidget.hpp"
 
 //  End of emuone-ibm360/API.hpp

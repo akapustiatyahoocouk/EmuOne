@@ -23,8 +23,13 @@ namespace core
         //////////
         //  Construction/destruction
     public:
-        explicit ComponentUi(Component * component);
-        virtual ~ComponentUi();
+        explicit ComponentUi(Component * component) : _component(component) {}
+        virtual ~ComponentUi() {}
+
+        //////////
+        //  Operations
+    public:
+        virtual FullScreenWidgetList    getFullScreenWidgets() = 0;
 
         //////////
         //  Implementation
