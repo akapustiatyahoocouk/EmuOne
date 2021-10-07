@@ -31,6 +31,7 @@ HEADERS += \
     ComponentCategory.hpp \
     ComponentEditor.hpp \
     ComponentType.hpp \
+    ComponentUi.hpp \
     Exceptions.hpp \
     MemorySize.hpp \
     Template.hpp \

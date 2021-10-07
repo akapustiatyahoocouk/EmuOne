@@ -1,27 +1,23 @@
 //
-//  emuone-ibm360/Storage.hpp
+//  emuone-ibm360/Ibm2741.hpp
 //
-//  IBM/360 storage
+//  IBM 2741 terminal
 //
 //////////
 #pragma once
 
-class EMUONE_IBM360_EXPORT Ibm360StorageEditor;
-
 namespace ibm360
 {
     //////////
-    //  The IBM/360 storage
-    class EMUONE_IBM360_EXPORT Storage : public core::Component
+    //  The IBM 2741 terminal
+    class EMUONE_IBM360_EXPORT Ibm2741 : public Device
     {
-        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Storage)
-
-        friend class ::Ibm360StorageEditor;
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Ibm2741)
 
         //////////
         //  Types
     public:
-        //  The "type" of IBM/360 mstorage
+        //  The "type" of IBM 2741 terminal
         class EMUONE_IBM360_EXPORT Type : public core::ComponentType
         {
             DECLARE_SINGLETON(Type)
@@ -37,14 +33,14 @@ namespace ibm360
         public:
             virtual core::ComponentCategory *   getCategory() const override;
             virtual bool        isCompatibleWith(core::Architecture * architecture) const override;
-            virtual Storage *   createComponent() override;
+            virtual Ibm2741 *   createComponent() override;
         };
 
         //////////
         //  Construction/destruction
     public:
-        Storage(const QString & name, const core::MemorySize & size);
-        virtual ~Storage();
+        Ibm2741(const QString & name, uint16_t address);
+        virtual ~Ibm2741();
 
         //////////
         //  Component
@@ -74,20 +70,13 @@ namespace ibm360
         //////////
         //  Operations
     public:
-        static bool             isValidSize(const core::MemorySize & size);
-
-        core::MemorySize        getSize() const { return _size; }
-        bool                    setSize(const core::MemorySize & size);
 
         //////////
         //  Implementation
     private:
         State                   _state = State::Constructed;
         mutable QRecursiveMutex _stateGuard;
-
-        //  Component configuration
-        core::MemorySize        _size;
     };
 }
 
-//  End of emuone-ibm360/Storage.hpp
+//  End of emuone-ibm360/Ibm2741.hpp

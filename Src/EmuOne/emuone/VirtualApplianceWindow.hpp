@@ -35,6 +35,8 @@ private:
     Ui::VirtualApplianceWindow *ui;
     core::VirtualAppliance *const   _virtualAppliance;
 
+    QMap<core::Component*,core::ComponentUi*>   _uiMap;
+
     //////////
     //  Event handlers
 private slots:

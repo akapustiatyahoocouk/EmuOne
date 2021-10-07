@@ -61,6 +61,9 @@ namespace core
         //  Returns the VA to which this Component currently belongs; nullptr == standalone
         VirtualAppliance *  getVirtualAppliance() const { return _virtualAppliance; }
 
+        //  Creates a new UI for this Component; returns nullptr if this Component has no UI
+        virtual ComponentUi *   createUi() = 0;
+
         //////////
         //  Operations (state control) - all thread-safe
     public:

@@ -1,5 +1,8 @@
-<VirtualAppliance Template="IBM/360 H40" Architecture="IBM/360" Type="VirtualMachine" Name="1">
- <Component Type="ibm360::Storage" Name="Main storage">
+<VirtualAppliance Template="IBM/360 H40" Name="1" Type="VirtualMachine" Architecture="IBM/360">
+ <Component Name="Main storage" Type="ibm360::Storage">
   <Configuration Size="256KB"/>
+ </Component>
+ <Component Name="System console" Type="ibm360::Ibm2741">
+  <Configuration Address="001"/>
  </Component>
 </VirtualAppliance>

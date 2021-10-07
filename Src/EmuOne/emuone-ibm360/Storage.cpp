@@ -153,6 +153,11 @@ bool Storage::setSize(const core::MemorySize & size)
     return false;
 }
 
+core::ComponentUi * Storage::createUi()
+{
+    return nullptr;
+}
+
 //////////
 //  Ibm360Storage::Type
 IMPLEMENT_SINGLETON(Storage::Type)

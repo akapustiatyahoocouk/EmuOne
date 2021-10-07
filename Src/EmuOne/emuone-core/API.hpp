@@ -29,6 +29,7 @@
 #include "emuone-core/ComponentType.hpp"
 #include "emuone-core/Component.hpp"
 #include "emuone-core/ComponentEditor.hpp"
+#include "emuone-core/ComponentUi.hpp"
 
 #include "emuone-core/VirtualAppliance.hpp"
 

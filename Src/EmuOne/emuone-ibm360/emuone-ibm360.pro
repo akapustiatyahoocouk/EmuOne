@@ -11,6 +11,9 @@ QMAKE_LFLAGS += -zdefs
 
 SOURCES += \
     Architecture.cpp \
+    Device.cpp \
+    Ibm2741.cpp \
+    Ibm2741Editor.cpp \
     Ibm360StorageEditor.cpp \
     Plugin.cpp \
     Storage.cpp \
@@ -20,7 +23,10 @@ HEADERS += \
     API.hpp \
     API.hpp \
     Architecture.hpp \
+    Device.hpp \
     Features.hpp \
+    Ibm2741.hpp \
+    Ibm2741Editor.hpp \
     Ibm360StorageEditor.hpp \
     Storage.hpp \
     Templates.hpp
@@ -40,4 +46,5 @@ RESOURCES += \
     Ibm360.qrc
 
 FORMS += \
+    Ibm2741Editor.ui \
     Ibm360StorageEditor.ui

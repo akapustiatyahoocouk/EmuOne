@@ -5,8 +5,6 @@
 //
 //////////
 #include "emuone/API.hpp"
-
-#include "ConfigureVmDialog.hpp"
 #include "ui_ConfigureVmDialog.h"
 
 ConfigureVmDialog::ConfigureVmDialog(core::VirtualAppliance * virtualAppliance, QWidget * parent)
@@ -241,6 +239,32 @@ core::Component * ConfigureVmDialog::_addComponent(core::ComponentType * compone
     }
 }
 
+void ConfigureVmDialog::_removeComponent(core::Component * component)
+{
+    //  Confirm
+    QString message =
+        "Are you sure you want to remove the " + component->getType()->getDisplayName() +
+        " " + component->getName() + "?";
+    QMessageBox::StandardButton reply =
+        QMessageBox::question(this, "Remove component", message, QMessageBox::Yes|QMessageBox::No);
+    if (reply == QMessageBox::Yes)
+    {   //  ...and remove
+        _virtualAppliance->removeComponent(component);
+        _refreshComponentsTree();
+        //  Are there editor(s) involved ?
+        if (_componentEditors.contains(component))
+        {
+            ComponentEditor * componentEditor = _componentEditors[component];
+            _componentEditors.remove(component);
+            delete componentEditor;
+        }
+        //  TODO if the "component" is "adapted", there may be an editor for the "adaptor"
+        //  Update UI
+        _refresh();
+        delete component;
+    }
+}
+
 //////////
 //  Event handlers
 void ConfigureVmDialog::_componentsTreeWidgetItemSelectionChanged()
@@ -260,6 +284,10 @@ void ConfigureVmDialog::_addComponentPushButtonClicked()
 
 void ConfigureVmDialog::_removeComponentPushButtonClicked()
 {
+    if (core::Component * component = _getSelectedComponent())
+    {
+        _removeComponent(component);
+    }
 }
 
 void ConfigureVmDialog::_componentNameLineEditTextChanged(const QString &)

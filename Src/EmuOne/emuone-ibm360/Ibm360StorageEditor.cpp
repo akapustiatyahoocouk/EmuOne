@@ -5,9 +5,7 @@
 //
 //////////
 #include "emuone-ibm360/API.hpp"
-#include "Ibm360StorageEditor.hpp"
 #include "ui_Ibm360StorageEditor.h"
-
 using namespace ibm360;
 
 //////////

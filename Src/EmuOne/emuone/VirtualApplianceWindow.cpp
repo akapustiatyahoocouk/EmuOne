@@ -5,8 +5,6 @@
 //
 //////////
 #include "emuone/API.hpp"
-
-#include "VirtualApplianceWindow.hpp"
 #include "ui_VirtualApplianceWindow.h"
 
 //////////
@@ -21,6 +19,22 @@ VirtualApplianceWindow::VirtualApplianceWindow(core::VirtualAppliance * virtualA
 
     this->setWindowTitle(virtualAppliance->getName());
     this->setWindowIcon(virtualAppliance->getArchitecture()->getLargeIcon());
+
+    //  Create component UIs
+    for (core::Component * component : virtualAppliance->getComponents())
+    {
+        if (core::ComponentUi * componentUi = component->createUi())
+        {
+            _uiMap.insert(component, componentUi);
+        }
+    }
+    for (core::Adaptor * adaptor : virtualAppliance->getAdaptors())
+    {
+        if (core::ComponentUi * componentUi = adaptor->createUi())
+        {
+            _uiMap.insert(adaptor, componentUi);
+        }
+    }
 }
 
 VirtualApplianceWindow::~VirtualApplianceWindow()

@@ -31,6 +31,7 @@ Architecture * H40VirtualMachineTemplate::getArchitecture() const
 void H40VirtualMachineTemplate::populateVirtualAppliance(core::VirtualAppliance * virtualAppliance)
 {
     virtualAppliance->addComponent(new Storage("Main storage", core::MemorySize(core::MemorySize::Unit::KB, 256)));
+    virtualAppliance->addComponent(new Ibm2741("System console", 0x001));
 }
 
 //  End of emuone-360/Templates.cpp

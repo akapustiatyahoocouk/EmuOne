@@ -59,6 +59,7 @@ private:
     QMenu *                 _createAddAnyComponentPopupMenu();
 
     core::Component *       _addComponent(core::ComponentType * componentType);
+    void                    _removeComponent(core::Component * component);
 
     //////////
     //  Event handlers

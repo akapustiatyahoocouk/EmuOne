@@ -5,8 +5,6 @@
 //
 //////////
 #include "emuone/API.hpp"
-
-#include "NewVmDialog.hpp"
 #include "ui_NewVmDialog.h"
 
 NewVmDialog::NewVmDialog(QWidget *parent) :

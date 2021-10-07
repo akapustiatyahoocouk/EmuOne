@@ -135,9 +135,9 @@
       <item row="1" column="0" colspan="2">
        <widget class="QScrollArea" name="_componentEditorsScrollArea">
         <property name="widgetResizable">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
-        <widget class="QWidget" name="scrollAreaWidgetContents">
+        <widget class="QWidget" name="_scrollAreaWidgetContents">
          <property name="geometry">
           <rect>
            <x>0</x>

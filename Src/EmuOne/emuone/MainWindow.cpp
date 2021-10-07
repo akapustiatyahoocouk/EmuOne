@@ -5,8 +5,6 @@
 //
 //////////
 #include "emuone/API.hpp"
-
-#include "MainWindow.hpp"
 #include "ui_MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
