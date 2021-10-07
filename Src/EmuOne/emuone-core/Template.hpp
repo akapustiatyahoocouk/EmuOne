@@ -29,6 +29,10 @@ public:
 public:
     //  The Architecture to which this VA template belongs.
     virtual Architecture *  getArchitecture() const = 0;
+
+    //  Populates the specified "virtualAppliance" with Components as per this template
+    //  Throws VirtualApplianceException if an error occurs.
+    virtual void        populateVirtualAppliance(VirtualAppliance * virtualAppliance) = 0;
 };
 
 //////////

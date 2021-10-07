@@ -1,5 +1,5 @@
 //
-//  emuone-ibm360/Templates.hpp
+//  emuone-ibm360/Ibm360Templates.hpp
 //
 //  IBM/360 templates
 //
@@ -20,6 +20,7 @@ public:
     //  VirtualApplianceTemplate
 public:
     virtual Architecture *  getArchitecture() const override;
+    virtual void        populateVirtualAppliance(VirtualAppliance * virtualAppliance) override;
 };
 
-//  End of emuone-ibm360/Templates.hpp
+//  End of emuone-ibm360/Ibm360Templates.hpp

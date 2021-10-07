@@ -8,14 +8,20 @@
 #include "emuone/API.hpp"
 #include <QMainWindow>
 
+class VirtualApplianceWindow;
+
 namespace Ui { class MainWindow; }
 
 //////////
 //  The main UI frame
-class MainWindow : public QMainWindow
+class MainWindow final : public QMainWindow
 {
     Q_OBJECT
 
+    CANNOT_ASSIGN_OR_COPY_CONSTRUCT(MainWindow)
+
+    //////////
+    //  Construction/destruction
 public:
     MainWindow(QWidget * parent = nullptr);
     ~MainWindow();
@@ -31,6 +37,8 @@ protected:
 private:
     bool                    _trackPositionChanges = false;
     VirtualApplianceList    _virtualAppliances; //  ...in view order
+
+    QMap<VirtualAppliance*,VirtualApplianceWindow*> _virtualApplianceWindows;   //  all that currently exist
 
     //  Helpers
     void                    _loadPosition();
@@ -48,7 +56,8 @@ private:
     //////////
     //  Controls
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow *        ui;
+    QTimer                  _refreshTimer;
 
     //////////
     //  Event handlers
@@ -63,6 +72,7 @@ private slots:
     void                    _onResumeVmTriggered();
     void                    _onConfigureVmTriggered();
     void                    _onVmListCurrentRowChanged(int);
+    void                    _refreshTimerTimeout();
 };
 
 //  End of emuone/MainWindow.hpp

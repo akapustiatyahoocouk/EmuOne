@@ -19,8 +19,8 @@
     #define EMUONE_IBM360_EXPORT  Q_DECL_IMPORT
 #endif
 
-#include "emuone-ibm360/Architecture.hpp"
-#include "emuone-ibm360/Templates.hpp"
+#include "emuone-ibm360/Ibm360Architecture.hpp"
+#include "emuone-ibm360/Ibm360Templates.hpp"
 
 #include "emuone-ibm360/Ibm360Storage.hpp"
 #include "emuone-ibm360/Ibm360StorageEditor.hpp"

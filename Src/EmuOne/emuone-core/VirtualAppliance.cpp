@@ -400,13 +400,13 @@ void VirtualAppliance::_stopComponents()
             adaptor->stop();
             Q_ASSERT(adaptor->getState() == Component::State::Initialised);
         }
-        for (Component * component : _components)
+    }
+    for (Component * component : _components)
+    {
+        if (component->getState() == Component::State::Running)
         {
-            if (component->getState() == Component::State::Running)
-            {
-                component->stop();
-                Q_ASSERT(component->getState() == Component::State::Initialised);
-            }
+            component->stop();
+            Q_ASSERT(component->getState() == Component::State::Initialised);
         }
     }
 }
@@ -420,13 +420,13 @@ void VirtualAppliance::_deinitialiseComponents()
             adaptor->deinitialise();
             Q_ASSERT(adaptor->getState() == Component::State::Connected);
         }
-        for (Component * component : _components)
+    }
+    for (Component * component : _components)
+    {
+        if (component->getState() == Component::State::Initialised)
         {
-            if (component->getState() == Component::State::Initialised)
-            {
-                component->deinitialise();
-                Q_ASSERT(component->getState() == Component::State::Connected);
-            }
+            component->deinitialise();
+            Q_ASSERT(component->getState() == Component::State::Connected);
         }
     }
 }
@@ -440,13 +440,13 @@ void VirtualAppliance::_disconnectComponents()
             adaptor->disconnect();
             Q_ASSERT(adaptor->getState() == Component::State::Constructed);
         }
-        for (Component * component : _components)
+    }
+    for (Component * component : _components)
+    {
+        if (component->getState() == Component::State::Connected)
         {
-            if (component->getState() == Component::State::Connected)
-            {
-                component->disconnect();
-                Q_ASSERT(component->getState() == Component::State::Constructed);
-            }
+            component->disconnect();
+            Q_ASSERT(component->getState() == Component::State::Constructed);
         }
     }
 }

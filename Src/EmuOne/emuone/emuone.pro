@@ -8,6 +8,7 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 SOURCES += \
     ConfigureVmDialog.cpp \
     NewVmDialog.cpp \
+    VirtualApplianceWindow.cpp \
     main.cpp \
     MainWindow.cpp
 
@@ -15,12 +16,14 @@ HEADERS += \
     API.hpp \
     ConfigureVmDialog.hpp \
     MainWindow.hpp \
-    NewVmDialog.hpp
+    NewVmDialog.hpp \
+    VirtualApplianceWindow.hpp
 
 FORMS += \
     ConfigureVmDialog.ui \
     MainWindow.ui \
-    NewVmDialog.ui
+    NewVmDialog.ui \
+    VirtualApplianceWindow.ui
 
 LIBS += -L../../../Bin/Debug -lemuone-core -lemuone-util
 

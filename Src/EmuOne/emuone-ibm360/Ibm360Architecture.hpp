@@ -1,5 +1,5 @@
 //
-//  emuone-ibm360/Architecture.hpp
+//  emuone-ibm360/Ibm360Architecture.hpp
 //
 //  IBM/360 architecture
 //
@@ -25,4 +25,4 @@ private:
     mutable QIcon       _largeIcon;
 };
 
-//  End of emuone-ibm360/Architecture.hpp
+//  End of emuone-ibm360/Ibm360Architecture.hpp

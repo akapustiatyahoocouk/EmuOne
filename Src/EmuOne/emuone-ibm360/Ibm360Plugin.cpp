@@ -1,5 +1,5 @@
 //
-//  emuone-ibm360/Plugin.cpp
+//  emuone-ibm360/Ibm360Plugin.cpp
 //
 //  The emuone-ibm360 plugin
 //
@@ -35,4 +35,4 @@ BEGIN_PLUGIN_TABLE
     PLUGIN_TABLE_ITEM(Ibm360Plugin)
 END_PLUGIN_TABLE
 
-//  End of emuone-ibm360/Plugin.cpp
+//  End of emuone-ibm360/Ibm360Plugin.cpp

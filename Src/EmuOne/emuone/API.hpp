@@ -13,6 +13,7 @@
 
 //////////
 //  emuone-core components
+#include "emuone/VirtualApplianceWindow.hpp"
 #include "emuone/MainWindow.hpp"
 #include "emuone/NewVmDialog.hpp"
 #include "emuone/ConfigureVmDialog.hpp"

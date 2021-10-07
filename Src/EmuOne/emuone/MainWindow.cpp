@@ -10,21 +10,27 @@
 #include "ui_MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    :   QMainWindow(parent),
+        ui(new Ui::MainWindow),
+        _refreshTimer(this)
 {
     ui->setupUi(this);
 
     _loadPosition();
     _loadVirtualAppliances();
 
+    //  Set up custom event handlers
+    connect(&_refreshTimer, &QTimer::timeout, this, &MainWindow::_refreshTimerTimeout);
+
     //  Done
     _trackPositionChanges = true;
     _refresh();
+    _refreshTimer.start(1000);
 }
 
 MainWindow::~MainWindow()
 {
+    _refreshTimer.stop();
     delete ui;
 }
 
@@ -126,7 +132,7 @@ void MainWindow::_refreshVirtualAppliancesList()
     //  Make sure the VM list has a proper number of items...
     while (_virtualAppliances.size() < ui->vmListWidget->count())
     {   //  Too many items in the list widget
-        delete ui->vmListWidget->takeItem(0);
+        ui->vmListWidget->takeItem(0);
     }
     while (_virtualAppliances.size() > ui->vmListWidget->count())
     {   //  Too few items in the list widget
@@ -200,6 +206,7 @@ void MainWindow::_onNewVmTriggered()
                 newVmDialog.getVirtualApplianceTemplate());
         try
         {
+            newVmDialog.getVirtualApplianceTemplate()->populateVirtualAppliance(virtualAppliance);
             virtualAppliance->save();
         }
         catch (VirtualApplianceException & ex)
@@ -225,6 +232,8 @@ void MainWindow::_onNewVmTriggered()
         _refresh();
         //  Select newly creates VA as "current"
         _setSelectedVirtualAppliance(virtualAppliance);
+        //  ...and start editing its configuration
+        _onConfigureVmTriggered();
     }
 }
 
@@ -267,6 +276,24 @@ void MainWindow::_onOpenVmTriggered()
 
 void MainWindow::_onCloseVmTriggered()
 {
+    VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
+    if (virtualAppliance != nullptr)
+    {   //  Confirm...
+        QString message =
+            "Are you sure you want to close the " + virtualAppliance->getType()->getDisplayName() +
+            " " + virtualAppliance->getName() + "?";
+        QMessageBox::StandardButton reply =
+            QMessageBox::question(this, "Close VM", message, QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes)
+        {   //  ...and close
+            virtualAppliance->stop();   //  ...just in case
+            _virtualAppliances.removeOne(virtualAppliance);
+            _saveVirtualAppliances();
+            _refreshVirtualAppliancesList();
+            _refresh();
+            delete virtualAppliance;
+        }
+    }
 }
 
 void MainWindow::_onExitTriggered()
@@ -284,6 +311,10 @@ void MainWindow::_onStartVmTriggered()
             virtualAppliance->start();
             _refreshVirtualAppliancesList();
             _refresh();
+            //  Create UI for the VA
+            VirtualApplianceWindow * virtualApplianceWindow = new VirtualApplianceWindow(virtualAppliance);
+            virtualApplianceWindow->setVisible(true);
+            _virtualApplianceWindows.insert(virtualAppliance, virtualApplianceWindow);
         }
     }
     catch (VirtualApplianceException & ex)
@@ -299,6 +330,14 @@ void MainWindow::_onStopVmTriggered()
     VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
     if (virtualAppliance != nullptr)
     {
+        //  Is there a VA UI window we need to close ?
+        if (_virtualApplianceWindows.contains(virtualAppliance))
+        {   //  Yes!
+            VirtualApplianceWindow * virtualApplianceWindow = _virtualApplianceWindows[virtualAppliance];
+            _virtualApplianceWindows.remove(virtualAppliance);
+            delete virtualApplianceWindow;
+        }
+        //  Stop the VA
         virtualAppliance->stop();
         _refreshVirtualAppliancesList();
         _refresh();
@@ -362,6 +401,24 @@ void MainWindow::_onConfigureVmTriggered()
 
 void MainWindow::_onVmListCurrentRowChanged(int)
 {
+    _refresh();
+}
+
+void MainWindow::_refreshTimerTimeout()
+{
+    //  Has any VA that was "running" stopped ?
+    for (VirtualAppliance * virtualAppliance : _virtualAppliances)
+    {
+        if (_virtualApplianceWindows.contains(virtualAppliance) &&
+            virtualAppliance->getState() != VirtualAppliance::State::Running)
+        {   //  Must kill this VA window
+            VirtualApplianceWindow * virtualApplianceWindow = _virtualApplianceWindows[virtualAppliance];
+            _virtualApplianceWindows.remove(virtualAppliance);
+            delete virtualApplianceWindow;
+        }
+    }
+    //  Refresh UI
+    _refreshVirtualAppliancesList();
     _refresh();
 }
 
