@@ -1,7 +1,7 @@
 //
-//  emuone-core/ComponentCategory.hpp
+//  emuone-core/ComponentEditor.hpp
 //
-//  The ComponentCategory ADT
+//  The ComponentEditor ADT
 //
 //////////
 #pragma once
@@ -19,27 +19,27 @@ class EMUONE_CORE_EXPORT ComponentEditor : public QWidget
     //////////
     //  Construction/destruction
 public:
-    ComponentEditor(Component * component, QWidget * parent = nullptr);
+    ComponentEditor(core::Component * component, QWidget * parent = nullptr);
 
     //////////
     //  Operations
 public:
-    Component *     getComponent() const { return _component; }
+    core::Component *   getComponent() const { return _component; }
 
     //  Adjusts all the editor's fields to reflect the current configuration
     //  of the edited component.
-    virtual void    refresh() = 0;
+    virtual void        refresh() = 0;
 
     //////////
     //  Signals
 signals:
-    void            componentConfigurationChanged(Component * component);
+    void                componentConfigurationChanged(core::Component * component);
 
     //////////
     //  Implementation
 private:
-    Component *     _component;
+    core::Component *   _component;
 };
 
-//  End of emuone-core/ComponentCategory.hpp
+//  End of emuone-core/ComponentEditor.hpp
 

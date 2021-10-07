@@ -5,6 +5,7 @@
 //
 //////////
 #include "emuone-core/API.hpp"
+using namespace core;
 
 //////////
 //  Construction/destruction
@@ -19,6 +20,7 @@ Component::Component(const QString & name)
 
 Component::~Component()
 {
+    Q_ASSERT(_virtualAppliance == nullptr);
 }
 
 //////////

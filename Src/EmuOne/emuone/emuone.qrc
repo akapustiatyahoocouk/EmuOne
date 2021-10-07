@@ -11,5 +11,6 @@
         <file>Images/Actions/ConfigureVm.png</file>
         <file>Images/Actions/Add.png</file>
         <file>Images/Actions/Remove.png</file>
+        <file>Images/Actions/About.png</file>
     </qresource>
 </RCC>

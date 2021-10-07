@@ -23,9 +23,81 @@
      <height>20</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuVm">
+    <property name="title">
+     <string>&amp;VM</string>
+    </property>
+    <addaction name="actionStop"/>
+    <addaction name="separator"/>
+    <addaction name="actionSuspend"/>
+   </widget>
+   <widget class="QMenu" name="menuDevices">
+    <property name="title">
+     <string>&amp;Devices</string>
+    </property>
+   </widget>
+   <addaction name="menuVm"/>
+   <addaction name="menuDevices"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionStop">
+   <property name="icon">
+    <iconset resource="emuone.qrc">
+     <normaloff>:/emuone/Images/Actions/StopVm.png</normaloff>:/emuone/Images/Actions/StopVm.png</iconset>
+   </property>
+   <property name="text">
+    <string>S&amp;top</string>
+   </property>
+  </action>
+  <action name="actionSuspend">
+   <property name="icon">
+    <iconset resource="emuone.qrc">
+     <normaloff>:/emuone/Images/Actions/SuspendVm.png</normaloff>:/emuone/Images/Actions/SuspendVm.png</iconset>
+   </property>
+   <property name="text">
+    <string>S&amp;uspend</string>
+   </property>
+  </action>
  </widget>
- <resources/>
- <connections/>
+ <resources>
+  <include location="emuone.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>actionStop</sender>
+   <signal>triggered()</signal>
+   <receiver>VirtualApplianceWindow</receiver>
+   <slot>_actionStopTriggered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>206</x>
+     <y>121</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSuspend</sender>
+   <signal>triggered()</signal>
+   <receiver>VirtualApplianceWindow</receiver>
+   <slot>_actionSuspendTriggered()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>206</x>
+     <y>121</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>_actionStopTriggered()</slot>
+  <slot>_actionSuspendTriggered()</slot>
+ </slots>
 </ui>

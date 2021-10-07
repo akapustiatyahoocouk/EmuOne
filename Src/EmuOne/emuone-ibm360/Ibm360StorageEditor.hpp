@@ -21,19 +21,19 @@ class EMUONE_IBM360_EXPORT Ibm360StorageEditor : public ComponentEditor
     //////////
     //  Construction/destruction
 public:
-    Ibm360StorageEditor(Ibm360Storage * ibm360Storage, QWidget * parent);
+    Ibm360StorageEditor(ibm360::Storage * storage, QWidget * parent);
     virtual ~Ibm360StorageEditor();
 
     //////////
     //  ComponentEditor
 public:
-    virtual void    refresh() override;
+    virtual void        refresh() override;
 
     //////////
     //  Implementation
 private:
     Ui::Ibm360StorageEditor *ui;
-    Ibm360Storage *     _ibm360Storage;
+    ibm360::Storage *   _storage;
     bool                _refreshUnderway = false;
 
     //////////

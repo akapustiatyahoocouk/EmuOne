@@ -5,6 +5,7 @@
 //
 //////////
 #include "emuone-core/API.hpp"
+using namespace core;
 
 //////////
 //  Operations
@@ -87,7 +88,7 @@ MemorySize MemorySize::fromString(const QString & s, const MemorySize & defaultV
 
 //////////
 //  Helper functions
-uint64_t getUnitValue(MemorySize::Unit unit)
+uint64_t core::getUnitValue(MemorySize::Unit unit)
 {
     switch (unit)
     {

@@ -16,7 +16,7 @@ NewVmDialog::NewVmDialog(QWidget *parent) :
     ui->setupUi(this);
 
     //  Populate "architectures" combo box
-    ArchitectureList architectures = Architecture::getAll();
+    core::ArchitectureList architectures = core::Architecture::getAll();
     if (architectures.isEmpty())
     {   //  No architectures - can't do anything really
         ui->_templateLabel->setEnabled(false);
@@ -29,7 +29,7 @@ NewVmDialog::NewVmDialog(QWidget *parent) :
     }
     else
     {   //  SOME architectures are defined
-        for (Architecture * architecture : architectures)
+        for (core::Architecture * architecture : architectures)
         {
             ui->_architectureComboBox->addItem(architecture->getSmallIcon(), architecture->getDisplayName(), QVariant::fromValue((void*)architecture));
         }
@@ -52,26 +52,26 @@ void NewVmDialog::_refresh()
 {
     ui->_buttonBox->button(QDialogButtonBox::Ok)->setEnabled(_getSelectedArchitecture() != nullptr &&
                                                              _getSelectedTemplate() != nullptr &&
-                                                             VirtualAppliance::isValidName(ui->_nameLineEdit->text()) &&
+                                                             core::VirtualAppliance::isValidName(ui->_nameLineEdit->text()) &&
                                                              !ui->_locationLineEdit->text().isEmpty());
 }
 
 void NewVmDialog::_refreshTemplatesList()
 {
-    VirtualApplianceTemplateList templateList;
-    Architecture * architecture = _getSelectedArchitecture();
+    core::VirtualApplianceTemplateList templateList;
+    core::Architecture * architecture = _getSelectedArchitecture();
     if (architecture != nullptr)
     {
         if (ui->_virtualMachineRadioButton->isChecked())
         {
-            for (VirtualMachineTemplate * virtualMachineTemplate : architecture->getVirtualMachineTemplates())
+            for (core::VirtualMachineTemplate * virtualMachineTemplate : architecture->getVirtualMachineTemplates())
             {
                 templateList.append(virtualMachineTemplate);
             }
         }
         else
         {
-            for (RemoteTerminalTemplate * remoteTerminalTemplate : architecture->getRemoteTerminalTemplates())
+            for (core::RemoteTerminalTemplate * remoteTerminalTemplate : architecture->getRemoteTerminalTemplates())
             {
                 templateList.append(remoteTerminalTemplate);
             }
@@ -97,7 +97,7 @@ void NewVmDialog::_refreshTemplatesList()
         ui->_locationLabel->setEnabled(true);
         ui->_locationLineEdit->setEnabled(true);
         ui->_browseButton->setEnabled(true);
-        for (VirtualApplianceTemplate * virtualApplianceTemplate : templateList)
+        for (core::VirtualApplianceTemplate * virtualApplianceTemplate : templateList)
         {
             ui->_templateComboBox->addItem(virtualApplianceTemplate->getSmallIcon(),
                                            virtualApplianceTemplate->getDisplayName(),
@@ -107,22 +107,22 @@ void NewVmDialog::_refreshTemplatesList()
     }
 }
 
-Architecture * NewVmDialog::_getSelectedArchitecture()
+core::Architecture * NewVmDialog::_getSelectedArchitecture()
 {
     int n = ui->_architectureComboBox->currentIndex();
     if (n >= 0)
     {
-        return (Architecture*)(ui->_architectureComboBox->itemData(n).value<void*>());
+        return (core::Architecture*)(ui->_architectureComboBox->itemData(n).value<void*>());
     }
     return nullptr;
 }
 
-VirtualApplianceTemplate * NewVmDialog::_getSelectedTemplate()
+core::VirtualApplianceTemplate * NewVmDialog::_getSelectedTemplate()
 {
     int n = ui->_templateComboBox->currentIndex();
     if (n >= 0)
     {
-        return (VirtualApplianceTemplate*)(ui->_templateComboBox->itemData(n).value<void*>());
+        return (core::VirtualApplianceTemplate*)(ui->_templateComboBox->itemData(n).value<void*>());
     }
     return nullptr;
 }
@@ -152,7 +152,7 @@ void NewVmDialog::_locationLineEditTextChanged(const QString &)
 
 void NewVmDialog::_browse()
 {
-    QString location = QFileDialog::getSaveFileName(this, "New VM location", "", "EmuOne VM file (*." + VirtualAppliance::PreferredExtension + ")");
+    QString location = QFileDialog::getSaveFileName(this, "New VM location", "", "EmuOne VM file (*." + core::VirtualAppliance::PreferredExtension + ")");
     if (location.isEmpty())
     {   //  User has cancelled the dialog
         return;
@@ -160,7 +160,7 @@ void NewVmDialog::_browse()
     QFileInfo fileInfo(location);
     if (fileInfo.suffix().isEmpty())
     {
-        location += "." + VirtualAppliance::PreferredExtension;
+        location += "." + core::VirtualAppliance::PreferredExtension;
     }
     ui->_locationLineEdit->setText(location);
 }
@@ -169,8 +169,8 @@ void NewVmDialog::_accept()
 {
     _virtualApplianceType =
             ui->_virtualMachineRadioButton->isChecked() ?
-                (VirtualApplianceType*)VirtualMachine::Type::getInstance() :
-                (VirtualApplianceType*)RemoteTerminal::Type::getInstance();
+                (core::VirtualApplianceType*)core::VirtualMachine::Type::getInstance() :
+                (core::VirtualApplianceType*)core::RemoteTerminal::Type::getInstance();
     _virtualApplianceArchitecture = _getSelectedArchitecture();
     _virtualApplianceTemplate = _getSelectedTemplate();
     _virtualApplianceName = ui->_nameLineEdit->text();

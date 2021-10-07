@@ -21,7 +21,7 @@ class VirtualApplianceWindow final : public QMainWindow
     //////////
     //  Construction/destruction
 public:
-    VirtualApplianceWindow(VirtualAppliance * virtualAppliance, QWidget * parent = nullptr);
+    VirtualApplianceWindow(core::VirtualAppliance * virtualAppliance, QWidget * parent = nullptr);
     virtual ~VirtualApplianceWindow();
 
     //////////
@@ -33,7 +33,13 @@ protected:
     //  Implementation
 private:
     Ui::VirtualApplianceWindow *ui;
-    VirtualAppliance *const _virtualAppliance;
+    core::VirtualAppliance *const   _virtualAppliance;
+
+    //////////
+    //  Event handlers
+private slots:
+    void                _actionStopTriggered();
+    void                _actionSuspendTriggered();
 };
 
 //  End of emuone/VirtualApplianceWindow.hpp

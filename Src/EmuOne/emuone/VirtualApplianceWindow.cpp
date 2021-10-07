@@ -11,7 +11,7 @@
 
 //////////
 //  Construction/destruction
-VirtualApplianceWindow::VirtualApplianceWindow(VirtualAppliance * virtualAppliance, QWidget * parent)
+VirtualApplianceWindow::VirtualApplianceWindow(core::VirtualAppliance * virtualAppliance, QWidget * parent)
     :   QMainWindow(parent),
         ui(new Ui::VirtualApplianceWindow),
         _virtualAppliance(virtualAppliance)
@@ -34,6 +34,27 @@ void VirtualApplianceWindow::closeEvent(QCloseEvent * event)
 {
     _virtualAppliance->stop();
     event->ignore();
+}
+
+//////////
+//  Event handlers
+void VirtualApplianceWindow::_actionStopTriggered()
+{
+    _virtualAppliance->stop();
+}
+
+void VirtualApplianceWindow::_actionSuspendTriggered()
+{
+    try
+    {
+        _virtualAppliance->suspend();
+    }
+    catch (core::VirtualApplianceException & ex)
+    {
+        QMessageBox msgBox;
+        msgBox.setText(ex.getMessage());
+        msgBox.exec();
+    }
 }
 
 //  End of emuone/VirtualApplianceWindow.cpp

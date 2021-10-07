@@ -5,6 +5,7 @@
 //
 //////////
 #include "emuone-core/API.hpp"
+using namespace core;
 
 ComponentTypeList ComponentType::_registry;
 

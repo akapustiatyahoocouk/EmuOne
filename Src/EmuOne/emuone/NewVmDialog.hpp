@@ -25,9 +25,9 @@ public:
     //////////
     //  Operations
 public:
-    VirtualApplianceType *      getVirtualApplianceType() const { return _virtualApplianceType; }
-    Architecture *              getVirtualApplianceArchitecture() const { return _virtualApplianceArchitecture; }
-    VirtualApplianceTemplate *  getVirtualApplianceTemplate() const { return _virtualApplianceTemplate; }
+    core::VirtualApplianceType *getVirtualApplianceType() const { return _virtualApplianceType; }
+    core::Architecture *        getVirtualApplianceArchitecture() const { return _virtualApplianceArchitecture; }
+    core::VirtualApplianceTemplate *    getVirtualApplianceTemplate() const { return _virtualApplianceTemplate; }
     QString                     getVirtualApplianceName() const { return _virtualApplianceName; }
     QString                     getVirtualApplianceLocation() const { return _virtualApplianceLocation; }
 
@@ -35,17 +35,17 @@ public:
     //  Implementation
 private:
     Ui::NewVmDialog *ui;
-    VirtualApplianceType *      _virtualApplianceType = nullptr;
-    Architecture *              _virtualApplianceArchitecture = nullptr;
-    VirtualApplianceTemplate *  _virtualApplianceTemplate = nullptr;
+    core::VirtualApplianceType *_virtualApplianceType = nullptr;
+    core::Architecture *        _virtualApplianceArchitecture = nullptr;
+    core::VirtualApplianceTemplate *    _virtualApplianceTemplate = nullptr;
     QString                     _virtualApplianceName;
     QString                     _virtualApplianceLocation;
 
     //  Helpers
     void                _refresh();
     void                _refreshTemplatesList();
-    Architecture *      _getSelectedArchitecture();
-    VirtualApplianceTemplate *  _getSelectedTemplate();
+    core::Architecture *_getSelectedArchitecture();
+    core::VirtualApplianceTemplate *    _getSelectedTemplate();
 
     //////////
     //  Event handflers

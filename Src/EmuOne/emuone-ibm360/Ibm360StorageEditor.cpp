@@ -8,14 +8,16 @@
 #include "Ibm360StorageEditor.hpp"
 #include "ui_Ibm360StorageEditor.h"
 
+using namespace ibm360;
+
 //////////
 //  Construction/destruction
-Ibm360StorageEditor::Ibm360StorageEditor(Ibm360Storage * ibm360Storage, QWidget * parent)
-    :   ComponentEditor(ibm360Storage, parent),
+Ibm360StorageEditor::Ibm360StorageEditor(Storage * storage, QWidget * parent)
+    :   ComponentEditor(storage, parent),
         ui(new Ui::Ibm360StorageEditor),
-        _ibm360Storage(ibm360Storage)
+        _storage(storage)
 {
-    Q_ASSERT(_ibm360Storage != nullptr);
+    Q_ASSERT(_storage != nullptr);
 
     ui->setupUi(this);
     ui->_sizeUnitComboBox->addItem("KB");
@@ -33,19 +35,19 @@ void Ibm360StorageEditor::refresh()
 {
     _refreshUnderway = true;
 
-    switch (_ibm360Storage->_size.getUnit())
+    switch (_storage->_size.getUnit())
     {
-        case MemorySize::Unit::KB:
+        case core::MemorySize::Unit::KB:
             ui->_sizeUnitComboBox->setCurrentIndex(0);
-            ui->_sizeLineEdit->setText(QString::number(_ibm360Storage->_size.getNumberOfUnits()));
+            ui->_sizeLineEdit->setText(QString::number(_storage->_size.getNumberOfUnits()));
             break;
-        case MemorySize::Unit::MB:
+        case core::MemorySize::Unit::MB:
             ui->_sizeUnitComboBox->setCurrentIndex(1);
-            ui->_sizeLineEdit->setText(QString::number(_ibm360Storage->_size.getNumberOfUnits()));
+            ui->_sizeLineEdit->setText(QString::number(_storage->_size.getNumberOfUnits()));
             break;
         default:
             ui->_sizeUnitComboBox->setCurrentIndex(0);  //  KB
-            ui->_sizeLineEdit->setText(QString::number(_ibm360Storage->_size.toUnits(MemorySize::Unit::KB)));
+            ui->_sizeLineEdit->setText(QString::number(_storage->_size.toUnits(core::MemorySize::Unit::KB)));
             break;
     }
 
@@ -58,14 +60,14 @@ void Ibm360StorageEditor::_sizeLineEditTextChanged(const QString &)
 {
     if (!_refreshUnderway)
     {
-        MemorySize::Unit unit = (ui->_sizeUnitComboBox->currentIndex() == 0) ? MemorySize::Unit::KB : MemorySize::Unit::MB;
+        core::MemorySize::Unit unit = (ui->_sizeUnitComboBox->currentIndex() == 0) ? core::MemorySize::Unit::KB : core::MemorySize::Unit::MB;
         uint64_t numberOfUnits = ui->_sizeLineEdit->text().toUInt();
         if (numberOfUnits > 0)
         {   //  Parsed successfully
-            MemorySize newSize(unit, numberOfUnits);
-            if (Ibm360Storage::isValidSize(newSize))
+            core::MemorySize newSize(unit, numberOfUnits);
+            if (Storage::isValidSize(newSize))
             {   //  Use it
-                _ibm360Storage->_size = newSize;
+                _storage->_size = newSize;
                 emit componentConfigurationChanged(getComponent());
             }
         }
@@ -76,14 +78,14 @@ void Ibm360StorageEditor::_sizeUnitComboBoxCurrentIndexChanged(int)
 {
     if (!_refreshUnderway)
     {
-        MemorySize::Unit unit = (ui->_sizeUnitComboBox->currentIndex() == 0) ? MemorySize::Unit::KB : MemorySize::Unit::MB;
+        core::MemorySize::Unit unit = (ui->_sizeUnitComboBox->currentIndex() == 0) ? core::MemorySize::Unit::KB : core::MemorySize::Unit::MB;
         uint64_t numberOfUnits = ui->_sizeLineEdit->text().toUInt();
         if (numberOfUnits > 0)
         {   //  Parsed successfully
-            MemorySize newSize(unit, numberOfUnits);
-            if (Ibm360Storage::isValidSize(newSize))
+            core::MemorySize newSize(unit, numberOfUnits);
+            if (Storage::isValidSize(newSize))
             {   //  Use it
-                _ibm360Storage->_size = newSize;
+                _storage->_size = newSize;
                 emit componentConfigurationChanged(getComponent());
             }
         }

@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    PluginManager::loadPlugins();
+    util::PluginManager::loadPlugins();
 
     MainWindow w;
     w.show();

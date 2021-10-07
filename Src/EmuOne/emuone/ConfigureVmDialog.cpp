@@ -9,7 +9,7 @@
 #include "ConfigureVmDialog.hpp"
 #include "ui_ConfigureVmDialog.h"
 
-ConfigureVmDialog::ConfigureVmDialog(VirtualAppliance * virtualAppliance, QWidget * parent)
+ConfigureVmDialog::ConfigureVmDialog(core::VirtualAppliance * virtualAppliance, QWidget * parent)
     :   QDialog(parent),
         ui(new Ui::ConfigureVmDialog)
 {
@@ -25,7 +25,7 @@ ConfigureVmDialog::ConfigureVmDialog(VirtualAppliance * virtualAppliance, QWidge
     ui->_templateLineEdit->setText(virtualAppliance->getTemplate()->getDisplayName());
 
     //  Populate the "component editors" map for current VA components
-    for (Component * component : virtualAppliance->getComponents())
+    for (core::Component * component : virtualAppliance->getComponents())
     {
         if (ComponentEditor * componentEditor = component->createEditor(ui->_componentEditorsScrollArea))
         {
@@ -34,7 +34,7 @@ ConfigureVmDialog::ConfigureVmDialog(VirtualAppliance * virtualAppliance, QWidge
             connect(componentEditor, &ComponentEditor::componentConfigurationChanged, this, &ConfigureVmDialog::_componentConfigurationChanged);
         }
     }
-    for (Adaptor * adaptor : virtualAppliance->getAdaptors())
+    for (core::Adaptor * adaptor : virtualAppliance->getAdaptors())
     {
         if (ComponentEditor * componentEditor = adaptor->createEditor(ui->_componentEditorsScrollArea))
         {
@@ -60,7 +60,7 @@ ConfigureVmDialog::~ConfigureVmDialog()
 //  Implementation helpers
 void ConfigureVmDialog::_refreshComponentsTree()
 {
-    ComponentCategoryList componentCategories = ComponentCategory::getAll();
+    core::ComponentCategoryList componentCategories = core::ComponentCategory::getAll();
     std::sort(componentCategories.begin(), componentCategories.end(),
               [](auto a, auto b) -> bool { return a->getDisplayName() < b->getDisplayName(); });
     //  Root nodes
@@ -79,7 +79,7 @@ void ConfigureVmDialog::_refreshComponentsTree()
         componentCategoryItem->setIcon(0, componentCategories[i]->getSmallIcon());
         componentCategoryItem->setData(0, Qt::ItemDataRole::UserRole, QVariant::fromValue(static_cast<void*>(componentCategories[i])));
         //  Now for the components
-        ComponentList components = _virtualAppliance->getComponents(componentCategories[i]);
+        core::ComponentList components = _virtualAppliance->getComponents(componentCategories[i]);
         std::sort(components.begin(), components.end(),
                   [](auto a, auto b) -> bool { return a->getName() < b->getName(); });
         while (components.size() < componentCategoryItem->childCount())
@@ -103,7 +103,7 @@ void ConfigureVmDialog::_refreshComponentsTree()
 void ConfigureVmDialog::_refresh()
 {
     _refreshUnderway = true;
-    Component * selectedComponent = _getSelectedComponent();
+    core::Component * selectedComponent = _getSelectedComponent();
 
     //  Refresh "component name" line edit
     ui->_componentNameLineEdit->setText((selectedComponent != nullptr) ? selectedComponent->getName() : "");
@@ -131,20 +131,20 @@ void ConfigureVmDialog::_refresh()
     _refreshUnderway = false;
 }
 
-ComponentCategory * ConfigureVmDialog::_getSelectedComponentCategory()
+core::ComponentCategory * ConfigureVmDialog::_getSelectedComponentCategory()
 {
     for (int i = 0; i < ui->_componentsTreeWidget->topLevelItemCount(); i++)
     {
         QTreeWidgetItem * componentCategoryItem = ui->_componentsTreeWidget->topLevelItem(i);
         if (ui->_componentsTreeWidget->currentItem() == componentCategoryItem)
         {
-            return static_cast<ComponentCategory*>(componentCategoryItem->data(0, Qt::ItemDataRole::UserRole).value<void*>());
+            return static_cast<core::ComponentCategory*>(componentCategoryItem->data(0, Qt::ItemDataRole::UserRole).value<void*>());
         }
     }
     return nullptr;
 }
 
-Component * ConfigureVmDialog::_getSelectedComponent()
+core::Component * ConfigureVmDialog::_getSelectedComponent()
 {
     for (int i = 0; i < ui->_componentsTreeWidget->topLevelItemCount(); i++)
     {
@@ -154,14 +154,14 @@ Component * ConfigureVmDialog::_getSelectedComponent()
             QTreeWidgetItem * componentItem = componentCategoryItem->child(j);
             if (ui->_componentsTreeWidget->currentItem() == componentItem)
             {
-                return static_cast<Component*>(componentItem->data(0, Qt::ItemDataRole::UserRole).value<void*>());
+                return static_cast<core::Component*>(componentItem->data(0, Qt::ItemDataRole::UserRole).value<void*>());
             }
         }
     }
     return nullptr;
 }
 
-void ConfigureVmDialog::_setSelectedComponent(Component * component)
+void ConfigureVmDialog::_setSelectedComponent(core::Component * component)
 {
     for (int i = 0; i < ui->_componentsTreeWidget->topLevelItemCount(); i++)
     {
@@ -169,7 +169,7 @@ void ConfigureVmDialog::_setSelectedComponent(Component * component)
         for (int j = 0; j < componentCategoryItem->childCount(); j++)
         {
             QTreeWidgetItem * componentItem = componentCategoryItem->child(j);
-            Component * itemComponent = static_cast<Component*>(componentItem->data(0, Qt::ItemDataRole::UserRole).value<void*>());
+            core::Component * itemComponent = static_cast<core::Component*>(componentItem->data(0, Qt::ItemDataRole::UserRole).value<void*>());
             if (itemComponent == component)
             {   //  This one!
                 ui->_componentsTreeWidget->setCurrentItem(componentItem);
@@ -183,18 +183,18 @@ QMenu * ConfigureVmDialog::_createAddAnyComponentPopupMenu()
 {
     QMenu * menu = new QMenu();
 
-    ComponentCategoryList componentCategories = ComponentCategory::getAll();
+    core::ComponentCategoryList componentCategories = core::ComponentCategory::getAll();
     std::sort(componentCategories.begin(), componentCategories.end(),
               [](auto a, auto b) -> bool { return a->getDisplayName() < b->getDisplayName(); });
-    for (ComponentCategory * componentCategory : componentCategories)
+    for (core::ComponentCategory * componentCategory : componentCategories)
     {
         QMenu * componentCategoryMenu = menu->addMenu(componentCategory->getSmallIcon(), componentCategory->getDisplayName());
-        ComponentTypeList componentTypes = componentCategory->getComponentTypes();
+        core::ComponentTypeList componentTypes = componentCategory->getComponentTypes();
         if (componentTypes.size() > 0)
         {
             std::sort(componentTypes.begin(), componentTypes.end(),
                       [](auto a, auto b) -> bool { return a->getDisplayName() < b->getDisplayName(); });
-            for (ComponentType * componentType : componentTypes)
+            for (core::ComponentType * componentType : componentTypes)
             {
                 if (componentType->isCompatibleWith(_virtualAppliance->getArchitecture()))  //  TODO or adaptable to it
                 {
@@ -212,11 +212,11 @@ QMenu * ConfigureVmDialog::_createAddAnyComponentPopupMenu()
     return menu;
 }
 
-Component * ConfigureVmDialog::_addComponent(ComponentType * componentType)
+core::Component * ConfigureVmDialog::_addComponent(core::ComponentType * componentType)
 {
     try
     {
-        Component * component = componentType->createComponent();
+        core::Component * component = componentType->createComponent();
         _virtualAppliance->addComponent(component);
         _refreshComponentsTree();
         //  Are there editor(s) involved ?
@@ -232,7 +232,7 @@ Component * ConfigureVmDialog::_addComponent(ComponentType * componentType)
         _refresh();
         return component;
     }
-    catch (VirtualApplianceException & ex)
+    catch (core::VirtualApplianceException & ex)
     {   //  OOPS! Report & abort
         QMessageBox msgBox;
         msgBox.setText(ex.getMessage());
@@ -264,9 +264,9 @@ void ConfigureVmDialog::_removeComponentPushButtonClicked()
 
 void ConfigureVmDialog::_componentNameLineEditTextChanged(const QString &)
 {
-    if (!_refreshUnderway && Component::isValidName(ui->_componentNameLineEdit->text()))
+    if (!_refreshUnderway && core::Component::isValidName(ui->_componentNameLineEdit->text()))
     {
-        if (Component * selectedComponent = _getSelectedComponent())
+        if (core::Component * selectedComponent = _getSelectedComponent())
         {
             selectedComponent->setName(ui->_componentNameLineEdit->text());
             _refreshComponentsTree();
@@ -275,7 +275,7 @@ void ConfigureVmDialog::_componentNameLineEditTextChanged(const QString &)
     }
 }
 
-void ConfigureVmDialog::_componentConfigurationChanged(Component * component)
+void ConfigureVmDialog::_componentConfigurationChanged(core::Component * component)
 {
     _refreshComponentsTree();
     _setSelectedComponent(component);   //  because component "name "short status" may have changed!
@@ -288,7 +288,7 @@ void ConfigureVmDialog::_accept()
         _virtualAppliance->save();
         QDialog::accept();
     }
-    catch (VirtualApplianceException & ex)
+    catch (core::VirtualApplianceException & ex)
     {   //  OOPS! Report & abort
         QMessageBox msgBox;
         msgBox.setText(ex.getMessage());

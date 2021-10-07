@@ -36,9 +36,9 @@ protected:
     //  Implementation
 private:
     bool                    _trackPositionChanges = false;
-    VirtualApplianceList    _virtualAppliances; //  ...in view order
+    core::VirtualApplianceList  _virtualAppliances; //  ...in view order
 
-    QMap<VirtualAppliance*,VirtualApplianceWindow*> _virtualApplianceWindows;   //  all that currently exist
+    QMap<core::VirtualAppliance*,VirtualApplianceWindow*> _virtualApplianceWindows;   //  all that currently exist
 
     //  Helpers
     void                    _loadPosition();
@@ -46,12 +46,12 @@ private:
     void                    _loadVirtualAppliances();
     void                    _saveVirtualAppliances();
 
-    VirtualAppliance *      _getSelectedVirtualAppliance() const;
-    void                    _setSelectedVirtualAppliance(VirtualAppliance * virtualAppliance);
+    core::VirtualAppliance *_getSelectedVirtualAppliance() const;
+    void                    _setSelectedVirtualAppliance(core::VirtualAppliance * virtualAppliance);
     void                    _refreshVirtualAppliancesList();
     void                    _refresh();
 
-    VirtualAppliance *      _findVirtualApplianceByLocation(const QString & location);
+    core::VirtualAppliance *_findVirtualApplianceByLocation(const QString & location);
 
     //////////
     //  Controls

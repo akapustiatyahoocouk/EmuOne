@@ -1,5 +1,5 @@
-<VirtualAppliance Name="1" Type="VirtualMachine" Architecture="IBM/360" Template="IBM/360 H40">
- <Component Name="Main storage" Type="Ibm360Storage">
+<VirtualAppliance Template="IBM/360 H40" Architecture="IBM/360" Type="VirtualMachine" Name="1">
+ <Component Type="ibm360::Storage" Name="Main storage">
   <Configuration Size="256KB"/>
  </Component>
 </VirtualAppliance>

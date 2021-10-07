@@ -19,22 +19,22 @@ class ConfigureVmDialog : public QDialog
     //////////
     //  Construction/destruction
 public:
-    ConfigureVmDialog(VirtualAppliance * virtualAppliance, QWidget * parent = nullptr);
+    ConfigureVmDialog(core::VirtualAppliance * virtualAppliance, QWidget * parent = nullptr);
     ~ConfigureVmDialog();
 
     //////////
     //  Implementation
 private:
     Ui::ConfigureVmDialog * ui;
-    VirtualAppliance *      _virtualAppliance;
+    core::VirtualAppliance *_virtualAppliance;
     bool                    _refreshUnderway = false;
 
-    QMap<Component*, ComponentEditor*>  _componentEditors;
+    QMap<core::Component*, ComponentEditor*>    _componentEditors;
 
     class _AddComponentAction : public QAction
     {
     public:
-        _AddComponentAction(ConfigureVmDialog * configureVmDialog, ComponentType * componentType)
+        _AddComponentAction(ConfigureVmDialog * configureVmDialog, core::ComponentType * componentType)
             :   QAction(componentType->getSmallIcon(), componentType->getDisplayName()),
                 _configureVmDialog(configureVmDialog),
                 _componentType(componentType)
@@ -42,7 +42,7 @@ private:
         }
 
         ConfigureVmDialog *const    _configureVmDialog;
-        ComponentType *const        _componentType;
+        core::ComponentType *const  _componentType;
 
     public:
         void                _triggered() { _configureVmDialog->_addComponent(_componentType); }
@@ -52,13 +52,13 @@ private:
     void                    _refreshComponentsTree();
     void                    _refresh();
 
-    ComponentCategory *     _getSelectedComponentCategory();
-    Component *             _getSelectedComponent();
-    void                    _setSelectedComponent(Component * component);
+    core::ComponentCategory *   _getSelectedComponentCategory();
+    core::Component *       _getSelectedComponent();
+    void                    _setSelectedComponent(core::Component * component);
 
     QMenu *                 _createAddAnyComponentPopupMenu();
 
-    Component *             _addComponent(ComponentType * componentType);
+    core::Component *       _addComponent(core::ComponentType * componentType);
 
     //////////
     //  Event handlers
@@ -67,7 +67,7 @@ private slots:
     void                    _addComponentPushButtonClicked();
     void                    _removeComponentPushButtonClicked();
     void                    _componentNameLineEditTextChanged(const QString &);
-    void                    _componentConfigurationChanged(Component * component);
+    void                    _componentConfigurationChanged(core::Component * component);
     void                    _accept();
     void                    _reject();
 };

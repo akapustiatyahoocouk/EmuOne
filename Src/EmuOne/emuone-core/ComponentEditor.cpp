@@ -8,7 +8,7 @@
 
 //////////
 //  Construction/destruction
-ComponentEditor::ComponentEditor(Component * component, QWidget * parent)
+ComponentEditor::ComponentEditor(core::Component * component, QWidget * parent)
     :   QWidget(parent),
         _component(component)
 {

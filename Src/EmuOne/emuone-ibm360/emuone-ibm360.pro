@@ -10,19 +10,20 @@ QMAKE_CXXFLAGS += -zdefs
 QMAKE_LFLAGS += -zdefs
 
 SOURCES += \
-    Ibm360Architecture.cpp \
-    Ibm360Plugin.cpp \
-    Ibm360Storage.cpp \
+    Architecture.cpp \
     Ibm360StorageEditor.cpp \
-    Ibm360Templates.cpp
+    Plugin.cpp \
+    Storage.cpp \
+    Templates.cpp
 
 HEADERS += \
     API.hpp \
     API.hpp \
-    Ibm360Architecture.hpp \
-    Ibm360Storage.hpp \
+    Architecture.hpp \
+    Features.hpp \
     Ibm360StorageEditor.hpp \
-    Ibm360Templates.hpp
+    Storage.hpp \
+    Templates.hpp
 
 LIBS += -L../../../Bin/Debug -lemuone-core -lemuone-util
 

@@ -182,8 +182,15 @@
     <addaction name="separator"/>
     <addaction name="actionConfigureVm"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuVm"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -229,7 +236,7 @@
      <normaloff>:/emuone/Images/Actions/NewVm.png</normaloff>:/emuone/Images/Actions/NewVm.png</iconset>
    </property>
    <property name="text">
-    <string>New VM</string>
+    <string>&amp;New VM</string>
    </property>
   </action>
   <action name="actionOpenVm">
@@ -238,7 +245,7 @@
      <normaloff>:/emuone/Images/Actions/OpenVm.png</normaloff>:/emuone/Images/Actions/OpenVm.png</iconset>
    </property>
    <property name="text">
-    <string>Open VM</string>
+    <string>&amp;Open VM</string>
    </property>
   </action>
   <action name="actionCloseVm">
@@ -247,7 +254,7 @@
      <normaloff>:/emuone/Images/Actions/CloseVm.png</normaloff>:/emuone/Images/Actions/CloseVm.png</iconset>
    </property>
    <property name="text">
-    <string>Close VM</string>
+    <string>&amp;Close VM</string>
    </property>
   </action>
   <action name="actionStartVm">
@@ -256,7 +263,7 @@
      <normaloff>:/emuone/Images/Actions/StartVm.png</normaloff>:/emuone/Images/Actions/StartVm.png</iconset>
    </property>
    <property name="text">
-    <string>Start</string>
+    <string>&amp;Start</string>
    </property>
   </action>
   <action name="actionStopVm">
@@ -265,7 +272,7 @@
      <normaloff>:/emuone/Images/Actions/StopVm.png</normaloff>:/emuone/Images/Actions/StopVm.png</iconset>
    </property>
    <property name="text">
-    <string>Stop</string>
+    <string>S&amp;top</string>
    </property>
   </action>
   <action name="actionSuspendVm">
@@ -274,7 +281,7 @@
      <normaloff>:/emuone/Images/Actions/SuspendVm.png</normaloff>:/emuone/Images/Actions/SuspendVm.png</iconset>
    </property>
    <property name="text">
-    <string>Suspend</string>
+    <string>S&amp;uspend</string>
    </property>
   </action>
   <action name="actionResumeVm">
@@ -283,7 +290,7 @@
      <normaloff>:/emuone/Images/Actions/ResumeVm.png</normaloff>:/emuone/Images/Actions/ResumeVm.png</iconset>
    </property>
    <property name="text">
-    <string>Resume</string>
+    <string>&amp;Resume</string>
    </property>
   </action>
   <action name="actionConfigureVm">
@@ -292,7 +299,16 @@
      <normaloff>:/emuone/Images/Actions/ConfigureVm.png</normaloff>:/emuone/Images/Actions/ConfigureVm.png</iconset>
    </property>
    <property name="text">
-    <string>Configure</string>
+    <string>&amp;Configure</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="emuone.qrc">
+     <normaloff>:/emuone/Images/Actions/About.png</normaloff>:/emuone/Images/Actions/About.png</iconset>
+   </property>
+   <property name="text">
+    <string>A&amp;bout</string>
    </property>
   </action>
  </widget>

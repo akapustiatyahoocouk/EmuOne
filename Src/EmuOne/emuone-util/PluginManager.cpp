@@ -4,6 +4,7 @@
 //  PluginManager class implementation
 //////////
 #include "emuone-util/API.hpp"
+using namespace util;
 
 QSet<QString> PluginManager::_processedDllPaths;
 PluginList PluginManager::_loadedPlugins;

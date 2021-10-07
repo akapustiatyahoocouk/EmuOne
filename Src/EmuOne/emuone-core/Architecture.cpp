@@ -5,6 +5,7 @@
 //
 //////////
 #include "emuone-core/API.hpp"
+using namespace core;
 
 ArchitectureList Architecture::_registry;
 

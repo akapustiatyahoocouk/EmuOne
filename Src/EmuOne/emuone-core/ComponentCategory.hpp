@@ -6,101 +6,104 @@
 //////////
 #pragma once
 
-//////////
-//  Represents a general "category" of components (e.g. "storage devices", "terminals", etc.
-//  Concrete derived classes will normally be singletons registered by plugins.
-class EMUONE_CORE_EXPORT ComponentCategory : public StockObject
+namespace core
 {
-    CANNOT_ASSIGN_OR_COPY_CONSTRUCT(ComponentCategory)
-
     //////////
-    //  Construction/destruction
-public:
-    ComponentCategory() {}
-    virtual ~ComponentCategory() {}
-
-    //////////
-    //  Operations
-public:
-    //  Returns an unordered list of all known component types that belong
-    //  to this component category
-    ComponentTypeList   getComponentTypes() const;
-
-    //////////
-    //  Registry
-public:
-    static ComponentCategoryList    getAll();
-    static ComponentCategory *      findByMnemonic(const QString & mnemonic);
-    static bool                     registerComponentCategory(ComponentCategory * componentCategory);
-private:
-    static ComponentCategoryList    _registry;
-};
-
-//////////
-//  The "standard" (predefined) component categories
-class EMUONE_CORE_EXPORT StandardComponentCategories
-{
-    UTILITY_CLASS(StandardComponentCategories)
-
-    //////////
-    //  Types
-public:
-    class EMUONE_CORE_EXPORT Memory : public ComponentCategory
+    //  Represents a general "category" of components (e.g. "storage devices", "terminals", etc.
+    //  Concrete derived classes will normally be singletons registered by plugins.
+    class EMUONE_CORE_EXPORT ComponentCategory : public StockObject
     {
-        DECLARE_SINGLETON(Memory)
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(ComponentCategory)
 
         //////////
-        //  StockObject
+        //  Construction/destruction
     public:
-        virtual QString     getMnemonic() const override;
-        virtual QString     getDisplayName() const override;
-        virtual QIcon       getSmallIcon() const override;
-        virtual QIcon       getLargeIcon() const override;
+        ComponentCategory() {}
+        virtual ~ComponentCategory() {}
 
         //////////
-        //  Implementation
+        //  Operations
+    public:
+        //  Returns an unordered list of all known component types that belong
+        //  to this component category
+        ComponentTypeList   getComponentTypes() const;
+
+        //////////
+        //  Registry
+    public:
+        static ComponentCategoryList    getAll();
+        static ComponentCategory *      findByMnemonic(const QString & mnemonic);
+        static bool                     registerComponentCategory(ComponentCategory * componentCategory);
     private:
-        mutable QIcon       _smallIcon;
-        mutable QIcon       _largeIcon;
+        static ComponentCategoryList    _registry;
     };
 
-    class EMUONE_CORE_EXPORT Processors : public ComponentCategory
+    //////////
+    //  The "standard" (predefined) component categories
+    class EMUONE_CORE_EXPORT StandardComponentCategories
     {
-        DECLARE_SINGLETON(Processors)
+        UTILITY_CLASS(StandardComponentCategories)
 
         //////////
-        //  StockObject
+        //  Types
     public:
-        virtual QString     getMnemonic() const override;
-        virtual QString     getDisplayName() const override;
-        virtual QIcon       getSmallIcon() const override;
-        virtual QIcon       getLargeIcon() const override;
+        class EMUONE_CORE_EXPORT Memory : public ComponentCategory
+        {
+            DECLARE_SINGLETON(Memory)
 
-        //////////
-        //  Implementation
-    private:
-        mutable QIcon       _smallIcon;
-        mutable QIcon       _largeIcon;
+            //////////
+            //  StockObject
+        public:
+            virtual QString     getMnemonic() const override;
+            virtual QString     getDisplayName() const override;
+            virtual QIcon       getSmallIcon() const override;
+            virtual QIcon       getLargeIcon() const override;
+
+            //////////
+            //  Implementation
+        private:
+            mutable QIcon       _smallIcon;
+            mutable QIcon       _largeIcon;
+        };
+
+        class EMUONE_CORE_EXPORT Processors : public ComponentCategory
+        {
+            DECLARE_SINGLETON(Processors)
+
+            //////////
+            //  StockObject
+        public:
+            virtual QString     getMnemonic() const override;
+            virtual QString     getDisplayName() const override;
+            virtual QIcon       getSmallIcon() const override;
+            virtual QIcon       getLargeIcon() const override;
+
+            //////////
+            //  Implementation
+        private:
+            mutable QIcon       _smallIcon;
+            mutable QIcon       _largeIcon;
+        };
+
+        class EMUONE_CORE_EXPORT Terminals : public ComponentCategory
+        {
+            DECLARE_SINGLETON(Terminals)
+
+            //////////
+            //  StockObject
+        public:
+            virtual QString     getMnemonic() const override;
+            virtual QString     getDisplayName() const override;
+            virtual QIcon       getSmallIcon() const override;
+            virtual QIcon       getLargeIcon() const override;
+
+            //////////
+            //  Implementation
+        private:
+            mutable QIcon       _smallIcon;
+            mutable QIcon       _largeIcon;
+        };
     };
-
-    class EMUONE_CORE_EXPORT Terminals : public ComponentCategory
-    {
-        DECLARE_SINGLETON(Terminals)
-
-        //////////
-        //  StockObject
-    public:
-        virtual QString     getMnemonic() const override;
-        virtual QString     getDisplayName() const override;
-        virtual QIcon       getSmallIcon() const override;
-        virtual QIcon       getLargeIcon() const override;
-
-        //////////
-        //  Implementation
-    private:
-        mutable QIcon       _smallIcon;
-        mutable QIcon       _largeIcon;
-    };
-};
+}
 
 //  End of emuone-core/ComponentCategory.hpp

@@ -5,6 +5,7 @@
 //
 //////////
 #include "emuone-core/API.hpp"
+using namespace core;
 
 //////////
 //  Constants
@@ -195,6 +196,7 @@ void VirtualAppliance::addComponent(Component * component)
     {   //  Yes!
         _components.append(component);
         _compatibleComponents.append(component);
+        component->_virtualAppliance = this;
         return;
     }
 
@@ -225,6 +227,7 @@ void VirtualAppliance::removeComponent(Component * component)
     {
         _components.removeOne(component);
         _compatibleComponents.removeOne(component);
+        component->_virtualAppliance = nullptr;
         return;
     }
 

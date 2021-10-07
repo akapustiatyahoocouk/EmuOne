@@ -85,9 +85,9 @@ void MainWindow::_loadVirtualAppliances()
         {
             try
             {
-                _virtualAppliances.append(VirtualAppliance::load(location));
+                _virtualAppliances.append(core::VirtualAppliance::load(location));
             }
-            catch (VirtualApplianceException & ex)
+            catch (core::VirtualApplianceException & ex)
             {   //  OOPS! Suppress, though
             }
         }
@@ -104,7 +104,7 @@ void MainWindow::_saveVirtualAppliances()
     }
 }
 
-VirtualAppliance * MainWindow::_getSelectedVirtualAppliance() const
+core::VirtualAppliance * MainWindow::_getSelectedVirtualAppliance() const
 {
     if (_virtualAppliances.size() != ui->vmListWidget->count())
     {
@@ -114,7 +114,7 @@ VirtualAppliance * MainWindow::_getSelectedVirtualAppliance() const
     return (rowIndex >= 0) ? _virtualAppliances[rowIndex] : nullptr;
 }
 
-void MainWindow::_setSelectedVirtualAppliance(VirtualAppliance * virtualAppliance)
+void MainWindow::_setSelectedVirtualAppliance(core::VirtualAppliance * virtualAppliance)
 {
     _refreshVirtualAppliancesList();
     for (int i = 0; i < _virtualAppliances.size(); i++)
@@ -146,12 +146,12 @@ void MainWindow::_refreshVirtualAppliancesList()
                        " (" + _virtualAppliances[i]->getType()->getDisplayName() + ")";
         switch (_virtualAppliances[i]->getState())
         {
-            case VirtualAppliance::State::Stopped:
+            case core::VirtualAppliance::State::Stopped:
                 break;
-            case VirtualAppliance::State::Running:
+            case core::VirtualAppliance::State::Running:
                 text += " (running)";
                 break;
-            case VirtualAppliance::State::Suspended:
+            case core::VirtualAppliance::State::Suspended:
                 text += " (suspended)";
                 break;
         }
@@ -162,15 +162,15 @@ void MainWindow::_refreshVirtualAppliancesList()
 
 void MainWindow::_refresh()
 {
-    VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
+    core::VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
 
     this->ui->actionCloseVm->setEnabled(virtualAppliance != nullptr);
 
-    this->ui->actionStartVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() == VirtualAppliance::State::Stopped);
-    this->ui->actionStopVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() != VirtualAppliance::State::Stopped);
-    this->ui->actionSuspendVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() == VirtualAppliance::State::Running);
-    this->ui->actionResumeVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() == VirtualAppliance::State::Suspended);
-    this->ui->actionConfigureVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() == VirtualAppliance::State::Stopped);
+    this->ui->actionStartVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() == core::VirtualAppliance::State::Stopped);
+    this->ui->actionStopVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() != core::VirtualAppliance::State::Stopped);
+    this->ui->actionSuspendVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() == core::VirtualAppliance::State::Running);
+    this->ui->actionResumeVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() == core::VirtualAppliance::State::Suspended);
+    this->ui->actionConfigureVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() == core::VirtualAppliance::State::Stopped);
 
     this->ui->startButton->setEnabled(this->ui->actionStartVm->isEnabled());
     this->ui->stopButton->setEnabled(this->ui->actionStopVm->isEnabled());
@@ -179,9 +179,9 @@ void MainWindow::_refresh()
     this->ui->configureButton->setEnabled(this->ui->actionConfigureVm->isEnabled());
 }
 
-VirtualAppliance * MainWindow::_findVirtualApplianceByLocation(const QString & location)
+core::VirtualAppliance * MainWindow::_findVirtualApplianceByLocation(const QString & location)
 {
-    for (VirtualAppliance * virtualAppliance : _virtualAppliances)
+    for (core::VirtualAppliance * virtualAppliance : _virtualAppliances)
     {
         if (virtualAppliance->getLocation() == location)
         {
@@ -198,7 +198,7 @@ void MainWindow::_onNewVmTriggered()
     NewVmDialog newVmDialog(this);
     if (newVmDialog.exec() == QDialog::DialogCode::Accepted)
     {   //  Create a new VA
-        VirtualAppliance * virtualAppliance =
+        core::VirtualAppliance * virtualAppliance =
             newVmDialog.getVirtualApplianceType()->createVirtualAppliance(
                 newVmDialog.getVirtualApplianceName(),
                 newVmDialog.getVirtualApplianceLocation(),
@@ -209,7 +209,7 @@ void MainWindow::_onNewVmTriggered()
             newVmDialog.getVirtualApplianceTemplate()->populateVirtualAppliance(virtualAppliance);
             virtualAppliance->save();
         }
-        catch (VirtualApplianceException & ex)
+        catch (core::VirtualApplianceException & ex)
         {   //  OOPS! Report & abort
             QMessageBox msgBox;
             msgBox.setText(ex.getMessage());
@@ -217,7 +217,7 @@ void MainWindow::_onNewVmTriggered()
             return;
         }
         //  If there already exists a VA with the same "location"< stop & drop it
-        VirtualAppliance * existingVirtualAppliance = _findVirtualApplianceByLocation(newVmDialog.getVirtualApplianceLocation());
+        core::VirtualAppliance * existingVirtualAppliance = _findVirtualApplianceByLocation(newVmDialog.getVirtualApplianceLocation());
         if (existingVirtualAppliance != nullptr)
         {
             _virtualAppliances.removeOne(existingVirtualAppliance);
@@ -239,13 +239,13 @@ void MainWindow::_onNewVmTriggered()
 
 void MainWindow::_onOpenVmTriggered()
 {
-    QString location = QFileDialog::getOpenFileName(this, "VM location", "", "EmuOne VM file (*." + VirtualAppliance::PreferredExtension + ")");
+    QString location = QFileDialog::getOpenFileName(this, "VM location", "", "EmuOne VM file (*." + core::VirtualAppliance::PreferredExtension + ")");
     if (location.isEmpty())
     {   //  User has cancelled the dialog
         return;
     }
     //  Is there already an open VA with the same "location" ?
-    VirtualAppliance * virtualAppliance = _findVirtualApplianceByLocation(location);
+    core::VirtualAppliance * virtualAppliance = _findVirtualApplianceByLocation(location);
     if (virtualAppliance != nullptr)
     {   //  Yes - just select it as "current"
         this->_setSelectedVirtualAppliance(virtualAppliance);
@@ -254,9 +254,9 @@ void MainWindow::_onOpenVmTriggered()
     //  Open...
     try
     {
-        virtualAppliance = VirtualAppliance::load(location);
+        virtualAppliance = core::VirtualAppliance::load(location);
     }
-    catch (VirtualApplianceException & ex)
+    catch (core::VirtualApplianceException & ex)
     {   //  OOPS! Report & abort
         QMessageBox msgBox;
         msgBox.setText(ex.getMessage());
@@ -276,7 +276,7 @@ void MainWindow::_onOpenVmTriggered()
 
 void MainWindow::_onCloseVmTriggered()
 {
-    VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
+    core::VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
     if (virtualAppliance != nullptr)
     {   //  Confirm...
         QString message =
@@ -305,7 +305,7 @@ void MainWindow::_onStartVmTriggered()
 {
     try
     {
-        VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
+        core::VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
         if (virtualAppliance != nullptr)
         {
             virtualAppliance->start();
@@ -317,7 +317,7 @@ void MainWindow::_onStartVmTriggered()
             _virtualApplianceWindows.insert(virtualAppliance, virtualApplianceWindow);
         }
     }
-    catch (VirtualApplianceException & ex)
+    catch (core::VirtualApplianceException & ex)
     {
         QMessageBox msgBox;
         msgBox.setText(ex.getMessage());
@@ -327,7 +327,7 @@ void MainWindow::_onStartVmTriggered()
 
 void MainWindow::_onStopVmTriggered()
 {
-    VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
+    core::VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
     if (virtualAppliance != nullptr)
     {
         //  Is there a VA UI window we need to close ?
@@ -348,7 +348,7 @@ void MainWindow::_onSuspendVmTriggered()
 {
     try
     {
-        VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
+        core::VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
         if (virtualAppliance != nullptr)
         {
             virtualAppliance->suspend();
@@ -356,7 +356,7 @@ void MainWindow::_onSuspendVmTriggered()
             _refresh();
         }
     }
-    catch (VirtualApplianceException & ex)
+    catch (core::VirtualApplianceException & ex)
     {
         QMessageBox msgBox;
         msgBox.setText(ex.getMessage());
@@ -368,7 +368,7 @@ void MainWindow::_onResumeVmTriggered()
 {
     try
     {
-        VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
+        core::VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
         if (virtualAppliance != nullptr)
         {
             virtualAppliance->resume();
@@ -376,7 +376,7 @@ void MainWindow::_onResumeVmTriggered()
             _refresh();
         }
     }
-    catch (VirtualApplianceException & ex)
+    catch (core::VirtualApplianceException & ex)
     {
         QMessageBox msgBox;
         msgBox.setText(ex.getMessage());
@@ -386,7 +386,7 @@ void MainWindow::_onResumeVmTriggered()
 
 void MainWindow::_onConfigureVmTriggered()
 {
-    VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
+    core::VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
     if (virtualAppliance != nullptr)
     {
         ConfigureVmDialog dlg(virtualAppliance, this);
@@ -407,10 +407,10 @@ void MainWindow::_onVmListCurrentRowChanged(int)
 void MainWindow::_refreshTimerTimeout()
 {
     //  Has any VA that was "running" stopped ?
-    for (VirtualAppliance * virtualAppliance : _virtualAppliances)
+    for (core::VirtualAppliance * virtualAppliance : _virtualAppliances)
     {
         if (_virtualApplianceWindows.contains(virtualAppliance) &&
-            virtualAppliance->getState() != VirtualAppliance::State::Running)
+            virtualAppliance->getState() != core::VirtualAppliance::State::Running)
         {   //  Must kill this VA window
             VirtualApplianceWindow * virtualApplianceWindow = _virtualApplianceWindows[virtualAppliance];
             _virtualApplianceWindows.remove(virtualAppliance);

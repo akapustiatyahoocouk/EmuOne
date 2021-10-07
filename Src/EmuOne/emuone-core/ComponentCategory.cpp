@@ -1,10 +1,11 @@
 //
 //  emuone-core/ComponentCategory.cpp
 //
-//  The ComponentCategory class implementation
+//  The core::ComponentCategory class implementation
 //
 //////////
 #include "emuone-core/API.hpp"
+using namespace core;
 
 ComponentCategoryList ComponentCategory::_registry;
 

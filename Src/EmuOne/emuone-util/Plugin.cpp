@@ -5,6 +5,7 @@
 //
 //////////
 #include "emuone-util/API.hpp"
+using namespace util;
 
 //////////
 //  The "emuone-util" plugin

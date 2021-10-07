@@ -5,10 +5,11 @@
 //
 //////////
 #include "emuone-core/API.hpp"
+using namespace core;
 
 //////////
 //  The "emuone-core" plugin
-class CorePlugin : public Plugin
+class CorePlugin : public util::Plugin
 {
     CANNOT_ASSIGN_OR_COPY_CONSTRUCT(CorePlugin)
 
