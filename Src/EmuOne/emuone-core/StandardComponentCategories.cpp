@@ -109,4 +109,38 @@ QIcon StandardComponentCategories::Terminals::largeIcon() const
     return _largeIcon;
 }
 
+//////////
+//  StandardComponentCategories::Software
+IMPLEMENT_SINGLETON(StandardComponentCategories::Software)
+StandardComponentCategories::Software::Software() {}
+StandardComponentCategories::Software::~Software() {}
+
+QString StandardComponentCategories::Software::mnemonic() const
+{
+    return "Software";
+}
+
+QString StandardComponentCategories::Software::displayName() const
+{
+    return "Software";
+}
+
+QIcon StandardComponentCategories::Software::smallIcon() const
+{
+    if (_smallIcon.isNull())
+    {
+        _smallIcon = QIcon(":/emuone/core/Images/SoftwareSmall.png");
+    }
+    return _smallIcon;
+}
+
+QIcon StandardComponentCategories::Software::largeIcon() const
+{
+    if (_largeIcon.isNull())
+    {
+        _largeIcon = QIcon(":/emuone/core/Images/SoftwareLarge.png");
+    }
+    return _largeIcon;
+}
+
 //  End of emuone-core/StandardComponentCategories.cpp

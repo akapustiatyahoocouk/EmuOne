@@ -27,6 +27,7 @@ public:
         ComponentCategory::registerComponentCategory(StandardComponentCategories::Memory::getInstance());
         ComponentCategory::registerComponentCategory(StandardComponentCategories::Processors::getInstance());
         ComponentCategory::registerComponentCategory(StandardComponentCategories::Terminals::getInstance());
+        ComponentCategory::registerComponentCategory(StandardComponentCategories::Software::getInstance());
     }
 };
 

@@ -20,5 +20,6 @@
     #define EMUONE_SCP360_EXPORT  Q_DECL_IMPORT
 #endif
 
+#include "emuone-scp360/Scp.hpp"
 
 //  End of emuone-scp360/API.hpp

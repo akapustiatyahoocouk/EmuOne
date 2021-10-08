@@ -10,10 +10,12 @@ QMAKE_CXXFLAGS += -zdefs
 QMAKE_LFLAGS += -zdefs
 
 SOURCES += \
-    Plugin.cpp
+    Plugin.cpp \
+    Scp.cpp
 
 HEADERS += \
-    API.hpp
+    API.hpp \
+    Scp.hpp
 
 LIBS += -L../../../Bin/Debug -lemuone-ibm360 -lemuone-core -lemuone-util
 

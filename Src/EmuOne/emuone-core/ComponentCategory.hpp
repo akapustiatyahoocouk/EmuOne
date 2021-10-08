@@ -103,6 +103,25 @@ namespace core
             mutable QIcon       _smallIcon;
             mutable QIcon       _largeIcon;
         };
+
+        class EMUONE_CORE_EXPORT Software : public ComponentCategory
+        {
+            DECLARE_SINGLETON(Software)
+
+            //////////
+            //  StockObject
+        public:
+            virtual QString     mnemonic() const override;
+            virtual QString     displayName() const override;
+            virtual QIcon       smallIcon() const override;
+            virtual QIcon       largeIcon() const override;
+
+            //////////
+            //  Implementation
+        private:
+            mutable QIcon       _smallIcon;
+            mutable QIcon       _largeIcon;
+        };
     };
 }
 
