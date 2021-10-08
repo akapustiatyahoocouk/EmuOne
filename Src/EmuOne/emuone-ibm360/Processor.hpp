@@ -1,7 +1,7 @@
 //
-//  emuone-ibm360/Ibm2741.hpp
+//  emuone-ibm360/Processor.hpp
 //
-//  IBM 2741 terminal
+//  IBM/360 processor
 //
 //////////
 #pragma once
@@ -9,17 +9,17 @@
 namespace ibm360
 {
     //////////
-    //  The IBM 2741 terminal
-    class EMUONE_IBM360_EXPORT Ibm2741 : public Device
+    //  The IBM/360 processor
+    class EMUONE_IBM360_EXPORT Processor : public core::Component
     {
-        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Ibm2741)
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Processor)
 
-        friend class ::Ibm2741Editor;
+        friend class ::Ibm360ProcessorEditor;
 
         //////////
         //  Types
     public:
-        //  The "type" of IBM 2741 terminal
+        //  The "type" of IBM/360 processor
         class EMUONE_IBM360_EXPORT Type : public core::ComponentType
         {
             DECLARE_SINGLETON(Type)
@@ -35,36 +35,14 @@ namespace ibm360
         public:
             virtual core::ComponentCategory *   category() const override;
             virtual bool        isCompatibleWith(core::Architecture * architecture) const override;
-            virtual Ibm2741 *   createComponent() override;
-        };
-
-        //  The "UI" of IBM 2741 terminal
-        class Ui : public core::ComponentUi
-        {
-            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Ui)
-
-            //////////
-            //  Construction/destruction
-        public:
-            explicit Ui(Ibm2741 * ibm2741);
-            virtual ~Ui();
-
-            //////////
-            //  core::ComponentUi
-        public:
-            virtual core::FullScreenWidgetList  fullScreenWidgets() override;
-
-            //////////
-            //  Implementation
-        private:
-            Ibm2741FullScreenWidget *   _fullScreenWidget;
+            virtual Processor * createComponent() override;
         };
 
         //////////
         //  Construction/destruction
     public:
-        Ibm2741(const QString & name, uint16_t address);
-        virtual ~Ibm2741();
+        Processor(const QString & name, Features features, const core::ClockFrequency & clockFrequency);
+        virtual ~Processor();
 
         //////////
         //  Component
@@ -94,6 +72,11 @@ namespace ibm360
         //////////
         //  Operations
     public:
+        static bool             isValidClockFrequency(const core::ClockFrequency & clockFrequency);
+        Features                features() const { return _features; }
+        bool                    setFeatures(Features features);
+        core::ClockFrequency    clockFrequency() const { return _clockFrequency; }
+        bool                    setClockFrequency(const core::ClockFrequency & clockFrequency);
 
         //////////
         //  Implementation
@@ -101,8 +84,10 @@ namespace ibm360
         State                   _state = State::Constructed;
         mutable QRecursiveMutex _stateGuard;
 
-        Ibm2741EditorList       _editors;   //  ...that have been created so far
+        //  Component configuration
+        Features                _features;
+        core::ClockFrequency    _clockFrequency;
     };
 }
 
-//  End of emuone-ibm360/Ibm2741.hpp
+//  End of emuone-ibm360/Processor.hpp

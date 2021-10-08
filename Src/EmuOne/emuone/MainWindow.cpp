@@ -23,7 +23,7 @@ MainWindow::MainWindow()
     //  Done
     _trackPositionChanges = true;
     _refresh();
-    _refreshTimer.start(1000);
+    _refreshTimer.start(250);
 }
 
 MainWindow::~MainWindow()

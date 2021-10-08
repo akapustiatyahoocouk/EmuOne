@@ -9,6 +9,7 @@
 //////////
 //  CRT + dependencies
 #include <QtCore/qglobal.h>
+#include <QApplication>
 #include <QCloseEvent>
 #include <QCoreApplication>
 #include <QDir>
@@ -21,6 +22,7 @@
 #include <QMessageBox>
 #include <QPainter>
 #include <QRecursiveMutex>
+#include <QScreen>
 #include <QSet>
 #include <QSettings>
 #include <QTimer>

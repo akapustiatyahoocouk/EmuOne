@@ -18,17 +18,24 @@ namespace ibm360
         FloatingPoint       = 0x08,
         ByteOrientedOperand = 0x10,
         Timer               = 0x20,
-        DirectControl       = 0x40
+        DirectControl       = 0x40,
+        //  Flag combinations
+        None                = 0x00,
+        All                 = 0x7F,
+        Default             = StoreProtection | Timer
     };
 
     //////////
     //  Helper functions
-    EMUONE_IBM360_EXPORT Features operator & (Features op1, Features op2);
-    EMUONE_IBM360_EXPORT Features operator | (Features op1, Features op2);
-    EMUONE_IBM360_EXPORT Features & operator &= (Features & op1, Features op2);
-    EMUONE_IBM360_EXPORT Features & operator |= (Features & op1, Features op2);
+    inline EMUONE_IBM360_EXPORT Features operator & (Features op1, Features op2) { return Features(uint8_t(op1) & uint8_t(op2)); }
+    inline EMUONE_IBM360_EXPORT Features operator | (Features op1, Features op2) { return Features(uint8_t(op1) | uint8_t(op2)); }
+    inline EMUONE_IBM360_EXPORT Features operator ~ (Features op) { return Features(~uint8_t(op) & uint8_t(Features::All)); }
+
+    inline EMUONE_IBM360_EXPORT Features & operator &= (Features & op1, Features op2) { op1 = op1 & op2; return op1; }
+    inline EMUONE_IBM360_EXPORT Features & operator |= (Features & op1, Features op2) { op1 = op1 | op2; return op1; }
 
     EMUONE_IBM360_EXPORT Features normalise(Features features);
+    inline EMUONE_IBM360_EXPORT bool has(Features features, Features requiredFeatures) { return (uint8_t(features) & uint8_t(requiredFeatures)) == uint8_t(requiredFeatures); }
 }
 
 //  End of emuone-ibm360/Features.hpp

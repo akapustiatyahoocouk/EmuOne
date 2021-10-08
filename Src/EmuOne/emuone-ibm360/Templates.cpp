@@ -30,6 +30,7 @@ Architecture * H40VirtualMachineTemplate::architecture() const
 
 void H40VirtualMachineTemplate::populateVirtualAppliance(core::VirtualAppliance * virtualAppliance)
 {
+    virtualAppliance->addComponent(new Processor("Processor", Features::All, core::ClockFrequency(core::ClockFrequency::Unit::KHZ, 1600)));
     virtualAppliance->addComponent(new Storage("Main storage", core::MemorySize(core::MemorySize::Unit::KB, 256)));
     virtualAppliance->addComponent(new Ibm2741("System console", 0x001));
 }

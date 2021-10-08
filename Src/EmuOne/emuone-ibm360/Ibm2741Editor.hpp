@@ -12,7 +12,7 @@ namespace Ui { class Ibm2741Editor; }
 
 //////////
 //  The IBM 2741 editor
-class Ibm2741Editor : public ComponentEditor
+class EMUONE_IBM360_EXPORT Ibm2741Editor : public ComponentEditor
 {
     Q_OBJECT
 

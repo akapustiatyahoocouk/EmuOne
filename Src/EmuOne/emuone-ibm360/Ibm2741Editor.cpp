@@ -21,6 +21,7 @@ Ibm2741Editor::Ibm2741Editor(ibm360::Ibm2741 * ibm2741, QWidget * parent)
 
 Ibm2741Editor::~Ibm2741Editor()
 {
+    _ibm2741->_editors.removeOne(this);
     delete _ui;
 }
 

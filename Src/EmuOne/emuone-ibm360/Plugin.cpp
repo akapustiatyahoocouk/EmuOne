@@ -28,6 +28,7 @@ namespace ibm360
             Architecture::registerArchitecture(Architecture::getInstance());
             Architecture::getInstance()->addVirtualMachineTemplate(H40VirtualMachineTemplate::getInstance());
 
+            core::ComponentType::registerComponentType(Processor::Type::getInstance());
             core::ComponentType::registerComponentType(Storage::Type::getInstance());
             core::ComponentType::registerComponentType(Ibm2741::Type::getInstance());
         }

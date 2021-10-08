@@ -9,7 +9,10 @@
 #include <QWidget>
 
 //////////
-//  A generic "editor" of a Component's properties
+//  A generic "editor" of a Component's properties.
+//  A ComponentEditor must not out-live the Component whose properties it is editing.
+//  To that end, a Component must keep track of all the ComponentEditors it has created
+//  and "destroy "delete" them when the Component itself is "delet"ed.
 class EMUONE_CORE_EXPORT ComponentEditor : public QWidget
 {
     Q_OBJECT

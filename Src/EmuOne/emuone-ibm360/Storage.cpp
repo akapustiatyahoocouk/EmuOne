@@ -53,6 +53,19 @@ void Storage::connect()
         return;
     }
 
+    //  Locate the Processor - we need its Features for protection
+    QList<Processor*> processors = this->virtualAppliance()->findComponents<Processor>();
+    if (processors.isEmpty())
+    {
+        throw core::VirtualApplianceException("ibm360::Storage cannot locate ibm360::Processor");
+    }
+    if (processors.size() > 1)
+    {
+        throw core::VirtualApplianceException("ibm360::Storage located multiple ibm360::Processor");
+    }
+    _fetchProtection = has(processors[0]->features(), Features::FetchProtection);
+    _storeProtection = has(processors[0]->features(), Features::StoreProtection);
+
     //  Done
     _state = State::Connected;
 }
@@ -118,6 +131,9 @@ void Storage::disconnect() noexcept
     {   //  OOPS! Can't make this state transiton!
         return;
     }
+
+    _fetchProtection = false;
+    _storeProtection = false;
 
     //  Done
     _state = State::Constructed;

@@ -106,6 +106,9 @@ namespace core
         ComponentList               components(ComponentCategory * componentCategory);
         AdaptorList                 adaptors() const { return _adaptors; }
 
+        template <class T>
+        QList<T*>                   findComponents() const;
+
         //  Operations (state control) - all thread-safe
     public:
         State                       state() const;
@@ -138,6 +141,21 @@ namespace core
         void                        _deinitialiseComponents();
         void                        _disconnectComponents();
     };
+
+    template <class T>
+    QList<T*> VirtualAppliance::findComponents() const
+    {
+        QList<T*> result;
+        for (Component * component : _components)
+        {
+            if (T * t = dynamic_cast<T*>(component))
+            {
+                result.append(t);
+            }
+        }
+        //  TODO adaptors too
+        return result;
+    }
 
     //////////
     //  A "generic VA"virtual machine" is an emulation of some computer running locally

@@ -45,7 +45,7 @@ VirtualApplianceWindow::VirtualApplianceWindow(core::VirtualAppliance * virtualA
         allFullScreenWidgets.append(fullScreenWidgets);
     }
 
-    this->centralWidget()->setLayout(new QGridLayout());
+    //this->centralWidget()->setLayout(new QGridLayout());
     /*  TODO uncomment if (allFullScreenWidgets.size() == 1)
     {   //  Can place the only FullScreenWidget directly into this frame
         allFullScreenWidgets[0]->setParent(this->centralWidget());
@@ -99,15 +99,23 @@ void VirtualApplianceWindow::closeEvent(QCloseEvent * event)
 void VirtualApplianceWindow::_savePosition()
 {
     QSettings settings("Aka", "EmuOne");
+    if (!this->isMaximized() && !this->isMinimized() && !this->isFullScreen())
+    {
+        settings.setValue("VirtualApplianceWindow-" + _virtualAppliance->name() + "/X", this->x());
+        settings.setValue("VirtualApplianceWindow-" + _virtualAppliance->name() + "/Y", this->y());
+        settings.setValue("VirtualApplianceWindow-" + _virtualAppliance->name() + "/Width", this->width());
+        settings.setValue("VirtualApplianceWindow-" + _virtualAppliance->name() + "/Height", this->height());
+    }
+}
+
+void VirtualApplianceWindow::_loadPosition()
+{
+    QSettings settings("Aka", "EmuOne");
     int x = settings.value("VirtualApplianceWindow-" + _virtualAppliance->name() + "/X", this->x()).toInt();
     int y = settings.value("VirtualApplianceWindow-" + _virtualAppliance->name() + "/Y", this->y()).toInt();
     int width = settings.value("VirtualApplianceWindow-" + _virtualAppliance->name() + "/Width", this->width()).toInt();
     int height = settings.value("VirtualApplianceWindow-" + _virtualAppliance->name() + "/Height", this->height()).toInt();
     this->setGeometry(x, y, width, height);
-}
-
-void VirtualApplianceWindow::_loadPosition()
-{
 }
 
 //////////

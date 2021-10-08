@@ -285,6 +285,7 @@ void VirtualAppliance::start()
         _stopComponents();
         _deinitialiseComponents();
         _disconnectComponents();
+        throw;
     }
 
     _state = State::Running;

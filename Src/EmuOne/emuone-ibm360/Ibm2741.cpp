@@ -16,6 +16,11 @@ Ibm2741::Ibm2741(const QString & name, uint16_t address)
 
 Ibm2741::~Ibm2741()
 {
+    //  Destroy live Editors
+    for (Ibm2741Editor * editor : _editors)
+    {
+        delete editor;
+    }
 }
 
 //////////
@@ -27,7 +32,9 @@ core::ComponentType * Ibm2741::type() const
 
 ComponentEditor * Ibm2741::createEditor(QWidget * parent)
 {
-    return new Ibm2741Editor(this, parent);;
+    Ibm2741Editor * editor = new Ibm2741Editor(this, parent);;
+    _editors.append(editor);
+    return editor;
 }
 
 QString Ibm2741::shortStatus() const

@@ -5,7 +5,6 @@
 //
 //////////
 #include "emuone/API.hpp"
-#include <QApplication>
 
 //////////
 //  EmuOne entry point

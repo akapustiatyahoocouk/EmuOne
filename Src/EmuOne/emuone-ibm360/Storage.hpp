@@ -6,8 +6,6 @@
 //////////
 #pragma once
 
-class EMUONE_IBM360_EXPORT Ibm360StorageEditor;
-
 namespace ibm360
 {
     //////////
@@ -87,6 +85,10 @@ namespace ibm360
 
         //  Component configuration
         core::MemorySize        _size;
+
+        //  Runtime state
+        bool                    _fetchProtection = false;
+        bool                    _storeProtection = false;
     };
 }
 

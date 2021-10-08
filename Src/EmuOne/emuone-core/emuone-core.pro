@@ -11,6 +11,7 @@ QMAKE_LFLAGS += -zdefs
 
 SOURCES += \
     Architecture.cpp \
+    ClockFrequency.cpp \
     Component.cpp \
     ComponentCategory.cpp \
     ComponentEditor.cpp \
@@ -28,6 +29,7 @@ HEADERS += \
     API.hpp \
     Architecture.hpp \
     Classes.hpp \
+    ClockFrequency.hpp \
     Component.hpp \
     ComponentCategory.hpp \
     ComponentEditor.hpp \

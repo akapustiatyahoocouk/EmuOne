@@ -7,9 +7,9 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 
 SOURCES += \
     ConfigureVmDialog.cpp \
+    Main.cpp \
     NewVmDialog.cpp \
     VirtualApplianceWindow.cpp \
-    main.cpp \
     MainWindow.cpp
 
 HEADERS += \

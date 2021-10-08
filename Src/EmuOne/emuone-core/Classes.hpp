@@ -36,6 +36,7 @@ namespace core
 class EMUONE_CORE_EXPORT ComponentEditor;
 
 class EMUONE_CORE_EXPORT FullScreenWidgetImpl;
+
 namespace core
 {
     using FullScreenWidget = ::FullScreenWidgetImpl;

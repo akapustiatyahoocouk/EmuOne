@@ -19,12 +19,16 @@
     #define EMUONE_IBM360_EXPORT  Q_DECL_IMPORT
 #endif
 
+#include "emuone-ibm360/Classes.hpp"
+
 #include "emuone-ibm360/Architecture.hpp"
 #include "emuone-ibm360/Templates.hpp"
 
 #include "emuone-ibm360/Features.hpp"
 #include "emuone-ibm360/Storage.hpp"
 #include "emuone-ibm360/Ibm360StorageEditor.hpp"
+#include "emuone-ibm360/Processor.hpp"
+#include "emuone-ibm360/Ibm360ProcessorEditor.hpp"
 
 #include "emuone-ibm360/Device.hpp"
 

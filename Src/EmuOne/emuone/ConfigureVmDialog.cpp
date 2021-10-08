@@ -47,6 +47,10 @@ ConfigureVmDialog::ConfigureVmDialog(core::VirtualAppliance * virtualAppliance, 
     _refresh();
 
     _ui->_componentsTreeWidget->expandAll();
+
+    //  Put the dialog in the screen center
+    QRect screenGeometry = QGuiApplication::primaryScreen()->availableGeometry();
+    this->move(screenGeometry.center() - this->rect().center());
 }
 
 ConfigureVmDialog::~ConfigureVmDialog()

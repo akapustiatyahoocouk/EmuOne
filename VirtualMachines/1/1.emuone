@@ -1,8 +1,11 @@
-<VirtualAppliance Template="IBM/360 H40" Name="1" Type="VirtualMachine" Architecture="IBM/360">
- <Component Name="Main storage" Type="ibm360::Storage">
+<VirtualAppliance Architecture="IBM/360" Template="IBM/360 H40" Type="VirtualMachine" Name="1">
+ <Component Type="ibm360::Storage" Name="Main storage">
   <Configuration Size="256KB"/>
  </Component>
- <Component Name="System console" Type="ibm360::Ibm2741">
+ <Component Type="ibm360::Ibm2741" Name="System console">
   <Configuration Address="001"/>
+ </Component>
+ <Component Type="ibm360::Processor" Name="Processor">
+  <Configuration FetchProtection="no" ClockFrequency="2MHZ" FloatingPoint="no" Timer="yes" DirectControl="no" Decimal="no" ByteOrientedOperand="no" StoreProtection="yes"/>
  </Component>
 </VirtualAppliance>
