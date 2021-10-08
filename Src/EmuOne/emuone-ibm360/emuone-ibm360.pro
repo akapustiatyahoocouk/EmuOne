@@ -35,6 +35,7 @@ HEADERS += \
     Ibm2741FullScreenWidget.hpp \
     Ibm360ProcessorEditor.hpp \
     Ibm360StorageEditor.hpp \
+    Monitor.hpp \
     Processor.hpp \
     Storage.hpp \
     Templates.hpp

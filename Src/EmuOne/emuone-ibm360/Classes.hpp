@@ -6,6 +6,11 @@
 //////////
 #pragma once
 
+namespace ibm360
+{
+    class EMUONE_IBM360_EXPORT Monitor;
+}
+
 //  QT does not play well with "form" classes
 class EMUONE_IBM360_EXPORT Ibm360StorageEditor;
 class EMUONE_IBM360_EXPORT Ibm360ProcessorEditor;

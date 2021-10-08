@@ -87,6 +87,10 @@ namespace ibm360
         //  Component configuration
         Features                _features;
         core::ClockFrequency    _clockFrequency;
+
+        //  Connection to other VM components
+        Storage *               _storage = nullptr;
+        Monitor *               _monitor = nullptr;
     };
 }
 

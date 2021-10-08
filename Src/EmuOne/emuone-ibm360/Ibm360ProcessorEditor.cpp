@@ -106,30 +106,95 @@ void Ibm360ProcessorEditor::_clockFrequencyUnitComboBoxCurrentIndexChanged(int)
 
 void Ibm360ProcessorEditor::_fetchProtectionCheckBoxClicked()
 {
+    if (_ui->_fetchProtectionCheckBox->isChecked())
+    {
+        _processor->_features |= Features::FetchProtection | Features::StoreProtection;
+        _ui->_storeProtectionCheckBox->setChecked(true);
+    }
+    else
+    {
+        _processor->_features &= ~Features::FetchProtection;
+    }
+    emit componentConfigurationChanged(component());
 }
 
 void Ibm360ProcessorEditor::_storeProtectionCheckBoxClicked()
 {
+    if (_ui->_storeProtectionCheckBox->isChecked())
+    {
+        _processor->_features |= Features::StoreProtection;
+    }
+    else
+    {
+        _processor->_features &= ~(Features::FetchProtection | Features::StoreProtection);
+        _ui->_fetchProtectionCheckBox->setChecked(false);
+    }
+    emit componentConfigurationChanged(component());
 }
 
 void Ibm360ProcessorEditor::_decimalCheckBoxClicked()
 {
+    if (_ui->_decimalCheckBox->isChecked())
+    {
+        _processor->_features |= Features::Decimal;
+    }
+    else
+    {
+        _processor->_features &= ~Features::Decimal;
+    }
+    emit componentConfigurationChanged(component());
 }
 
 void Ibm360ProcessorEditor::_floatingPointCheckBoxClicked()
 {
+    if (_ui->_floatingPointCheckBox->isChecked())
+    {
+        _processor->_features |= Features::FloatingPoint;
+    }
+    else
+    {
+        _processor->_features &= ~Features::FloatingPoint;
+    }
+    emit componentConfigurationChanged(component());
 }
 
 void Ibm360ProcessorEditor::_byteOrientedOperandCheckBoxClicked()
 {
+    if (_ui->_byteOrientedOperandCheckBox->isChecked())
+    {
+        _processor->_features |= Features::ByteOrientedOperand;
+    }
+    else
+    {
+        _processor->_features &= ~Features::ByteOrientedOperand;
+    }
+    emit componentConfigurationChanged(component());
 }
 
 void Ibm360ProcessorEditor::_timerCheckBoxClicked()
 {
+    if (_ui->_timerCheckBox->isChecked())
+    {
+        _processor->_features |= Features::Timer;
+    }
+    else
+    {
+        _processor->_features &= ~Features::Timer;
+    }
+    emit componentConfigurationChanged(component());
 }
 
 void Ibm360ProcessorEditor::_directControlCheckBoxClicked()
 {
+    if (_ui->_directControlCheckBox->isChecked())
+    {
+        _processor->_features |= Features::DirectControl;
+    }
+    else
+    {
+        _processor->_features &= ~Features::DirectControl;
+    }
+    emit componentConfigurationChanged(component());
 }
 
 //  End of emuone-360/Ibm360ProcessorEditor.cpp

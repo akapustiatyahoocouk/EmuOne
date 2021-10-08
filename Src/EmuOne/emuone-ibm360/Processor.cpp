@@ -54,6 +54,27 @@ void Processor::connect()
         return;
     }
 
+    QList<Storage*> storages = this->virtualAppliance()->findComponents<Storage>();
+    if (storages.isEmpty())
+    {
+        throw core::VirtualApplianceException("ibm360::Processor cannot locate ibm360::Storage");
+    }
+    if (storages.size() > 1)
+    {
+        throw core::VirtualApplianceException("ibm360::Processor located multiple ibm360::Storage");
+    }
+    _storage = storages[0];
+
+    QList<Monitor*> monitors = this->virtualAppliance()->findComponents<Monitor>();
+    if (monitors.size() > 1)
+    {
+        throw core::VirtualApplianceException("ibm360::Processor located multiple ibm360::Monitor");
+    }
+    if (!monitors.isEmpty())
+    {
+        _monitor = monitors[0];
+    }
+
     //  Done
     _state = State::Connected;
 }
@@ -119,6 +140,9 @@ void Processor::disconnect() noexcept
     {   //  OOPS! Can't make this state transiton!
         return;
     }
+
+    _storage = nullptr;
+    _monitor = nullptr;
 
     //  Done
     _state = State::Constructed;

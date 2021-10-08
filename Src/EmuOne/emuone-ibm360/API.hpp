@@ -29,6 +29,7 @@
 #include "emuone-ibm360/Ibm360StorageEditor.hpp"
 #include "emuone-ibm360/Processor.hpp"
 #include "emuone-ibm360/Ibm360ProcessorEditor.hpp"
+#include "emuone-ibm360/Monitor.hpp"
 
 #include "emuone-ibm360/Device.hpp"
 
