@@ -27,20 +27,26 @@ public:
     //////////
     //  QWidget
 protected:
-    virtual void        closeEvent(QCloseEvent * event) override;
+    virtual void        moveEvent(QMoveEvent * event) override;
     virtual void        resizeEvent(QResizeEvent * event) override;
+    virtual void        closeEvent(QCloseEvent * event) override;
 
     //////////
     //  Implementation
 private:
-    Ui::VirtualApplianceWindow *ui;
+    Ui::VirtualApplianceWindow *    _ui;
     core::VirtualAppliance *const   _virtualAppliance;
 
     QMap<core::Component*,core::ComponentUi*>   _uiMap;
-    QWidget *           _fullScreenWidget = nullptr;
 
     //  Helpers
-    void                _resizeControls();
+    void                _savePosition();
+    void                _loadPosition();
+
+    //////////
+    //  Controls
+private:
+    QTabWidget *        _fullScreenTabWidget = nullptr;
 
     //////////
     //  Event handlers

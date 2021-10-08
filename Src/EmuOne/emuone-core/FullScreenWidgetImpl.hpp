@@ -23,6 +23,15 @@ class EMUONE_CORE_EXPORT FullScreenWidgetImpl : public QWidget
 public:
     FullScreenWidgetImpl();
     virtual ~FullScreenWidgetImpl();
+
+    //////////
+    //  Operations
+public:
+    //  Returns the Component whose UI aspect this FullScreenWidget[Impl] represents.
+    virtual core::Component *   component() = 0;
+
+    //  Returns the short user-readable "display name" of this FullScreenWidget[Impl].
+    virtual QString             displayName() = 0;
 };
 
 //  End of emuone-core/FullScreenWidgetImpl.hpp

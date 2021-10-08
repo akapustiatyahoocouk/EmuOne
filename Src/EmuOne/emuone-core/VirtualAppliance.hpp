@@ -69,13 +69,22 @@ namespace core
     public:
         static bool                 isValidName(const QString & name);
 
-        virtual VirtualApplianceType *  getType() const = 0;
+        //  Returns the type of this Virtual Appliance
+        virtual VirtualApplianceType *  type() const = 0;
 
-        QString                     getName() const { return _name; }
+        //  Returns/sets the type of this Virtual Appliance
+        QString                     name() const { return _name; }
         void                        setName(const QString & name);
-        QString                     getLocation() { return _location; }
-        Architecture *              getArchitecture() const { return _architecture; }
-        virtual VirtualApplianceTemplate *  getTemplate() const { return _template; }
+
+        //  Returns the "type "location" of this Virtual Appliance (this is the full
+        //  path of the VA's configuration file)
+        QString                     location() { return _location; }
+
+        //  Returns the Architecture of this Virtual Appliance
+        Architecture *              architecture() const { return _architecture; }
+
+        //  Returns the Template from which this Virtual Appliance has been initially created
+        virtual VirtualApplianceTemplate *  initialTemplate() const { return _template; }
 
         //  Saves tis VA's configuration to the "location" XML file.
         //  Throws VirtualApplianceException if an error occurs.
@@ -93,13 +102,13 @@ namespace core
         //  Throws VirtualApplianceException if the componentn cannot be removed.
         virtual void                removeComponent(Component * component);
 
-        ComponentList               getComponents() const;
-        ComponentList               getComponents(ComponentCategory * componentCategory);
-        AdaptorList                 getAdaptors() const { return _adaptors; }
+        ComponentList               components() const;
+        ComponentList               components(ComponentCategory * componentCategory);
+        AdaptorList                 adaptors() const { return _adaptors; }
 
         //  Operations (state control) - all thread-safe
     public:
-        State                       getState() const;
+        State                       state() const;
         void                        start();    //  throws VirtualApplianceException
         void                        stop() noexcept;
         void                        suspend();  //  throws VirtualApplianceException
@@ -146,10 +155,10 @@ namespace core
             //////////
             //  StockObject
         public:
-            virtual QString     getMnemonic() const override;
-            virtual QString     getDisplayName() const override;
-            virtual QIcon       getSmallIcon() const override;
-            virtual QIcon       getLargeIcon() const override;
+            virtual QString     mnemonic() const override;
+            virtual QString     displayName() const override;
+            virtual QIcon       smallIcon() const override;
+            virtual QIcon       largeIcon() const override;
 
             //////////
             //  VirtualApplianceType
@@ -172,8 +181,8 @@ namespace core
         //////////
         //  VirtualAppliance
     public:
-        virtual VirtualApplianceType *  getType() const override;
-        virtual VirtualMachineTemplate *getTemplate() const override;
+        virtual VirtualApplianceType *  type() const override;
+        virtual VirtualMachineTemplate *initialTemplate() const override;
     };
 
     //////////
@@ -192,10 +201,10 @@ namespace core
             //////////
             //  StockObject
         public:
-            virtual QString     getMnemonic() const override;
-            virtual QString     getDisplayName() const override;
-            virtual QIcon       getSmallIcon() const override;
-            virtual QIcon       getLargeIcon() const override;
+            virtual QString     mnemonic() const override;
+            virtual QString     displayName() const override;
+            virtual QIcon       smallIcon() const override;
+            virtual QIcon       largeIcon() const override;
 
             //////////
             //  VirtualApplianceType
@@ -218,8 +227,8 @@ namespace core
         //////////
         //  VirtualAppliance
     public:
-        virtual VirtualApplianceType *  getType() const override;
-        virtual RemoteTerminalTemplate *getTemplate() const override;
+        virtual VirtualApplianceType *  type() const override;
+        virtual RemoteTerminalTemplate *initialTemplate() const override;
     };
 }
 

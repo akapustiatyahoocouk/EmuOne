@@ -13,17 +13,17 @@ IMPLEMENT_SINGLETON(H40VirtualMachineTemplate)
 H40VirtualMachineTemplate::H40VirtualMachineTemplate() {}
 H40VirtualMachineTemplate::~H40VirtualMachineTemplate() {}
 
-QString H40VirtualMachineTemplate::getMnemonic() const
+QString H40VirtualMachineTemplate::mnemonic() const
 {
     return "IBM/360 H40";
 }
 
-QString H40VirtualMachineTemplate::getDisplayName() const
+QString H40VirtualMachineTemplate::displayName() const
 {
     return "IBM/360 H40";
 }
 
-Architecture * H40VirtualMachineTemplate::getArchitecture() const
+Architecture * H40VirtualMachineTemplate::architecture() const
 {
     return Architecture::getInstance();
 }

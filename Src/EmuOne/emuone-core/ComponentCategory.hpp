@@ -26,12 +26,12 @@ namespace core
     public:
         //  Returns an unordered list of all known component types that belong
         //  to this component category
-        ComponentTypeList   getComponentTypes() const;
+        ComponentTypeList   componentTypes() const;
 
         //////////
         //  Registry
     public:
-        static ComponentCategoryList    getAll();
+        static ComponentCategoryList    all();
         static ComponentCategory *      findByMnemonic(const QString & mnemonic);
         static bool                     registerComponentCategory(ComponentCategory * componentCategory);
     private:
@@ -54,10 +54,10 @@ namespace core
             //////////
             //  StockObject
         public:
-            virtual QString     getMnemonic() const override;
-            virtual QString     getDisplayName() const override;
-            virtual QIcon       getSmallIcon() const override;
-            virtual QIcon       getLargeIcon() const override;
+            virtual QString     mnemonic() const override;
+            virtual QString     displayName() const override;
+            virtual QIcon       smallIcon() const override;
+            virtual QIcon       largeIcon() const override;
 
             //////////
             //  Implementation
@@ -73,10 +73,10 @@ namespace core
             //////////
             //  StockObject
         public:
-            virtual QString     getMnemonic() const override;
-            virtual QString     getDisplayName() const override;
-            virtual QIcon       getSmallIcon() const override;
-            virtual QIcon       getLargeIcon() const override;
+            virtual QString     mnemonic() const override;
+            virtual QString     displayName() const override;
+            virtual QIcon       smallIcon() const override;
+            virtual QIcon       largeIcon() const override;
 
             //////////
             //  Implementation
@@ -92,10 +92,10 @@ namespace core
             //////////
             //  StockObject
         public:
-            virtual QString     getMnemonic() const override;
-            virtual QString     getDisplayName() const override;
-            virtual QIcon       getSmallIcon() const override;
-            virtual QIcon       getLargeIcon() const override;
+            virtual QString     mnemonic() const override;
+            virtual QString     displayName() const override;
+            virtual QIcon       smallIcon() const override;
+            virtual QIcon       largeIcon() const override;
 
             //////////
             //  Implementation

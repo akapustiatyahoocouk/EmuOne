@@ -23,7 +23,7 @@ class MainWindow final : public QMainWindow
     //////////
     //  Construction/destruction
 public:
-    MainWindow(QWidget * parent = nullptr);
+    MainWindow();
     ~MainWindow();
 
     //////////
@@ -31,6 +31,7 @@ public:
 protected:
     void                    moveEvent(QMoveEvent * event) override;
     void                    resizeEvent(QResizeEvent * event) override;
+    void                    closeEvent(QCloseEvent * event) override;
 
     //////////
     //  Implementation
@@ -56,7 +57,7 @@ private:
     //////////
     //  Controls
 private:
-    Ui::MainWindow *        ui;
+    Ui::MainWindow *        _ui;
     QTimer                  _refreshTimer;
 
     //////////

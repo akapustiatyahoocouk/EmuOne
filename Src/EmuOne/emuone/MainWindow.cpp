@@ -7,12 +7,12 @@
 #include "emuone/API.hpp"
 #include "ui_MainWindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    :   QMainWindow(parent),
-        ui(new Ui::MainWindow),
+MainWindow::MainWindow()
+    :   QMainWindow(nullptr),
+        _ui(new Ui::MainWindow),
         _refreshTimer(this)
 {
-    ui->setupUi(this);
+    _ui->setupUi(this);
 
     _loadPosition();
     _loadVirtualAppliances();
@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     _refreshTimer.stop();
-    delete ui;
+    delete _ui;
 }
 
 //////////
@@ -42,6 +42,11 @@ void MainWindow::moveEvent(QMoveEvent * /*event*/)
 void MainWindow::resizeEvent(QResizeEvent * /*event*/)
 {
     _savePosition();
+}
+
+void MainWindow::closeEvent(QCloseEvent * /*event*/)
+{
+    _onExitTriggered();
 }
 
 //////////
@@ -98,17 +103,17 @@ void MainWindow::_saveVirtualAppliances()
     settings.setValue("VirtualAppliances/Count", _virtualAppliances.size());
     for (int i = 0; i < _virtualAppliances.size(); i++)
     {
-        settings.setValue("VirtualAppliances/Location" + QString::number(i), _virtualAppliances[i]->getLocation());
+        settings.setValue("VirtualAppliances/Location" + QString::number(i), _virtualAppliances[i]->location());
     }
 }
 
 core::VirtualAppliance * MainWindow::_getSelectedVirtualAppliance() const
 {
-    if (_virtualAppliances.size() != ui->vmListWidget->count())
+    if (_virtualAppliances.size() != _ui->vmListWidget->count())
     {
         const_cast<MainWindow*>(this)->_refreshVirtualAppliancesList();
     }
-    int rowIndex = ui->vmListWidget->currentRow();
+    int rowIndex = _ui->vmListWidget->currentRow();
     return (rowIndex >= 0) ? _virtualAppliances[rowIndex] : nullptr;
 }
 
@@ -119,7 +124,7 @@ void MainWindow::_setSelectedVirtualAppliance(core::VirtualAppliance * virtualAp
     {
         if (_virtualAppliances[i] == virtualAppliance)
         {
-            ui->vmListWidget->setCurrentRow(i);
+            _ui->vmListWidget->setCurrentRow(i);
             break;
         }
     }
@@ -128,21 +133,21 @@ void MainWindow::_setSelectedVirtualAppliance(core::VirtualAppliance * virtualAp
 void MainWindow::_refreshVirtualAppliancesList()
 {
     //  Make sure the VM list has a proper number of items...
-    while (_virtualAppliances.size() < ui->vmListWidget->count())
+    while (_virtualAppliances.size() < _ui->vmListWidget->count())
     {   //  Too many items in the list widget
-        ui->vmListWidget->takeItem(0);
+        _ui->vmListWidget->takeItem(0);
     }
-    while (_virtualAppliances.size() > ui->vmListWidget->count())
+    while (_virtualAppliances.size() > _ui->vmListWidget->count())
     {   //  Too few items in the list widget
-        ui->vmListWidget->addItem(".");
+        _ui->vmListWidget->addItem(".");
     }
     //  ...with correct properties
     for (int i = 0; i < _virtualAppliances.size(); i++)
     {
-        QListWidgetItem * item = ui->vmListWidget->item(i);
-        QString text = _virtualAppliances[i]->getName() +
-                       " (" + _virtualAppliances[i]->getType()->getDisplayName() + ")";
-        switch (_virtualAppliances[i]->getState())
+        QListWidgetItem * item = _ui->vmListWidget->item(i);
+        QString text = _virtualAppliances[i]->name() +
+                       " (" + _virtualAppliances[i]->type()->displayName() + ")";
+        switch (_virtualAppliances[i]->state())
         {
             case core::VirtualAppliance::State::Stopped:
                 break;
@@ -154,7 +159,7 @@ void MainWindow::_refreshVirtualAppliancesList()
                 break;
         }
         item->setText(text);
-        item->setIcon(_virtualAppliances[i]->getArchitecture()->getSmallIcon());
+        item->setIcon(_virtualAppliances[i]->architecture()->smallIcon());
     }
 }
 
@@ -162,26 +167,26 @@ void MainWindow::_refresh()
 {
     core::VirtualAppliance * virtualAppliance = _getSelectedVirtualAppliance();
 
-    this->ui->actionCloseVm->setEnabled(virtualAppliance != nullptr);
+    _ui->actionCloseVm->setEnabled(virtualAppliance != nullptr);
 
-    this->ui->actionStartVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() == core::VirtualAppliance::State::Stopped);
-    this->ui->actionStopVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() != core::VirtualAppliance::State::Stopped);
-    this->ui->actionSuspendVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() == core::VirtualAppliance::State::Running);
-    this->ui->actionResumeVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() == core::VirtualAppliance::State::Suspended);
-    this->ui->actionConfigureVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->getState() == core::VirtualAppliance::State::Stopped);
+    _ui->actionStartVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->state() == core::VirtualAppliance::State::Stopped);
+    _ui->actionStopVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->state() != core::VirtualAppliance::State::Stopped);
+    _ui->actionSuspendVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->state() == core::VirtualAppliance::State::Running);
+    _ui->actionResumeVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->state() == core::VirtualAppliance::State::Suspended);
+    _ui->actionConfigureVm->setEnabled(virtualAppliance != nullptr && virtualAppliance->state() == core::VirtualAppliance::State::Stopped);
 
-    this->ui->startButton->setEnabled(this->ui->actionStartVm->isEnabled());
-    this->ui->stopButton->setEnabled(this->ui->actionStopVm->isEnabled());
-    this->ui->suspendButton->setEnabled(this->ui->actionSuspendVm->isEnabled());
-    this->ui->resumeButton->setEnabled(this->ui->actionResumeVm->isEnabled());
-    this->ui->configureButton->setEnabled(this->ui->actionConfigureVm->isEnabled());
+    _ui->startButton->setEnabled(_ui->actionStartVm->isEnabled());
+    _ui->stopButton->setEnabled(_ui->actionStopVm->isEnabled());
+    _ui->suspendButton->setEnabled(_ui->actionSuspendVm->isEnabled());
+    _ui->resumeButton->setEnabled(_ui->actionResumeVm->isEnabled());
+    _ui->configureButton->setEnabled(_ui->actionConfigureVm->isEnabled());
 }
 
 core::VirtualAppliance * MainWindow::_findVirtualApplianceByLocation(const QString & location)
 {
     for (core::VirtualAppliance * virtualAppliance : _virtualAppliances)
     {
-        if (virtualAppliance->getLocation() == location)
+        if (virtualAppliance->location() == location)
         {
             return virtualAppliance;
         }
@@ -197,25 +202,25 @@ void MainWindow::_onNewVmTriggered()
     if (newVmDialog.exec() == QDialog::DialogCode::Accepted)
     {   //  Create a new VA
         core::VirtualAppliance * virtualAppliance =
-            newVmDialog.getVirtualApplianceType()->createVirtualAppliance(
-                newVmDialog.getVirtualApplianceName(),
-                newVmDialog.getVirtualApplianceLocation(),
-                newVmDialog.getVirtualApplianceArchitecture(),
-                newVmDialog.getVirtualApplianceTemplate());
+            newVmDialog.virtualApplianceType()->createVirtualAppliance(
+                newVmDialog.virtualApplianceName(),
+                newVmDialog.virtualApplianceLocation(),
+                newVmDialog.virtualApplianceArchitecture(),
+                newVmDialog.virtualApplianceTemplate());
         try
         {
-            newVmDialog.getVirtualApplianceTemplate()->populateVirtualAppliance(virtualAppliance);
+            newVmDialog.virtualApplianceTemplate()->populateVirtualAppliance(virtualAppliance);
             virtualAppliance->save();
         }
         catch (core::VirtualApplianceException & ex)
         {   //  OOPS! Report & abort
             QMessageBox msgBox;
-            msgBox.setText(ex.getMessage());
+            msgBox.setText(ex.message());
             msgBox.exec();
             return;
         }
         //  If there already exists a VA with the same "location"< stop & drop it
-        core::VirtualAppliance * existingVirtualAppliance = _findVirtualApplianceByLocation(newVmDialog.getVirtualApplianceLocation());
+        core::VirtualAppliance * existingVirtualAppliance = _findVirtualApplianceByLocation(newVmDialog.virtualApplianceLocation());
         if (existingVirtualAppliance != nullptr)
         {
             _virtualAppliances.removeOne(existingVirtualAppliance);
@@ -224,7 +229,7 @@ void MainWindow::_onNewVmTriggered()
         //  Add & sort
         _virtualAppliances.append(virtualAppliance);
         std::sort(_virtualAppliances.begin(), _virtualAppliances.end(),
-                  [](auto a, auto b) -> bool { return a->getName() < b->getName(); });
+                  [](auto a, auto b) -> bool { return a->name() < b->name(); });
         _saveVirtualAppliances();
         _refreshVirtualAppliancesList();
         _refresh();
@@ -257,14 +262,14 @@ void MainWindow::_onOpenVmTriggered()
     catch (core::VirtualApplianceException & ex)
     {   //  OOPS! Report & abort
         QMessageBox msgBox;
-        msgBox.setText(ex.getMessage());
+        msgBox.setText(ex.message());
         msgBox.exec();
         return;
     }
     //  Add & sort
     _virtualAppliances.append(virtualAppliance);
     std::sort(_virtualAppliances.begin(), _virtualAppliances.end(),
-              [](auto a, auto b) -> bool { return a->getName() < b->getName(); });
+              [](auto a, auto b) -> bool { return a->name() < b->name(); });
     _saveVirtualAppliances();
     _refreshVirtualAppliancesList();
     _refresh();
@@ -278,8 +283,8 @@ void MainWindow::_onCloseVmTriggered()
     if (virtualAppliance != nullptr)
     {   //  Confirm...
         QString message =
-            "Are you sure you want to close the " + virtualAppliance->getType()->getDisplayName() +
-            " " + virtualAppliance->getName() + "?";
+            "Are you sure you want to close the " + virtualAppliance->type()->displayName() +
+            " " + virtualAppliance->name() + "?";
         QMessageBox::StandardButton reply =
             QMessageBox::question(this, "Close VM", message, QMessageBox::Yes|QMessageBox::No);
         if (reply == QMessageBox::Yes)
@@ -295,7 +300,15 @@ void MainWindow::_onCloseVmTriggered()
 }
 
 void MainWindow::_onExitTriggered()
-{
+{   //  Stop all running VAs...
+    for (core::VirtualAppliance * virtualAppliance : _virtualAppliances)
+    {
+        if (virtualAppliance->state() == core::VirtualAppliance::State::Running)
+        {
+            virtualAppliance->stop();
+        }
+    }
+    //  ...and exit
     QApplication::quit();
 }
 
@@ -318,7 +331,7 @@ void MainWindow::_onStartVmTriggered()
     catch (core::VirtualApplianceException & ex)
     {
         QMessageBox msgBox;
-        msgBox.setText(ex.getMessage());
+        msgBox.setText(ex.message());
         msgBox.exec();
     }
 }
@@ -357,7 +370,7 @@ void MainWindow::_onSuspendVmTriggered()
     catch (core::VirtualApplianceException & ex)
     {
         QMessageBox msgBox;
-        msgBox.setText(ex.getMessage());
+        msgBox.setText(ex.message());
         msgBox.exec();
     }
 }
@@ -377,7 +390,7 @@ void MainWindow::_onResumeVmTriggered()
     catch (core::VirtualApplianceException & ex)
     {
         QMessageBox msgBox;
-        msgBox.setText(ex.getMessage());
+        msgBox.setText(ex.message());
         msgBox.exec();
     }
 }
@@ -408,7 +421,7 @@ void MainWindow::_refreshTimerTimeout()
     for (core::VirtualAppliance * virtualAppliance : _virtualAppliances)
     {
         if (_virtualApplianceWindows.contains(virtualAppliance) &&
-            virtualAppliance->getState() != core::VirtualAppliance::State::Running)
+            virtualAppliance->state() != core::VirtualAppliance::State::Running)
         {   //  Must kill this VA window
             VirtualApplianceWindow * virtualApplianceWindow = _virtualApplianceWindows[virtualAppliance];
             _virtualApplianceWindows.remove(virtualAppliance);

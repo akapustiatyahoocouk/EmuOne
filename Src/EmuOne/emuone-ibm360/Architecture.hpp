@@ -17,10 +17,10 @@ namespace ibm360
         //////////
         //  StockObject
     public:
-        virtual QString     getMnemonic() const override;
-        virtual QString     getDisplayName() const override;
-        virtual QIcon       getSmallIcon() const override;
-        virtual QIcon       getLargeIcon() const override;
+        virtual QString     mnemonic() const override;
+        virtual QString     displayName() const override;
+        virtual QIcon       smallIcon() const override;
+        virtual QIcon       largeIcon() const override;
 
         //////////
         //  Implementation

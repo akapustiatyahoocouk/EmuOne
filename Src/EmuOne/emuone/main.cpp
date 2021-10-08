@@ -1,15 +1,23 @@
-#include "emuone-util/API.hpp"
-#include "MainWindow.hpp"
-
+//
+//  emuone/Main.cpp
+//
+//  EmuOne entry point
+//
+//////////
+#include "emuone/API.hpp"
 #include <QApplication>
 
+//////////
+//  EmuOne entry point
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QApplication application(argc, argv);
 
     util::PluginManager::loadPlugins();
 
-    MainWindow w;
-    w.show();
-    return a.exec();
+    MainWindow mainWindow;
+    mainWindow.show();
+    return application.exec();
 }
+
+//  End of emuone/Main.cpp

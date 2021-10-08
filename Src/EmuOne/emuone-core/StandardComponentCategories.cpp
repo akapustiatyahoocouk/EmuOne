@@ -13,17 +13,17 @@ IMPLEMENT_SINGLETON(StandardComponentCategories::Memory)
 StandardComponentCategories::Memory::Memory() {}
 StandardComponentCategories::Memory::~Memory() {}
 
-QString StandardComponentCategories::Memory::getMnemonic() const
+QString StandardComponentCategories::Memory::mnemonic() const
 {
     return "Memory";
 }
 
-QString StandardComponentCategories::Memory::getDisplayName() const
+QString StandardComponentCategories::Memory::displayName() const
 {
     return "Memory";
 }
 
-QIcon StandardComponentCategories::Memory::getSmallIcon() const
+QIcon StandardComponentCategories::Memory::smallIcon() const
 {
     if (_smallIcon.isNull())
     {
@@ -32,7 +32,7 @@ QIcon StandardComponentCategories::Memory::getSmallIcon() const
     return _smallIcon;
 }
 
-QIcon StandardComponentCategories::Memory::getLargeIcon() const
+QIcon StandardComponentCategories::Memory::largeIcon() const
 {
     if (_largeIcon.isNull())
     {
@@ -47,17 +47,17 @@ IMPLEMENT_SINGLETON(StandardComponentCategories::Processors)
 StandardComponentCategories::Processors::Processors() {}
 StandardComponentCategories::Processors::~Processors() {}
 
-QString StandardComponentCategories::Processors::getMnemonic() const
+QString StandardComponentCategories::Processors::mnemonic() const
 {
     return "Processors";
 }
 
-QString StandardComponentCategories::Processors::getDisplayName() const
+QString StandardComponentCategories::Processors::displayName() const
 {
     return "Processors";
 }
 
-QIcon StandardComponentCategories::Processors::getSmallIcon() const
+QIcon StandardComponentCategories::Processors::smallIcon() const
 {
     if (_smallIcon.isNull())
     {
@@ -66,7 +66,7 @@ QIcon StandardComponentCategories::Processors::getSmallIcon() const
     return _smallIcon;
 }
 
-QIcon StandardComponentCategories::Processors::getLargeIcon() const
+QIcon StandardComponentCategories::Processors::largeIcon() const
 {
     if (_largeIcon.isNull())
     {
@@ -81,17 +81,17 @@ IMPLEMENT_SINGLETON(StandardComponentCategories::Terminals)
 StandardComponentCategories::Terminals::Terminals() {}
 StandardComponentCategories::Terminals::~Terminals() {}
 
-QString StandardComponentCategories::Terminals::getMnemonic() const
+QString StandardComponentCategories::Terminals::mnemonic() const
 {
     return "Terminals";
 }
 
-QString StandardComponentCategories::Terminals::getDisplayName() const
+QString StandardComponentCategories::Terminals::displayName() const
 {
     return "Terminals";
 }
 
-QIcon StandardComponentCategories::Terminals::getSmallIcon() const
+QIcon StandardComponentCategories::Terminals::smallIcon() const
 {
     if (_smallIcon.isNull())
     {
@@ -100,7 +100,7 @@ QIcon StandardComponentCategories::Terminals::getSmallIcon() const
     return _smallIcon;
 }
 
-QIcon StandardComponentCategories::Terminals::getLargeIcon() const
+QIcon StandardComponentCategories::Terminals::largeIcon() const
 {
     if (_largeIcon.isNull())
     {

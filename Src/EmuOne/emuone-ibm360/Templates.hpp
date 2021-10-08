@@ -15,14 +15,14 @@ namespace ibm360
         //////////
         //  StockObject
     public:
-        virtual QString     getMnemonic() const override;
-        virtual QString     getDisplayName() const override;
+        virtual QString         mnemonic() const override;
+        virtual QString         displayName() const override;
 
         //////////
         //  VirtualApplianceTemplate
     public:
-        virtual Architecture *  getArchitecture() const override;
-        virtual void        populateVirtualAppliance(core::VirtualAppliance * virtualAppliance) override;
+        virtual Architecture *  architecture() const override;
+        virtual void            populateVirtualAppliance(core::VirtualAppliance * virtualAppliance) override;
     };
 }
 

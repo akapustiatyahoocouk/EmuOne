@@ -21,7 +21,7 @@ namespace ibm360
         //////////
         //  Types
     public:
-        //  The "type" of IBM/360 mstorage
+        //  The "type" of IBM/360 storage
         class EMUONE_IBM360_EXPORT Type : public core::ComponentType
         {
             DECLARE_SINGLETON(Type)
@@ -29,13 +29,13 @@ namespace ibm360
             //////////
             //  StockObject
         public:
-            virtual QString     getMnemonic() const override;
-            virtual QString     getDisplayName() const override;
+            virtual QString     mnemonic() const override;
+            virtual QString     displayName() const override;
 
             //////////
             //  ComponentType
         public:
-            virtual core::ComponentCategory *   getCategory() const override;
+            virtual core::ComponentCategory *   category() const override;
             virtual bool        isCompatibleWith(core::Architecture * architecture) const override;
             virtual Storage *   createComponent() override;
         };
@@ -49,15 +49,15 @@ namespace ibm360
         //////////
         //  Component
     public:
-        virtual core::ComponentType *   getType() const override;
+        virtual core::ComponentType*type() const override;
         virtual ComponentEditor *   createEditor(QWidget * parent) override;
-        virtual QString             getShortStatus() const override;
+        virtual QString             shortStatus() const override;
         virtual core::ComponentUi * createUi() override;
 
         //////////
         //  Component (state control) - all thread-safe
     public:
-        virtual State           getState() const override;
+        virtual State           state() const override;
         virtual void            connect() override;
         virtual void            initialise() override;
         virtual void            start() override;
@@ -76,7 +76,7 @@ namespace ibm360
     public:
         static bool             isValidSize(const core::MemorySize & size);
 
-        core::MemorySize        getSize() const { return _size; }
+        core::MemorySize        size() const { return _size; }
         bool                    setSize(const core::MemorySize & size);
 
         //////////

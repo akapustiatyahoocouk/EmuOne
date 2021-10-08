@@ -7,6 +7,8 @@
 
 namespace util
 {
+    //////////
+    //  A generic "plugin" is an agent doscovered dynamically at start-up and initialised
     class EMUONE_UTIL_EXPORT Plugin
     {
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Plugin)
@@ -25,6 +27,8 @@ namespace util
     };
     using PluginList = QList<Plugin*>;
 
+    //////////
+    //  The plugin discoverer / manager
     class EMUONE_UTIL_EXPORT PluginManager
     {
         UTILITY_CLASS(PluginManager)

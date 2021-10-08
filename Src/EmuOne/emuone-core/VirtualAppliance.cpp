@@ -47,18 +47,18 @@ void VirtualAppliance::save() const
     //  Create & populate roor node
     QDomElement rootElement = domDocument.createElement("VirtualAppliance");
     domDocument.appendChild(rootElement);
-    rootElement.setAttribute("Type", this->getType()->getMnemonic());
+    rootElement.setAttribute("Type", this->type()->mnemonic());
     rootElement.setAttribute("Name", _name);
-    rootElement.setAttribute("Architecture", _architecture->getMnemonic());
-    rootElement.setAttribute("Template", _template->getMnemonic());
+    rootElement.setAttribute("Architecture", _architecture->mnemonic());
+    rootElement.setAttribute("Template", _template->mnemonic());
 
     //  Create & populate component nodes
     for (Component * component : _components)
     {
         QDomElement componentElement = domDocument.createElement("Component");
         rootElement.appendChild(componentElement);
-        componentElement.setAttribute("Type", component->getType()->getMnemonic());
-        componentElement.setAttribute("Name", component->getName());
+        componentElement.setAttribute("Type", component->type()->mnemonic());
+        componentElement.setAttribute("Name", component->name());
         //  ...and its configuration too
         QDomElement configurationElement = domDocument.createElement("Configuration");
         componentElement.appendChild(configurationElement);
@@ -192,7 +192,7 @@ void VirtualAppliance::addComponent(Component * component)
     }
 
     //  Is the "component" compatble with this VA's architecture ?
-    if (component->getType()->isCompatibleWith(_architecture))
+    if (component->type()->isCompatibleWith(_architecture))
     {   //  Yes!
         _components.append(component);
         _compatibleComponents.append(component);
@@ -204,7 +204,7 @@ void VirtualAppliance::addComponent(Component * component)
     //  TODO
 
     //  Give uo
-    throw VirtualApplianceException(component->getType()->getDisplayName() + " is not compatible with " + _architecture->getDisplayName());
+    throw VirtualApplianceException(component->type()->displayName() + " is not compatible with " + _architecture->displayName());
 }
 
 void VirtualAppliance::removeComponent(Component * component)
@@ -237,19 +237,19 @@ void VirtualAppliance::removeComponent(Component * component)
     //  Give up
 }
 
-ComponentList VirtualAppliance::getComponents() const
+ComponentList VirtualAppliance::components() const
 {
     return _components;
 }
 
-ComponentList VirtualAppliance::getComponents(ComponentCategory * componentCategory)
+ComponentList VirtualAppliance::components(ComponentCategory * componentCategory)
 {
     Q_ASSERT(componentCategory != nullptr);
 
     ComponentList result;
     for (auto component : _components)
     {
-        if (component->getType()->getCategory() == componentCategory)
+        if (component->type()->category() == componentCategory)
         {
             result.append(component);
         }
@@ -259,7 +259,7 @@ ComponentList VirtualAppliance::getComponents(ComponentCategory * componentCateg
 
 //////////
 //  Operations (state control)
-VirtualAppliance::State VirtualAppliance::getState() const
+VirtualAppliance::State VirtualAppliance::state() const
 {
     QMutexLocker locker(&_stateGuard);
     return _state;
@@ -328,15 +328,15 @@ void VirtualAppliance::_connectComponents()
     {
         for (Component * component : _components)
         {
-            Q_ASSERT(component->getState() == Component::State::Constructed);
+            Q_ASSERT(component->state() == Component::State::Constructed);
             component->connect();
-            Q_ASSERT(component->getState() == Component::State::Connected);
+            Q_ASSERT(component->state() == Component::State::Connected);
         }
         for (Adaptor * adaptor : _adaptors)
         {
-            Q_ASSERT(adaptor->getState() == Component::State::Constructed);
+            Q_ASSERT(adaptor->state() == Component::State::Constructed);
             adaptor->connect();
-            Q_ASSERT(adaptor->getState() == Component::State::Connected);
+            Q_ASSERT(adaptor->state() == Component::State::Connected);
         }
     }
     catch (...)
@@ -352,15 +352,15 @@ void VirtualAppliance::_initialiseComponents()
     {
         for (Component * component : _components)
         {
-            Q_ASSERT(component->getState() == Component::State::Connected);
+            Q_ASSERT(component->state() == Component::State::Connected);
             component->initialise();
-            Q_ASSERT(component->getState() == Component::State::Initialised);
+            Q_ASSERT(component->state() == Component::State::Initialised);
         }
         for (Adaptor * adaptor : _adaptors)
         {
-            Q_ASSERT(adaptor->getState() == Component::State::Connected);
+            Q_ASSERT(adaptor->state() == Component::State::Connected);
             adaptor->initialise();
-            Q_ASSERT(adaptor->getState() == Component::State::Initialised);
+            Q_ASSERT(adaptor->state() == Component::State::Initialised);
         }
     }
     catch (...)
@@ -376,15 +376,15 @@ void VirtualAppliance::_startComponents()
     {
         for (Component * component : _components)
         {
-            Q_ASSERT(component->getState() == Component::State::Initialised);
+            Q_ASSERT(component->state() == Component::State::Initialised);
             component->start();
-            Q_ASSERT(component->getState() == Component::State::Running);
+            Q_ASSERT(component->state() == Component::State::Running);
         }
         for (Adaptor * adaptor : _adaptors)
         {
-            Q_ASSERT(adaptor->getState() == Component::State::Initialised);
+            Q_ASSERT(adaptor->state() == Component::State::Initialised);
             adaptor->start();
-            Q_ASSERT(adaptor->getState() == Component::State::Running);
+            Q_ASSERT(adaptor->state() == Component::State::Running);
         }
     }
     catch (...)
@@ -398,18 +398,18 @@ void VirtualAppliance::_stopComponents()
 {
     for (Adaptor * adaptor : _adaptors)
     {
-        if (adaptor->getState() == Component::State::Running)
+        if (adaptor->state() == Component::State::Running)
         {
             adaptor->stop();
-            Q_ASSERT(adaptor->getState() == Component::State::Initialised);
+            Q_ASSERT(adaptor->state() == Component::State::Initialised);
         }
     }
     for (Component * component : _components)
     {
-        if (component->getState() == Component::State::Running)
+        if (component->state() == Component::State::Running)
         {
             component->stop();
-            Q_ASSERT(component->getState() == Component::State::Initialised);
+            Q_ASSERT(component->state() == Component::State::Initialised);
         }
     }
 }
@@ -418,18 +418,18 @@ void VirtualAppliance::_deinitialiseComponents()
 {
     for (Adaptor * adaptor : _adaptors)
     {
-        if (adaptor->getState() == Component::State::Initialised)
+        if (adaptor->state() == Component::State::Initialised)
         {
             adaptor->deinitialise();
-            Q_ASSERT(adaptor->getState() == Component::State::Connected);
+            Q_ASSERT(adaptor->state() == Component::State::Connected);
         }
     }
     for (Component * component : _components)
     {
-        if (component->getState() == Component::State::Initialised)
+        if (component->state() == Component::State::Initialised)
         {
             component->deinitialise();
-            Q_ASSERT(component->getState() == Component::State::Connected);
+            Q_ASSERT(component->state() == Component::State::Connected);
         }
     }
 }
@@ -438,18 +438,18 @@ void VirtualAppliance::_disconnectComponents()
 {
     for (Adaptor * adaptor : _adaptors)
     {
-        if (adaptor->getState() == Component::State::Connected)
+        if (adaptor->state() == Component::State::Connected)
         {
             adaptor->disconnect();
-            Q_ASSERT(adaptor->getState() == Component::State::Constructed);
+            Q_ASSERT(adaptor->state() == Component::State::Constructed);
         }
     }
     for (Component * component : _components)
     {
-        if (component->getState() == Component::State::Connected)
+        if (component->state() == Component::State::Connected)
         {
             component->disconnect();
-            Q_ASSERT(component->getState() == Component::State::Constructed);
+            Q_ASSERT(component->state() == Component::State::Constructed);
         }
     }
 }

@@ -24,7 +24,7 @@ public:
     //////////
     //  Operations
 public:
-    core::Component *   getComponent() const { return _component; }
+    core::Component *   component() const { return _component; }
 
     //  Adjusts all the editor's fields to reflect the current configuration
     //  of the edited component.

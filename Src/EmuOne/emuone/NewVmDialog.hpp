@@ -19,22 +19,22 @@ class NewVmDialog : public QDialog
     //////////
     //  Construction/destruction
 public:
-    explicit NewVmDialog(QWidget *parent = nullptr);
+    explicit NewVmDialog(QWidget * parent);
     ~NewVmDialog();
 
     //////////
     //  Operations
 public:
-    core::VirtualApplianceType *getVirtualApplianceType() const { return _virtualApplianceType; }
-    core::Architecture *        getVirtualApplianceArchitecture() const { return _virtualApplianceArchitecture; }
-    core::VirtualApplianceTemplate *    getVirtualApplianceTemplate() const { return _virtualApplianceTemplate; }
-    QString                     getVirtualApplianceName() const { return _virtualApplianceName; }
-    QString                     getVirtualApplianceLocation() const { return _virtualApplianceLocation; }
+    core::VirtualApplianceType *virtualApplianceType() const { return _virtualApplianceType; }
+    core::Architecture *        virtualApplianceArchitecture() const { return _virtualApplianceArchitecture; }
+    core::VirtualApplianceTemplate *    virtualApplianceTemplate() const { return _virtualApplianceTemplate; }
+    QString                     virtualApplianceName() const { return _virtualApplianceName; }
+    QString                     virtualApplianceLocation() const { return _virtualApplianceLocation; }
 
     //////////
     //  Implementation
 private:
-    Ui::NewVmDialog *ui;
+    Ui::NewVmDialog *           _ui;
     core::VirtualApplianceType *_virtualApplianceType = nullptr;
     core::Architecture *        _virtualApplianceArchitecture = nullptr;
     core::VirtualApplianceTemplate *    _virtualApplianceTemplate = nullptr;

@@ -32,10 +32,16 @@ protected:
     virtual void        paintEvent(QPaintEvent * event) override;
 
     //////////
+    //  core::FullScreenWidget
+public:
+    virtual core::Component *   component() override;
+    virtual QString     displayName() override;
+
+    //////////
     //  Implementation
 private:
-    Ui::Ibm2741FullScreenWidget *   ui;
-    Ibm2741 *const                  _ibm2741;
+    Ui::Ibm2741FullScreenWidget *   _ui;
+    Ibm2741 *const      _ibm2741;
 };
 
 //  Endof emuone-ibm360/Ibm2741FullScreenWidget.hpp

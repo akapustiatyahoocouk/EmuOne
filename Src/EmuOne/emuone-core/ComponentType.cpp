@@ -11,7 +11,7 @@ ComponentTypeList ComponentType::_registry;
 
 //////////
 //  Registry
-ComponentTypeList ComponentType::getAll()
+ComponentTypeList ComponentType::all()
 {
     return _registry;
 }
@@ -20,7 +20,7 @@ ComponentType * ComponentType::findByMnemonic(const QString & mnemonic)
 {
     for (ComponentType * componentType : _registry)
     {
-        if (componentType->getMnemonic() == mnemonic)
+        if (componentType->mnemonic() == mnemonic)
         {
             return componentType;
         }
@@ -31,13 +31,13 @@ ComponentType * ComponentType::findByMnemonic(const QString & mnemonic)
 bool ComponentType::registerComponentType(ComponentType * componentType)
 {
     Q_ASSERT(componentType != nullptr);
-    Q_ASSERT(componentType->getCategory() != nullptr);
+    Q_ASSERT(componentType->category() != nullptr);
 
-    if (!ComponentCategory::registerComponentCategory(componentType->getCategory()))
+    if (!ComponentCategory::registerComponentCategory(componentType->category()))
     {   //  OOPS! No point in continuing
         return false;
     }
-    ComponentType * registeredComponentType = findByMnemonic(componentType->getMnemonic());
+    ComponentType * registeredComponentType = findByMnemonic(componentType->mnemonic());
     if (registeredComponentType == nullptr)
     {
         _registry.append(componentType);

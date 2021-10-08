@@ -42,10 +42,10 @@ namespace core
         static bool         isValidName(const QString & name);
 
         //  Returns the type of this component.
-        virtual ComponentType * getType() const = 0;
+        virtual ComponentType * type() const = 0;
 
         //  Returns the name of this component.
-        QString             getName() const { return _name; }
+        QString             name() const { return _name; }
 
         //  Sets the name of this component.
         //  Throws "VirtualApplianceException" if the new "name" is not a valid component name.
@@ -56,10 +56,10 @@ namespace core
         virtual ComponentEditor *   createEditor(QWidget * parent) = 0;
 
         //  Returns a short message describing this Component's status
-        virtual QString     getShortStatus() const = 0;
+        virtual QString     shortStatus() const = 0;
 
         //  Returns the VA to which this Component currently belongs; nullptr == standalone
-        VirtualAppliance *  getVirtualAppliance() const { return _virtualAppliance; }
+        VirtualAppliance *  virtualAppliance() const { return _virtualAppliance; }
 
         //  Creates a new UI for this Component; returns nullptr if this Component has no UI
         virtual ComponentUi *   createUi() = 0;
@@ -67,7 +67,7 @@ namespace core
         //////////
         //  Operations (state control) - all thread-safe
     public:
-        virtual State       getState() const = 0;
+        virtual State       state() const = 0;
         virtual void        connect() = 0;      //  throws VirtualApplianceException
         virtual void        initialise() = 0;   //  throws VirtualApplianceException;
         virtual void        start() = 0;        //  throws VirtualApplianceException

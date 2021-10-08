@@ -30,7 +30,7 @@ namespace ibm360
         //  Operations
     public:
         static bool             isValidAddress(uint16_t address);
-        uint16_t                getAddress() const { return _address; }
+        uint16_t                address() const { return _address; }
         void                    setAddress(uint16_t address);
 
         //////////

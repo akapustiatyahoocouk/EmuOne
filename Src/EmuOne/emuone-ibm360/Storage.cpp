@@ -21,7 +21,7 @@ Storage::~Storage()
 
 //////////
 //  Component
-core::ComponentType * Storage::getType() const
+core::ComponentType * Storage::type() const
 {
     return Storage::Type::getInstance();
 }
@@ -31,14 +31,14 @@ ComponentEditor * Storage::createEditor(QWidget * parent)
     return new Ibm360StorageEditor(this, parent);
 }
 
-QString Storage::getShortStatus() const
+QString Storage::shortStatus() const
 {
     return _size.toDisplayString();
 }
 
 //////////
 //  Component (state control) - all thread-safe
-core::Component::State Storage::getState() const
+core::Component::State Storage::state() const
 {
     QMutexLocker lock(&_stateGuard);
     return _state;
@@ -164,17 +164,17 @@ IMPLEMENT_SINGLETON(Storage::Type)
 Storage::Type::Type() {}
 Storage::Type::~Type() {}
 
-QString Storage::Type::getMnemonic() const
+QString Storage::Type::mnemonic() const
 {
     return "ibm360::Storage";
 }
 
-QString Storage::Type::getDisplayName() const
+QString Storage::Type::displayName() const
 {
     return "IBM/360 main storage";
 }
 
-core::ComponentCategory * Storage::Type::getCategory() const
+core::ComponentCategory * Storage::Type::category() const
 {
     return core::StandardComponentCategories::Memory::getInstance();
 }

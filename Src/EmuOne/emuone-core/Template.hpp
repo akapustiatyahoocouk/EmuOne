@@ -23,14 +23,14 @@ namespace core
         //////////
         //  StockObject
     public:
-        virtual QIcon       getSmallIcon() const override { return getArchitecture()->getSmallIcon(); }
-        virtual QIcon       getLargeIcon() const override { return getArchitecture()->getLargeIcon(); }
+        virtual QIcon       smallIcon() const override { return architecture()->smallIcon(); }
+        virtual QIcon       largeIcon() const override { return architecture()->largeIcon(); }
 
         //////////
         //  Operations
     public:
         //  The Architecture to which this VA template belongs.
-        virtual Architecture *  getArchitecture() const = 0;
+        virtual Architecture *  architecture() const = 0;
 
         //  Populates the specified "virtualAppliance" with Components as per this template
         //  Throws VirtualApplianceException if an error occurs.

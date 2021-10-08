@@ -20,7 +20,7 @@ Ibm2741::~Ibm2741()
 
 //////////
 //  Component
-core::ComponentType * Ibm2741::getType() const
+core::ComponentType * Ibm2741::type() const
 {
     return Ibm2741::Type::getInstance();
 }
@@ -30,9 +30,9 @@ ComponentEditor * Ibm2741::createEditor(QWidget * parent)
     return new Ibm2741Editor(this, parent);;
 }
 
-QString Ibm2741::getShortStatus() const
+QString Ibm2741::shortStatus() const
 {
-    return "@" + ("000" + QString::number(getAddress(), 16)).right(3).toUpper();
+    return "@" + ("000" + QString::number(address(), 16)).right(3).toUpper();
 }
 
 core::ComponentUi * Ibm2741::createUi()
@@ -42,7 +42,7 @@ core::ComponentUi * Ibm2741::createUi()
 
 //////////
 //  Component (state control) - all thread-safe
-core::Component::State Ibm2741::getState() const
+core::Component::State Ibm2741::state() const
 {
     QMutexLocker lock(&_stateGuard);
     return _state;
@@ -145,17 +145,17 @@ IMPLEMENT_SINGLETON(Ibm2741::Type)
 Ibm2741::Type::Type() {}
 Ibm2741::Type::~Type() {}
 
-QString Ibm2741::Type::getMnemonic() const
+QString Ibm2741::Type::mnemonic() const
 {
     return "ibm360::Ibm2741";
 }
 
-QString Ibm2741::Type::getDisplayName() const
+QString Ibm2741::Type::displayName() const
 {
     return "IBM 2741 terminal";
 }
 
-core::ComponentCategory * Ibm2741::Type::getCategory() const
+core::ComponentCategory * Ibm2741::Type::category() const
 {
     return core::StandardComponentCategories::Terminals::getInstance();
 }
@@ -182,7 +182,7 @@ Ibm2741::Ui::~Ui()
 {
 }
 
-core::FullScreenWidgetList Ibm2741::Ui::getFullScreenWidgets()
+core::FullScreenWidgetList Ibm2741::Ui::fullScreenWidgets()
 {
     core::FullScreenWidgetList result;
     result.append(_fullScreenWidget);

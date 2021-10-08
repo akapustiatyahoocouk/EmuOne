@@ -17,7 +17,7 @@ bool Architecture::addVirtualMachineTemplate(VirtualMachineTemplate * virtualMac
 {
     Q_ASSERT(virtualMachineTemplate != nullptr);
 
-    VirtualMachineTemplate * registeredTemplate = findVirtualMachineTemplate(virtualMachineTemplate->getMnemonic());
+    VirtualMachineTemplate * registeredTemplate = findVirtualMachineTemplate(virtualMachineTemplate->mnemonic());
     if (registeredTemplate == nullptr)
     {
         _virtualApplianceTemplates.append(virtualMachineTemplate);
@@ -31,7 +31,7 @@ bool Architecture::addRemoteTerminalTemplate(RemoteTerminalTemplate * remoteTerm
 {
     Q_ASSERT(remoteTerminalTemplate != nullptr);
 
-    RemoteTerminalTemplate * registeredTemplate = findRemoteTerminalTemplate(remoteTerminalTemplate->getMnemonic());
+    RemoteTerminalTemplate * registeredTemplate = findRemoteTerminalTemplate(remoteTerminalTemplate->mnemonic());
     if (registeredTemplate == nullptr)
     {
         _virtualApplianceTemplates.append(remoteTerminalTemplate);
@@ -45,7 +45,7 @@ VirtualApplianceTemplate * Architecture::findVirtualApplianceTemplate(const QStr
 {
     for (VirtualApplianceTemplate * virtualApplianceTemplate : _virtualApplianceTemplates)
     {
-        if (virtualApplianceTemplate->getMnemonic() == mnemonic)
+        if (virtualApplianceTemplate->mnemonic() == mnemonic)
         {
             return virtualApplianceTemplate;
         }
@@ -57,7 +57,7 @@ VirtualMachineTemplate * Architecture::findVirtualMachineTemplate(const QString 
 {
     for (VirtualMachineTemplate * virtualMachineTemplate : _virtualMachineTemplates)
     {
-        if (virtualMachineTemplate->getMnemonic() == mnemonic)
+        if (virtualMachineTemplate->mnemonic() == mnemonic)
         {
             return virtualMachineTemplate;
         }
@@ -69,7 +69,7 @@ RemoteTerminalTemplate * Architecture::findRemoteTerminalTemplate(const QString 
 {
     for (RemoteTerminalTemplate * remoteTerminalTemplate : _remoteTerminalTemplates)
     {
-        if (remoteTerminalTemplate->getMnemonic() == mnemonic)
+        if (remoteTerminalTemplate->mnemonic() == mnemonic)
         {
             return remoteTerminalTemplate;
         }
@@ -79,7 +79,7 @@ RemoteTerminalTemplate * Architecture::findRemoteTerminalTemplate(const QString 
 
 //////////
 //  Registry
-ArchitectureList Architecture::getAll()
+ArchitectureList Architecture::all()
 {
     return _registry;
 }
@@ -88,7 +88,7 @@ Architecture * Architecture::findByMnemonic(const QString & mnemonic)
 {
     for (Architecture * architecture : _registry)
     {
-        if (architecture->getMnemonic() == mnemonic)
+        if (architecture->mnemonic() == mnemonic)
         {
             return architecture;
         }
@@ -100,7 +100,7 @@ bool Architecture::registerArchitecture(Architecture * architecture)
 {
     Q_ASSERT(architecture != nullptr);
 
-    Architecture * registeredArchitecture = findByMnemonic(architecture->getMnemonic());
+    Architecture * registeredArchitecture = findByMnemonic(architecture->mnemonic());
     if (registeredArchitecture == nullptr)
     {
         _registry.append(architecture);

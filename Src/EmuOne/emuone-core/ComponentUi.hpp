@@ -29,7 +29,8 @@ namespace core
         //////////
         //  Operations
     public:
-        virtual FullScreenWidgetList    getFullScreenWidgets() = 0;
+        virtual Component *     component() const { return _component; }
+        virtual FullScreenWidgetList    fullScreenWidgets() = 0;
 
         //////////
         //  Implementation

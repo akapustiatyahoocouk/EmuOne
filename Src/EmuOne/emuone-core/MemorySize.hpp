@@ -42,8 +42,8 @@ namespace core
         //////////
         //  Operations
     public:
-        Unit                getUnit() const { return _unit; }
-        uint64_t            getNumberOfUnits() const { return _numberOfUnits; }
+        Unit                unit() const { return _unit; }
+        uint64_t            numberOfUnits() const { return _numberOfUnits; }
 
         //  Returns this memory size expressed in the specified units.
         uint64_t            toUnits(Unit unit) const;
@@ -52,8 +52,8 @@ namespace core
         uint64_t            toBytes() const;
 
         QString             toString() const;
-        QString             toDisplayString() const;
         static MemorySize   fromString(const QString & s, const MemorySize & defaultValue);
+        QString             toDisplayString() const;
 
         //////////
         //  Implementation

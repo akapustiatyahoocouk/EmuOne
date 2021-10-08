@@ -25,7 +25,7 @@ public:
     //////////
     //  Implementation
 private:
-    Ui::ConfigureVmDialog * ui;
+    Ui::ConfigureVmDialog * _ui;
     core::VirtualAppliance *_virtualAppliance;
     bool                    _refreshUnderway = false;
 
@@ -35,7 +35,7 @@ private:
     {
     public:
         _AddComponentAction(ConfigureVmDialog * configureVmDialog, core::ComponentType * componentType)
-            :   QAction(componentType->getSmallIcon(), componentType->getDisplayName()),
+            :   QAction(componentType->smallIcon(), componentType->displayName()),
                 _configureVmDialog(configureVmDialog),
                 _componentType(componentType)
         {
@@ -52,7 +52,7 @@ private:
     void                    _refreshComponentsTree();
     void                    _refresh();
 
-    core::ComponentCategory *   _getSelectedComponentCategory();
+    core::ComponentCategory*_getSelectedComponentCategory();
     core::Component *       _getSelectedComponent();
     void                    _setSelectedComponent(core::Component * component);
 

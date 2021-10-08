@@ -20,10 +20,10 @@ public:
     //////////
     //  Operations
 public:
-    virtual QString     getMnemonic() const = 0;
-    virtual QString     getDisplayName() const = 0;
-    virtual QIcon       getSmallIcon() const = 0;
-    virtual QIcon       getLargeIcon() const = 0;
+    virtual QString     mnemonic() const = 0;
+    virtual QString     displayName() const = 0;
+    virtual QIcon       smallIcon() const = 0;
+    virtual QIcon       largeIcon() const = 0;
 };
 
 //  End of emuone-util/StockObject.hpp

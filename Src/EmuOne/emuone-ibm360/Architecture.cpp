@@ -13,17 +13,17 @@ Architecture::~Architecture() {}
 
 //////////
 //  StockObject
-QString Architecture::getMnemonic() const
+QString Architecture::mnemonic() const
 {
     return "IBM/360";
 }
 
-QString Architecture::getDisplayName() const
+QString Architecture::displayName() const
 {
     return "IBM/360";
 }
 
-QIcon Architecture::getSmallIcon() const
+QIcon Architecture::smallIcon() const
 {
     if (_smallIcon.isNull())
     {
@@ -32,7 +32,7 @@ QIcon Architecture::getSmallIcon() const
     return _smallIcon;
 }
 
-QIcon Architecture::getLargeIcon() const
+QIcon Architecture::largeIcon() const
 {
     if (_largeIcon.isNull())
     {

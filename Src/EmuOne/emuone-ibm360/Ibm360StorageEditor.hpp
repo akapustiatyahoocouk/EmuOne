@@ -32,7 +32,7 @@ public:
     //////////
     //  Implementation
 private:
-    Ui::Ibm360StorageEditor *ui;
+    Ui::Ibm360StorageEditor *   _ui;
     ibm360::Storage *   _storage;
     bool                _refreshUnderway = false;
 

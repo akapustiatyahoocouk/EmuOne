@@ -20,12 +20,12 @@ VirtualMachine::~VirtualMachine()
 
 //////////
 //  VirtualAppliance
-VirtualApplianceType * VirtualMachine::getType() const
+VirtualApplianceType * VirtualMachine::type() const
 {
     return Type::getInstance();
 }
 
-VirtualMachineTemplate * VirtualMachine::getTemplate() const
+VirtualMachineTemplate * VirtualMachine::initialTemplate() const
 {
     return dynamic_cast<VirtualMachineTemplate*>(_template);
 }
@@ -36,17 +36,17 @@ IMPLEMENT_SINGLETON(VirtualMachine::Type)
 VirtualMachine::Type::Type() {}
 VirtualMachine::Type::~Type() {}
 
-QString VirtualMachine::Type::getMnemonic() const
+QString VirtualMachine::Type::mnemonic() const
 {
     return "VirtualMachine";
 }
 
-QString VirtualMachine::Type::getDisplayName() const
+QString VirtualMachine::Type::displayName() const
 {
     return "Virtual Machine";
 }
 
-QIcon VirtualMachine::Type::getSmallIcon() const
+QIcon VirtualMachine::Type::smallIcon() const
 {
     if (_smallIcon.isNull())
     {
@@ -55,7 +55,7 @@ QIcon VirtualMachine::Type::getSmallIcon() const
     return _smallIcon;
 }
 
-QIcon VirtualMachine::Type::getLargeIcon() const
+QIcon VirtualMachine::Type::largeIcon() const
 {
     if (_largeIcon.isNull())
     {

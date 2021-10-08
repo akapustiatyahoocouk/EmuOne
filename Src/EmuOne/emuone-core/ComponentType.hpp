@@ -23,14 +23,14 @@ namespace core
         //////////
         //  StockObject
     public:
-        virtual QIcon       getSmallIcon() const override { return getCategory()->getSmallIcon(); }
-        virtual QIcon       getLargeIcon() const override { return getCategory()->getLargeIcon(); }
+        virtual QIcon       smallIcon() const override { return category()->smallIcon(); }
+        virtual QIcon       largeIcon() const override { return category()->largeIcon(); }
 
         //////////
         //  Operations
     public:
         //  Returns the category to which this component type belongs.
-        virtual ComponentCategory * getCategory() const = 0;
+        virtual ComponentCategory * category() const = 0;
 
         //  Checks if components of this type are "compatible with" (i.e. can be
         //  used directly by) virtual appliances of the specified "architecture"
@@ -42,7 +42,7 @@ namespace core
         //////////
         //  Registry
     public:
-        static ComponentTypeList    getAll();
+        static ComponentTypeList    all();
         static ComponentType *      findByMnemonic(const QString & mnemonic);
         static bool                 registerComponentType(ComponentType * componentType);
     private:

@@ -11,25 +11,25 @@
 //  Construction/destruction
 VirtualApplianceWindow::VirtualApplianceWindow(core::VirtualAppliance * virtualAppliance, QWidget * parent)
     :   QMainWindow(parent),
-        ui(new Ui::VirtualApplianceWindow),
+        _ui(new Ui::VirtualApplianceWindow),
         _virtualAppliance(virtualAppliance)
 {
-    ui->setupUi(this);
+    _ui->setupUi(this);
     Q_ASSERT(_virtualAppliance != nullptr);
 
-    this->setWindowTitle(virtualAppliance->getName());
-    this->setWindowIcon(virtualAppliance->getArchitecture()->getLargeIcon());
+    this->setWindowTitle(virtualAppliance->name());
+    this->setWindowIcon(virtualAppliance->architecture()->largeIcon());
     this->setMinimumSize(320, 200);
 
     //  Create component UIs
-    for (core::Component * component : virtualAppliance->getComponents())
+    for (core::Component * component : virtualAppliance->components())
     {
         if (core::ComponentUi * componentUi = component->createUi())
         {
             _uiMap.insert(component, componentUi);
         }
     }
-    for (core::Adaptor * adaptor : virtualAppliance->getAdaptors())
+    for (core::Adaptor * adaptor : virtualAppliance->adaptors())
     {
         if (core::ComponentUi * componentUi = adaptor->createUi())
         {
@@ -41,51 +41,73 @@ VirtualApplianceWindow::VirtualApplianceWindow(core::VirtualAppliance * virtualA
     core::FullScreenWidgetList allFullScreenWidgets;
     for (core::ComponentUi * componentUi : _uiMap)
     {
-        core::FullScreenWidgetList fullScreenWidgets = componentUi->getFullScreenWidgets();
+        core::FullScreenWidgetList fullScreenWidgets = componentUi->fullScreenWidgets();
         allFullScreenWidgets.append(fullScreenWidgets);
     }
-    if (allFullScreenWidgets.size() == 1)
+
+    this->centralWidget()->setLayout(new QGridLayout());
+    /*  TODO uncomment if (allFullScreenWidgets.size() == 1)
     {   //  Can place the only FullScreenWidget directly into this frame
-        allFullScreenWidgets[0]->setParent(this);
-        _fullScreenWidget = allFullScreenWidgets[0];
+        allFullScreenWidgets[0]->setParent(this->centralWidget());
+        this->centralWidget()->layout()->addWidget(allFullScreenWidgets[0]);
     }
-    else if (allFullScreenWidgets.size() > 1)
+    else */if (allFullScreenWidgets.size() != 0)
     {   //  Need a tab control, with one page per FullScreenWidget
-        Q_ASSERT(false);
+        _fullScreenTabWidget = new QTabWidget(this->centralWidget());
+        this->centralWidget()->layout()->addWidget(_fullScreenTabWidget);
+        _fullScreenTabWidget->setVisible(true);
+        for (core::FullScreenWidget * fullScreenWidget : allFullScreenWidgets)
+        {
+            _fullScreenTabWidget->addTab(fullScreenWidget,
+                                         fullScreenWidget->component()->type()->smallIcon(),
+                                         fullScreenWidget->displayName());
+        }
     }
 
     //  Set up custom event handlers
-    _resizeControls();
+
+    //  Done
+    _loadPosition();
 }
 
 VirtualApplianceWindow::~VirtualApplianceWindow()
 {
-    delete ui;
+    delete _fullScreenTabWidget;
+    delete _ui;
 }
 
 //////////
 //  QWidget
+void VirtualApplianceWindow::moveEvent(QMoveEvent * /*event*/)
+{
+    _savePosition();
+}
+
+void VirtualApplianceWindow::resizeEvent(QResizeEvent * /*event*/)
+{
+    _savePosition();
+}
+
 void VirtualApplianceWindow::closeEvent(QCloseEvent * event)
 {
     _virtualAppliance->stop();
     event->ignore();
 }
 
-void VirtualApplianceWindow::resizeEvent(QResizeEvent * /*event*/)
-{
-    _resizeControls();
-}
-
 //////////
 //  Implementation helpers
-void VirtualApplianceWindow::_resizeControls()
+void VirtualApplianceWindow::_savePosition()
 {
-    QRect rc1 = centralWidget()->geometry();
-    QRect rc2 = this->geometry();
-    QRect rc3 = ui->menubar->geometry();
-    QRect rc4 = ui->statusbar->geometry();
-    rc1 = rc1;
-    _fullScreenWidget->setGeometry(rc1.x(), rc3.height() / 2, rc1.width(), rc2.height() - rc3.height() - rc4.height());
+    QSettings settings("Aka", "EmuOne");
+    int x = settings.value("VirtualApplianceWindow-" + _virtualAppliance->name() + "/X", this->x()).toInt();
+    int y = settings.value("VirtualApplianceWindow-" + _virtualAppliance->name() + "/Y", this->y()).toInt();
+    int width = settings.value("VirtualApplianceWindow-" + _virtualAppliance->name() + "/Width", this->width()).toInt();
+    int height = settings.value("VirtualApplianceWindow-" + _virtualAppliance->name() + "/Height", this->height()).toInt();
+    this->setGeometry(x, y, width, height);
+}
+
+void VirtualApplianceWindow::_loadPosition()
+{
 }
 
 //////////
@@ -104,7 +126,7 @@ void VirtualApplianceWindow::_actionSuspendTriggered()
     catch (core::VirtualApplianceException & ex)
     {
         QMessageBox msgBox;
-        msgBox.setText(ex.getMessage());
+        msgBox.setText(ex.message());
         msgBox.exec();
     }
 }

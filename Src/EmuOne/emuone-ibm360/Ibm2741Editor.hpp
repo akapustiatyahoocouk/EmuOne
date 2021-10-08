@@ -32,7 +32,7 @@ public:
     //////////
     //  Implementation
 private:
-    Ui::Ibm2741Editor *     ui;
+    Ui::Ibm2741Editor *     _ui;
     ibm360::Ibm2741 *const  _ibm2741;
     bool                    _refreshUnderway = false;
 

@@ -27,9 +27,9 @@ namespace core
         bool                        addVirtualMachineTemplate(VirtualMachineTemplate * virtualMachineTemplate);
         bool                        addRemoteTerminalTemplate(RemoteTerminalTemplate * remoteTerminalTemplate);
 
-        VirtualApplianceTemplateList    getVirtualApplianceTemplates() const { return _virtualApplianceTemplates; }
-        VirtualMachineTemplateList      getVirtualMachineTemplates() const { return _virtualMachineTemplates; }
-        RemoteTerminalTemplateList      getRemoteTerminalTemplates() const { return _remoteTerminalTemplates; }
+        VirtualApplianceTemplateList    virtualApplianceTemplates() const { return _virtualApplianceTemplates; }
+        VirtualMachineTemplateList      virtualMachineTemplates() const { return _virtualMachineTemplates; }
+        RemoteTerminalTemplateList      remoteTerminalTemplates() const { return _remoteTerminalTemplates; }
 
         VirtualApplianceTemplate *  findVirtualApplianceTemplate(const QString & mnemonic) const;
         VirtualMachineTemplate *    findVirtualMachineTemplate(const QString & mnemonic) const;
@@ -38,7 +38,7 @@ namespace core
         //////////
         //  Registry
     public:
-        static ArchitectureList     getAll();
+        static ArchitectureList     all();
         static Architecture *       findByMnemonic(const QString & mnemonic);
         static bool                 registerArchitecture(Architecture * architecture);
     private:

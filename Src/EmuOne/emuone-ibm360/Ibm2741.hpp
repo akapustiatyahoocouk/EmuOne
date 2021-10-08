@@ -27,13 +27,13 @@ namespace ibm360
             //////////
             //  StockObject
         public:
-            virtual QString     getMnemonic() const override;
-            virtual QString     getDisplayName() const override;
+            virtual QString     mnemonic() const override;
+            virtual QString     displayName() const override;
 
             //////////
             //  ComponentType
         public:
-            virtual core::ComponentCategory *   getCategory() const override;
+            virtual core::ComponentCategory *   category() const override;
             virtual bool        isCompatibleWith(core::Architecture * architecture) const override;
             virtual Ibm2741 *   createComponent() override;
         };
@@ -52,7 +52,7 @@ namespace ibm360
             //////////
             //  core::ComponentUi
         public:
-            virtual core::FullScreenWidgetList  getFullScreenWidgets() override;
+            virtual core::FullScreenWidgetList  fullScreenWidgets() override;
 
             //////////
             //  Implementation
@@ -69,15 +69,15 @@ namespace ibm360
         //////////
         //  Component
     public:
-        virtual core::ComponentType *   getType() const override;
+        virtual core::ComponentType*type() const override;
         virtual ComponentEditor *   createEditor(QWidget * parent) override;
-        virtual QString             getShortStatus() const override;
+        virtual QString             shortStatus() const override;
         virtual core::ComponentUi * createUi() override;
 
         //////////
         //  Component (state control) - all thread-safe
     public:
-        virtual State           getState() const override;
+        virtual State           state() const override;
         virtual void            connect() override;
         virtual void            initialise() override;
         virtual void            start() override;

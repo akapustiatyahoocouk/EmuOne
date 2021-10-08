@@ -11,11 +11,11 @@ using namespace core;
 //  Registry
 VirtualApplianceType * VirtualApplianceType::findByMnemonic(const QString & mnemonic)
 {
-    if (mnemonic == VirtualMachine::Type::getInstance()->getMnemonic())
+    if (mnemonic == VirtualMachine::Type::getInstance()->mnemonic())
     {
         return VirtualMachine::Type::getInstance();
     }
-    if (mnemonic == RemoteTerminal::Type::getInstance()->getMnemonic())
+    if (mnemonic == RemoteTerminal::Type::getInstance()->mnemonic())
     {
         return RemoteTerminal::Type::getInstance();
     }

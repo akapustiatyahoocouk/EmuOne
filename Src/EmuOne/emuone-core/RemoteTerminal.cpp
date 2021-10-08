@@ -20,12 +20,12 @@ RemoteTerminal::~RemoteTerminal()
 
 //////////
 //  VirtualAppliance
-VirtualApplianceType * RemoteTerminal::getType() const
+VirtualApplianceType * RemoteTerminal::type() const
 {
     return Type::getInstance();
 }
 
-RemoteTerminalTemplate * RemoteTerminal::getTemplate() const
+RemoteTerminalTemplate * RemoteTerminal::initialTemplate() const
 {
     return dynamic_cast<RemoteTerminalTemplate*>(_template);
 }
@@ -36,17 +36,17 @@ IMPLEMENT_SINGLETON(RemoteTerminal::Type)
 RemoteTerminal::Type::Type() {}
 RemoteTerminal::Type::~Type() {}
 
-QString RemoteTerminal::Type::getMnemonic() const
+QString RemoteTerminal::Type::mnemonic() const
 {
     return "RemoteTerminal";
 }
 
-QString RemoteTerminal::Type::getDisplayName() const
+QString RemoteTerminal::Type::displayName() const
 {
     return "Remote Terminal";
 }
 
-QIcon RemoteTerminal::Type::getSmallIcon() const
+QIcon RemoteTerminal::Type::smallIcon() const
 {
     if (_smallIcon.isNull())
     {
@@ -55,7 +55,7 @@ QIcon RemoteTerminal::Type::getSmallIcon() const
     return _smallIcon;
 }
 
-QIcon RemoteTerminal::Type::getLargeIcon() const
+QIcon RemoteTerminal::Type::largeIcon() const
 {
     if (_largeIcon.isNull())
     {

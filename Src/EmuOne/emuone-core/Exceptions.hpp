@@ -23,7 +23,7 @@ namespace core
         //////////
         //  Operations
     public:
-        QString             getMessage() const { return _message; }
+        QString             message() const { return _message; }
 
         //////////
         //  Implementation
