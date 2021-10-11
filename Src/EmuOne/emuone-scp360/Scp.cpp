@@ -28,14 +28,17 @@ Scp::Type * Scp::type() const
 
 ComponentEditor * Scp::createEditor(QWidget * parent)
 {
+    return nullptr;
 }
 
 QString Scp::shortStatus() const
 {
+    return "TODO";
 }
 
 core::ComponentUi * Scp::createUi()
 {
+    return nullptr;
 }
 
 //////////
