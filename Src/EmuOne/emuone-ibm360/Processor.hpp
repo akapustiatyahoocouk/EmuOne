@@ -9,6 +9,44 @@
 namespace ibm360
 {
     //////////
+    //  The IBM/360 PSW
+    class EMUONE_IBM360_EXPORT Psw final
+    {
+        //////////
+        //  Construction/destruction/assignment
+    public:
+        Psw() : _value(0) {}
+
+        //////////
+        //  Operations
+    public:
+        uint8_t             systemMask() const { return (uint8_t)(_value >> 56); }
+        uint8_t             protectionKey() { return (uint8_t)((_value >> 52) & 0x0F); }
+        bool                asciiMode() const { return (_value & UINT64_C(0x0008000000000000)) != 0; }
+        bool                ebcdicMode() const { return (_value & UINT64_C(0x0008000000000000)) == 0; }
+        bool                machineCheckMode() const { return (_value & UINT64_C(0x0004000000000000)) != 0; }
+        bool                waitState() const { return (_value & UINT64_C(0x0002000000000000)) != 0; }
+        bool                runningState() const { return (_value & UINT64_C(0x0002000000000000)) == 0; }
+        bool                problemState() const { return (_value & UINT64_C(0x0001000000000000)) != 0; }
+        bool                supervisorState() const { return (_value & UINT64_C(0x0001000000000000)) == 0; }
+        uint16_t            interruptionCode() const { return (uint16_t)(_value >> 32); }
+        uint8_t             instructionLengthCode() const { return (uint8_t)((_value >> 30) & 0x03); }
+        uint8_t             conditionCode() const { return (uint8_t)((_value >> 28) & 0x03); }
+        uint8_t             programMask() const { return (uint8_t)((_value >> 24) & 0x03); }
+        bool                fixedPointOverflow() const { return (_value & UINT64_C(0x0000000008000000)) != 0; }
+        bool                decimalOverflow() const { return (_value & UINT64_C(0x0000000004000000)) != 0; }
+        bool                exponentUnderflow() const { return (_value & UINT64_C(0x0000000002000000)) != 0; }
+        bool                significance() const { return (_value & UINT64_C(0x0000000001000000)) != 0; }
+        uint32_t            instructionAddress() const { return (uint32_t)_value & 0x00FFFFFF; }
+        void                setInstructionAddress(uint32_t instructionAddress) { _value = ((_value & UINT64_C(0xFFFFFFFFFF000000)) | (instructionAddress & 0x00FFFFFF)); }
+
+        //////////
+        //  Implementation
+    private:
+        uint64_t            _value;
+    };
+
+    //////////
     //  The IBM/360 processor
     class EMUONE_IBM360_EXPORT Processor : public core::Component
     {
@@ -91,6 +129,11 @@ namespace ibm360
         //  Connection to other VM components
         Storage *               _storage = nullptr;
         Monitor *               _monitor = nullptr;
+
+        //  Runtime state
+        Psw                     _psw;
+        bool                    _stopped;
+        bool                    _iplInProgress;
     };
 }
 

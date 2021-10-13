@@ -58,6 +58,22 @@ void Scp::connect()
         return;
     }
 
+    //  Discover devices
+    QSet<core::Component*> adaptedComponents;
+    for (core::Adaptor * adaptor : virtualAppliance()->adaptors())
+    {
+        adaptedComponents.insert(adaptor->adaptedComponent());
+    }
+    for (Device * device: virtualAppliance()->findComponents<Device>())
+    {
+        if (!adaptedComponents.contains(device))
+        {
+        }
+    }
+    for (Device * device : virtualAppliance()->findAdaptors<Device>())
+    {
+    }
+
     //  Done
     _state = State::Connected;
 }
@@ -84,6 +100,10 @@ void Scp::start()
         return;
     }
 
+    //  Start the worker thread
+    _workerThread = new _WorkerThread(this);
+    _workerThread->start();
+
     //  Done
     _state = State::Running;
 }
@@ -96,6 +116,10 @@ void Scp::stop() noexcept
     {   //  OOPS! Can't make this state transiton!
         return;
     }
+
+    //  Stop the worker thread
+    _workerThread->requestStop();   //  this stops it eventually
+    _workerThread = nullptr;
 
     //  Done
     _state = State::Initialised;
@@ -123,6 +147,8 @@ void Scp::disconnect() noexcept
     {   //  OOPS! Can't make this state transiton!
         return;
     }
+
+    _devices.clear();
 
     //  Done
     _state = State::Constructed;
@@ -167,6 +193,46 @@ bool Scp::Type::isCompatibleWith(core::Architecture * architecture) const
 Scp * Scp::Type::createComponent()
 {
     return new Scp("SCP/360");
+}
+
+//////////
+//  Implementation helpers
+void Scp::_registerDevice(Device * device)
+{
+    if (_devices.contains(device->address()))
+    {   //  OOPS!
+        throw core::VirtualApplianceException("Device conflict at address " +
+                                              ("000" + QString::number(device->address(), 16)).right(3).toUpper());
+    }
+    _devices.insert(device->address(), device);
+}
+
+//////////
+//  Scp::_WorkerThread
+Scp::_WorkerThread::_WorkerThread(Scp *const scp)
+    :   _scp(scp)
+{
+}
+
+Scp::_WorkerThread::~_WorkerThread()
+{
+}
+
+void Scp::_WorkerThread::run()
+{
+    //  Wait until VA is "running" - that means all Components and Adapters are Running
+    while (_scp->virtualAppliance()->state() != core::VirtualAppliance::State::Running)
+    {
+        QThread::msleep(10);
+    }
+    //  Create the INIT process
+    InitProcess * initProcess = new InitProcess(_scp, (uint16_t)0x0001);
+    _scp->_processes.append(initProcess);
+    initProcess->start();
+    //  Go!
+    while (!_stopRequested)
+    {
+    }
 }
 
 //  End of emuone-scp360/Scp.cpp

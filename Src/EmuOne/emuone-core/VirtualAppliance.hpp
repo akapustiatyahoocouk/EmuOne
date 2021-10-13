@@ -10,7 +10,7 @@ namespace core
 {
     //////////
     //  A "type" of a virtual appliance
-    class EMUONE_CORE_EXPORT VirtualApplianceType : public StockObject
+    class EMUONE_CORE_EXPORT VirtualApplianceType : public util::StockObject
     {
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(VirtualApplianceType)
 
@@ -41,7 +41,7 @@ namespace core
         friend class VirtualMachine;
         friend class RemoteTerminal;
 
-        //////////JWT
+        //////////
         //  Constants
     public:
         //  The preferred extension for VA configuration files (without leading '.')
@@ -105,9 +105,13 @@ namespace core
         ComponentList               components() const;
         ComponentList               components(ComponentCategory * componentCategory);
         AdaptorList                 adaptors() const { return _adaptors; }
+        AdaptorList                 adaptors(ComponentCategory * componentCategory);
 
         template <class T>
         QList<T*>                   findComponents() const;
+
+        template <class T>
+        QList<T*>                   findAdaptors() const;
 
         //  Operations (state control) - all thread-safe
     public:
@@ -153,7 +157,20 @@ namespace core
                 result.append(t);
             }
         }
-        //  TODO adaptors too
+        return result;
+    }
+
+    template <class T>
+    QList<T*> VirtualAppliance::findAdaptors() const
+    {
+        QList<T*> result;
+        for (Adaptor * adaptor : _adaptors)
+        {
+            if (T * t = dynamic_cast<T*>(adaptor))
+            {
+                result.append(t);
+            }
+        }
         return result;
     }
 

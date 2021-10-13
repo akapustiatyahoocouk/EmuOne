@@ -10,11 +10,20 @@ QMAKE_CXXFLAGS += -zdefs
 QMAKE_LFLAGS += -zdefs
 
 SOURCES += \
+    EmulatedApplication.cpp \
+    EmulatedProcess.cpp \
+    EnvironmentVariable.cpp \
+    InitProcess.cpp \
     Plugin.cpp \
+    Process.cpp \
     Scp.cpp
 
 HEADERS += \
     API.hpp \
+    Classes.hpp \
+    EmulatedApplication.hpp \
+    InitProcess.hpp \
+    Process.hpp \
     Scp.hpp
 
 LIBS += -L../../../Bin/Debug -lemuone-ibm360 -lemuone-core -lemuone-util

@@ -72,6 +72,43 @@ namespace scp360
     private:
         State                   _state = State::Constructed;
         mutable QRecursiveMutex _stateGuard;
+
+        QMap<uint16_t, Device*> _devices;   //  ...keyed by I/O address
+        ProcessList         _processes; //  ...all that exist
+
+        //  Helpers
+        void                _registerDevice(Device * device);   //  throws VirtualApplianceException on error
+
+        //////////
+        //  Threads
+    private:
+        class _WorkerThread : public QThread
+        {
+            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_WorkerThread)
+
+            //////////
+            //  Construction/destruction
+        public:
+            _WorkerThread(Scp *const scp);
+            virtual ~_WorkerThread();
+
+            //////////
+            //  QThread
+        public:
+            virtual void    run() override;
+
+            //////////
+            //  Operations
+        public:
+            void            requestStop() { _stopRequested = true;  }
+
+            //////////
+            //  Implementation
+        private:
+            Scp *const      _scp;
+            volatile bool   _stopRequested = false;
+        };
+        _WorkerThread *     _workerThread = nullptr;
     };
 }
 

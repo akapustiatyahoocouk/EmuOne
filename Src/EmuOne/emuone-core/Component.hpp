@@ -108,7 +108,7 @@ namespace core
         //////////
         //  Operations
     public:
-        Component *         getAdaptedComponent() const { return _adaptedComponent; }
+        Component *         adaptedComponent() const { return _adaptedComponent; }
 
         //////////
         //  Implementation

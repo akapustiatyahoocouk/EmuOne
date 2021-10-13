@@ -10,6 +10,7 @@ QMAKE_CXXFLAGS += -zdefs
 QMAKE_LFLAGS += -zdefs
 
 SOURCES += \
+    Adaptor.cpp \
     Architecture.cpp \
     ClockFrequency.cpp \
     Component.cpp \

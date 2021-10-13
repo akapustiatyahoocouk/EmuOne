@@ -1,4 +1,4 @@
-//
+
 //  emuone-scp360/API.hpp
 //
 //  enuone-scp360 master header
@@ -20,6 +20,10 @@
     #define EMUONE_SCP360_EXPORT  Q_DECL_IMPORT
 #endif
 
+#include "emuone-scp360/Classes.hpp"
+#include "emuone-scp360/EmulatedApplication.hpp"
+#include "emuone-scp360/Process.hpp"
+#include "emuone-scp360/InitProcess.hpp"
 #include "emuone-scp360/Scp.hpp"
 
 //  End of emuone-scp360/API.hpp

@@ -10,7 +10,7 @@ namespace core
 {
     //////////
     //  Represents a VM architecture.
-    class EMUONE_CORE_EXPORT Architecture : public StockObject
+    class EMUONE_CORE_EXPORT Architecture : public util::StockObject
     {
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Architecture)
 

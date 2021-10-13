@@ -257,6 +257,21 @@ ComponentList VirtualAppliance::components(ComponentCategory * componentCategory
     return result;
 }
 
+AdaptorList VirtualAppliance::adaptors(ComponentCategory * componentCategory)
+{
+    Q_ASSERT(componentCategory != nullptr);
+
+    AdaptorList result;
+    for (auto adaptor : _adaptors)
+    {
+        if (adaptor->type()->category() == componentCategory)
+        {
+            result.append(adaptor);
+        }
+    }
+    return result;
+}
+
 //////////
 //  Operations (state control)
 VirtualAppliance::State VirtualAppliance::state() const

@@ -10,7 +10,7 @@ namespace core
 {
     //////////
     //  Represents a generic VA template
-    class EMUONE_CORE_EXPORT VirtualApplianceTemplate : public StockObject
+    class EMUONE_CORE_EXPORT VirtualApplianceTemplate : public util::StockObject
     {
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(VirtualApplianceTemplate)
 
@@ -21,7 +21,7 @@ namespace core
         virtual ~VirtualApplianceTemplate() {}
 
         //////////
-        //  StockObject
+        //  util::tockObject
     public:
         virtual QIcon       smallIcon() const override { return architecture()->smallIcon(); }
         virtual QIcon       largeIcon() const override { return architecture()->largeIcon(); }

@@ -101,6 +101,16 @@ void Processor::start()
         return;
     }
 
+    if (_monitor != nullptr)
+    {   //  The Monitor will decide when to run the CPU
+        _stopped = true;
+        _iplInProgress = false;
+    }
+    else
+    {   //  TODO implement
+        Q_ASSERT(false);
+    }
+
     //  Done
     _state = State::Running;
 }

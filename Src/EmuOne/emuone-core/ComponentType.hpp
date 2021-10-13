@@ -10,7 +10,7 @@ namespace core
 {
     //////////
     //  Represents a type of a component; also acts as a factory for components of that type.
-    class EMUONE_CORE_EXPORT ComponentType : public StockObject
+    class EMUONE_CORE_EXPORT ComponentType : public util::StockObject
     {
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(ComponentType)
 
@@ -21,7 +21,7 @@ namespace core
         virtual ~ComponentType() {}
 
         //////////
-        //  StockObject
+        //  util::StockObject
     public:
         virtual QIcon       smallIcon() const override { return category()->smallIcon(); }
         virtual QIcon       largeIcon() const override { return category()->largeIcon(); }
