@@ -73,11 +73,14 @@ namespace scp360
         State                   _state = State::Constructed;
         mutable QRecursiveMutex _stateGuard;
 
-        QMap<uint16_t, Device*> _devices;   //  ...keyed by I/O address
+        QMap<uint16_t, Device*>         _devices;   //  ...keyed by I/O address
+        QMap<uint16_t, DeviceDriver*>   _deviceDrivers;   //  ...keyed by I/O address
         ProcessList         _processes; //  ...all that exist
 
         //  Helpers
         void                _registerDevice(Device * device);   //  throws VirtualApplianceException on error
+        void                _createDeviceDrivers();
+        void                _destroyDeviceDrivers();
 
         //////////
         //  Threads

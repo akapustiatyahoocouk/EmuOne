@@ -20,9 +20,12 @@
 #include <QLibrary>
 #include <QMenu>
 #include <QMessageBox>
+#include <QMutexLocker>
 #include <QPainter>
+#include <QQueue>
 #include <QRecursiveMutex>
 #include <QScreen>
+#include <QSemaphore>
 #include <QSet>
 #include <QSettings>
 #include <QTimer>
@@ -38,6 +41,8 @@
 
 #include "emuone-util/Macros.hpp"
 #include "emuone-util/PluginManager.hpp"
+
+#include "emuone-util/BlockingQueue.hpp"
 
 #include "emuone-util/StockObject.hpp"
 //  End of emuone-util/API.hpp

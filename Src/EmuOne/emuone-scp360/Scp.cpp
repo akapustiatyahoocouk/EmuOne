@@ -68,10 +68,12 @@ void Scp::connect()
     {
         if (!adaptedComponents.contains(device))
         {
+            _registerDevice(device);
         }
     }
     for (Device * device : virtualAppliance()->findAdaptors<Device>())
     {
+        _registerDevice(device);
     }
 
     //  Done
@@ -86,6 +88,8 @@ void Scp::initialise()
     {   //  OOPS! Can't make this state transiton!
         return;
     }
+
+    _createDeviceDrivers();
 
     //  Done
     _state = State::Initialised;
@@ -134,6 +138,7 @@ void Scp::deinitialise() noexcept
         return;
     }
 
+    _destroyDeviceDrivers();
 
     //  Done
     _state = State::Connected;
@@ -205,6 +210,24 @@ void Scp::_registerDevice(Device * device)
                                               ("000" + QString::number(device->address(), 16)).right(3).toUpper());
     }
     _devices.insert(device->address(), device);
+}
+
+void Scp::_createDeviceDrivers()
+{
+    for (Device * device : _devices)
+    {
+        DeviceDriver * deviceDriver = DeviceDriver::create(device);
+        _deviceDrivers.insert(device->address(), deviceDriver);
+    }
+}
+
+void Scp::_destroyDeviceDrivers()
+{
+    for (DeviceDriver * deviceDriver : _deviceDrivers)
+    {
+        delete deviceDriver;
+    }
+    _deviceDrivers.clear();
 }
 
 //////////

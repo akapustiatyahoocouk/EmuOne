@@ -15,6 +15,7 @@ SOURCES += \
 
 HEADERS += \
     API.hpp \
+    BlockingQueue.hpp \
     Classes.hpp \
     Macros.hpp \
     PluginManager.hpp \

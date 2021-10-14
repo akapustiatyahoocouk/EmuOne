@@ -10,9 +10,11 @@ QMAKE_CXXFLAGS += -zdefs
 QMAKE_LFLAGS += -zdefs
 
 SOURCES += \
+    DeviceDriver.cpp \
     EmulatedApplication.cpp \
     EmulatedProcess.cpp \
     EnvironmentVariable.cpp \
+    Ibm2741Driver.cpp \
     InitProcess.cpp \
     Plugin.cpp \
     Process.cpp \
@@ -21,6 +23,7 @@ SOURCES += \
 HEADERS += \
     API.hpp \
     Classes.hpp \
+    DeviceDrivers.hpp \
     EmulatedApplication.hpp \
     InitProcess.hpp \
     Process.hpp \

@@ -21,6 +21,7 @@
 #endif
 
 #include "emuone-scp360/Classes.hpp"
+#include "emuone-scp360/DeviceDrivers.hpp"
 #include "emuone-scp360/EmulatedApplication.hpp"
 #include "emuone-scp360/Process.hpp"
 #include "emuone-scp360/InitProcess.hpp"
