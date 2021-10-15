@@ -9,12 +9,9 @@ using namespace scp360;
 
 //////////
 //  Construction/destruction
-EmulatedProcess::EmulatedProcess(Scp * scp, uint16_t id, const QString & name, Flags flags, Process * parent,
-                                 EmulatedApplication * emulatedApplication)
-    :   Process(scp, id, name, flags, parent),
-        _emulatedApplication(emulatedApplication)
+EmulatedProcess::EmulatedProcess(Scp * scp, uint16_t id, const QString & name, Flags flags, Process * parent)
+    :   Process(scp, id, name, flags, parent)
 {
-    Q_ASSERT(_emulatedApplication != nullptr);
 }
 
 EmulatedProcess::~EmulatedProcess()

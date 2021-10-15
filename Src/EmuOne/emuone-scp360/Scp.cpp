@@ -11,7 +11,9 @@ using namespace scp360;
 //////////
 //  Construction/destruction
 Scp::Scp(const QString & name)
-    :   ibm360::Monitor(name)
+    :   ibm360::Monitor(name),
+        //  Subsystems
+        _objectManager(this)
 {
 }
 
@@ -249,8 +251,12 @@ void Scp::_WorkerThread::run()
         QThread::msleep(10);
     }
     //  Create the INIT process
-    InitProcess * initProcess = new InitProcess(_scp, (uint16_t)0x0001);
-    _scp->_processes.append(initProcess);
+    EmulatedProcess * initProcess = nullptr;
+    _scp->_objectManager.createEmulatedProcess(InitProcess::InitApplication::getInstance()->mnemonic(),
+                                               Process::Flags::System,
+                                               nullptr,
+                                               InitProcess::InitApplication::getInstance(),
+                                               initProcess);
     initProcess->start();
     //  Go!
     while (!_stopRequested)

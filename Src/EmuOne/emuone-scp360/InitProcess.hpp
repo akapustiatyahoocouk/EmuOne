@@ -24,21 +24,28 @@ namespace scp360
             DECLARE_SINGLETON(InitApplication)
 
             //////////
-            //    util::StockObject
+            //  util::StockObject
         public:
             virtual QString     mnemonic() const override;
             virtual QString     displayName() const override;
+
+            //////////
+            //  EmulatedApplication
+        public:
+            virtual EmulatedProcess *   createInstance(Scp * scp, uint16_t id, const QString & name, Process::Flags flags, Process * parent) override;
         };
 
         //////////
-        //  Construction/destruction
-    public:
-        InitProcess(Scp * scp, uint16_t id);
+        //  Construction/destruction - from friends only
+    private:
+        InitProcess(Scp * scp, uint16_t id, const QString & name, Process::Flags flags, Process * parent);
         virtual ~InitProcess();
 
         //////////
         //  EmulatedProcess
     public:
+        virtual EmulatedApplication *   application() const override;
+    protected:
         virtual uint16_t        run() override;
     };
 }

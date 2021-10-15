@@ -14,6 +14,8 @@ namespace scp360
     {
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Scp)
 
+        friend class Object;
+
         //////////
         //  Types
     public:
@@ -75,7 +77,9 @@ namespace scp360
 
         QMap<uint16_t, Device*>         _devices;   //  ...keyed by I/O address
         QMap<uint16_t, DeviceDriver*>   _deviceDrivers;   //  ...keyed by I/O address
-        ProcessList         _processes; //  ...all that exist
+
+        //  Subsystems
+        ObjectManager       _objectManager;
 
         //  Helpers
         void                _registerDevice(Device * device);   //  throws VirtualApplianceException on error

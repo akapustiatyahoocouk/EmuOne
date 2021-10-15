@@ -16,17 +16,24 @@ SOURCES += \
     EnvironmentVariable.cpp \
     Ibm2741Driver.cpp \
     InitProcess.cpp \
+    Object.cpp \
+    ObjectManager.cpp \
     Plugin.cpp \
     Process.cpp \
-    Scp.cpp
+    Scp.cpp \
+    Segment.cpp \
+    SegmentLock.cpp \
+    SegmentMapping.cpp
 
 HEADERS += \
     API.hpp \
     Classes.hpp \
     DeviceDrivers.hpp \
     EmulatedApplication.hpp \
+    ErrorCodes.hpp \
     InitProcess.hpp \
-    Process.hpp \
+    ObjectManager.hpp \
+    Objects.hpp \
     Scp.hpp
 
 LIBS += -L../../../Bin/Debug -lemuone-ibm360 -lemuone-core -lemuone-util

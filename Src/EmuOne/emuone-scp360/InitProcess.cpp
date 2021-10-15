@@ -9,13 +9,8 @@ using namespace scp360;
 
 //////////
 //  Construction/destruction
-InitProcess::InitProcess(Scp * scp, uint16_t id)
-    :   EmulatedProcess(scp,
-                        id,
-                        InitProcess::InitApplication::getInstance()->mnemonic(),
-                        Flags::System,
-                        nullptr,
-                        InitProcess::InitApplication::getInstance())
+InitProcess::InitProcess(Scp * scp, uint16_t id, const QString & name, Process::Flags flags, Process * parent)
+    :   EmulatedProcess(scp, id, name, flags, parent)
 {
 }
 
@@ -25,6 +20,11 @@ InitProcess::~InitProcess()
 
 //////////
 //  EmulatedProcess
+EmulatedApplication * InitProcess::application() const
+{
+    return InitProcess::InitApplication::getInstance();
+}
+
 uint16_t InitProcess::run()
 {
     return 0;
@@ -44,6 +44,14 @@ QString InitProcess::InitApplication::mnemonic() const
 QString InitProcess::InitApplication::displayName() const
 {
     return "INIT";
+}
+
+
+//////////
+//  EmulatedApplication
+EmulatedProcess * InitProcess::InitApplication::createInstance(Scp * scp, uint16_t id, const QString & name, Process::Flags flags, Process * parent)
+{
+    return new InitProcess(scp, id, name, flags, parent);
 }
 
 //  End of emuone-scp360/InitProcess.cpp

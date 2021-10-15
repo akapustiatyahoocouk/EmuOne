@@ -1,4 +1,4 @@
-
+//
 //  emuone-scp360/API.hpp
 //
 //  enuone-scp360 master header
@@ -21,9 +21,13 @@
 #endif
 
 #include "emuone-scp360/Classes.hpp"
+#include "emuone-scp360/ErrorCodes.hpp"
+
+#include "emuone-scp360/Objects.hpp"
+#include "emuone-scp360/ObjectManager.hpp"
+
 #include "emuone-scp360/DeviceDrivers.hpp"
 #include "emuone-scp360/EmulatedApplication.hpp"
-#include "emuone-scp360/Process.hpp"
 #include "emuone-scp360/InitProcess.hpp"
 #include "emuone-scp360/Scp.hpp"
 
