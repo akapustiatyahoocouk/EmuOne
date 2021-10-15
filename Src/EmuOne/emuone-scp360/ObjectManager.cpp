@@ -22,6 +22,27 @@ ObjectManager::~ObjectManager()
 
 //////////
 //  Operations
+ErrorCode ObjectManager::createPhysicalDevice(ibm360::Device * hardwareDevice, Device::Flags flags, DeviceDriver * driver, PhysicalDevice *& physicalDevice)
+{
+    if (hardwareDevice == nullptr || driver == nullptr)
+    {
+        physicalDevice = nullptr;
+        return ErrorCode::ERR_PAR;
+    }
+
+    Object::Id id;
+    ErrorCode err = _generateUniqueObjectId(id);
+    if (err != ErrorCode::ERR_OK)
+    {
+        physicalDevice = nullptr;
+        return err;
+    }
+
+    physicalDevice = new PhysicalDevice(_scp, id, hardwareDevice, flags, driver);
+    _registerObject(physicalDevice);
+    return ErrorCode::ERR_OK;
+}
+
 ErrorCode ObjectManager::createSegment(const QString & name, uint32_t size, Segment::Flags flags, uint32_t address, Segment *& segment)
 {
     if (!Segment::isValidName(name))
@@ -148,6 +169,12 @@ void ObjectManager::_registerObject(Object * object)
     {
         _processes.insert(process->id(), process);
     }
+    else if (Device * device = dynamic_cast<Device*>(object))
+    {
+        _devices.insert(device->id(), device);
+        Q_ASSERT(!_devicesByName.contains(device->name()));
+        _devicesByName.insert(device->name(), device);
+    }
     else
     {
         Q_ASSERT(false);
@@ -177,6 +204,11 @@ void ObjectManager::_unregisterObject(Object * object)
     else if (Process * process = dynamic_cast<Process*>(object))
     {
         _processes.remove(process->id());
+    }
+    else if (Device * device = dynamic_cast<Device*>(object))
+    {
+        _devices.remove(device->id());
+        _devicesByName.remove(device->name());
     }
     else
     {

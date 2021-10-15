@@ -331,6 +331,11 @@ namespace scp360
         virtual uint16_t        run() = 0;
 
         //////////
+        //  System calls for an emulatedprocess
+    public:
+        ErrorCode               writeToOperator(const QString & text);
+
+        //////////
         //  Threads
     private:
         //  Each EmulatedProcess runs on a separate worker thread
@@ -361,6 +366,99 @@ namespace scp360
             volatile bool   _stopRequested = false;
         };
         _WorkerThread *     _workerThread = nullptr;
+    };
+
+    //////////
+    //  A generic "device" available to SCP/360
+    class EMUONE_SCP360_EXPORT Device : public Object
+    {
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Device)
+
+        //////////
+        //  Types
+    public:
+        enum class Flags
+        {
+            Initialise = 0x00000001,    //  DeviceDriver supports initialise() call
+            Deinitialise = 0x00000002,  //  DeviceDriver supports deinitialise() call
+            //  Flag combinations
+            None = 0x00000000,  //  None of the flags
+            All = 0x00000003    //  All of the flags
+        };
+
+        //////////
+        //  Construction/destruction
+    public:
+        Device(Scp * scp, Id id, const QString & name, Flags Flags, DeviceDriver * driver);
+        virtual ~Device();
+
+        //////////
+        //  Operations
+    public:
+        QString             name() const { return _name; }
+        Flags               flags() const { return _flags; }
+        DeviceDriver *      driver() const { return _driver; }
+
+        //////////
+        //  Implementation
+    private:
+        QString             _name;
+        Flags               _flags;
+        DeviceDriver *      _driver;
+    };
+
+    EMUONE_SCP360_EXPORT Device::Flags operator & (Device::Flags op1, Device::Flags op2);
+    EMUONE_SCP360_EXPORT Device::Flags operator | (Device::Flags op1, Device::Flags op2);
+    EMUONE_SCP360_EXPORT Device::Flags & operator &= (Device::Flags & op1, Device::Flags op2);
+    EMUONE_SCP360_EXPORT Device::Flags & operator |= (Device::Flags & op1, Device::Flags op2);
+
+    //////////
+    //  A generic "pysical device" available to SCP/360
+    class EMUONE_SCP360_EXPORT PhysicalDevice : public Device
+    {
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(PhysicalDevice)
+
+        //////////
+        //  Construction/destruction
+    public:
+        PhysicalDevice(Scp * scp, Id id, ibm360::Device * hardwareDevice, Flags flags, DeviceDriver * driver);
+        virtual ~PhysicalDevice();
+
+        //////////
+        //  Operations
+    public:
+        static bool         isValidName(const QString & name);
+
+        //////////
+        //  Operations
+    public:
+        ibm360::Device *    hardwareDevice() const { return _hardwareDevice; }
+
+        //////////
+        //  Implementation
+    private:
+        ibm360::Device *    _hardwareDevice;    //  ...represented by this PhysicalDevice in SCP/360
+
+        //  Helpers
+        static QString      _nameFromAddress(uint16_t address);
+    };
+
+    //////////
+    //  A generic "logical device" available to SCP/360
+    class EMUONE_SCP360_EXPORT LogicalDevice : public Device
+    {
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(LogicalDevice)
+
+        //////////
+        //  Construction/destruction
+    public:
+        LogicalDevice(Scp * scp, Id id, const QString & name, Flags flags, DeviceDriver * driver);
+        virtual ~LogicalDevice();
+
+        //////////
+        //  Operations
+    public:
+        static bool         isValidName(const QString & name);
     };
 }
 

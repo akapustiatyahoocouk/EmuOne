@@ -60,22 +60,22 @@ void Scp::connect()
         return;
     }
 
-    //  Discover devices
+    //  Discover hardware devices
     QSet<core::Component*> adaptedComponents;
     for (core::Adaptor * adaptor : virtualAppliance()->adaptors())
     {
         adaptedComponents.insert(adaptor->adaptedComponent());
     }
-    for (Device * device: virtualAppliance()->findComponents<Device>())
+    for (ibm360::Device * hardwareDevice : virtualAppliance()->findComponents<ibm360::Device>())
     {
-        if (!adaptedComponents.contains(device))
+        if (!adaptedComponents.contains(hardwareDevice))
         {
-            _registerDevice(device);
+            _registerHardwareDevice(hardwareDevice);
         }
     }
-    for (Device * device : virtualAppliance()->findAdaptors<Device>())
+    for (ibm360::Device * hardwareDevice : virtualAppliance()->findAdaptors<ibm360::Device>())
     {
-        _registerDevice(device);
+        _registerHardwareDevice(hardwareDevice);
     }
 
     //  Done
@@ -91,7 +91,15 @@ void Scp::initialise()
         return;
     }
 
-    _createDeviceDrivers();
+    try
+    {
+        _createDevicesAndDeviceDrivers();
+    }
+    catch (...)
+    {   //  OOPS! Cleanup & re-throw
+        _destroyDevicesAndDeviceDrivers();
+        throw;
+    }
 
     //  Done
     _state = State::Initialised;
@@ -140,7 +148,7 @@ void Scp::deinitialise() noexcept
         return;
     }
 
-    _destroyDeviceDrivers();
+    _destroyDevicesAndDeviceDrivers();
 
     //  Done
     _state = State::Connected;
@@ -155,7 +163,7 @@ void Scp::disconnect() noexcept
         return;
     }
 
-    _devices.clear();
+    _hardwareDevices.clear();
 
     //  Done
     _state = State::Constructed;
@@ -204,27 +212,76 @@ Scp * Scp::Type::createComponent()
 
 //////////
 //  Implementation helpers
-void Scp::_registerDevice(Device * device)
+void Scp::_registerHardwareDevice(ibm360::Device * hardwareDevice)
 {
-    if (_devices.contains(device->address()))
+    if (_hardwareDevices.contains(hardwareDevice->address()))
     {   //  OOPS!
         throw core::VirtualApplianceException("Device conflict at address " +
-                                              ("000" + QString::number(device->address(), 16)).right(3).toUpper());
+                                              ("000" + QString::number(hardwareDevice->address(), 16)).right(3).toUpper());
     }
-    _devices.insert(device->address(), device);
+    _hardwareDevices.insert(hardwareDevice->address(), hardwareDevice);
 }
 
-void Scp::_createDeviceDrivers()
+void Scp::_createDevicesAndDeviceDrivers()
 {
-    for (Device * device : _devices)
+    //  Create PhysicalDevices for all hardware devices, instantiating DeviceDrivers as necessary
+    QMap<QString, DeviceDriver*> deviceDriverMap;
+    for (ibm360::Device * hardwareDevice : _hardwareDevices)
     {
-        DeviceDriver * deviceDriver = DeviceDriver::create(device);
-        _deviceDrivers.insert(device->address(), deviceDriver);
+        QString hardwareDeviceTypeName = typeid(*hardwareDevice).name();
+        DeviceDriver * deviceDriver;
+        if (deviceDriverMap.contains(hardwareDeviceTypeName))
+        {   //  Use existing driver
+            deviceDriver = deviceDriverMap[hardwareDeviceTypeName];
+        }
+        else
+        {   //  Need a new driver
+            try
+            {
+                deviceDriver = DeviceDriver::createHardwareDeviceDriver(hardwareDevice);  //  throws VirtualApplianceException on error
+            }
+            catch (core::VirtualApplianceException & ex)
+            {   //  OOPS! Cleanup...
+                //  ...and re-throw
+                throw;
+            }
+            deviceDriverMap.insert(hardwareDeviceTypeName, deviceDriver);
+        }
+        PhysicalDevice * physicalDevice;
+        ErrorCode err = _objectManager.createPhysicalDevice(hardwareDevice, deviceDriver->deviceFlags(), deviceDriver, physicalDevice);
+        if (err != ErrorCode::ERR_OK)
+        {   //  OOPS! TODO proper error message
+            throw core::VirtualApplianceException("Could not create physical device " + hardwareDevice->type()->displayName());
+        }
+        _deviceDrivers.insert(physicalDevice, deviceDriver);
+    }
+
+    //  Discover "operator's console" device
+    Q_ASSERT(_operatorsConsole == nullptr);
+    for (Device * device : _deviceDrivers.keys())
+    {
+        if (PhysicalDevice * physicalDevice = dynamic_cast<PhysicalDevice*>(device))
+        {
+            ibm360::Device * hardwareDevice = physicalDevice->hardwareDevice();
+            if (dynamic_cast<ibm360::Ibm2741*>(hardwareDevice))
+            {   //  This hardware device CAN be used as an operator's console
+                if (_operatorsConsole == nullptr ||
+                    hardwareDevice->address() < _operatorsConsole->hardwareDevice()->address())
+                {   //  ...and it's the new best
+                    _operatorsConsole = physicalDevice;
+                }
+            }
+        }
+    }
+    if (_operatorsConsole == nullptr)
+    {
+        throw core::VirtualApplianceException("Operator console device could not be found");
     }
 }
 
-void Scp::_destroyDeviceDrivers()
+void Scp::_destroyDevicesAndDeviceDrivers()
 {
+    _operatorsConsole = nullptr;
     for (DeviceDriver * deviceDriver : _deviceDrivers)
     {
         delete deviceDriver;

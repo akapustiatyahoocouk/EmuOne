@@ -15,6 +15,8 @@ namespace scp360
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Scp)
 
         friend class Object;
+        friend class EmulatedProcess;
+        friend class InitProcess;
 
         //////////
         //  Types
@@ -75,16 +77,17 @@ namespace scp360
         State                   _state = State::Constructed;
         mutable QRecursiveMutex _stateGuard;
 
-        QMap<uint16_t, Device*>         _devices;   //  ...keyed by I/O address
-        QMap<uint16_t, DeviceDriver*>   _deviceDrivers;   //  ...keyed by I/O address
+        QMap<uint16_t, ibm360::Device*> _hardwareDevices;   //  Keyed by I/O address, populated by "connect()"
+        QMap<Device*, DeviceDriver*>    _deviceDrivers;     //  Drivers to use for Devices, populated by "initialise()"
+        PhysicalDevice *                _operatorsConsole = nullptr;
 
         //  Subsystems
         ObjectManager       _objectManager;
 
         //  Helpers
-        void                _registerDevice(Device * device);   //  throws VirtualApplianceException on error
-        void                _createDeviceDrivers();
-        void                _destroyDeviceDrivers();
+        void                _registerHardwareDevice(ibm360::Device * hardwareDevice);   //  throws VirtualApplianceException on error
+        void                _createDevicesAndDeviceDrivers();   //  throws VirtualApplianceException on error
+        void                _destroyDevicesAndDeviceDrivers();
 
         //////////
         //  Threads

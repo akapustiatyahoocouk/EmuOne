@@ -23,6 +23,8 @@ namespace scp360
         //////////
         //  Operations
     public:
+        ErrorCode           createPhysicalDevice(ibm360::Device * hardwareDevice, Device::Flags flags, DeviceDriver * driver, PhysicalDevice *& physicalDevice);
+
         ErrorCode           createSegment(const QString & name, uint32_t size, Segment::Flags flags, uint32_t address, Segment *& segment);
         ErrorCode           destroySegment(Segment * segment);
 
@@ -41,6 +43,8 @@ namespace scp360
         QMap<Object::Id, SegmentMapping*>   _segmentMappings;
         QMap<Object::Id, SegmentLock*>      _segmentLocks;
         QMap<Object::Id, Process*>          _processes;
+        QMap<Object::Id, Device*>           _devices;
+        QMap<QString, Device*>              _devicesByName;
 
         //  Helpers
         ErrorCode           _generateUniqueObjectId(Object::Id & id);

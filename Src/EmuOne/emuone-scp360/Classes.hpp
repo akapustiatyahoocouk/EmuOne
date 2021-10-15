@@ -19,7 +19,10 @@ namespace scp360
     class EMUONE_SCP360_EXPORT EmulatedProcess;
 
     class EMUONE_SCP360_EXPORT ObjectManager;
+    class EMUONE_SCP360_EXPORT DeviceDriver;
     class EMUONE_SCP360_EXPORT Scp;
+
+    class EMUONE_SCP360_EXPORT InitProcess;
 
     using SegmentMappingList = QList<SegmentMapping*>;
     using SegmentLockList = QList<SegmentLock*>;

@@ -10,12 +10,16 @@ QMAKE_CXXFLAGS += -zdefs
 QMAKE_LFLAGS += -zdefs
 
 SOURCES += \
+    CharacterSet.cpp \
+    Cp037CharacterSet.cpp \
+    Iso88591CharacterSet.cpp \
     Plugin.cpp \
     PluginManager.cpp
 
 HEADERS += \
     API.hpp \
     BlockingQueue.hpp \
+    CharacterSets.hpp \
     Classes.hpp \
     Macros.hpp \
     PluginManager.hpp \
@@ -29,3 +33,6 @@ unix {
     target.path = /usr/lib
 }
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    util.qrc

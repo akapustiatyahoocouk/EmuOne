@@ -42,7 +42,9 @@
 #include "emuone-util/Macros.hpp"
 #include "emuone-util/PluginManager.hpp"
 
+#include "emuone-util/StockObject.hpp"
+
+#include "emuone-util/CharacterSets.hpp"
 #include "emuone-util/BlockingQueue.hpp"
 
-#include "emuone-util/StockObject.hpp"
 //  End of emuone-util/API.hpp

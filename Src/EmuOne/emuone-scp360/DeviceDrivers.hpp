@@ -15,22 +15,46 @@ namespace scp360
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(DeviceDriver)
 
         //////////
+        //  Types
+    public:
+        class EMUONE_SCP360_EXPORT IoCompletionListener
+        {
+            //////////
+            //  This is an interface
+        public:
+            virtual ~IoCompletionListener() {}
+
+            //////////
+            //  Operations
+        public:
+            virtual void        ioCompleted(Device * device, ErrorCode errorCode) = 0;
+        };
+
+        //////////
         //  Construction/destruction
     public:
-        explicit DeviceDriver(ibm360::Device * device);
+        DeviceDriver();
         virtual ~DeviceDriver();
 
         //////////
         //  Operations
     public:
-        //  Creates a new DeviceDriver for the specified Device.
-        //  Throws VirtualApplianceException if an error occurs (e.g. no such driver).
-        static DeviceDriver *   create(ibm360::Device * device);
+        static DeviceDriver *   createHardwareDeviceDriver(ibm360::Device * hardwareDevice);    //  throws VirtualApplianceException on error
+
+        //  Retrns the Flags indicating capabilities of the driven Devices
+        virtual Device::Flags   deviceFlags() const = 0;
+
+        //  Initiates an I/O operation on the specified Device.
+        //  If the I/O operation could not be started, returns immediately with a
+        //  non-OK error code. Otherwise returns OK error code AND guarantees that the
+        //  specified "ioCompletionListener" will be notified (on an arbitrary worker
+        //  thread internal to the DeviceDriver or Device) when I/O operation has finished
+        virtual ErrorCode       beginInitialiseDevice(Device * device, IoCompletionListener * ioCompletionListener) = 0;
+        virtual ErrorCode       beginDeinitialiseDevice(Device * device, IoCompletionListener * ioCompletionListener) = 0;
 
         //////////
         //  Implementation
     private:
-        ibm360::Device *        _device;
     };
 
     //////////
@@ -42,13 +66,19 @@ namespace scp360
         //////////
         //  Construction/destruction
     public:
-        explicit Ibm2741Driver(ibm360::Ibm2741 * ibm2741);
+        Ibm2741Driver();
         virtual ~Ibm2741Driver();
+
+        //////////
+        //  DeviceDriver
+    public:
+        virtual Device::Flags   deviceFlags() const override;
+        virtual ErrorCode       beginInitialiseDevice(Device * device, IoCompletionListener * ioCompletionListener) override;
+        virtual ErrorCode       beginDeinitialiseDevice(Device * device, IoCompletionListener * ioCompletionListener) override;
 
         //////////
         //  Implementation
     private:
-        ibm360::Ibm2741 *       _ibm2741;
     };
 }
 

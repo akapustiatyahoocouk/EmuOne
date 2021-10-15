@@ -1,4 +1,4 @@
-
+//
 //  emuone-util/BlockingQueue.hpp
 //
 //  A "blocking inter-thread queue" ADT

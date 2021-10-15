@@ -9,10 +9,8 @@ using namespace scp360;
 
 //////////
 //  Construction/destruction
-DeviceDriver::DeviceDriver(ibm360::Device * device)
-    :   _device(device)
+DeviceDriver::DeviceDriver()
 {
-    Q_ASSERT(_device != nullptr);
 }
 
 DeviceDriver::~DeviceDriver()
@@ -21,16 +19,15 @@ DeviceDriver::~DeviceDriver()
 
 //////////
 //  Operations
-DeviceDriver * DeviceDriver::create(ibm360::Device * device)
+DeviceDriver * DeviceDriver::createHardwareDeviceDriver(ibm360::Device * hardwareDevice)
 {
-    Q_ASSERT(device != nullptr);
+    Q_ASSERT(hardwareDevice != nullptr);
 
-    if (ibm360::Ibm2741 * ibm2741 = dynamic_cast<ibm360::Ibm2741*>(device))
+    if (dynamic_cast<ibm360::Ibm2741*>(hardwareDevice))
     {
-        return new Ibm2741Driver(ibm2741);
+        return new Ibm2741Driver();
     }
-
-    throw core::VirtualApplianceException("Cannot instantiate device drived for " + device->type()->displayName());
+    throw core::VirtualApplianceException("No device driver for " + hardwareDevice->type()->displayName());
 }
 
 //  End of emuone-scp360/DeviceDriver.cpp

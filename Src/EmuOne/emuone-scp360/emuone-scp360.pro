@@ -10,6 +10,7 @@ QMAKE_CXXFLAGS += -zdefs
 QMAKE_LFLAGS += -zdefs
 
 SOURCES += \
+    Device.cpp \
     DeviceDriver.cpp \
     EmulatedApplication.cpp \
     EmulatedProcess.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
     InitProcess.cpp \
     Object.cpp \
     ObjectManager.cpp \
+    PhysicalDevice.cpp \
     Plugin.cpp \
     Process.cpp \
     Scp.cpp \

@@ -28,6 +28,24 @@ void EmulatedProcess::start()
 }
 
 //////////
+//  System calls for an emulatedprocess
+ErrorCode EmulatedProcess::writeToOperator(const QString & text)
+{
+    if (scp()->_operatorsConsole == nullptr)
+    {   //  OOPS! No operator console
+        return ErrorCode::ERR_SUP;
+    }
+
+    //  The "operator console" is a text device that expects EBCDIC bytes.
+    std::unique_ptr<util::CharacterSet::Encoder> encoder(util::Cp037CharacterSet::getInstance()->createEncoder());
+    QByteArray ebcdic;
+    encoder->encode(text + '\n', ebcdic);
+
+    //  Instruct device driver to begin a "write".
+    DeviceDriver * deviceDriver = scp()->_deviceDrivers[scp()->_operatorsConsole];
+}
+
+//////////
 //  EmulatedProcess::_WorkerThread
 EmulatedProcess::_WorkerThread::_WorkerThread(EmulatedProcess * emulatedProcess)
     :   _emulatedProcess(emulatedProcess)
