@@ -20,6 +20,7 @@ namespace scp360
 
     class EMUONE_SCP360_EXPORT ObjectManager;
     class EMUONE_SCP360_EXPORT DeviceDriver;
+    class EMUONE_SCP360_EXPORT SystemCall;
     class EMUONE_SCP360_EXPORT Scp;
 
     class EMUONE_SCP360_EXPORT InitProcess;

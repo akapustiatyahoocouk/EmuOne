@@ -29,6 +29,8 @@
 #include "emuone-scp360/DeviceDrivers.hpp"
 #include "emuone-scp360/EmulatedApplication.hpp"
 #include "emuone-scp360/InitProcess.hpp"
+
+#include "emuone-scp360/SystemCalls.hpp"
 #include "emuone-scp360/Scp.hpp"
 
 //  End of emuone-scp360/API.hpp

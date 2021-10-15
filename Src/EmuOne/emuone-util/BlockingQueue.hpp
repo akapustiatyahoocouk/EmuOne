@@ -40,7 +40,7 @@ namespace util
     template <class T>
     void BlockingQueue<T>::enqueue(const T & value)
     {
-        QMutexLocker lock(_dataGuard);
+        QMutexLocker lock(&_dataGuard);
         _data.enqueue(value);
         _dataSize.release();
     }
@@ -49,7 +49,7 @@ namespace util
     T BlockingQueue<T>::dequeue()
     {
         _dataSize.acquire();
-        QMutexLocker lock(_dataGuard);
+        QMutexLocker lock(&_dataGuard);
         return _data.dequeue();
     }
 
@@ -58,8 +58,8 @@ namespace util
     {
         if (_dataSize.tryAcquire(1, timeoutMs))
         {
-            QMutexLocker lock(_dataGuard);
-            value = _data.dequeue(value);
+            QMutexLocker lock(&_dataGuard);
+            value = _data.dequeue();
             return true;
         }
         return false;

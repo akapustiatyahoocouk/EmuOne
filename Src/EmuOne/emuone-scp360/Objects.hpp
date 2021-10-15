@@ -331,8 +331,14 @@ namespace scp360
         virtual uint16_t        run() = 0;
 
         //////////
-        //  System calls for an emulatedprocess
+        //  System calls for an emulated process (all synchronous!)
     public:
+        ErrorCode               makeSystemCall(SystemCall * systemCall);
+
+        //  Writes a single message (record) to the "operator console".
+        //  If the "text" is too long, it is truncated at the right edge to fit to
+        //  a single record (e.g. a single 80-column line on IBM 2741, etc.)
+        //  Returns when the writing has completed one way or another.
         ErrorCode               writeToOperator(const QString & text);
 
         //////////

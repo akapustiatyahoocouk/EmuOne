@@ -72,6 +72,15 @@ namespace scp360
         virtual void        deserialiseConfiguration(QDomElement & configurationElement) override;
 
         //////////
+        //  ibm360::Monitor - interrupt handling.
+    public:
+        virtual void        onIoInterruption(uint16_t interruptionCode) override;
+        virtual void        onProgramInterruption(uint16_t interruptionCode) override;
+        virtual void        onSvcInterruption(uint16_t interruptionCode) override;
+        virtual void        onExternalInterruption(uint16_t interruptionCode) override;
+        virtual void        onMachineCheckInterruption(uint16_t interruptionCode) override;
+
+        //////////
         //  Implementation
     private:
         State                   _state = State::Constructed;
@@ -88,6 +97,31 @@ namespace scp360
         void                _registerHardwareDevice(ibm360::Device * hardwareDevice);   //  throws VirtualApplianceException on error
         void                _createDevicesAndDeviceDrivers();   //  throws VirtualApplianceException on error
         void                _destroyDevicesAndDeviceDrivers();
+
+        //////////
+        //  Event handling
+    private:
+        class _Event
+        {
+            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_Event)
+        public:
+            _Event(Process * process) : _process(process) { Q_ASSERT(_process != nullptr); }
+            virtual ~_Event() {}
+
+            Process *const  _process;
+        };
+
+        class _SystemCallEvent : public _Event
+        {
+            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_SystemCallEvent)
+        public:
+            _SystemCallEvent(Process * process) : _Event(process) {}
+            virtual ~_SystemCallEvent() {}
+        };
+
+        util::BlockingQueue<_Event*>    _events;
+
+        void                _handleSystemCallEvent(_SystemCallEvent * event);
 
         //////////
         //  Threads

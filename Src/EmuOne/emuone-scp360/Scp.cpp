@@ -180,6 +180,29 @@ void Scp::deserialiseConfiguration(QDomElement & configurationElement)
 }
 
 //////////
+//  ibm360::Monitor - interrupt handling.
+void Scp::onIoInterruption(uint16_t interruptionCode)
+{
+}
+
+void Scp::onProgramInterruption(uint16_t interruptionCode)
+{
+}
+
+void Scp::onSvcInterruption(uint16_t interruptionCode)
+{   //  Must post a SystemCall to SCP's incoming events queue
+    _events.enqueue(new _SystemCallEvent(nullptr));
+}
+
+void Scp::onExternalInterruption(uint16_t interruptionCode)
+{
+}
+
+void Scp::onMachineCheckInterruption(uint16_t interruptionCode)
+{
+}
+
+//////////
 //  scp360::Scp::Type
 IMPLEMENT_SINGLETON(Scp::Type)
 Scp::Type::Type() {}
@@ -290,6 +313,12 @@ void Scp::_destroyDevicesAndDeviceDrivers()
 }
 
 //////////
+//  Event handling
+void Scp::_handleSystemCallEvent(_SystemCallEvent * event)
+{
+}
+
+//////////
 //  Scp::_WorkerThread
 Scp::_WorkerThread::_WorkerThread(Scp *const scp)
     :   _scp(scp)
@@ -317,7 +346,17 @@ void Scp::_WorkerThread::run()
     initProcess->start();
     //  Go!
     while (!_stopRequested)
-    {
+    {   //  Wait for next control event...
+        _Event * event;
+        if (!_scp->_events.tryDequeue(event, 50))
+        {   //  Nothing to do
+            continue;
+        }
+        if (_SystemCallEvent * systemCallEvent = dynamic_cast<_SystemCallEvent*>(event))
+        {
+            _scp->_handleSystemCallEvent(systemCallEvent);
+        }
+        delete event;
     }
 }
 

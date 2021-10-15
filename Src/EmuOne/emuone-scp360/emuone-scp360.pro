@@ -36,7 +36,8 @@ HEADERS += \
     InitProcess.hpp \
     ObjectManager.hpp \
     Objects.hpp \
-    Scp.hpp
+    Scp.hpp \
+    SystemCalls.hpp
 
 LIBS += -L../../../Bin/Debug -lemuone-ibm360 -lemuone-core -lemuone-util
 
