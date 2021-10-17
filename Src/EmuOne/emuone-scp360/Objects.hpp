@@ -248,6 +248,13 @@ namespace scp360
     public:
         static bool             isValidName(const QString & name);
 
+        QString                 name() const { return _name; }
+        Flags                   flags() const { return _flags; }
+        State                   state() const { return _state; }
+        void                    setState(State state) { _state = state; }
+
+        uint16_t                suspendCount() const { return _suspendCount; }
+
         //////////
         //  Implementation
     private:
@@ -333,6 +340,10 @@ namespace scp360
         //////////
         //  System calls for an emulated process (all synchronous!)
     public:
+        //  Makes the specified "systemCall", returning only after the
+        //  system call has completed and its outcome is known.
+        //  The caller (who is the one that created the systemCall) is
+        //  then responsible for deleting the "systemCall".
         ErrorCode               makeSystemCall(SystemCall * systemCall);
 
         //  Writes a single message (record) to the "operator console".
@@ -340,6 +351,16 @@ namespace scp360
         //  a single record (e.g. a single 80-column line on IBM 2741, etc.)
         //  Returns when the writing has completed one way or another.
         ErrorCode               writeToOperator(const QString & text);
+
+        //////////
+        //  Operations
+    public:
+        void                    markSystemCallComplete();
+
+        //////////
+        //  Implementation
+    private:
+        QSemaphore              _systemCallCompletionSemaphore;
 
         //////////
         //  Threads
@@ -385,11 +406,18 @@ namespace scp360
     public:
         enum class Flags
         {
-            Initialise = 0x00000001,    //  DeviceDriver supports initialise() call
-            Deinitialise = 0x00000002,  //  DeviceDriver supports deinitialise() call
+            WriteBlock = 0x00000001,        //  DeviceDriver supports writeBlock() call
             //  Flag combinations
             None = 0x00000000,  //  None of the flags
             All = 0x00000003    //  All of the flags
+        };
+
+        enum class State
+        {
+            Unknown,            //  device state is unknown
+            Ready,              //  device is ready for next I/O
+            Busy,               //  device is busy performing I/O
+            NonOperational      //  device is not operational (switched off, etc.)
         };
 
         //////////
@@ -403,14 +431,17 @@ namespace scp360
     public:
         QString             name() const { return _name; }
         Flags               flags() const { return _flags; }
+        State               state() const { return _state; }
+        void                setState(State state) { _state = state; }
         DeviceDriver *      driver() const { return _driver; }
 
         //////////
         //  Implementation
     private:
-        QString             _name;
-        Flags               _flags;
-        DeviceDriver *      _driver;
+        const QString       _name;
+        const Flags         _flags;
+        volatile State      _state = State::Unknown;    //  set asynchronously by device driver
+        DeviceDriver *const _driver;
     };
 
     EMUONE_SCP360_EXPORT Device::Flags operator & (Device::Flags op1, Device::Flags op2);

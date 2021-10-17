@@ -77,16 +77,13 @@ void InitProcess::_initialiseDevices()
     for (Device * device : scp()->_deviceDrivers.keys())
     {
         DeviceDriver * deviceDriver = scp()->_deviceDrivers[device];
-        if ((device->flags() & Device::Flags::Initialise) == Device::Flags::Initialise)
-        {
-            _InitialiseDeviceCompletionListener * ioCompletionListener = new _InitialiseDeviceCompletionListener(device);
-            _initialiseDeviceCompletionListeners.append(ioCompletionListener);
-            ErrorCode err = deviceDriver->beginInitialiseDevice(device, ioCompletionListener);
-            if (err != ErrorCode::ERR_OK)
-            {   //  Notify the listener immediately
-                ioCompletionListener->errorCode = err;
-                ioCompletionListener->completed = true;
-            }
+        _InitialiseDeviceCompletionListener * ioCompletionListener = new _InitialiseDeviceCompletionListener(device);
+        _initialiseDeviceCompletionListeners.append(ioCompletionListener);
+        ErrorCode err = deviceDriver->initialiseDevice(device, ioCompletionListener);
+        if (err != ErrorCode::ERR_OK)
+        {   //  Notify the listener immediately
+            ioCompletionListener->errorCode = err;
+            ioCompletionListener->completed = true;
         }
     }
     //  ...and wait for all completion listeners to be notified if initialisation completion

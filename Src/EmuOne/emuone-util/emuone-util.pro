@@ -19,6 +19,7 @@ SOURCES += \
 HEADERS += \
     API.hpp \
     BlockingQueue.hpp \
+    Buffers.hpp \
     CharacterSets.hpp \
     Classes.hpp \
     Macros.hpp \

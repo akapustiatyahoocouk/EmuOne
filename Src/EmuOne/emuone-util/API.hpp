@@ -46,5 +46,6 @@
 
 #include "emuone-util/CharacterSets.hpp"
 #include "emuone-util/BlockingQueue.hpp"
+#include "emuone-util/Buffers.hpp"
 
 //  End of emuone-util/API.hpp

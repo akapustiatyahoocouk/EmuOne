@@ -24,11 +24,21 @@ namespace scp360
         //  Operations
     public:
         Process *           process() const { return _process; }
+        bool                outcomeKnown() const { return _outcomeKnown; }
+        ErrorCode           outcome() const { return _outcome; }
+        void                setOutcome(ErrorCode outcome)
+        {
+            Q_ASSERT(!_outcomeKnown);
+            _outcomeKnown = true;
+            _outcome = outcome;
+        }
 
         //////////
         //  Implementation
     private:
         Process *           _process;   //  ...that made the system call
+        bool                _outcomeKnown = false;
+        ErrorCode           _outcome = ErrorCode::ERR_UNK;
     };
 
     //////////
@@ -40,19 +50,15 @@ namespace scp360
         //////////
         //  Construction/destruction
     public:
-        WriteToOperatorSystemCall(Process * process, const QByteArray & messageBytes)
-            :   SystemCall(process), _messageBytes(messageBytes) {}
+        WriteToOperatorSystemCall(Process * process, util::Buffer * buffer)
+            :   SystemCall(process), buffer(buffer) {}
         virtual ~WriteToOperatorSystemCall() {}
 
         //////////
-        //  Operations
+        //  Properties
     public:
-        QByteArray          messageBytes() const { return _messageBytes; }
-
-        //////////
-        //  Implementation
-    private:
-        QByteArray          _messageBytes;  //  in EBCDIC!
+        //  The buffer to write from; must not be deleted before the system call.
+        util::Buffer *const buffer;
     };
 }
 

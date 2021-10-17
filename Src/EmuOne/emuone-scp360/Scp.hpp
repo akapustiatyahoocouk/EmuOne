@@ -81,6 +81,11 @@ namespace scp360
         virtual void        onMachineCheckInterruption(uint16_t interruptionCode) override;
 
         //////////
+        //  Operations
+    public:
+        ErrorCode           makeSystemCall(SystemCall * systemCall);
+
+        //////////
         //  Implementation
     private:
         State                   _state = State::Constructed;
@@ -93,10 +98,27 @@ namespace scp360
         //  Subsystems
         ObjectManager       _objectManager;
 
+        QMap<Process*,SystemCall*>  _systemCallsInProgress;
+        QMap<Device*,Process*>      _ioInProgress;
+
         //  Helpers
         void                _registerHardwareDevice(ibm360::Device * hardwareDevice);   //  throws VirtualApplianceException on error
         void                _createDevicesAndDeviceDrivers();   //  throws VirtualApplianceException on error
         void                _destroyDevicesAndDeviceDrivers();
+
+        //////////
+        //  Interrupt handling
+        class _TransferCompletionListener : public DeviceDriver::TransferCompletionListener
+        {
+            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_TransferCompletionListener)
+        public:
+            _TransferCompletionListener(Scp * scp) : _scp(scp) {}
+        public:
+            virtual void        transferCompleted(Device * device, uint32_t bytesTransferred, ErrorCode errorCode) override;
+        private:
+            Scp *const          _scp;
+        };
+        _TransferCompletionListener _transferCompletionListener;
 
         //////////
         //  Event handling
@@ -105,23 +127,42 @@ namespace scp360
         {
             CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_Event)
         public:
-            _Event(Process * process) : _process(process) { Q_ASSERT(_process != nullptr); }
+            _Event(Process * process) : _process(process) {}
             virtual ~_Event() {}
 
-            Process *const  _process;
+            Process *const  _process;   //  can be nullptr!
         };
 
         class _SystemCallEvent : public _Event
         {
             CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_SystemCallEvent)
         public:
-            _SystemCallEvent(Process * process) : _Event(process) {}
+            _SystemCallEvent(SystemCall * systemCall)
+                :   _Event(systemCall->process()), _systemCall(systemCall) {}
             virtual ~_SystemCallEvent() {}
+
+            SystemCall *const   _systemCall;
+        };
+
+        class _TransferCompleteEvent : public _Event
+        {
+            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_TransferCompleteEvent)
+        public:
+            _TransferCompleteEvent(Device * device, uint32_t bytesTransferred, ErrorCode errorCode)
+                :   _Event(nullptr), _device(device), _bytesTransferred(bytesTransferred), _errorCode(errorCode) {}
+            virtual ~_TransferCompleteEvent() {}
+
+            Device *const   _device;
+            const uint32_t  _bytesTransferred;
+            const ErrorCode _errorCode;
         };
 
         util::BlockingQueue<_Event*>    _events;
 
         void                _handleSystemCallEvent(_SystemCallEvent * event);
+        void                _handleWriteToOperatorSystemCall(WriteToOperatorSystemCall * systemCall);
+        void                _handleUnknownSystemCall(SystemCall * systemCall);
+        void                _handleTransferCompleteEvent(_TransferCompleteEvent * event);
 
         //////////
         //  Threads
@@ -133,7 +174,7 @@ namespace scp360
             //////////
             //  Construction/destruction
         public:
-            _WorkerThread(Scp *const scp);
+            explicit _WorkerThread(Scp * scp);
             virtual ~_WorkerThread();
 
             //////////

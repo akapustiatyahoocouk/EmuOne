@@ -13,7 +13,9 @@ using namespace scp360;
 Scp::Scp(const QString & name)
     :   ibm360::Monitor(name),
         //  Subsystems
-        _objectManager(this)
+        _objectManager(this),
+        //  Interrupt handler
+        _transferCompletionListener(this)
 {
 }
 
@@ -28,7 +30,7 @@ Scp::Type * Scp::type() const
     return Scp::Type::getInstance();
 }
 
-ComponentEditor * Scp::createEditor(QWidget * parent)
+ComponentEditor * Scp::createEditor(QWidget * /*parent*/)
 {
     return nullptr;
 }
@@ -171,35 +173,49 @@ void Scp::disconnect() noexcept
 
 //////////
 //  Component (serialisation)
-void Scp::serialiseConfiguration(QDomElement & configurationElement) const
+void Scp::serialiseConfiguration(QDomElement & /*configurationElement*/) const
 {
 }
 
-void Scp::deserialiseConfiguration(QDomElement & configurationElement)
+void Scp::deserialiseConfiguration(QDomElement & /*configurationElement*/)
 {
 }
 
 //////////
 //  ibm360::Monitor - interrupt handling.
-void Scp::onIoInterruption(uint16_t interruptionCode)
+void Scp::onIoInterruption(uint16_t /*interruptionCode*/)
 {
 }
 
-void Scp::onProgramInterruption(uint16_t interruptionCode)
+void Scp::onProgramInterruption(uint16_t /*interruptionCode*/)
 {
 }
 
-void Scp::onSvcInterruption(uint16_t interruptionCode)
+void Scp::onSvcInterruption(uint16_t /*interruptionCode*/)
 {   //  Must post a SystemCall to SCP's incoming events queue
     _events.enqueue(new _SystemCallEvent(nullptr));
 }
 
-void Scp::onExternalInterruption(uint16_t interruptionCode)
+void Scp::onExternalInterruption(uint16_t /*interruptionCode*/)
 {
 }
 
-void Scp::onMachineCheckInterruption(uint16_t interruptionCode)
+void Scp::onMachineCheckInterruption(uint16_t /*interruptionCode*/)
 {
+}
+
+//////////
+//  Operations
+ErrorCode Scp::makeSystemCall(SystemCall * systemCall)
+{
+    Q_ASSERT(systemCall != nullptr);
+    Q_ASSERT(systemCall->process()->scp() == this);
+    Q_ASSERT(systemCall->process()->state() == Process::State::Active);
+    Q_ASSERT(QThread::currentThread() != _workerThread);
+
+    //  Send systemCall to worker thread for processing there
+    _events.enqueue(new _SystemCallEvent(systemCall));
+    return ErrorCode::ERR_OK;
 }
 
 //////////
@@ -313,9 +329,122 @@ void Scp::_destroyDevicesAndDeviceDrivers()
 }
 
 //////////
+//  Interrupt handling
+void Scp::_TransferCompletionListener::transferCompleted(Device * device, uint32_t bytesTransferred, ErrorCode errorCode)
+{
+    _scp->_events.enqueue(new _TransferCompleteEvent(device, bytesTransferred, errorCode));
+}
+
+//////////
 //  Event handling
 void Scp::_handleSystemCallEvent(_SystemCallEvent * event)
 {
+    Q_ASSERT(QThread::currentThread() == _workerThread);
+
+    Process * process = event->_systemCall->process();
+    //  The process that made the system call is now "waiting"
+    process->setState(Process::State::Waiting);
+    //  Dispatch system call to an appropriate handler
+    if (auto writeToOperatorSystemCall = dynamic_cast<WriteToOperatorSystemCall*>(event->_systemCall))
+    {
+        _handleWriteToOperatorSystemCall(writeToOperatorSystemCall);
+    }
+    else
+    {   //  OOPS! Unknown system call
+        _handleUnknownSystemCall(event->_systemCall);
+    }
+    //  If the system call hasn't been handled immediately, put it to
+    //  the list of "system calls in progress"
+    if (!event->_systemCall->outcomeKnown())
+    {
+        _systemCallsInProgress.insert(process, event->_systemCall);
+        return;
+    }
+    //  The process that made the system call is now "ready" again
+    //  or "suspended" if another process suspended the one that made
+    //  the system call
+    process->setState((process->suspendCount() == 0) ? Process::State::Ready : Process::State::Suspended);
+    if (EmulatedProcess * emulatedProcess = dynamic_cast<EmulatedProcess*>(process))
+    {   //  Must allow EmulatedProcess::makeSystemCall() to return
+        emulatedProcess->markSystemCallComplete();
+    }
+}
+
+void Scp::_handleWriteToOperatorSystemCall(WriteToOperatorSystemCall * systemCall)
+{
+    Q_ASSERT(QThread::currentThread() == _workerThread);
+
+    //  Locate the device driver that drives the "operator console" device
+    if (_operatorsConsole == nullptr)
+    {   //  OOPS! No "operator console"
+        systemCall->setOutcome(ErrorCode::ERR_SUP);
+        return;
+    }
+    if (!_deviceDrivers.contains(_operatorsConsole))
+    {   //  OOPS! No device driver exists for "operator console"
+        systemCall->setOutcome(ErrorCode::ERR_SUP);
+        return;
+    }
+    DeviceDriver * operatorConsoleDriver = _deviceDrivers[_operatorsConsole];
+    //  Is the device ready for I/O ?
+    switch (_operatorsConsole->state())
+    {
+        case Device::State::Unknown:
+        case Device::State::NonOperational:
+            //  Can't perform I/O
+            systemCall->setOutcome(ErrorCode::ERR_SUP);
+            return;
+        case Device::State::Ready:
+            //  Instruct the driver to begin writing
+            {
+                ErrorCode err = operatorConsoleDriver->writeBlock(_operatorsConsole, systemCall->buffer, &_transferCompletionListener);
+                if (err == ErrorCode::ERR_OK)
+                {   //  I/O started - it will complete eventually
+                    _ioInProgress.insert(_operatorsConsole, systemCall->process());
+                    return;
+                }
+                if (err != ErrorCode::ERR_USE)
+                {   //  OOPS! Couldn't!
+                    systemCall->setOutcome(err);
+                    return;
+                }
+            }
+            //  Device is "ready", but perhaps another device on the same "controller" is
+            //  already performing I/O, and "controller" can only handle one I/O at a time.
+            //  Fall through - this will enqueue an "I/O request" for later completion
+        case Device::State::Busy:
+            //  Device is busy with another I/O - form an "I/O request" qnd queue it
+            Q_ASSERT(false);
+    }
+}
+
+void Scp::_handleUnknownSystemCall(SystemCall * systemCall)
+{
+    Q_ASSERT(QThread::currentThread() == _workerThread);
+
+    systemCall->setOutcome(ErrorCode::ERR_SVC);
+}
+
+void Scp::_handleTransferCompleteEvent(_TransferCompleteEvent * event)
+{
+    Q_ASSERT(QThread::currentThread() == _workerThread);
+    Q_ASSERT(_ioInProgress.contains(event->_device));
+
+    Process * process = _ioInProgress[event->_device];
+    _ioInProgress.remove(event->_device);
+    Q_ASSERT(process->state() == Process::State::Waiting ||
+             process->state() == Process::State::SuspendedWaiting);
+    //  The system call that led to I/O now has a known outcome
+    Q_ASSERT(_systemCallsInProgress.contains(process));
+    SystemCall * systemCall = _systemCallsInProgress[process];
+    _systemCallsInProgress.remove(process);
+    systemCall->setOutcome(event->_errorCode);
+    //  The process is ready to continue running
+    process->setState((process->suspendCount() == 0) ? Process::State::Ready : Process::State::Suspended);
+    if (EmulatedProcess * emulatedProcess = dynamic_cast<EmulatedProcess*>(process))
+    {   //  Must allow EmulatedProcess::makeSystemCall() to return
+        emulatedProcess->markSystemCallComplete();
+    }
 }
 
 //////////
@@ -355,6 +484,10 @@ void Scp::_WorkerThread::run()
         if (_SystemCallEvent * systemCallEvent = dynamic_cast<_SystemCallEvent*>(event))
         {
             _scp->_handleSystemCallEvent(systemCallEvent);
+        }
+        else if (_TransferCompleteEvent * transferCompleteEvent = dynamic_cast<_TransferCompleteEvent*>(event))
+        {
+            _scp->_handleTransferCompleteEvent(transferCompleteEvent);
         }
         delete event;
     }

@@ -17,6 +17,7 @@ namespace scp360
         //////////
         //  Types
     public:
+        //  THe listener to completion of I/O requests that do not involve data transfer
         class EMUONE_SCP360_EXPORT IoCompletionListener
         {
             //////////
@@ -28,6 +29,20 @@ namespace scp360
             //  Operations
         public:
             virtual void        ioCompleted(Device * device, ErrorCode errorCode) = 0;
+        };
+
+        //  The listener to completion of I/O requests that involve data transfer
+        class EMUONE_SCP360_EXPORT TransferCompletionListener
+        {
+            //////////
+            //  This is an interface
+        public:
+            virtual ~TransferCompletionListener() {}
+
+            //////////
+            //  Operations
+        public:
+            virtual void        transferCompleted(Device * device, uint32_t bytesTransferred, ErrorCode errorCode) = 0;
         };
 
         //////////
@@ -49,8 +64,15 @@ namespace scp360
         //  non-OK error code. Otherwise returns OK error code AND guarantees that the
         //  specified "ioCompletionListener" will be notified (on an arbitrary worker
         //  thread internal to the DeviceDriver or Device) when I/O operation has finished
-        virtual ErrorCode       beginInitialiseDevice(Device * device, IoCompletionListener * ioCompletionListener) = 0;
-        virtual ErrorCode       beginDeinitialiseDevice(Device * device, IoCompletionListener * ioCompletionListener) = 0;
+
+        //  Initialises the specified "device" setting its State
+        virtual ErrorCode       initialiseDevice(Device * device, IoCompletionListener * ioCompletionListener) = 0;
+
+        //  Deinitialises the specified "device"
+        virtual ErrorCode       deinitialiseDevice(Device * device, IoCompletionListener * ioCompletionListener) = 0;
+
+        //  Writes a single record containing data from the specified "buffer"
+        virtual ErrorCode       writeBlock(Device * device, const util::Buffer * buffer, TransferCompletionListener * transferCompletionListener) = 0;
 
         //////////
         //  Implementation
@@ -73,12 +95,46 @@ namespace scp360
         //  DeviceDriver
     public:
         virtual Device::Flags   deviceFlags() const override;
-        virtual ErrorCode       beginInitialiseDevice(Device * device, IoCompletionListener * ioCompletionListener) override;
-        virtual ErrorCode       beginDeinitialiseDevice(Device * device, IoCompletionListener * ioCompletionListener) override;
+        virtual ErrorCode       initialiseDevice(Device * device, IoCompletionListener * ioCompletionListener) override;
+        virtual ErrorCode       deinitialiseDevice(Device * device, IoCompletionListener * ioCompletionListener) override;
+        virtual ErrorCode       writeBlock(Device * device, const util::Buffer * buffer, TransferCompletionListener * transferCompletionListener) override;
 
         //////////
         //  Implementation
     private:
+        QSet<ibm360::Ibm2741*>  _knownHardwareDevices;
+
+        class _TransferCompletionListener : public ibm360::Ibm2741::TransferCompletionListener
+        {
+            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_TransferCompletionListener)
+
+            //////////
+            //  Construction/destruction
+        public:
+            _TransferCompletionListener(Ibm2741Driver * driver, PhysicalDevice * physicalDevice)
+                :   _driver(driver), _physicalDevice(physicalDevice) {}
+            virtual ~_TransferCompletionListener() {}
+
+            //////////
+            //  ibm360::Ibm2741::TransferCompletionListener
+        public:
+            virtual void        transferCompleted(uint32_t bytesTransferred, Ibm2741::ErrorCode errorCode) override;
+
+            //////////
+            //  Properties
+        public:
+            Ibm2741Driver::TransferCompletionListener * transferCompletionListener = nullptr;
+
+            //////////
+            //  Implementation
+        public:
+            Ibm2741Driver *const    _driver;
+            PhysicalDevice *const   _physicalDevice;
+        };
+        QSet<_TransferCompletionListener*>   _transferCompletionListeners;
+
+        //  Helpers
+        static ErrorCode        _translateErrorCode(ibm360::Ibm2741::ErrorCode ibm2741ErrorCode);
     };
 }
 

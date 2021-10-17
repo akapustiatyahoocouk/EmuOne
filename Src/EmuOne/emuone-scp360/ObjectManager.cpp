@@ -92,6 +92,7 @@ ErrorCode ObjectManager::destroySegment(Segment * segment)
     //  Destroy the segment itself
     _unregisterObject(segment);
     delete segment;
+    return ErrorCode::ERR_OK;
 }
 
 ErrorCode ObjectManager::createEmulatedProcess(const QString & name, Process::Flags flags, Process * parent, EmulatedApplication * emulatedApplication, EmulatedProcess *& process)

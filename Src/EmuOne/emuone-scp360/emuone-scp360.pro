@@ -29,6 +29,7 @@ SOURCES += \
 
 HEADERS += \
     API.hpp \
+    Buffers.hpp \
     Classes.hpp \
     DeviceDrivers.hpp \
     EmulatedApplication.hpp \

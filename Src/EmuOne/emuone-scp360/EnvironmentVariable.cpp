@@ -65,6 +65,7 @@ bool EnvironmentVariable::isValidScalarValue(const QString & scalarValue)
             return false;
         }
     }
+    return true;
 }
 
 bool EnvironmentVariable::isValidListValue(const QStringList & listValue)

@@ -26,6 +26,7 @@
 #include "emuone-scp360/Objects.hpp"
 #include "emuone-scp360/ObjectManager.hpp"
 
+#include "emuone-scp360/Buffers.hpp"
 #include "emuone-scp360/DeviceDrivers.hpp"
 #include "emuone-scp360/EmulatedApplication.hpp"
 #include "emuone-scp360/InitProcess.hpp"

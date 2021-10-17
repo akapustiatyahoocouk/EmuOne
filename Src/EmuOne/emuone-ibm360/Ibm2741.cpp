@@ -77,6 +77,8 @@ void Ibm2741::initialise()
         return;
     }
 
+    _deviceState = _DeviceState::Idle;
+
     //  Done
     _state = State::Initialised;
 }
@@ -89,6 +91,9 @@ void Ibm2741::start()
     {   //  OOPS! Can't make this state transiton!
         return;
     }
+
+    _workerThread = new _WorkerThread(this);
+    _workerThread->start();
 
     //  Done
     _state = State::Running;
@@ -103,6 +108,9 @@ void Ibm2741::stop() noexcept
         return;
     }
 
+    _workerThread->requestStop();   //  this stops it eventually
+    _workerThread = nullptr;
+
     //  Done
     _state = State::Initialised;
 }
@@ -116,6 +124,7 @@ void Ibm2741::deinitialise() noexcept
         return;
     }
 
+    _deviceState = _DeviceState::NotOperational;
 
     //  Done
     _state = State::Connected;
@@ -144,6 +153,23 @@ void Ibm2741::serialiseConfiguration(QDomElement & configurationElement) const
 void Ibm2741::deserialiseConfiguration(QDomElement & configurationElement)
 {
     Device::deserialiseConfiguration(configurationElement);
+}
+
+//////////
+//  Operations
+Ibm2741::ErrorCode Ibm2741::beginWrite(const util::Buffer * buffer, TransferCompletionListener * completionListener)
+{
+    Q_ASSERT(buffer != nullptr);
+    Q_ASSERT(completionListener != nullptr);
+
+    //  Can we ?
+    if (_deviceState != _DeviceState::Idle)
+    {   //  No!
+        return ErrorCode::Busy;
+    }
+    //  Send a "write" request to the worker thread
+    _requestQueue.enqueue(new _WriteRequest(buffer, completionListener));
+    return Ibm2741::ErrorCode::Success;
 }
 
 //////////
@@ -194,6 +220,30 @@ core::FullScreenWidgetList Ibm2741::Ui::fullScreenWidgets()
     core::FullScreenWidgetList result;
     result.append(_fullScreenWidget);
     return result;
+}
+
+//////////
+//  Ibm2741::_WorkerThread
+void Ibm2741::_WorkerThread::run()
+{
+    _ibm2741->_deviceState = _DeviceState::Idle;
+    while (!_stopRequested)
+    {
+        _Request * request;
+        if (!_ibm2741->_requestQueue.tryDequeue(request, 100))
+        {
+            continue;
+        }
+        if (_WriteRequest * writeRequest = dynamic_cast<_WriteRequest*>(request))
+        {   //  TODO implement properly
+            QThread::sleep(10);
+            writeRequest->completionListener->transferCompleted(writeRequest->buffer->size(), ErrorCode::Success);
+        }
+        else
+        {   //  OOPS! Invalid request!
+            Q_ASSERT(false);
+        }
+    }
 }
 
 //  End of emuone-360/Ibm2741.cpp
