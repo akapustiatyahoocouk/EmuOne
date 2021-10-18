@@ -22,45 +22,46 @@ InitProcess::~InitProcess()
 //  EmulatedProcess
 EmulatedApplication * InitProcess::application() const
 {
-    return InitProcess::InitApplication::getInstance();
+    return InitProcess::Application::getInstance();
 }
 
-uint16_t InitProcess::run()
+ErrorCode InitProcess::run()
 {
+    systemCalls.writeToOperator("*** SCP/360 VERSION " __DATE__ " " __TIME__ " ***");
     //  Initialise all Devices that CAN be initialised (using their DeviceDrivers)
     _initialiseDevices();
 
+    //  We need to create a "LOGIN" process for each "terminal"
+    _createLoginProcesses();
 
-
-    return 0;
+    return ErrorCode::ERR_OK;
 }
-
-//////////
-//  InitProcess::InitApplication
-IMPLEMENT_SINGLETON(InitProcess::InitApplication)
-InitProcess::InitApplication::InitApplication() {}
-InitProcess::InitApplication::~InitApplication() {}
-
-QString InitProcess::InitApplication::mnemonic() const
-{
-    return "INIT";
-}
-
-QString InitProcess::InitApplication::displayName() const
-{
-    return "INIT";
-}
-
 
 //////////
 //  EmulatedApplication
-EmulatedProcess * InitProcess::InitApplication::createInstance(Scp * scp, uint16_t id, const QString & name, Process::Flags flags, Process * parent)
+EmulatedProcess * InitProcess::Application::createInstance(Scp * scp, uint16_t id, const QString & name, Process::Flags flags, Process * parent)
 {
     return new InitProcess(scp, id, name, flags, parent);
 }
 
 //////////
-//  Construction/destruction
+//  InitProcess::Application
+IMPLEMENT_SINGLETON(InitProcess::Application)
+InitProcess::Application::Application() {}
+InitProcess::Application::~Application() {}
+
+QString InitProcess::Application::mnemonic() const
+{
+    return "INIT";
+}
+
+QString InitProcess::Application::displayName() const
+{
+    return "INIT";
+}
+
+//////////
+//  InitProcess::_InitialiseDeviceCompletionListener
 InitProcess::_InitialiseDeviceCompletionListener::_InitialiseDeviceCompletionListener(Device * device)
     :   device(device)
 {
@@ -99,11 +100,11 @@ void InitProcess::_initialiseDevices()
     {
         if (ioCompletionListener->errorCode == ErrorCode::ERR_OK)
         {
-            writeToOperator("Device " + ioCompletionListener->device->name() + " initialised successfully");
+            systemCalls.writeToOperator("Device " + ioCompletionListener->device->name() + " initialised successfully");
         }
         else
         {
-            writeToOperator("Device " + ioCompletionListener->device->name() + " failed to initialise");    //  TODO why ?
+            systemCalls.writeToOperator("Device " + ioCompletionListener->device->name() + " failed to initialise");    //  TODO why ?
         }
     }
     //  Clear initialisation results
@@ -114,12 +115,43 @@ void InitProcess::_initialiseDevices()
     _initialiseDeviceCompletionListeners.clear();
 }
 
+void InitProcess::_createLoginProcesses()
+{
+    for (PhysicalDevice * physicalDevice : scp()->_objectManager.physicalDevices())
+    {
+        if (Scp::_isTerminal(physicalDevice->hardwareDevice()))
+        {   //  This one! TODO use system calls to create LOGIN process
+            QString loginProcessName = LoginProcess::Application::getInstance()->mnemonic() +
+                                       ("000" + QString::number(physicalDevice->hardwareDevice()->address(), 16)).right(3).toUpper();
+            EmulatedProcess * loginProcess;
+            ErrorCode err = scp()->_objectManager.createEmulatedProcess(loginProcessName,
+                                                                        Process::Flags::None,
+                                                                        this,
+                                                                        LoginProcess::Application::getInstance(),
+                                                                        loginProcess);
+            if (err != ErrorCode::ERR_OK)
+            {   //  OOPS!
+                systemCalls.writeToOperator("Count not create LOGIN process for terminal " + physicalDevice->name());
+                continue;
+            }
+            //  Set up LOGIN-specific environment variables
+            //  TODO CURVOL	The name of the “current” file system volume. Any attempt to refer to a named file without explicitly specifying the volume where it resides is assumed to refer to this volume.
+            //  TODO TMPVOL	The volume where temporary/work files are created. For performance reasons this is usually a direct-access device.
+            systemCalls.setEnvironmentVariableValue(loginProcess, "SYSIN", physicalDevice->name());
+            systemCalls.setEnvironmentVariableValue(loginProcess, "SYSOUT", physicalDevice->name());
+            //  Go!
+            loginProcess->start();
+        }
+    }
+}
+
 //////////
 //  InitProcess::_InitialiseDeviceCompletionListener
 void InitProcess::_InitialiseDeviceCompletionListener::ioCompleted(Device * device, ErrorCode errorCode)
 {
     Q_ASSERT(this->device == device);
     this->errorCode = errorCode;
+    this->completed = true;
 }
 
 //  End of emuone-scp360/InitProcess.cpp

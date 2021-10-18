@@ -205,6 +205,7 @@ namespace scp360
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Process)
 
         friend class EmulatedProcess;
+        friend class ObjectManager;
 
         //////////
         //  Constants
@@ -236,6 +237,7 @@ namespace scp360
             SuspendedWaiting,
             Finished
         };
+
         //////////
         //  Construction/destruction
     public:
@@ -251,9 +253,12 @@ namespace scp360
         QString                 name() const { return _name; }
         Flags                   flags() const { return _flags; }
         State                   state() const { return _state; }
-        void                    setState(State state) { _state = state; }
+        void                    setState(State state);
 
         uint16_t                suspendCount() const { return _suspendCount; }
+
+        ErrorCode               setEnvironmentVariable(const QString & name, const QString & scalarValue);
+        ErrorCode               setEnvironmentVariable(const QString & name, const QStringList & listValue);
 
         //////////
         //  Implementation
@@ -270,7 +275,7 @@ namespace scp360
         uint16_t                _suspendCount = 0;
         uint16_t                _staticPriority;
         int16_t                 _dynamicPriority;
-        uint16_t                _exitCode = 0;
+        ErrorCode               _exitCode = ErrorCode::ERR_UNK;
         uint16_t                _holdCount = 0;
     };
 
@@ -322,6 +327,8 @@ namespace scp360
     {
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(EmulatedProcess)
 
+        friend class Scp;
+
         //////////
         //  Construction/destruction - sub-classes only
     protected:
@@ -333,24 +340,105 @@ namespace scp360
     public:
         virtual EmulatedApplication *   application() const = 0;
         void                    start();
-        void                    stop(uint16_t exitCode);
+        void                    stop(ErrorCode exitCode);
     protected:
-        virtual uint16_t        run() = 0;
+        virtual ErrorCode       run() = 0;
 
         //////////
         //  System calls for an emulated process (all synchronous!)
     public:
-        //  Makes the specified "systemCall", returning only after the
-        //  system call has completed and its outcome is known.
-        //  The caller (who is the one that created the systemCall) is
-        //  then responsible for deleting the "systemCall".
-        ErrorCode               makeSystemCall(SystemCall * systemCall);
+        class EMUONE_SCP360_EXPORT SystemCalls final
+        {
+            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(SystemCalls)
 
-        //  Writes a single message (record) to the "operator console".
-        //  If the "text" is too long, it is truncated at the right edge to fit to
-        //  a single record (e.g. a single 80-column line on IBM 2741, etc.)
-        //  Returns when the writing has completed one way or another.
-        ErrorCode               writeToOperator(const QString & text);
+            friend class EmulatedProcess;
+
+            //////////
+            //  Construction/destruction - from friends only
+        private:
+            explicit SystemCalls(EmulatedProcess * emulatedProcess) : _emulatedProcess(emulatedProcess) {}
+            ~SystemCalls() {}
+
+            //////////
+            //  Operations
+        public:
+            //  Makes the specified "systemCall", returning only after the
+            //  system call has completed and its outcome is known.
+            //  The caller (who is the one that created the systemCall) is
+            //  then responsible for deleting the "systemCall".
+            ErrorCode               makeSystemCall(SystemCall * systemCall);
+
+            //  Writes a single message (record) to the "operator console".
+            //  If the "text" is too long, it is truncated at the right edge to fit to
+            //  a single record (e.g. a single 80-column line on IBM 2741, etc.)
+            //  Returns when the writing has completed one way or another.
+            ErrorCode               writeToOperator(const QString & text);
+
+    /*
+    7.2.2	SC#EVCNT – Count Environment Variable Values
+    This system call allows the process to determine the number of values that a specified variable in its environment has. As a special case, it can also be used to determine if the specified environment variable exists at all.
+
+    Call gateway:	SVC   10
+    Upon entry:	•	R1 = SC#EVCNT (X’00020101’)
+    •	R2 = the address of the environment variable name.
+    •	R3 = the length of the environment variable name.
+    Upon return:	•	R15 = call status, ERR#OK for success, other ERR#... error codes for failure. Typically ERR#NOF, which means that the specified environment variable does not exist.
+    •	R0 = the number of values the specified environment variable has; always 1 (scalar) or more upon success; undefined upon failure.
+    Comments	•	Any tailing whitespace in the environment variable name is ignored.
+    •	Any lower-case letters in the environment variable name are treated as upper-case.
+    7.2.3	SC#EVGTL – Get Environment Variable Value (List)
+    This system call allows the process to retrieve an individual value from the list of values associated with a given variable in its environment.
+
+    Call gateway:	SVC   10
+    Upon entry:	•	R1 = SC#EVGTL (X’00020102’)
+    •	R2 = the address of the environment variable name.
+    •	R3 = the length of the environment variable name.
+    •	R4 = the 0-based index of the value to retrieve.
+    •	R5 = the address of the buffer to store the value to.
+    •	R6 = the length of the buffer to store the value to.
+    Upon return:	•	R15 = call status, ERR#OK for success, other ERR#... error codes for failure.
+    •	R0 = the number of characters actually stored into the supplied buffer (upon success); undefined (upon failure).
+    •	Other registers are unchanged.
+    Comment	•	Any tailing whitespace in the environment variable name is ignored.
+    •	Any lower-case letters in the environment variable name are treated as upper-case.
+    •	If the environment variable in question does not exist, or the index exceeds the number of values it has, R15 will be ERR#NOF upon return.
+    •	If the specified buffer is too small to hold the entire value, only the initial portion of the value (as much as fits into the buffer) will be stored and R15 will be ERR#BTS upon return.
+    •	If the specified buffer is larger than the value, only the initial portion of the buffer is filled, and the rest of the buffer is not affected; the number of characters actually stored is returned in R0.
+    7.2.4	SC#EVGTS – Get Environment Variable Value (Scalar)
+    This system call allows the process to retrieve the complete value associated with a given variable in its environment.
+
+    Call gateway:	SVC   10
+    Upon entry:	•	R1 = SC#EVGTS
+    •	R2 = the address of the environment variable name.
+    •	R3 = the length of the environment variable name.
+    •	R4 = the address of the buffer to store the value to.
+    •	R5 = the length of the buffer to store the value to.
+    Upon return:	•	R15 = call status, ERR#OK for success, other ERR#... error codes for failure.
+    •	R0 = the number of characters actually stored into the supplied buffer (upon success); undefined (upon failure).
+    •	Other registers are unchanged.
+    Comment	•	Any tailing whitespace in the environment variable name is ignored.
+    •	Any lower-case letters in the environment variable name are treated as upper-case.
+    •	If the environment variable in question does not exist, or the index exceeds the number of values it has, R15 will be ERR#NOF upon return.
+    •	If the environment variable has a list of more than 1 values, the string stored into the buffer will contain all these values separated by commas and enclosed in parentheses, e.g. (VAL1,VAL2,VAL3). The system call will fail unless the buffer is large enough to hold the entire list.
+    •	If the specified buffer is too small to hold the entire value, only the initial portion of the value (as much as fits into the buffer) will be stored and R15 will be ERR#BTS upon return.
+    •	If the specified buffer is larger than the value, only the initial portion of the buffer is filled, and the rest of the buffer is not affected; the number of characters actually stored is returned in R0.
+
+
+
+    SC#EVSTL EQU   X'00020104'  SET ENVIRONMENT VARIABLE VALUE (LIST)
+    */
+            ErrorCode               setEnvironmentVariableValue(const QString & name, const QString & scalarValue);
+            ErrorCode               setEnvironmentVariableValue(Process * targetProcess, const QString & name, const QString & scalarValue);
+    /*
+    SC#EVADL EQU   X'00020106'  ADD TO ENVIRONMENT VARIABLE VALUE (LIST)
+    SC#EVDEL EQU   X'00020107'  DELETE ENVIRONMENT VARIABLE
+    */
+            //////////
+            //  Implementation
+        private:
+            EmulatedProcess *const  _emulatedProcess;
+        };
+        SystemCalls             systemCalls;
 
         //////////
         //  Operations
@@ -382,15 +470,9 @@ namespace scp360
             virtual void    run() override;
 
             //////////
-            //  Operations
-        public:
-            void            requestStop() { _stopRequested = true;  }
-
-            //////////
             //  Implementation
         private:
             EmulatedProcess *const  _emulatedProcess;
-            volatile bool   _stopRequested = false;
         };
         _WorkerThread *     _workerThread = nullptr;
     };

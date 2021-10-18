@@ -104,16 +104,45 @@ namespace scp360
     private:
         QSet<ibm360::Ibm2741*>  _knownHardwareDevices;
 
-        class _TransferCompletionListener : public ibm360::Ibm2741::TransferCompletionListener
+        class _Ibm2741IoCompletionListener : public ibm360::Ibm2741::IoCompletionListener
         {
-            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_TransferCompletionListener)
+            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_Ibm2741IoCompletionListener)
 
             //////////
             //  Construction/destruction
         public:
-            _TransferCompletionListener(Ibm2741Driver * driver, PhysicalDevice * physicalDevice)
+            _Ibm2741IoCompletionListener(Ibm2741Driver * driver, PhysicalDevice * physicalDevice)
                 :   _driver(driver), _physicalDevice(physicalDevice) {}
-            virtual ~_TransferCompletionListener() {}
+            virtual ~_Ibm2741IoCompletionListener() {}
+
+            //////////
+            //  ibm360::Ibm2741::IoCompletionListener
+        public:
+            virtual void        ioCompleted(Ibm2741::ErrorCode errorCode) override;
+
+            //////////
+            //  Properties
+        public:
+            Ibm2741Driver::IoCompletionListener * ioCompletionListener = nullptr;
+
+            //////////
+            //  Implementation
+        public:
+            Ibm2741Driver *const    _driver;
+            PhysicalDevice *const   _physicalDevice;
+        };
+        QSet<_Ibm2741IoCompletionListener*> _ibm2741IoCompletionListeners;
+
+        class _Ibm2741TransferCompletionListener : public ibm360::Ibm2741::TransferCompletionListener
+        {
+            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_Ibm2741TransferCompletionListener)
+
+            //////////
+            //  Construction/destruction
+        public:
+            _Ibm2741TransferCompletionListener(Ibm2741Driver * driver, PhysicalDevice * physicalDevice)
+                :   _driver(driver), _physicalDevice(physicalDevice) {}
+            virtual ~_Ibm2741TransferCompletionListener() {}
 
             //////////
             //  ibm360::Ibm2741::TransferCompletionListener
@@ -131,7 +160,7 @@ namespace scp360
             Ibm2741Driver *const    _driver;
             PhysicalDevice *const   _physicalDevice;
         };
-        QSet<_TransferCompletionListener*>   _transferCompletionListeners;
+        QSet<_Ibm2741TransferCompletionListener*>   _ibm2741TransferCompletionListeners;
 
         //  Helpers
         static ErrorCode        _translateErrorCode(ibm360::Ibm2741::ErrorCode ibm2741ErrorCode);

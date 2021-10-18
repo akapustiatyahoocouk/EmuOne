@@ -1,6 +1,6 @@
-<VirtualAppliance Architecture="IBM/360" Name="1" Type="VirtualMachine" Template="IBM/360 H40">
+<VirtualAppliance Template="IBM/360 H40" Name="1" Architecture="IBM/360" Type="VirtualMachine">
  <Component Name="Processor" Type="ibm360::Processor">
-  <Configuration StoreProtection="yes" Timer="yes" DirectControl="no" ByteOrientedOperand="no" Decimal="yes" FloatingPoint="yes" ClockFrequency="1600KHZ" FetchProtection="yes"/>
+  <Configuration StoreProtection="yes" ClockFrequency="1600KHZ" FloatingPoint="yes" Decimal="yes" FetchProtection="yes" ByteOrientedOperand="no" Timer="yes" DirectControl="no"/>
  </Component>
  <Component Name="Main storage" Type="ibm360::Storage">
   <Configuration Size="256KB"/>
@@ -10,5 +10,8 @@
  </Component>
  <Component Name="SCP/360" Type="scp360::Scp">
   <Configuration/>
+ </Component>
+ <Component Name="IBM 2741" Type="ibm360::Ibm2741">
+  <Configuration Address="00f"/>
  </Component>
 </VirtualAppliance>

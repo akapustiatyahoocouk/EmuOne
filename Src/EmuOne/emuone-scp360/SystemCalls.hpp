@@ -60,6 +60,27 @@ namespace scp360
         //  The buffer to write from; must not be deleted before the system call.
         util::Buffer *const buffer;
     };
+
+    //////////
+    //  The "set environment variable value" system call
+    class EMUONE_SCP360_EXPORT SetEnvironmentVariableValueSystemCall : public SystemCall
+    {
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(SetEnvironmentVariableValueSystemCall)
+
+        //////////
+        //  Construction/destruction
+    public:
+        SetEnvironmentVariableValueSystemCall(Process * process, Process * targetProcess, const QString & name, const QString & value)
+            :   SystemCall(process), targetProcess(targetProcess), name(name), listValue{value} {}
+        virtual ~SetEnvironmentVariableValueSystemCall() {}
+
+        //////////
+        //  Properties
+    public:
+        Process *const          targetProcess;
+        const QString           name;
+        const QStringList       listValue;
+    };
 }
 
 //  End of emuone-scp360/SystemCalls.hpp

@@ -30,6 +30,7 @@ public:
     //  QWidget
 protected:
     virtual void        paintEvent(QPaintEvent * event) override;
+    virtual void        resizeEvent(QResizeEvent * event) override;
 
     //////////
     //  core::FullScreenWidget
@@ -42,6 +43,21 @@ public:
 private:
     Ui::Ibm2741FullScreenWidget *   _ui;
     Ibm2741 *const      _ibm2741;
+
+    QFont               _font;
+    int                 _fontHeight = 0;    //  in pixels
+
+    QTimer              _refreshTimer;
+
+    //  Helpers
+    QRect               _clientRect();
+    void                _repositionControls();
+    void                _recalculateFont();
+
+    //////////
+    //  Event handlers
+private slots:
+    void                _refreshTimerTimeout();
 };
 
 //  Endof emuone-ibm360/Ibm2741FullScreenWidget.hpp

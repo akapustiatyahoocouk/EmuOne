@@ -10,7 +10,8 @@ using namespace scp360;
 //////////
 //  Construction/destruction
 EmulatedProcess::EmulatedProcess(Scp * scp, uint16_t id, const QString & name, Flags flags, Process * parent)
-    :   Process(scp, id, name, flags, parent)
+    :   Process(scp, id, name, flags, parent),
+        systemCalls(this)
 {
 }
 
@@ -27,36 +28,29 @@ void EmulatedProcess::start()
     _workerThread->start();
 }
 
-//////////
-//  System calls for an emulatedprocess
-ErrorCode EmulatedProcess::makeSystemCall(SystemCall * systemCall)
+void EmulatedProcess::stop(ErrorCode exitCode)
 {
-    Q_ASSERT(systemCall != nullptr);
-    Q_ASSERT(systemCall->process() == this);
-    Q_ASSERT(!_systemCallCompletionSemaphore.available());
-
-    //  We want to  send a "system call" event to SCP...
-    ErrorCode err = scp()->makeSystemCall(systemCall);
-    if (err != ErrorCode::ERR_OK)
-    {   //  The SCP has refused the system call request
-        return err;
+    if (_state != Process::State::Prepared &&
+        _state != Process::State::Finished)
+    {   //  The process is supposed to have started but not yet finished
+        if (_workerThread != nullptr && _workerThread->isRunning())
+        {
+            if (scp()->_systemCallsInProgress.contains(this))
+            {   //  The "emulatedProcess" is waiting for a system call to complete
+                SystemCall * systemCall = scp()->_systemCallsInProgress[this];
+                systemCall->setOutcome(ErrorCode::ERR_UNK);
+                _workerThread->requestInterruption();
+                _systemCallCompletionSemaphore.release();   //  in case process is in a system call
+                _workerThread->wait();
+            }
+            else
+            {   //  The "emulatedProcess" is running
+                _workerThread->requestInterruption();
+                _workerThread->wait();
+            }
+        }
+        this->_exitCode = exitCode;
     }
-    //  ...and wait until the system call has been completed
-    _systemCallCompletionSemaphore.acquire();
-    Q_ASSERT(systemCall->outcomeKnown());
-    return systemCall->outcome();
-}
-
-ErrorCode EmulatedProcess::writeToOperator(const QString & text)
-{
-    //  The "operator console" is a text device that expects EBCDIC bytes.
-    util::ByteArrayBuffer buffer;
-    std::unique_ptr<util::CharacterSet::Encoder> encoder(util::Cp037CharacterSet::getInstance()->createEncoder());
-    encoder->encode(text + '\n', buffer.data);
-
-    //  Issue a "svc"
-    WriteToOperatorSystemCall systemCall(this, &buffer);
-    return makeSystemCall(&systemCall);
 }
 
 //////////
@@ -86,9 +80,14 @@ void EmulatedProcess::_WorkerThread::run()
         _emulatedProcess->_exitCode = _emulatedProcess->run();
         _emulatedProcess->_state = Process::State::Finished;
     }
+    catch (ErrorCode errorCode)
+    {   //  Process was force-terminated
+        _emulatedProcess->_exitCode = errorCode;
+        _emulatedProcess->_state = Process::State::Finished;
+    }
     catch (...)
     {
-        _emulatedProcess->_exitCode = 4;    //  TODO properly!
+        _emulatedProcess->_exitCode = ErrorCode::ERR_UNK;
         _emulatedProcess->_state = Process::State::Finished;
     }
 }

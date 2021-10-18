@@ -24,11 +24,16 @@ namespace scp360
         //  Operations
     public:
         ErrorCode           createPhysicalDevice(ibm360::Device * hardwareDevice, Device::Flags flags, DeviceDriver * driver, PhysicalDevice *& physicalDevice);
+        ErrorCode           destroyPhysicalDevice(PhysicalDevice * physicalDevice);
+        QList<PhysicalDevice*>  physicalDevices() const;
 
         ErrorCode           createSegment(const QString & name, uint32_t size, Segment::Flags flags, uint32_t address, Segment *& segment);
         ErrorCode           destroySegment(Segment * segment);
 
         ErrorCode           createEmulatedProcess(const QString & name, Process::Flags flags, Process * parent, EmulatedApplication * emulatedApplication, EmulatedProcess *& process);
+        QList<EmulatedProcess*> emulatedProcesses() const;
+
+        void                destroyAllObjects();
 
         //////////
         //  Implementation
@@ -39,7 +44,7 @@ namespace scp360
         QMap<Object::Id, Object*>   _objects;
 
         //  Secondary object caches (by object type)
-        QMap<Object::Id, Segment*>  _segments;
+        QMap<Object::Id, Segment*>          _segments;
         QMap<Object::Id, SegmentMapping*>   _segmentMappings;
         QMap<Object::Id, SegmentLock*>      _segmentLocks;
         QMap<Object::Id, Process*>          _processes;

@@ -17,11 +17,13 @@ SOURCES += \
     EnvironmentVariable.cpp \
     Ibm2741Driver.cpp \
     InitProcess.cpp \
+    LoginProcess.cpp \
     Object.cpp \
     ObjectManager.cpp \
     PhysicalDevice.cpp \
     Plugin.cpp \
     Process.cpp \
+    Scp.SystemCalls.cpp \
     Scp.cpp \
     Segment.cpp \
     SegmentLock.cpp \
@@ -35,6 +37,7 @@ HEADERS += \
     EmulatedApplication.hpp \
     ErrorCodes.hpp \
     InitProcess.hpp \
+    LoginProcess.hpp \
     ObjectManager.hpp \
     Objects.hpp \
     Scp.hpp \

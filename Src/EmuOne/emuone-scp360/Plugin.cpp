@@ -27,7 +27,8 @@ namespace scp360
         {
             core::ComponentType::registerComponentType(Scp::Type::getInstance());
 
-            EmulatedApplication::registerEmulatedApplication(InitProcess::InitApplication::getInstance());
+            EmulatedApplication::registerEmulatedApplication(InitProcess::Application::getInstance());
+            EmulatedApplication::registerEmulatedApplication(LoginProcess::Application::getInstance());
         }
     };
 }

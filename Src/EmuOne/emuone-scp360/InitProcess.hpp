@@ -15,13 +15,11 @@ namespace scp360
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(InitProcess)
 
         //////////
-        //  Types
-    public:
-        //////////
         //  A SCP/360 INIT Application
-        class EMUONE_SCP360_EXPORT InitApplication : public EmulatedApplication
+        public:
+        class EMUONE_SCP360_EXPORT Application : public EmulatedApplication
         {
-            DECLARE_SINGLETON(InitApplication)
+            DECLARE_SINGLETON(Application)
 
             //////////
             //  util::StockObject
@@ -46,7 +44,7 @@ namespace scp360
     public:
         virtual EmulatedApplication *   application() const override;
     protected:
-        virtual uint16_t        run() override;
+        virtual ErrorCode       run() override;
 
         //////////
         //  Implementation
@@ -77,6 +75,7 @@ namespace scp360
 
         //  Helpers
         void                    _initialiseDevices();
+        void                    _createLoginProcesses();
     };
 }
 

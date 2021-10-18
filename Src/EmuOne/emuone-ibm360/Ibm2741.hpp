@@ -15,6 +15,7 @@ namespace ibm360
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Ibm2741)
 
         friend class ::Ibm2741Editor;
+        friend class ::Ibm2741FullScreenWidget;
 
         //////////
         //  Types
@@ -68,6 +69,20 @@ namespace ibm360
             Unknown
         };
 
+        //  The listener to completion of I/O requests that do not involve data transfer
+        class EMUONE_IBM360_EXPORT IoCompletionListener
+        {
+            //////////
+            //  This is an interface
+        public:
+            virtual ~IoCompletionListener() {}
+
+            //////////
+            //  Operations
+        public:
+            virtual void        ioCompleted(ErrorCode errorCode) = 0;
+        };
+
         //  The listener to completion of I/O requests that involve data transfer
         class EMUONE_IBM360_EXPORT TransferCompletionListener
         {
@@ -80,6 +95,16 @@ namespace ibm360
             //  Operations
         public:
             virtual void        transferCompleted(uint32_t bytesTransferred, ErrorCode errorCode) = 0;
+        };
+
+        //  The current "operational state" of the device
+        enum class DeviceState
+        {
+            Resetting,
+            Idle,
+            Reading,
+            Writing,
+            NotOperational
         };
 
         //////////
@@ -116,12 +141,25 @@ namespace ibm360
         //////////
         //  Operations
     public:
+        //  The current "operational state" of this device
+        DeviceState             deviceState() const { return _deviceState; }
+
+        //  Initiates a "reset" operation.
+        //  If a "reset" begins successfully, the method returns "Success" and the
+        //  "completionListener" is guaranteed to eventually be notified when the
+        //  "reset" is done. This is done on an internal worker thread.
+        //  If the "reset" cannot be started, returns the non-"Success" error code.
+        ErrorCode               beginReset(IoCompletionListener * completionListener);
+
         //  Initiates a "write" operation.
         //  If a "write" begins successfully, the method returns "Success" and the
         //  "completionListener" is guaranteed to eventually be notified when the
         //  "write" is done. This is done on an internal worker thread.
         //  If the "write" cannot be started, returns the non-"Success" error code.
         ErrorCode               beginWrite(const util::Buffer * buffer, TransferCompletionListener * completionListener);
+
+        //  Same as "beginWrite()", but goes to new line after writing
+        ErrorCode               beginWriteBlock(const util::Buffer * buffer, TransferCompletionListener * completionListener);
 
         //////////
         //  Implementation
@@ -132,14 +170,8 @@ namespace ibm360
         Ibm2741EditorList       _editors;   //  ...that have been created so far
 
         //  Runtime state
-        enum class _DeviceState
-        {
-            Idle,
-            Reading,
-            Writing,
-            NotOperational
-        };
-        volatile _DeviceState   _deviceState = _DeviceState::NotOperational;
+        volatile DeviceState    _deviceState = DeviceState::NotOperational;
+        QStringList             _contents;
 
         //////////
         //  Requests sent to the worker thread
@@ -154,6 +186,23 @@ namespace ibm360
             virtual ~_Request() {}
         };
 
+        class _ResetRequest : public _Request
+        {
+            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_ResetRequest)
+
+            //////////
+            //  Construction/destruction
+        public:
+            explicit _ResetRequest(IoCompletionListener * completionListener)
+                :   completionListener(completionListener) {}
+            virtual ~_ResetRequest() {}
+
+            //////////
+            //  Properties
+        public:
+            IoCompletionListener *const completionListener;
+        };
+
         class _WriteRequest : public _Request
         {
             CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_WriteRequest)
@@ -161,9 +210,27 @@ namespace ibm360
             //////////
             //  Construction/destruction
         public:
-            explicit _WriteRequest(const util::Buffer * buffer, TransferCompletionListener * completionListener)
+            _WriteRequest(const util::Buffer * buffer, TransferCompletionListener * completionListener)
                 :   buffer(buffer), completionListener(completionListener) {}
             virtual ~_WriteRequest() {}
+
+            //////////
+            //  Properties
+        public:
+            const util::Buffer *const           buffer;
+            TransferCompletionListener *const   completionListener;
+        };
+
+        class _WriteBlockRequest : public _Request
+        {
+            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_WriteBlockRequest)
+
+            //////////
+            //  Construction/destruction
+        public:
+            _WriteBlockRequest(const util::Buffer * buffer, TransferCompletionListener * completionListener)
+                :   buffer(buffer), completionListener(completionListener) {}
+            virtual ~_WriteBlockRequest() {}
 
             //////////
             //  Properties
@@ -183,8 +250,8 @@ namespace ibm360
             //////////
             //  Construction/destruction
         public:
-            explicit _WorkerThread(Ibm2741 * ibm2741) : _ibm2741(ibm2741) {}
-            virtual ~_WorkerThread() {}
+            explicit _WorkerThread(Ibm2741 * ibm2741);
+            virtual ~_WorkerThread();
 
             //////////
             //  QThread
@@ -201,6 +268,13 @@ namespace ibm360
         private:
             Ibm2741 *const  _ibm2741;
             volatile bool   _stopRequested = false;
+            util::CharacterSet::Decoder * _ebcdicDecoder;
+            QByteArray      _decodeBuffer;
+
+            //  Helpers
+            void            _handleResetRequest(const _ResetRequest * request);
+            void            _handleWriteRequest(const _WriteRequest * request);
+            void            _handleWriteBlockRequest(const _WriteBlockRequest * request);
         };
         _WorkerThread *     _workerThread = nullptr;
     };

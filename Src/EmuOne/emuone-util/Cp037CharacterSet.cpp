@@ -371,7 +371,7 @@ int Cp037CharacterSet::_Decoder::decode(const QByteArray & bytes, int scan, QCha
 {
     if (scan >= 0 && scan < bytes.length())
     {
-        c = (char16_t)_ebcdicToAscii[bytes[scan]];
+        c = (char16_t)_ebcdicToAscii[(uint8_t)bytes[scan]];
         return 1;
     }
     return 0;

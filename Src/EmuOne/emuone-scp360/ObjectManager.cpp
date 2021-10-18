@@ -43,6 +43,33 @@ ErrorCode ObjectManager::createPhysicalDevice(ibm360::Device * hardwareDevice, D
     return ErrorCode::ERR_OK;
 }
 
+ErrorCode ObjectManager::destroyPhysicalDevice(PhysicalDevice * physicalDevice)
+{
+    if (physicalDevice == nullptr || physicalDevice->scp() != _scp ||
+        !_devices.contains(physicalDevice->id()) || _devices[physicalDevice->id()] != physicalDevice)
+    {
+        return ErrorCode::ERR_PAR;
+    }
+
+    //  Destroy the device itself
+    _unregisterObject(physicalDevice);
+    delete physicalDevice;
+    return ErrorCode::ERR_OK;
+}
+
+QList<PhysicalDevice*> ObjectManager::physicalDevices() const
+{
+    QList<PhysicalDevice*> result;
+    for (Device * device : _devices)
+    {
+        if (PhysicalDevice * physicalDevice = dynamic_cast<PhysicalDevice*>(device))
+        {
+            result.append(physicalDevice);
+        }
+    }
+    return result;
+}
+
 ErrorCode ObjectManager::createSegment(const QString & name, uint32_t size, Segment::Flags flags, uint32_t address, Segment *& segment)
 {
     if (!Segment::isValidName(name))
@@ -79,7 +106,7 @@ ErrorCode ObjectManager::createSegment(const QString & name, uint32_t size, Segm
 ErrorCode ObjectManager::destroySegment(Segment * segment)
 {
     if (segment == nullptr || segment->scp() != _scp ||
-        _segments.contains(segment->id()) || _segments[segment->id()] != segment)
+        !_segments.contains(segment->id()) || _segments[segment->id()] != segment)
     {
         return ErrorCode::ERR_PAR;
     }
@@ -126,9 +153,41 @@ ErrorCode ObjectManager::createEmulatedProcess(const QString & name, Process::Fl
         return err;
     }
 
+    //  Create a new process
     process = emulatedApplication->createInstance(_scp, id, name, flags, parent);
     _registerObject(process);
+
+    //  Done
     return ErrorCode::ERR_OK;
+}
+
+QList<EmulatedProcess*> ObjectManager::emulatedProcesses() const
+{
+    QList<EmulatedProcess*> result;
+    for (Process * process : _processes)
+    {
+        if (EmulatedProcess * emulatedProcess = dynamic_cast<EmulatedProcess*>(process))
+        {
+            result.append(emulatedProcess);
+        }
+    }
+    return result;
+}
+
+void ObjectManager::destroyAllObjects()
+{
+    for (Object * object : _objects)
+    {
+        delete object;
+    }
+    _objects.clear();
+
+    _segments.clear();
+    _segmentMappings.clear();
+    _segmentLocks.clear();
+    _processes.clear();
+    _devices.clear();
+    _devicesByName.clear();
 }
 
 //////////

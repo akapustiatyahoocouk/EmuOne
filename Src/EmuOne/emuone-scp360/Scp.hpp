@@ -83,6 +83,8 @@ namespace scp360
         //////////
         //  Operations
     public:
+        //  Checks if the caller is running on the SCP worker (kernel) thread
+        bool                onKernelThread() const;
         ErrorCode           makeSystemCall(SystemCall * systemCall);
 
         //////////
@@ -105,6 +107,7 @@ namespace scp360
         void                _registerHardwareDevice(ibm360::Device * hardwareDevice);   //  throws VirtualApplianceException on error
         void                _createDevicesAndDeviceDrivers();   //  throws VirtualApplianceException on error
         void                _destroyDevicesAndDeviceDrivers();
+        static bool         _isTerminal(ibm360::Device * hardwareDevice);
 
         //////////
         //  Interrupt handling
@@ -161,6 +164,7 @@ namespace scp360
 
         void                _handleSystemCallEvent(_SystemCallEvent * event);
         void                _handleWriteToOperatorSystemCall(WriteToOperatorSystemCall * systemCall);
+        void                _handleSetEnvironmentVariableValueSystemCall(SetEnvironmentVariableValueSystemCall * systemCall);
         void                _handleUnknownSystemCall(SystemCall * systemCall);
         void                _handleTransferCompleteEvent(_TransferCompleteEvent * event);
 

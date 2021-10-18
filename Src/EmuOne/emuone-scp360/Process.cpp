@@ -63,6 +63,49 @@ bool Process::isValidName(const QString & name)
     return true;
 }
 
+void Process::setState(State state)
+{
+    Q_ASSERT(scp()->onKernelThread());
+
+    _state = state;
+}
+
+ErrorCode Process::setEnvironmentVariable(const QString & name, const QString & scalarValue)
+{
+    Q_ASSERT(scp()->onKernelThread());
+
+    if (!EnvironmentVariable::isValidName(name) || !EnvironmentVariable::isValidScalarValue(scalarValue))
+    {
+        return ErrorCode::ERR_PAR;
+    }
+    //  Does the variable already exist ?
+    if (_environment.contains(name))
+    {   //  Yes, and it will be replaced
+        delete _environment[name];
+    }
+    //  Create the variable
+    _environment.insert(name, new EnvironmentVariable(name, scalarValue));
+    return ErrorCode::ERR_OK;
+}
+
+ErrorCode Process::setEnvironmentVariable(const QString & name, const QStringList & listValue)
+{
+    Q_ASSERT(scp()->onKernelThread());
+
+    if (!EnvironmentVariable::isValidName(name) || !EnvironmentVariable::isValidListValue(listValue))
+    {
+        return ErrorCode::ERR_PAR;
+    }
+    //  Does the variable already exist ?
+    if (_environment.contains(name))
+    {   //  Yes, and it will be replaced
+        delete _environment[name];
+    }
+    //  Create the variable
+    _environment.insert(name, new EnvironmentVariable(name, listValue));
+    return ErrorCode::ERR_OK;
+}
+
 //////////
 //  Helper functions
 EMUONE_SCP360_EXPORT Process::Flags scp360::operator & (Process::Flags op1, Process::Flags op2)

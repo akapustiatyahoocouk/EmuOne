@@ -77,7 +77,7 @@ void Ibm2741::initialise()
         return;
     }
 
-    _deviceState = _DeviceState::Idle;
+    _deviceState = DeviceState::Idle;
 
     //  Done
     _state = State::Initialised;
@@ -124,7 +124,7 @@ void Ibm2741::deinitialise() noexcept
         return;
     }
 
-    _deviceState = _DeviceState::NotOperational;
+    _deviceState = DeviceState::NotOperational;
 
     //  Done
     _state = State::Connected;
@@ -157,18 +157,41 @@ void Ibm2741::deserialiseConfiguration(QDomElement & configurationElement)
 
 //////////
 //  Operations
+Ibm2741::ErrorCode Ibm2741::beginReset(IoCompletionListener * completionListener)
+{
+    Q_ASSERT(completionListener != nullptr);
+
+    _requestQueue.enqueue(new _ResetRequest(completionListener));
+    return Ibm2741::ErrorCode::Success;
+}
+
 Ibm2741::ErrorCode Ibm2741::beginWrite(const util::Buffer * buffer, TransferCompletionListener * completionListener)
 {
     Q_ASSERT(buffer != nullptr);
     Q_ASSERT(completionListener != nullptr);
 
     //  Can we ?
-    if (_deviceState != _DeviceState::Idle)
+    if (_deviceState != DeviceState::Idle)
     {   //  No!
         return ErrorCode::Busy;
     }
     //  Send a "write" request to the worker thread
     _requestQueue.enqueue(new _WriteRequest(buffer, completionListener));
+    return Ibm2741::ErrorCode::Success;
+}
+
+Ibm2741::ErrorCode Ibm2741::beginWriteBlock(const util::Buffer * buffer, TransferCompletionListener * completionListener)
+{
+    Q_ASSERT(buffer != nullptr);
+    Q_ASSERT(completionListener != nullptr);
+
+    //  Can we ?
+    if (_deviceState != DeviceState::Idle)
+    {   //  No!
+        return ErrorCode::Busy;
+    }
+    //  Send a "write" request to the worker thread
+    _requestQueue.enqueue(new _WriteBlockRequest(buffer, completionListener));
     return Ibm2741::ErrorCode::Success;
 }
 
@@ -224,9 +247,20 @@ core::FullScreenWidgetList Ibm2741::Ui::fullScreenWidgets()
 
 //////////
 //  Ibm2741::_WorkerThread
+Ibm2741::_WorkerThread::_WorkerThread(Ibm2741 * ibm2741)
+    :   _ibm2741(ibm2741) ,
+        _ebcdicDecoder(util::Cp037CharacterSet::getInstance()->createDecoder())
+{
+}
+
+Ibm2741::_WorkerThread::~_WorkerThread()
+{
+    delete _ebcdicDecoder;
+}
+
 void Ibm2741::_WorkerThread::run()
 {
-    _ibm2741->_deviceState = _DeviceState::Idle;
+    _ibm2741->_deviceState = DeviceState::Idle;
     while (!_stopRequested)
     {
         _Request * request;
@@ -234,16 +268,114 @@ void Ibm2741::_WorkerThread::run()
         {
             continue;
         }
-        if (_WriteRequest * writeRequest = dynamic_cast<_WriteRequest*>(request))
-        {   //  TODO implement properly
-            QThread::sleep(10);
-            writeRequest->completionListener->transferCompleted(writeRequest->buffer->size(), ErrorCode::Success);
+        if (_ResetRequest * resetRequest = dynamic_cast<_ResetRequest*>(request))
+        {
+            _handleResetRequest(resetRequest);
+        }
+        else if (_WriteRequest * writeRequest = dynamic_cast<_WriteRequest*>(request))
+        {
+            _handleWriteRequest(writeRequest);
+        }
+        else if (_WriteBlockRequest * writeBlockRequest = dynamic_cast<_WriteBlockRequest*>(request))
+        {
+            _handleWriteBlockRequest(writeBlockRequest);
         }
         else
         {   //  OOPS! Invalid request!
             Q_ASSERT(false);
         }
     }
+}
+
+void Ibm2741::_WorkerThread::_handleResetRequest(const _ResetRequest * request)
+{
+    _ibm2741->_deviceState = DeviceState::Resetting;
+    QThread::sleep(5);
+    _ibm2741->_deviceState = DeviceState::Idle;
+    request->completionListener->ioCompleted(ErrorCode::Success);
+}
+
+void Ibm2741::_WorkerThread::_handleWriteRequest(const _WriteRequest * request)
+{
+    _ibm2741->_deviceState = DeviceState::Writing;
+    QChar ch;
+    for (int i = 0; i < request->buffer->size(); i++)
+    {   //  Translate EBCDIC to ASCII...
+        _decodeBuffer.clear();
+        _decodeBuffer.append(request->buffer->at(i));
+        if (_ebcdicDecoder->decode(_decodeBuffer, 0, ch) == 0)
+        {
+            ch = '?';
+        }
+        //  ...print...
+        if (ch == '\n')
+        {   //  Start a new line
+            _ibm2741->_contents.append("");
+        }
+        else
+        {
+            if (_ibm2741->_contents.isEmpty())
+            {
+                _ibm2741->_contents.append(QString(1, ch));
+            }
+            else if (_ibm2741->_contents[_ibm2741->_contents.size() - 1].length() >= 79)
+            {   //  Printing the 80th column - need to start a new line
+                _ibm2741->_contents[_ibm2741->_contents.size() - 1] += ch;
+                _ibm2741->_contents.append("");
+            }
+            else
+            {   //  Adding to the current line
+                _ibm2741->_contents[_ibm2741->_contents.size() - 1] += ch;
+            }
+        }
+        //  ...and simulate delay
+        QThread::msleep(70);    //  14.1 CPS
+
+    }
+    _ibm2741->_deviceState = DeviceState::Idle;
+    request->completionListener->transferCompleted(request->buffer->size(), ErrorCode::Success);
+}
+
+void Ibm2741::_WorkerThread::_handleWriteBlockRequest(const _WriteBlockRequest * request)
+{
+    _ibm2741->_deviceState = DeviceState::Writing;
+    QChar ch;
+    for (int i = 0; i < request->buffer->size(); i++)
+    {   //  Translate EBCDIC to ASCII...
+        _decodeBuffer.clear();
+        _decodeBuffer.append(request->buffer->at(i));
+        if (_ebcdicDecoder->decode(_decodeBuffer, 0, ch) == 0)
+        {
+            ch = '?';
+        }
+        //  ...print...
+        if (ch == '\n')
+        {   //  Start a new line
+            _ibm2741->_contents.append("");
+        }
+        else
+        {
+            if (_ibm2741->_contents.isEmpty())
+            {
+                _ibm2741->_contents.append(QString(1, ch));
+            }
+            else if (_ibm2741->_contents[_ibm2741->_contents.size() - 1].length() >= 79)
+            {   //  Printing the 80th column - need to start a new line
+                _ibm2741->_contents[_ibm2741->_contents.size() - 1] += ch;
+                _ibm2741->_contents.append("");
+            }
+            else
+            {   //  Adding to the current line
+                _ibm2741->_contents[_ibm2741->_contents.size() - 1] += ch;
+            }
+        }
+        //  ...and simulate delay
+        QThread::msleep(70);    //  14.1 CPS
+
+    }
+    _ibm2741->_contents.append(""); //  ...to start a new line
+    _ibm2741->_deviceState = DeviceState::Idle;
+    request->completionListener->transferCompleted(request->buffer->size(), ErrorCode::Success);
 }
 
 //  End of emuone-360/Ibm2741.cpp

@@ -16,6 +16,19 @@
   <property name="autoFillBackground">
    <bool>false</bool>
   </property>
+  <widget class="QScrollBar" name="_scrollBar">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>10</y>
+     <width>16</width>
+     <height>160</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

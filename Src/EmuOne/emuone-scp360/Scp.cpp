@@ -135,7 +135,10 @@ void Scp::stop() noexcept
 
     //  Stop the worker thread
     _workerThread->requestStop();   //  this stops it eventually
+    _workerThread->wait();
     _workerThread = nullptr;
+    _objectManager.destroyAllObjects();
+
 
     //  Done
     _state = State::Initialised;
@@ -206,6 +209,11 @@ void Scp::onMachineCheckInterruption(uint16_t /*interruptionCode*/)
 
 //////////
 //  Operations
+bool Scp::onKernelThread() const
+{
+    Q_ASSERT(QThread::currentThread() == _workerThread);
+}
+
 ErrorCode Scp::makeSystemCall(SystemCall * systemCall)
 {
     Q_ASSERT(systemCall != nullptr);
@@ -302,7 +310,7 @@ void Scp::_createDevicesAndDeviceDrivers()
         if (PhysicalDevice * physicalDevice = dynamic_cast<PhysicalDevice*>(device))
         {
             ibm360::Device * hardwareDevice = physicalDevice->hardwareDevice();
-            if (dynamic_cast<ibm360::Ibm2741*>(hardwareDevice))
+            if (_isTerminal(hardwareDevice))
             {   //  This hardware device CAN be used as an operator's console
                 if (_operatorsConsole == nullptr ||
                     hardwareDevice->address() < _operatorsConsole->hardwareDevice()->address())
@@ -320,12 +328,27 @@ void Scp::_createDevicesAndDeviceDrivers()
 
 void Scp::_destroyDevicesAndDeviceDrivers()
 {
+    for (PhysicalDevice * physicalDevice : _objectManager.physicalDevices())
+    {
+        _objectManager.destroyPhysicalDevice(physicalDevice);
+    }
     _operatorsConsole = nullptr;
+
+    QSet<DeviceDriver*> deviceDrivers;
     for (DeviceDriver * deviceDriver : _deviceDrivers)
+    {
+        deviceDrivers.insert(deviceDriver);
+    }
+    for (DeviceDriver * deviceDriver : deviceDrivers)
     {
         delete deviceDriver;
     }
     _deviceDrivers.clear();
+}
+
+bool Scp::_isTerminal(ibm360::Device * hardwareDevice)
+{
+    return (dynamic_cast<ibm360::Ibm2741*>(hardwareDevice) != nullptr);
 }
 
 //////////
@@ -349,6 +372,10 @@ void Scp::_handleSystemCallEvent(_SystemCallEvent * event)
     {
         _handleWriteToOperatorSystemCall(writeToOperatorSystemCall);
     }
+    else if (auto setEnvironmentVariableValueSystemCall = dynamic_cast<SetEnvironmentVariableValueSystemCall*>(event->_systemCall))
+    {
+        _handleSetEnvironmentVariableValueSystemCall(setEnvironmentVariableValueSystemCall);
+    }
     else
     {   //  OOPS! Unknown system call
         _handleUnknownSystemCall(event->_systemCall);
@@ -363,10 +390,14 @@ void Scp::_handleSystemCallEvent(_SystemCallEvent * event)
     //  The process that made the system call is now "ready" again
     //  or "suspended" if another process suspended the one that made
     //  the system call
-    process->setState((process->suspendCount() == 0) ? Process::State::Ready : Process::State::Suspended);
     if (EmulatedProcess * emulatedProcess = dynamic_cast<EmulatedProcess*>(process))
     {   //  Must allow EmulatedProcess::makeSystemCall() to return
+        process->setState((process->suspendCount() == 0) ? Process::State::Active : Process::State::Suspended);
         emulatedProcess->markSystemCallComplete();
+    }
+    else
+    {   //  A native process is now "ready" to run
+        process->setState((process->suspendCount() == 0) ? Process::State::Ready : Process::State::Suspended);
     }
 }
 
@@ -418,6 +449,14 @@ void Scp::_handleWriteToOperatorSystemCall(WriteToOperatorSystemCall * systemCal
     }
 }
 
+void Scp::_handleSetEnvironmentVariableValueSystemCall(SetEnvironmentVariableValueSystemCall * systemCall)
+{
+    Q_ASSERT(QThread::currentThread() == _workerThread);
+
+    ErrorCode err = systemCall->process()->setEnvironmentVariable(systemCall->name, systemCall->listValue);
+    systemCall->setOutcome(err);
+}
+
 void Scp::_handleUnknownSystemCall(SystemCall * systemCall)
 {
     Q_ASSERT(QThread::currentThread() == _workerThread);
@@ -440,10 +479,14 @@ void Scp::_handleTransferCompleteEvent(_TransferCompleteEvent * event)
     _systemCallsInProgress.remove(process);
     systemCall->setOutcome(event->_errorCode);
     //  The process is ready to continue running
-    process->setState((process->suspendCount() == 0) ? Process::State::Ready : Process::State::Suspended);
     if (EmulatedProcess * emulatedProcess = dynamic_cast<EmulatedProcess*>(process))
     {   //  Must allow EmulatedProcess::makeSystemCall() to return
+        process->setState((process->suspendCount() == 0) ? Process::State::Active : Process::State::Suspended);
         emulatedProcess->markSystemCallComplete();
+    }
+    else
+    {   //  A native process is now ready to run
+        process->setState((process->suspendCount() == 0) ? Process::State::Ready : Process::State::Suspended);
     }
 }
 
@@ -467,13 +510,13 @@ void Scp::_WorkerThread::run()
     }
     //  Create the INIT process
     EmulatedProcess * initProcess = nullptr;
-    _scp->_objectManager.createEmulatedProcess(InitProcess::InitApplication::getInstance()->mnemonic(),
+    _scp->_objectManager.createEmulatedProcess(InitProcess::Application::getInstance()->mnemonic(),
                                                Process::Flags::System,
                                                nullptr,
-                                               InitProcess::InitApplication::getInstance(),
+                                               InitProcess::Application::getInstance(),
                                                initProcess);
-    initProcess->start();
     //  Go!
+    initProcess->start();
     while (!_stopRequested)
     {   //  Wait for next control event...
         _Event * event;
@@ -490,6 +533,11 @@ void Scp::_WorkerThread::run()
             _scp->_handleTransferCompleteEvent(transferCompleteEvent);
         }
         delete event;
+    }
+    //  Stop all emulated processes
+    for (EmulatedProcess * emulatedProcess : _scp->_objectManager.emulatedProcesses())
+    {
+        emulatedProcess->stop(ErrorCode::ERR_UNK);
     }
 }
 
