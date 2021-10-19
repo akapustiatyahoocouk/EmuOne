@@ -77,6 +77,8 @@ namespace scp360
         //  Terminates any ongoing I/O operation on the specified "device" ASAP.
         virtual ErrorCode       haltIo(Device * device) = 0;
 
+        virtual ErrorCode       validateOpenFlags(OpenFileFlags openFlags) const = 0;
+
         //////////
         //  Implementation
     private:
@@ -102,6 +104,7 @@ namespace scp360
         virtual ErrorCode       deinitialiseDevice(Device * device, IoCompletionListener * ioCompletionListener) override;
         virtual ErrorCode       writeBlock(Device * device, const util::Buffer * buffer, TransferCompletionListener * transferCompletionListener) override;
         virtual ErrorCode       haltIo(Device * device) override;
+        virtual ErrorCode       validateOpenFlags(OpenFileFlags openFlags) const override;
 
         //////////
         //  Implementation

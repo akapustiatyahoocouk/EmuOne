@@ -73,10 +73,10 @@ void EmulatedProcess::_openStdIo()
         {
             QString sysinValue = sysinEnvironmentVariable->valueAt(0);
             systemCalls.openFile(sysinValue,
-                                 OpenFileSystemCall::OpenFlags::FixedUnblockedRecords |
-                                 OpenFileSystemCall::OpenFlags::ReadOnly |
-                                 OpenFileSystemCall::OpenFlags::TextMode |
-                                 OpenFileSystemCall::OpenFlags::SequentialAccess,
+                                 OpenFileFlags::FixedUnblockedRecords |
+                                 OpenFileFlags::ReadOnly |
+                                 OpenFileFlags::TextMode |
+                                 OpenFileFlags::SequentialAccess,
                                  80, 80,
                                  _sysinHandle);
         }
@@ -89,10 +89,10 @@ void EmulatedProcess::_openStdIo()
         {
             QString sysoutValue = sysoutEnvironmentVariable->valueAt(0);
             systemCalls.openFile(sysoutValue,
-                                 OpenFileSystemCall::OpenFlags::FixedUnblockedRecords |
-                                 OpenFileSystemCall::OpenFlags::WriteOnly |
-                                 OpenFileSystemCall::OpenFlags::TextMode |
-                                 OpenFileSystemCall::OpenFlags::SequentialAccess,
+                                 OpenFileFlags::FixedUnblockedRecords |
+                                 OpenFileFlags::WriteOnly |
+                                 OpenFileFlags::TextMode |
+                                 OpenFileFlags::SequentialAccess,
                                  80, 80,
                                  _sysoutHandle);
         }

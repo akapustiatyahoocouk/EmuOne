@@ -151,6 +151,21 @@ ErrorCode Ibm2741Driver::haltIo(Device * device)
     return _translateErrorCode(ibm2741->haltIo());
 }
 
+ErrorCode Ibm2741Driver::validateOpenFlags(OpenFileFlags openFlags) const
+{
+    //  IBM 2741 only allows "fixed unblocked" R/W in text (sequential) mode
+    if ((openFlags & OpenFileFlags::RecordsMask) == OpenFileFlags::FixedUnblockedRecords &&
+        ((openFlags & OpenFileFlags::DirectionMask) == OpenFileFlags::ReadOnly ||
+         (openFlags & OpenFileFlags::DirectionMask) == OpenFileFlags::WriteOnly ||
+         (openFlags & OpenFileFlags::DirectionMask) == OpenFileFlags::ReadWrite) &&
+        (openFlags & OpenFileFlags::ModeMask) == OpenFileFlags::TextMode &&
+        (openFlags & OpenFileFlags::AccessMask) == OpenFileFlags::SequentialAccess)
+    {
+        return ErrorCode::ERR_OK;
+    }
+    return ErrorCode::ERR_SUP;
+}
+
 //////////
 //  Implementation helpers
 ibm360::Ibm2741 * Ibm2741Driver::_resolveIbm2741(Device * device)

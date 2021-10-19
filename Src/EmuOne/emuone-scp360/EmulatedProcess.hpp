@@ -66,8 +66,9 @@ namespace scp360
             //  I/O redirection via environment is performed automatically.
             //  Upon success returns ERR_OK and stores a valid "fileHandle".
             //  Upon failure returns a non-ERR_OK error code.
-            ErrorCode               openFile(const QString & fileName, OpenFileSystemCall::OpenFlags openFlags,
+            ErrorCode               openFile(const QString & fileName, OpenFileFlags openFlags,
                                              uint32_t recordSize, uint32_t blockSize, uint16_t & fileHandle);
+
     /*
     7.2.2	SC#EVCNT – Count Environment Variable Values
     This system call allows the process to determine the number of values that a specified variable in its environment has. As a special case, it can also be used to determine if the specified environment variable exists at all.
@@ -98,6 +99,10 @@ namespace scp360
     •	If the environment variable in question does not exist, or the index exceeds the number of values it has, R15 will be ERR#NOF upon return.
     •	If the specified buffer is too small to hold the entire value, only the initial portion of the value (as much as fits into the buffer) will be stored and R15 will be ERR#BTS upon return.
     •	If the specified buffer is larger than the value, only the initial portion of the buffer is filled, and the rest of the buffer is not affected; the number of characters actually stored is returned in R0.
+    */
+        ErrorCode               getEnvironmentVariableValueScalar(const QString & name, const QString & scalarValue);
+
+    /*
     7.2.4	SC#EVGTS – Get Environment Variable Value (Scalar)
     This system call allows the process to retrieve the complete value associated with a given variable in its environment.
 

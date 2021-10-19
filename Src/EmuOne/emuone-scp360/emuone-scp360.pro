@@ -24,11 +24,13 @@ SOURCES += \
     PhysicalDevice.cpp \
     Plugin.cpp \
     Process.cpp \
+    Resources.cpp \
     Scp.cpp \
     Segment.cpp \
     SegmentLock.cpp \
     SegmentMapping.cpp \
-    SystemCalls.cpp
+    SystemCalls.cpp \
+    Types.cpp
 
 HEADERS += \
     API.hpp \
@@ -37,13 +39,14 @@ HEADERS += \
     DeviceDrivers.hpp \
     EmulatedApplication.hpp \
     EmulatedProcess.hpp \
-    ErrorCodes.hpp \
     InitProcess.hpp \
     LoginProcess.hpp \
     ObjectManager.hpp \
     Objects.hpp \
+    Resources.hpp \
     Scp.hpp \
-    SystemCalls.hpp
+    SystemCalls.hpp \
+    Types.hpp
 
 LIBS += -L../../../Bin/Debug -lemuone-ibm360 -lemuone-core -lemuone-util
 

@@ -26,6 +26,7 @@ namespace scp360
         ErrorCode           createPhysicalDevice(ibm360::Device * hardwareDevice, Device::Flags flags, DeviceDriver * driver, PhysicalDevice *& physicalDevice);
         ErrorCode           destroyPhysicalDevice(PhysicalDevice * physicalDevice);
         QList<PhysicalDevice*>  physicalDevices() const;
+        PhysicalDevice *    findPhysicalDeviceByName(const QString & name) const;
 
         ErrorCode           createSegment(const QString & name, uint32_t size, Segment::Flags flags, uint32_t address, Segment *& segment);
         ErrorCode           destroySegment(Segment * segment);

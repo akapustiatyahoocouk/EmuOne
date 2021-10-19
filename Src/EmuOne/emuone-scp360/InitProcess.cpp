@@ -30,6 +30,8 @@ ErrorCode InitProcess::run()
     //  Initialise all Devices that CAN be initialised (using their DeviceDrivers)
     _initialiseDevices();
 
+    //  TODO Set default "TMPVOL" environment variable
+
     //  TODO move this to LOGIN process
     systemCalls.writeToOperator("*** SCP/360 VERSION " +
                                 QString(__DATE__).toUpper() +

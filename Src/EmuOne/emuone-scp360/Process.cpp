@@ -70,7 +70,45 @@ void Process::setState(State state)
     _state = state;
 }
 
-ErrorCode Process::setEnvironmentVariable(const QString & name, const QString & scalarValue)
+bool Process::hasEnvironmentVariable(const QString & name) const
+{
+    Q_ASSERT(scp()->onKernelThread());
+
+    return _environment.contains(name);
+}
+
+ErrorCode Process::getEnvironmentVariableValueCount(const QString & name, int & value) const
+{
+    Q_ASSERT(scp()->onKernelThread());
+
+    if (_environment.contains(name))
+    {
+        value = _environment[name]->valueCount();
+        return ErrorCode::ERR_OK;
+    }
+    else
+    {
+        return ErrorCode::ERR_NOF;
+    }
+}
+
+ErrorCode Process::getEnvironmentVariableValueScalar(const QString & name, QString & value) const
+{
+    Q_ASSERT(scp()->onKernelThread());
+
+    if (_environment.contains(name))
+    {
+        QStringList values = _environment[name]->values();
+        value = (values.size() == 1) ? values[0] : ('(' + values.join(',') + ')');
+        return ErrorCode::ERR_OK;
+    }
+    else
+    {
+        return ErrorCode::ERR_NOF;
+    }
+}
+
+ErrorCode Process::setEnvironmentVariableValue(const QString & name, const QString & scalarValue)
 {
     Q_ASSERT(scp()->onKernelThread());
 
@@ -88,7 +126,7 @@ ErrorCode Process::setEnvironmentVariable(const QString & name, const QString & 
     return ErrorCode::ERR_OK;
 }
 
-ErrorCode Process::setEnvironmentVariable(const QString & name, const QStringList & listValue)
+ErrorCode Process::setEnvironmentVariableValue(const QString & name, const QStringList & listValue)
 {
     Q_ASSERT(scp()->onKernelThread());
 

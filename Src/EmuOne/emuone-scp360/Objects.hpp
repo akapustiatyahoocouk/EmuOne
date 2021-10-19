@@ -206,6 +206,7 @@ namespace scp360
 
         friend class EmulatedProcess;
         friend class ObjectManager;
+        friend class Scp;
 
         //////////
         //  Constants
@@ -257,8 +258,11 @@ namespace scp360
 
         uint16_t                suspendCount() const { return _suspendCount; }
 
-        ErrorCode               setEnvironmentVariable(const QString & name, const QString & scalarValue);
-        ErrorCode               setEnvironmentVariable(const QString & name, const QStringList & listValue);
+        bool                    hasEnvironmentVariable(const QString & name) const;
+        ErrorCode               getEnvironmentVariableValueCount(const QString & name, int & value) const;
+        ErrorCode               getEnvironmentVariableValueScalar(const QString & name, QString & value) const;
+        ErrorCode               setEnvironmentVariableValue(const QString & name, const QString & scalarValue);
+        ErrorCode               setEnvironmentVariableValue(const QString & name, const QStringList & listValue);
 
         //////////
         //  Implementation
@@ -277,6 +281,8 @@ namespace scp360
         int16_t                 _dynamicPriority;
         ErrorCode               _exitCode = ErrorCode::ERR_UNK;
         uint16_t                _holdCount = 0;
+
+        QMap<uint16_t, Resource*>    _openHandles;  //  handle -> Resource
     };
 
     EMUONE_SCP360_EXPORT Process::Flags operator & (Process::Flags op1, Process::Flags op2);

@@ -211,7 +211,7 @@ void Scp::onMachineCheckInterruption(uint16_t /*interruptionCode*/)
 //  Operations
 bool Scp::onKernelThread() const
 {
-    Q_ASSERT(QThread::currentThread() == _workerThread);
+    return QThread::currentThread() == _workerThread;
 }
 
 ErrorCode Scp::makeSystemCall(SystemCall * systemCall)
@@ -363,6 +363,7 @@ void Scp::_TransferCompletionListener::transferCompleted(Device * device, uint32
 void Scp::_handleSystemCallEvent(_SystemCallEvent * event)
 {
     Q_ASSERT(QThread::currentThread() == _workerThread);
+    Q_ASSERT(event != nullptr);
 
     Process * process = event->_systemCall->process();
     //  The process that made the system call is now "waiting"
@@ -371,6 +372,10 @@ void Scp::_handleSystemCallEvent(_SystemCallEvent * event)
     if (auto writeToOperatorSystemCall = dynamic_cast<WriteToOperatorSystemCall*>(event->_systemCall))
     {
         _handleWriteToOperatorSystemCall(writeToOperatorSystemCall);
+    }
+    else if (auto openFileSystemCall = dynamic_cast<OpenFileSystemCall*>(event->_systemCall))
+    {
+        _handleOpenFileSystemCall(openFileSystemCall);
     }
     else if (auto setEnvironmentVariableValueSystemCall = dynamic_cast<SetEnvironmentVariableValueSystemCall*>(event->_systemCall))
     {
@@ -404,6 +409,7 @@ void Scp::_handleSystemCallEvent(_SystemCallEvent * event)
 void Scp::_handleWriteToOperatorSystemCall(WriteToOperatorSystemCall * systemCall)
 {
     Q_ASSERT(QThread::currentThread() == _workerThread);
+    Q_ASSERT(systemCall != nullptr);
 
     //  Locate the device driver that drives the "operator console" device
     if (_operatorsConsole == nullptr)
@@ -449,17 +455,90 @@ void Scp::_handleWriteToOperatorSystemCall(WriteToOperatorSystemCall * systemCal
     }
 }
 
+void Scp::_handleOpenFileSystemCall(OpenFileSystemCall * systemCall)
+{
+    Q_ASSERT(QThread::currentThread() == _workerThread);
+    Q_ASSERT(systemCall != nullptr);
+
+    //  Perform filename redirection
+    QSet<QString> usedRedirectors;
+    QString resolvedFileName = systemCall->fileName;
+    usedRedirectors.insert(resolvedFileName);
+    while (systemCall->process()->hasEnvironmentVariable(resolvedFileName))
+    {
+        int valueCount;
+        if (systemCall->process()->getEnvironmentVariableValueCount(resolvedFileName, valueCount) != ErrorCode::ERR_OK ||
+            valueCount != 1)
+        {   //  OOPS! Stop resolving
+            break;
+        }
+        QString value;
+        if (systemCall->process()->getEnvironmentVariableValueScalar(resolvedFileName, value) != ErrorCode::ERR_OK)
+        {   //  OOPS! Stop resolving
+            break;
+        }
+        //  Perform 1 step of name resolution
+        if (usedRedirectors.contains(value))
+        {   //  A cycle!
+            break;
+        }
+        usedRedirectors.insert(value);
+        resolvedFileName = value;
+    }
+
+    //  Are we trying to open a device ?
+    if (PhysicalDevice * physicalDevice = _objectManager.findPhysicalDeviceByName(resolvedFileName))
+    {   //  Yes - locate the driver...
+        DeviceDriver * deviceDriver = _deviceDrivers[physicalDevice];
+        //  ...ask it to confirm the "open mode"...
+        ErrorCode err = deviceDriver->validateOpenFlags(systemCall->openFlags);
+        if (err != ErrorCode::ERR_OK)
+        {   //  OOPS! Can't open!
+            systemCall->setOutcome(err);
+            return;
+        }
+        //  ...allocate a yet-unused "handle"...
+        uint16_t handle = 0;
+        for (uint16_t h = 1; h != 0; h++)
+        {
+            if (!systemCall->process()->_openHandles.contains(h))
+            {
+                handle = h;
+                break;
+            }
+        }
+        if (handle == 0)
+        {   //  OOPS! Too many open handles!
+            systemCall->setOutcome(ErrorCode::ERR_LIM);
+            return;
+        }
+        //  Create a new DeviceResource and insert it into the Process' handle table
+        DeviceResource * deviceResource = new DeviceResource(physicalDevice);
+        systemCall->process()->_openHandles.insert(handle, deviceResource);
+        deviceResource->incrementOpenHandleCount();
+        //  Store the hewly created "handle" and we're done
+        systemCall->handle = handle;
+        systemCall->setOutcome(ErrorCode::ERR_OK);
+        return;
+    }
+
+    //  TODO finish the implementation
+    systemCall->setOutcome(ErrorCode::ERR_NOF);
+}
+
 void Scp::_handleSetEnvironmentVariableValueSystemCall(SetEnvironmentVariableValueSystemCall * systemCall)
 {
     Q_ASSERT(QThread::currentThread() == _workerThread);
+    Q_ASSERT(systemCall != nullptr);
 
-    ErrorCode err = systemCall->process()->setEnvironmentVariable(systemCall->name, systemCall->listValue);
+    ErrorCode err = systemCall->process()->setEnvironmentVariableValue(systemCall->name, systemCall->listValue);
     systemCall->setOutcome(err);
 }
 
 void Scp::_handleUnknownSystemCall(SystemCall * systemCall)
 {
     Q_ASSERT(QThread::currentThread() == _workerThread);
+    Q_ASSERT(systemCall != nullptr);
 
     systemCall->setOutcome(ErrorCode::ERR_SVC);
 }

@@ -21,17 +21,18 @@
 #endif
 
 #include "emuone-scp360/Classes.hpp"
-#include "emuone-scp360/ErrorCodes.hpp"
+#include "emuone-scp360/Types.hpp"
+#include "emuone-scp360/Buffers.hpp"
 
 #include "emuone-scp360/Objects.hpp"
 #include "emuone-scp360/ObjectManager.hpp"
 
-#include "emuone-scp360/Buffers.hpp"
 #include "emuone-scp360/DeviceDrivers.hpp"
-
-#include "emuone-scp360/EmulatedApplication.hpp"
+#include "emuone-scp360/Resources.hpp"
 
 #include "emuone-scp360/SystemCalls.hpp"
+
+#include "emuone-scp360/EmulatedApplication.hpp"
 #include "emuone-scp360/EmulatedProcess.hpp"
 #include "emuone-scp360/InitProcess.hpp"
 #include "emuone-scp360/LoginProcess.hpp"

@@ -70,6 +70,11 @@ QList<PhysicalDevice*> ObjectManager::physicalDevices() const
     return result;
 }
 
+PhysicalDevice * ObjectManager::findPhysicalDeviceByName(const QString & name) const
+{
+    return _devicesByName.contains(name) ? dynamic_cast<PhysicalDevice*>(_devicesByName[name]) : nullptr;
+}
+
 ErrorCode ObjectManager::createSegment(const QString & name, uint32_t size, Segment::Flags flags, uint32_t address, Segment *& segment)
 {
     if (!Segment::isValidName(name))

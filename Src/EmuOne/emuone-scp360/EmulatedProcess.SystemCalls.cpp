@@ -34,6 +34,8 @@ ErrorCode EmulatedProcess::SystemCalls::makeSystemCall(SystemCall * systemCall)
 
 ErrorCode EmulatedProcess::SystemCalls::writeToOperator(const QString & text)
 {
+    Q_ASSERT(QThread::currentThread() == _emulatedProcess->_workerThread);
+
     //  The "operator console" is a text device that expects EBCDIC bytes.
     util::ByteArrayBuffer buffer;
     std::unique_ptr<util::CharacterSet::Encoder> encoder(util::Cp037CharacterSet::getInstance()->createEncoder());
@@ -44,14 +46,26 @@ ErrorCode EmulatedProcess::SystemCalls::writeToOperator(const QString & text)
     return makeSystemCall(&systemCall);
 }
 
-ErrorCode EmulatedProcess::SystemCalls::openFile(const QString & fileName, OpenFileSystemCall::OpenFlags openFlags,
+ErrorCode EmulatedProcess::SystemCalls::openFile(const QString & fileName, OpenFileFlags openFlags,
                                                  uint32_t recordSize, uint32_t blockSize, uint16_t & fileHandle)
 {
-    return ErrorCode::ERR_SUP;
+    Q_ASSERT(QThread::currentThread() == _emulatedProcess->_workerThread);
+
+    //  Issue "SVC"
+    OpenFileSystemCall systemCall(_emulatedProcess, fileName, openFlags, recordSize, blockSize);
+    ErrorCode err = makeSystemCall(&systemCall);
+    if (err != ErrorCode::ERR_OK)
+    {   //  OOPS! Something wrong!
+        return err;
+    }
+    fileHandle = systemCall.handle;
+    return ErrorCode::ERR_OK;
 }
 
 ErrorCode EmulatedProcess::SystemCalls::setEnvironmentVariableValue(const QString & name, const QString & scalarValue)
 {
+    Q_ASSERT(QThread::currentThread() == _emulatedProcess->_workerThread);
+
     //  Issue "SVC"
     SetEnvironmentVariableValueSystemCall systemCall(_emulatedProcess, _emulatedProcess, name, scalarValue);
     return makeSystemCall(&systemCall);
@@ -59,6 +73,8 @@ ErrorCode EmulatedProcess::SystemCalls::setEnvironmentVariableValue(const QStrin
 
 ErrorCode EmulatedProcess::SystemCalls::setEnvironmentVariableValue(Process * targetProcess, const QString & name, const QString & scalarValue)
 {
+    Q_ASSERT(QThread::currentThread() == _emulatedProcess->_workerThread);
+
     //  Issue "SVC"
     SetEnvironmentVariableValueSystemCall systemCall(_emulatedProcess, targetProcess, name, scalarValue);
     return makeSystemCall(&systemCall);
