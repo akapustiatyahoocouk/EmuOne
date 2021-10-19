@@ -74,6 +74,9 @@ namespace scp360
         //  Writes a single record containing data from the specified "buffer"
         virtual ErrorCode       writeBlock(Device * device, const util::Buffer * buffer, TransferCompletionListener * transferCompletionListener) = 0;
 
+        //  Terminates any ongoing I/O operation on the specified "device" ASAP.
+        virtual ErrorCode       haltIo(Device * device) = 0;
+
         //////////
         //  Implementation
     private:
@@ -98,6 +101,7 @@ namespace scp360
         virtual ErrorCode       initialiseDevice(Device * device, IoCompletionListener * ioCompletionListener) override;
         virtual ErrorCode       deinitialiseDevice(Device * device, IoCompletionListener * ioCompletionListener) override;
         virtual ErrorCode       writeBlock(Device * device, const util::Buffer * buffer, TransferCompletionListener * transferCompletionListener) override;
+        virtual ErrorCode       haltIo(Device * device) override;
 
         //////////
         //  Implementation
@@ -111,8 +115,8 @@ namespace scp360
             //////////
             //  Construction/destruction
         public:
-            _Ibm2741IoCompletionListener(Ibm2741Driver * driver, PhysicalDevice * physicalDevice)
-                :   _driver(driver), _physicalDevice(physicalDevice) {}
+            _Ibm2741IoCompletionListener(Ibm2741Driver * driver, Device * device)
+                :   _driver(driver), _device(device) {}
             virtual ~_Ibm2741IoCompletionListener() {}
 
             //////////
@@ -129,7 +133,7 @@ namespace scp360
             //  Implementation
         public:
             Ibm2741Driver *const    _driver;
-            PhysicalDevice *const   _physicalDevice;
+            Device *const           _device;
         };
         QSet<_Ibm2741IoCompletionListener*> _ibm2741IoCompletionListeners;
 
@@ -140,8 +144,8 @@ namespace scp360
             //////////
             //  Construction/destruction
         public:
-            _Ibm2741TransferCompletionListener(Ibm2741Driver * driver, PhysicalDevice * physicalDevice)
-                :   _driver(driver), _physicalDevice(physicalDevice) {}
+            _Ibm2741TransferCompletionListener(Ibm2741Driver * driver, Device * device)
+                :   _driver(driver), _device(device) {}
             virtual ~_Ibm2741TransferCompletionListener() {}
 
             //////////
@@ -158,11 +162,12 @@ namespace scp360
             //  Implementation
         public:
             Ibm2741Driver *const    _driver;
-            PhysicalDevice *const   _physicalDevice;
+            Device *const           _device;
         };
         QSet<_Ibm2741TransferCompletionListener*>   _ibm2741TransferCompletionListeners;
 
         //  Helpers
+        static ibm360::Ibm2741 *_resolveIbm2741(Device * device);
         static ErrorCode        _translateErrorCode(ibm360::Ibm2741::ErrorCode ibm2741ErrorCode);
     };
 }

@@ -29,12 +29,7 @@ ErrorCode Ibm2741Driver::initialiseDevice(Device * device, IoCompletionListener 
     Q_ASSERT(device != nullptr);
     Q_ASSERT(ioCompletionListener != nullptr);
 
-    PhysicalDevice * physicalDevice = dynamic_cast<PhysicalDevice*>(device);
-    if (physicalDevice == nullptr)
-    {
-        return ErrorCode::ERR_PAR;
-    }
-    ibm360::Ibm2741 * ibm2741 = dynamic_cast<ibm360::Ibm2741*>(physicalDevice->hardwareDevice());
+    ibm360::Ibm2741 * ibm2741 = _resolveIbm2741(device);
     if (ibm2741 == nullptr)
     {
         return ErrorCode::ERR_PAR;
@@ -43,8 +38,8 @@ ErrorCode Ibm2741Driver::initialiseDevice(Device * device, IoCompletionListener 
     if (!_knownHardwareDevices.contains(ibm2741))
     {   //  Add & set up
         _knownHardwareDevices.insert(ibm2741);
-        _ibm2741TransferCompletionListeners.insert(new _Ibm2741TransferCompletionListener(this, physicalDevice));
-        _ibm2741IoCompletionListeners.insert(new _Ibm2741IoCompletionListener(this, physicalDevice));
+        _ibm2741TransferCompletionListeners.insert(new _Ibm2741TransferCompletionListener(this, device));
+        _ibm2741IoCompletionListeners.insert(new _Ibm2741IoCompletionListener(this, device));
     }
     device->setState(Device::State::Ready);
 
@@ -52,7 +47,7 @@ ErrorCode Ibm2741Driver::initialiseDevice(Device * device, IoCompletionListener 
     _Ibm2741IoCompletionListener * ibm2741IoCompletionListener = nullptr;
     for (auto l : _ibm2741IoCompletionListeners)
     {   //  TODO spped up look-up!
-        if (l->_physicalDevice == physicalDevice)
+        if (l->_device == device)
         {   //  This one
             ibm2741IoCompletionListener = l;
             break;
@@ -74,13 +69,8 @@ ErrorCode Ibm2741Driver::deinitialiseDevice(Device * device, IoCompletionListene
     Q_ASSERT(device != nullptr);
     Q_ASSERT(ioCompletionListener != nullptr);
 
-    PhysicalDevice * physicalDevice = dynamic_cast<PhysicalDevice*>(device);
-    if (physicalDevice == nullptr)
-    {
-        return ErrorCode::ERR_PAR;
-    }
-    ibm360::Ibm2741 * ibm2741 = dynamic_cast<ibm360::Ibm2741*>(physicalDevice->hardwareDevice());
-    if (ibm2741 == nullptr || !_knownHardwareDevices.contains(ibm2741))
+    ibm360::Ibm2741 * ibm2741 = _resolveIbm2741(device);
+    if (ibm2741 == nullptr)
     {
         return ErrorCode::ERR_PAR;
     }
@@ -89,7 +79,7 @@ ErrorCode Ibm2741Driver::deinitialiseDevice(Device * device, IoCompletionListene
     _Ibm2741IoCompletionListener * ibm2741IoCompletionListener = nullptr;
     for (auto l : _ibm2741IoCompletionListeners)
     {   //  TODO spped up look-up!
-        if (l->_physicalDevice == physicalDevice)
+        if (l->_device == device)
         {   //  This one
             ibm2741IoCompletionListener = l;
             break;
@@ -101,7 +91,7 @@ ErrorCode Ibm2741Driver::deinitialiseDevice(Device * device, IoCompletionListene
     _Ibm2741TransferCompletionListener * ibm2741TransferCompletionListener = nullptr;
     for (auto l : _ibm2741TransferCompletionListeners)
     {   //  TODO spped up look-up!
-        if (l->_physicalDevice == physicalDevice)
+        if (l->_device == device)
         {   //  This one
             ibm2741TransferCompletionListener = l;
             break;
@@ -123,13 +113,8 @@ ErrorCode Ibm2741Driver::writeBlock(Device * device, const util::Buffer * buffer
     Q_ASSERT(buffer != nullptr);
     Q_ASSERT(transferCompletionListener != nullptr);
 
-    PhysicalDevice * physicalDevice = dynamic_cast<PhysicalDevice*>(device);
-    if (physicalDevice == nullptr)
-    {
-        return ErrorCode::ERR_PAR;
-    }
-    ibm360::Ibm2741 * ibm2741 = dynamic_cast<ibm360::Ibm2741*>(physicalDevice->hardwareDevice());
-    if (ibm2741 == nullptr || !_knownHardwareDevices.contains(ibm2741))
+    ibm360::Ibm2741 * ibm2741 = _resolveIbm2741(device);
+    if (ibm2741 == nullptr)
     {
         return ErrorCode::ERR_PAR;
     }
@@ -138,7 +123,7 @@ ErrorCode Ibm2741Driver::writeBlock(Device * device, const util::Buffer * buffer
     _Ibm2741TransferCompletionListener * ibm2741TransferCompletionListener = nullptr;
     for (auto l : _ibm2741TransferCompletionListeners)
     {   //  TODO speed up look-up!
-        if (l->_physicalDevice == physicalDevice)
+        if (l->_device == device)
         {   //  This one
             ibm2741TransferCompletionListener = l;
             break;
@@ -155,8 +140,29 @@ ErrorCode Ibm2741Driver::writeBlock(Device * device, const util::Buffer * buffer
     return ErrorCode::ERR_OK;
 }
 
+ErrorCode Ibm2741Driver::haltIo(Device * device)
+{
+    ibm360::Ibm2741 * ibm2741 = _resolveIbm2741(device);
+    if (ibm2741 == nullptr)
+    {
+        return ErrorCode::ERR_PAR;
+    }
+
+    return _translateErrorCode(ibm2741->haltIo());
+}
+
 //////////
 //  Implementation helpers
+ibm360::Ibm2741 * Ibm2741Driver::_resolveIbm2741(Device * device)
+{
+    PhysicalDevice * physicalDevice = dynamic_cast<PhysicalDevice*>(device);
+    if (physicalDevice == nullptr)
+    {
+        return nullptr;
+    }
+    return dynamic_cast<ibm360::Ibm2741*>(physicalDevice->hardwareDevice());
+}
+
 ErrorCode Ibm2741Driver::_translateErrorCode(ibm360::Ibm2741::ErrorCode ibm2741ErrorCode)
 {
     switch (ibm2741ErrorCode)
@@ -165,6 +171,8 @@ ErrorCode Ibm2741Driver::_translateErrorCode(ibm360::Ibm2741::ErrorCode ibm2741E
             return ErrorCode::ERR_OK;
         case ibm360::Ibm2741::ErrorCode::Busy:
             return ErrorCode::ERR_USE;
+        case ibm360::Ibm2741::ErrorCode::Interrupted:
+            return ErrorCode::ERR_CAN;
         case ibm360::Ibm2741::ErrorCode::Unknown:
             return ErrorCode::ERR_UNK;
         default:
@@ -177,7 +185,7 @@ ErrorCode Ibm2741Driver::_translateErrorCode(ibm360::Ibm2741::ErrorCode ibm2741E
 void Ibm2741Driver::_Ibm2741IoCompletionListener::ioCompleted(Ibm2741::ErrorCode errorCode)
 {
     Q_ASSERT(ioCompletionListener != nullptr);
-    ioCompletionListener->ioCompleted(_physicalDevice, _translateErrorCode(errorCode));
+    ioCompletionListener->ioCompleted(_device, _translateErrorCode(errorCode));
 }
 
 //////////
@@ -185,7 +193,7 @@ void Ibm2741Driver::_Ibm2741IoCompletionListener::ioCompleted(Ibm2741::ErrorCode
 void Ibm2741Driver::_Ibm2741TransferCompletionListener::transferCompleted(uint32_t bytesTransferred, Ibm2741::ErrorCode errorCode)
 {
     Q_ASSERT(transferCompletionListener != nullptr);
-    transferCompletionListener->transferCompleted(_physicalDevice, bytesTransferred, _translateErrorCode(errorCode));
+    transferCompletionListener->transferCompleted(_device, bytesTransferred, _translateErrorCode(errorCode));
 }
 
 //  End of emuone-scp360/Ibm2741Driver.cpp

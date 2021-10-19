@@ -27,9 +27,15 @@ EmulatedApplication * InitProcess::application() const
 
 ErrorCode InitProcess::run()
 {
-    systemCalls.writeToOperator("*** SCP/360 VERSION " __DATE__ " " __TIME__ " ***");
     //  Initialise all Devices that CAN be initialised (using their DeviceDrivers)
     _initialiseDevices();
+
+    //  TODO move this to LOGIN process
+    systemCalls.writeToOperator("*** SCP/360 VERSION " +
+                                QString(__DATE__).toUpper() +
+                                " " +
+                                QString(__TIME__).toUpper() +
+                                " ***");
 
     //  We need to create a "LOGIN" process for each "terminal"
     _createLoginProcesses();

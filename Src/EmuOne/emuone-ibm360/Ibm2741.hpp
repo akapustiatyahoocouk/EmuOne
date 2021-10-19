@@ -65,7 +65,8 @@ namespace ibm360
         enum class ErrorCode
         {
             Success,
-            Busy,
+            Busy,           //  I/O could not be started because the device is busy
+            Interrupted,    //  I/O operation has stopped half-way by "haltIo()"
             Unknown
         };
 
@@ -160,6 +161,11 @@ namespace ibm360
 
         //  Same as "beginWrite()", but goes to new line after writing
         ErrorCode               beginWriteBlock(const util::Buffer * buffer, TransferCompletionListener * completionListener);
+
+        //  Instructs this device to halt any I/O-in-progress ASAP.
+        //  If there was, the corresponding "completionListener" is notified that the
+        //  I/O was finished by interruption; otherwise has no effect.
+        ErrorCode               haltIo();
 
         //////////
         //  Implementation
@@ -262,6 +268,7 @@ namespace ibm360
             //  Operations
         public:
             void            requestStop() { _stopRequested = true;  }
+            void            requestHaltIo() { _haltIoRequested = true;  }
 
             //////////
             //  Implementation
@@ -270,6 +277,8 @@ namespace ibm360
             volatile bool   _stopRequested = false;
             util::CharacterSet::Decoder * _ebcdicDecoder;
             QByteArray      _decodeBuffer;
+
+            volatile bool   _haltIoRequested = false;
 
             //  Helpers
             void            _handleResetRequest(const _ResetRequest * request);

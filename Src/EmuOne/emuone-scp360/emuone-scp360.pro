@@ -13,6 +13,7 @@ SOURCES += \
     Device.cpp \
     DeviceDriver.cpp \
     EmulatedApplication.cpp \
+    EmulatedProcess.SystemCalls.cpp \
     EmulatedProcess.cpp \
     EnvironmentVariable.cpp \
     Ibm2741Driver.cpp \
@@ -23,11 +24,11 @@ SOURCES += \
     PhysicalDevice.cpp \
     Plugin.cpp \
     Process.cpp \
-    Scp.SystemCalls.cpp \
     Scp.cpp \
     Segment.cpp \
     SegmentLock.cpp \
-    SegmentMapping.cpp
+    SegmentMapping.cpp \
+    SystemCalls.cpp
 
 HEADERS += \
     API.hpp \
@@ -35,6 +36,7 @@ HEADERS += \
     Classes.hpp \
     DeviceDrivers.hpp \
     EmulatedApplication.hpp \
+    EmulatedProcess.hpp \
     ErrorCodes.hpp \
     InitProcess.hpp \
     LoginProcess.hpp \

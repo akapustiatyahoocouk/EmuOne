@@ -61,6 +61,45 @@ void EmulatedProcess::markSystemCallComplete()
 }
 
 //////////
+//  Implementation helpers
+void EmulatedProcess::_openStdIo()
+{
+    Q_ASSERT(QThread::currentThread() == _workerThread);
+
+    if (_environment.contains("SYSIN"))
+    {
+        EnvironmentVariable * sysinEnvironmentVariable = _environment["SYSIN"];
+        if (sysinEnvironmentVariable->valueCount() == 1)
+        {
+            QString sysinValue = sysinEnvironmentVariable->valueAt(0);
+            systemCalls.openFile(sysinValue,
+                                 OpenFileSystemCall::OpenFlags::FixedUnblockedRecords |
+                                 OpenFileSystemCall::OpenFlags::ReadOnly |
+                                 OpenFileSystemCall::OpenFlags::TextMode |
+                                 OpenFileSystemCall::OpenFlags::SequentialAccess,
+                                 80, 80,
+                                 _sysinHandle);
+        }
+    }
+
+    if (_environment.contains("SYSOUT"))
+    {
+        EnvironmentVariable * sysoutEnvironmentVariable = _environment["SYSOUT"];
+        if (sysoutEnvironmentVariable->valueCount() == 1)
+        {
+            QString sysoutValue = sysoutEnvironmentVariable->valueAt(0);
+            systemCalls.openFile(sysoutValue,
+                                 OpenFileSystemCall::OpenFlags::FixedUnblockedRecords |
+                                 OpenFileSystemCall::OpenFlags::WriteOnly |
+                                 OpenFileSystemCall::OpenFlags::TextMode |
+                                 OpenFileSystemCall::OpenFlags::SequentialAccess,
+                                 80, 80,
+                                 _sysoutHandle);
+        }
+    }
+}
+
+//////////
 //  EmulatedProcess::_WorkerThread
 EmulatedProcess::_WorkerThread::_WorkerThread(EmulatedProcess * emulatedProcess)
     :   _emulatedProcess(emulatedProcess)
@@ -77,6 +116,8 @@ void EmulatedProcess::_WorkerThread::run()
     _emulatedProcess->_state = Process::State::Active;
     try
     {
+        _emulatedProcess->_openStdIo();
+        //  Go!
         _emulatedProcess->_exitCode = _emulatedProcess->run();
         _emulatedProcess->_state = Process::State::Finished;
     }

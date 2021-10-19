@@ -195,6 +195,17 @@ Ibm2741::ErrorCode Ibm2741::beginWriteBlock(const util::Buffer * buffer, Transfe
     return Ibm2741::ErrorCode::Success;
 }
 
+Ibm2741::ErrorCode Ibm2741::haltIo()
+{
+    if (_workerThread != nullptr)
+    {
+        _workerThread->requestHaltIo();
+        return (_deviceState == DeviceState::Resetting ||
+                _deviceState == DeviceState::Reading ||
+                _deviceState == DeviceState::Writing) ? ErrorCode::Success : ErrorCode::Unknown;
+    }
+}
+
 //////////
 //  Ibm2741::Type
 IMPLEMENT_SINGLETON(Ibm2741::Type)
@@ -268,6 +279,7 @@ void Ibm2741::_WorkerThread::run()
         {
             continue;
         }
+        _haltIoRequested = false;   //  each request starts afresh
         if (_ResetRequest * resetRequest = dynamic_cast<_ResetRequest*>(request))
         {
             _handleResetRequest(resetRequest);
@@ -300,7 +312,15 @@ void Ibm2741::_WorkerThread::_handleWriteRequest(const _WriteRequest * request)
     _ibm2741->_deviceState = DeviceState::Writing;
     QChar ch;
     for (int i = 0; i < request->buffer->size(); i++)
-    {   //  Translate EBCDIC to ASCII...
+    {   //  Halt ?
+        if (_haltIoRequested)
+        {   //  Yes
+            _haltIoRequested = false;
+            _ibm2741->_deviceState = DeviceState::Idle;
+            request->completionListener->transferCompleted(i, ErrorCode::Interrupted);
+            return;
+        }
+        //  Translate EBCDIC to ASCII...
         _decodeBuffer.clear();
         _decodeBuffer.append(request->buffer->at(i));
         if (_ebcdicDecoder->decode(_decodeBuffer, 0, ch) == 0)
@@ -341,7 +361,15 @@ void Ibm2741::_WorkerThread::_handleWriteBlockRequest(const _WriteBlockRequest *
     _ibm2741->_deviceState = DeviceState::Writing;
     QChar ch;
     for (int i = 0; i < request->buffer->size(); i++)
-    {   //  Translate EBCDIC to ASCII...
+    {   //  Halt ?
+        if (_haltIoRequested)
+        {   //  Yes
+            _haltIoRequested = false;
+            _ibm2741->_deviceState = DeviceState::Idle;
+            request->completionListener->transferCompleted(i, ErrorCode::Interrupted);
+            return;
+        }
+        //  Translate EBCDIC to ASCII...
         _decodeBuffer.clear();
         _decodeBuffer.append(request->buffer->at(i));
         if (_ebcdicDecoder->decode(_decodeBuffer, 0, ch) == 0)

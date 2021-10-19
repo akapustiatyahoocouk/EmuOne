@@ -534,6 +534,12 @@ void Scp::_WorkerThread::run()
         }
         delete event;
     }
+    //  Stop all I/Os in progress
+    for (Device * device : _scp->_deviceDrivers.keys())
+    {
+        DeviceDriver * deviceDriver = _scp->_deviceDrivers[device];
+        deviceDriver->haltIo(device);
+    }
     //  Stop all emulated processes
     for (EmulatedProcess * emulatedProcess : _scp->_objectManager.emulatedProcesses())
     {

@@ -44,6 +44,12 @@ ErrorCode EmulatedProcess::SystemCalls::writeToOperator(const QString & text)
     return makeSystemCall(&systemCall);
 }
 
+ErrorCode EmulatedProcess::SystemCalls::openFile(const QString & fileName, OpenFileSystemCall::OpenFlags openFlags,
+                                                 uint32_t recordSize, uint32_t blockSize, uint16_t & fileHandle)
+{
+    return ErrorCode::ERR_SUP;
+}
+
 ErrorCode EmulatedProcess::SystemCalls::setEnvironmentVariableValue(const QString & name, const QString & scalarValue)
 {
     //  Issue "SVC"
