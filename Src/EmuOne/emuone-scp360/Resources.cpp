@@ -9,7 +9,7 @@ using namespace scp360;
 
 //////////
 //  Resource
-bool Resource::incrementOpenHandleCount()
+bool IResource::incrementOpenHandleCount()
 {
     uint32_t newOpenHandleCount = _openHandleCount + 1;
     if (newOpenHandleCount > _openHandleCount)
@@ -20,7 +20,7 @@ bool Resource::incrementOpenHandleCount()
     return false;   //  overflow!
 }
 
-void Resource::decrementOpenHandleCount()
+void IResource::decrementOpenHandleCount()
 {
     Q_ASSERT(_openHandleCount != 0);
     _openHandleCount--;

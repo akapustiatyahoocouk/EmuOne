@@ -68,6 +68,9 @@ namespace scp360
         CreateAndMapSegment     = 0x00030001,   //  CREATE & MAP SEGMENT
     };
 
+    //  A "resource handle" is a value that allows a running Process to refer to a Resource
+    typedef uint16_t ResourceHandle;
+
     //  "Open file" flags
     enum class OpenFileFlags : uint16_t
     {

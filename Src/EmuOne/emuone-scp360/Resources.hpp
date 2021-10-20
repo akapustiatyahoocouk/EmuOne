@@ -12,15 +12,15 @@ namespace scp360
     //////////
     //  A generic SCP/360 "Resource" is an entity to which one or several Processes
     //  can have open "handles"
-    class EMUONE_SCP360_EXPORT Resource
+    class EMUONE_SCP360_EXPORT IResource
     {
-        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Resource)
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(IResource)
 
         //////////
         //  Construction/destruction
     public:
-        Resource() {}
-        virtual ~Resource() {}
+        explicit IResource(Scp * scp) : _scp(scp) { Q_ASSERT(_scp != nullptr); }
+        virtual ~IResource() {}
 
         //////////
         //  Operations
@@ -37,21 +37,51 @@ namespace scp360
         //////////
         //  Implementation
     private:
+        Scp *const          _scp;   //  ...managing this Resource
         uint32_t            _openHandleCount = 0;
+    };
+
+    //////////
+    //  A "resource" that can be used for I/O purposes.
+    class EMUONE_SCP360_EXPORT IIoResource : public virtual IResource
+    {
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(IIoResource)
+
+        //////////
+        //  Construction/destruction
+    public:
+        IIoResource(Scp * scp, OpenFileFlags openFileFlags) : IResource(scp), _openFileFlags(openFileFlags) {}
+        virtual ~IIoResource() {}
+
+        //////////
+        //  Operations
+    public:
+        OpenFileFlags       openFileFlags() const { return _openFileFlags; }
+
+        //////////
+        //  Implementation
+    private:
+        OpenFileFlags       _openFileFlags;
     };
 
     //////////
     //  A "resource" that represents a Device for I/O purposes.
     //  "DeviceResource"s are created when a Process issues an "open file" system call
     //  where "file name" refers to a physical (TODO or logical) device
-    class EMUONE_SCP360_EXPORT DeviceResource : public Resource
+    class EMUONE_SCP360_EXPORT DeviceResource : public virtual IIoResource
     {
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(DeviceResource)
 
         //////////
         //  Construction/destruction
     public:
-        DeviceResource(Device * device) : _device(device) { Q_ASSERT(_device != nullptr); }
+        DeviceResource(Scp * scp, OpenFileFlags openFileFlags, Device * device)
+            :   IResource(scp),
+                IIoResource(scp, openFileFlags),
+                _device(device)
+        {
+            Q_ASSERT(_device != nullptr);
+        }
         virtual ~DeviceResource() {}
 
         //////////

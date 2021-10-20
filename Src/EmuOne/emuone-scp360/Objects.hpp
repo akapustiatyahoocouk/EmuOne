@@ -282,7 +282,7 @@ namespace scp360
         ErrorCode               _exitCode = ErrorCode::ERR_UNK;
         uint16_t                _holdCount = 0;
 
-        QMap<uint16_t, Resource*>    _openHandles;  //  handle -> Resource
+        QMap<ResourceHandle, IResource*>    _openHandles;  //  handle -> Resource
     };
 
     EMUONE_SCP360_EXPORT Process::Flags operator & (Process::Flags op1, Process::Flags op2);

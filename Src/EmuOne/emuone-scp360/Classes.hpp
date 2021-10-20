@@ -14,7 +14,7 @@ namespace scp360
     class EMUONE_SCP360_EXPORT SegmentLock;
     class EMUONE_SCP360_EXPORT Process;
     class EMUONE_SCP360_EXPORT EnvironmentVariable;
-    class EMUONE_SCP360_EXPORT Resource;
+    class EMUONE_SCP360_EXPORT IResource;
 
     class EMUONE_SCP360_EXPORT EmulatedApplication;
     class EMUONE_SCP360_EXPORT EmulatedProcess;

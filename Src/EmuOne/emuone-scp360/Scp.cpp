@@ -498,9 +498,9 @@ void Scp::_handleOpenFileSystemCall(OpenFileSystemCall * systemCall)
             return;
         }
         //  ...allocate a yet-unused "handle"...
-        uint16_t handle = 0;
-        for (uint16_t h = 1; h != 0; h++)
-        {
+        ResourceHandle handle = 0;
+        for (ResourceHandle h = 1; h != 0; h++)
+        {   //  Loop until an overflow occurs
             if (!systemCall->process()->_openHandles.contains(h))
             {
                 handle = h;
@@ -513,7 +513,7 @@ void Scp::_handleOpenFileSystemCall(OpenFileSystemCall * systemCall)
             return;
         }
         //  Create a new DeviceResource and insert it into the Process' handle table
-        DeviceResource * deviceResource = new DeviceResource(physicalDevice);
+        DeviceResource * deviceResource = new DeviceResource(this, systemCall->openFlags, physicalDevice);
         systemCall->process()->_openHandles.insert(handle, deviceResource);
         deviceResource->incrementOpenHandleCount();
         //  Store the hewly created "handle" and we're done

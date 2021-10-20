@@ -51,7 +51,7 @@ namespace scp360
         //  Construction/destruction
     public:
         WriteToOperatorSystemCall(Process * process, util::Buffer * buffer)
-            :   SystemCall(process), buffer(buffer) {}
+            :   SystemCall(process), buffer(buffer) { Q_ASSERT(buffer != nullptr); }
         virtual ~WriteToOperatorSystemCall() {}
 
         //////////
@@ -85,6 +85,29 @@ namespace scp360
 
         //  The recipient for the "handle" to the newly open file
         uint16_t            handle = 0;
+    };
+
+    //////////
+    //  The "write to file" system call
+    class EMUONE_SCP360_EXPORT WriteToFileSystemCall : public SystemCall
+    {
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(WriteToFileSystemCall)
+
+        //////////
+        //  Construction/destruction
+    public:
+        WriteToFileSystemCall(Process * process, ResourceHandle handle, util::Buffer * buffer)
+            :   SystemCall(process), handle(handle), buffer(buffer) { Q_ASSERT(buffer != nullptr); }
+        virtual ~WriteToFileSystemCall() {}
+
+        //////////
+        //  Properties
+    public:
+        //  The "handle" to the I/O Resource to write to
+        ResourceHandle      handle;
+
+        //  The buffer to write from; must not be deleted before the system call.
+        util::Buffer *const buffer;
     };
 
     //////////

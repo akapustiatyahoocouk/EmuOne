@@ -69,7 +69,10 @@ namespace scp360
             ErrorCode               openFile(const QString & fileName, OpenFileFlags openFlags,
                                              uint32_t recordSize, uint32_t blockSize, uint16_t & fileHandle);
 
-    /*
+            ErrorCode               writeToFile(ResourceHandle handle, const void * data, uint32_t bytesToWrite,
+                                                uint32_t & bytesWritten);
+
+/*
     7.2.2	SC#EVCNT – Count Environment Variable Values
     This system call allows the process to determine the number of values that a specified variable in its environment has. As a special case, it can also be used to determine if the specified environment variable exists at all.
 
