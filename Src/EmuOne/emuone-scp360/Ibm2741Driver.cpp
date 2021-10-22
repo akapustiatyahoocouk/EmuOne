@@ -151,16 +151,54 @@ ErrorCode Ibm2741Driver::haltIo(Device * device)
     return _translateErrorCode(ibm2741->haltIo());
 }
 
-ErrorCode Ibm2741Driver::validateOpenFlags(OpenFileFlags openFlags) const
+ErrorCode Ibm2741Driver::validateOpen(OpenFileFlags openFlags, uint32_t recordSize, uint32_t blockSize) const
 {
-    //  IBM 2741 only allows "fixed unblocked" R/W in text (sequential) mode
+    if ((openFlags & OpenFileFlags::DirectionMask) != OpenFileFlags::ReadOnly &&
+        (openFlags & OpenFileFlags::DirectionMask) != OpenFileFlags::WriteOnly &&
+        (openFlags & OpenFileFlags::DirectionMask) != OpenFileFlags::ReadWrite)
+    {   //  OOPS! Invalid "direction"
+        return ErrorCode::ERR_SUP;
+    }
+    if ((openFlags & OpenFileFlags::ModeMask) != OpenFileFlags::TextMode)
+    {   //  OOPS! Invalid "mode"
+        return ErrorCode::ERR_SUP;
+    }
+    if ((openFlags & OpenFileFlags::AccessMask) != OpenFileFlags::SequentialAccess)
+    {   //  OOPS! Invalid "access"
+        return ErrorCode::ERR_SUP;
+    }
+
     if ((openFlags & OpenFileFlags::RecordsMask) == OpenFileFlags::FixedUnblockedRecords &&
-        ((openFlags & OpenFileFlags::DirectionMask) == OpenFileFlags::ReadOnly ||
-         (openFlags & OpenFileFlags::DirectionMask) == OpenFileFlags::WriteOnly ||
-         (openFlags & OpenFileFlags::DirectionMask) == OpenFileFlags::ReadWrite) &&
-        (openFlags & OpenFileFlags::ModeMask) == OpenFileFlags::TextMode &&
-        (openFlags & OpenFileFlags::AccessMask) == OpenFileFlags::SequentialAccess)
-    {
+        recordSize > 0 && recordSize <= 80 && blockSize == recordSize)
+    {   //  In "fixed unblocked" mode:
+        //  *   Any "write" operation writes a single line, with "new line" at the end.
+        //      *   If the size written is longer than MAX(RECORDSIZE,80), the tail is lost.
+        //      *   Any non-printable (control) characters are printed as '?'
+        //  *   Any "read" operation reads a single record of size RECORDSIZE, padded
+        //      with spaces at the right as necessary.
+        //      *   A "record" on input is identified by "new line" key pressed by the operator.
+        //      *   Any input in line after RECORDSIZE is lost.
+        //      *   The "new line" key itself (X'25') does not become part of the recode.
+        return ErrorCode::ERR_OK;
+    }
+    if ((openFlags & OpenFileFlags::RecordsMask) == OpenFileFlags::VariableUnblockedRecords &&
+        recordSize > 0 && recordSize <= 80 && blockSize == recordSize)
+    {   //  Same as "fixed unblocked" mode, except:
+        //  *   On input the actual length of the line entered by the operator before
+        //      the "end line" key becomes the "actual length of the record".
+        return ErrorCode::ERR_OK;
+    }
+    if ((openFlags & OpenFileFlags::RecordsMask) == OpenFileFlags::UndefinedRecords &&
+        recordSize == 0 && blockSize == 0)
+    {   //  In "undefined records" mode:
+        //  *   Anything "written" to the device is just sent to the device.
+        //      *   There is no automatic "line end" at the end of a "write" operation.
+        //      *   A EOLN (X'25') causes a new line; other control characters are sent
+        //          to the device as well to be treated in a device-specific manner.
+        //  *   When reading:
+        //      *   Input is deemed "available" when device operator presses the "ENTER"
+        //          character.
+        //      *   The EOLN (X'25') character will be the last byte of the read record.
         return ErrorCode::ERR_OK;
     }
     return ErrorCode::ERR_SUP;

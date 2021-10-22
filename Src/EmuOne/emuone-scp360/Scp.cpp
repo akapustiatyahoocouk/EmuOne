@@ -491,7 +491,7 @@ void Scp::_handleOpenFileSystemCall(OpenFileSystemCall * systemCall)
     {   //  Yes - locate the driver...
         DeviceDriver * deviceDriver = _deviceDrivers[physicalDevice];
         //  ...ask it to confirm the "open mode"...
-        ErrorCode err = deviceDriver->validateOpenFlags(systemCall->openFlags);
+        ErrorCode err = deviceDriver->validateOpen(systemCall->openFlags, systemCall->recordSize, systemCall->blockSize);
         if (err != ErrorCode::ERR_OK)
         {   //  OOPS! Can't open!
             systemCall->setOutcome(err);
