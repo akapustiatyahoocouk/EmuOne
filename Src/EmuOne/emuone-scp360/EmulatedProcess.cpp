@@ -57,6 +57,7 @@ void EmulatedProcess::stop(ErrorCode exitCode)
 //  Operations
 void EmulatedProcess::markSystemCallComplete()
 {
+    Q_ASSERT(_systemCallCompletionSemaphore.available() == 0);
     _systemCallCompletionSemaphore.release();
 }
 
@@ -72,13 +73,17 @@ void EmulatedProcess::_openStdIo()
         if (sysinEnvironmentVariable->valueCount() == 1)
         {
             QString sysinValue = sysinEnvironmentVariable->valueAt(0);
-            systemCalls.openFile(sysinValue,
-                                 OpenFileFlags::FixedUnblockedRecords |
-                                 OpenFileFlags::ReadOnly |
-                                 OpenFileFlags::TextMode |
-                                 OpenFileFlags::SequentialAccess,
-                                 80, 80,
-                                 _sysinHandle);
+            ErrorCode err = systemCalls.openFile(sysinValue,
+                                                 OpenFileFlags::FixedUnblockedRecords |
+                                                 OpenFileFlags::ReadOnly |
+                                                 OpenFileFlags::TextMode |
+                                                 OpenFileFlags::SequentialAccess,
+                                                 80, 80,
+                                                 _sysinHandle);
+            if (err != ErrorCode::ERR_OK)
+            {   //  Report
+                systemCalls.writeToOperator("Could not open SYSIN at " + sysinValue);
+            }
         }
     }
 
@@ -88,13 +93,17 @@ void EmulatedProcess::_openStdIo()
         if (sysoutEnvironmentVariable->valueCount() == 1)
         {
             QString sysoutValue = sysoutEnvironmentVariable->valueAt(0);
-            systemCalls.openFile(sysoutValue,
-                                 OpenFileFlags::FixedUnblockedRecords |
-                                 OpenFileFlags::WriteOnly |
-                                 OpenFileFlags::TextMode |
-                                 OpenFileFlags::SequentialAccess,
-                                 80, 80,
-                                 _sysoutHandle);
+            ErrorCode err = systemCalls.openFile(sysoutValue,
+                                                 OpenFileFlags::FixedUnblockedRecords |
+                                                 OpenFileFlags::WriteOnly |
+                                                 OpenFileFlags::TextMode |
+                                                 OpenFileFlags::SequentialAccess,
+                                                 80, 80,
+                                                 _sysoutHandle);
+            if (err != ErrorCode::ERR_OK)
+            {   //  Report
+                systemCalls.writeToOperator("Could not open SYSOUT at " + sysoutValue);
+            }
         }
     }
 }

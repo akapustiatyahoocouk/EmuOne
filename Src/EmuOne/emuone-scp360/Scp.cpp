@@ -377,6 +377,10 @@ void Scp::_handleSystemCallEvent(_SystemCallEvent * event)
     {
         _handleOpenFileSystemCall(openFileSystemCall);
     }
+    else if (auto writeToFileSystemCall = dynamic_cast<WriteToFileSystemCall*>(event->_systemCall))
+    {
+        _handleWriteToFileSystemCall(writeToFileSystemCall);
+    }
     else if (auto setEnvironmentVariableValueSystemCall = dynamic_cast<SetEnvironmentVariableValueSystemCall*>(event->_systemCall))
     {
         _handleSetEnvironmentVariableValueSystemCall(setEnvironmentVariableValueSystemCall);
@@ -513,7 +517,7 @@ void Scp::_handleOpenFileSystemCall(OpenFileSystemCall * systemCall)
             return;
         }
         //  Create a new DeviceResource and insert it into the Process' handle table
-        DeviceResource * deviceResource = new DeviceResource(this, systemCall->openFlags, physicalDevice);
+        DeviceResource * deviceResource = new DeviceResource(this, systemCall->openFlags, systemCall->recordSize, systemCall->blockSize, physicalDevice);
         systemCall->process()->_openHandles.insert(handle, deviceResource);
         deviceResource->incrementOpenHandleCount();
         //  Store the hewly created "handle" and we're done
@@ -526,12 +530,36 @@ void Scp::_handleOpenFileSystemCall(OpenFileSystemCall * systemCall)
     systemCall->setOutcome(ErrorCode::ERR_NOF);
 }
 
+void Scp::_handleWriteToFileSystemCall(WriteToFileSystemCall * systemCall)
+{
+    Q_ASSERT(QThread::currentThread() == _workerThread);
+    Q_ASSERT(systemCall != nullptr);
+
+    //  Resolve I/O resource handle
+    if (!systemCall->process()->_openHandles.contains(systemCall->handle))
+    {   //  OOPS! Handle not open!
+        systemCall->setOutcome(ErrorCode::ERR_PAR);
+        return;
+    }
+    IResource * resource = systemCall->process()->_openHandles[systemCall->handle];
+    Q_ASSERT(resource != nullptr);
+    IIoResource * ioResource = dynamic_cast<IIoResource *>(resource);
+    if (ioResource == nullptr)
+    {   //  OOPS! Handle does not refer to I/O resource!
+        systemCall->setOutcome(ErrorCode::ERR_PAR);
+        return;
+    }
+
+    //  TODO finish the implementation
+    systemCall->setOutcome(ErrorCode::ERR_OK);
+}
+
 void Scp::_handleSetEnvironmentVariableValueSystemCall(SetEnvironmentVariableValueSystemCall * systemCall)
 {
     Q_ASSERT(QThread::currentThread() == _workerThread);
     Q_ASSERT(systemCall != nullptr);
 
-    ErrorCode err = systemCall->process()->setEnvironmentVariableValue(systemCall->name, systemCall->listValue);
+    ErrorCode err = systemCall->targetProcess->setEnvironmentVariableValue(systemCall->name, systemCall->listValue);
     systemCall->setOutcome(err);
 }
 

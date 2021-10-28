@@ -14,7 +14,7 @@ ErrorCode EmulatedProcess::SystemCalls::makeSystemCall(SystemCall * systemCall)
     Q_ASSERT(QThread::currentThread() == _emulatedProcess->_workerThread);
     Q_ASSERT(systemCall != nullptr);
     Q_ASSERT(systemCall->process() == _emulatedProcess);
-    Q_ASSERT(!_emulatedProcess->_systemCallCompletionSemaphore.available());
+    Q_ASSERT(_emulatedProcess->_systemCallCompletionSemaphore.available() == 0);
 
     //  We want to  send a "system call" event to SCP...
     ErrorCode err = _emulatedProcess->scp()->makeSystemCall(systemCall);
@@ -24,6 +24,7 @@ ErrorCode EmulatedProcess::SystemCalls::makeSystemCall(SystemCall * systemCall)
     }
     //  ...and wait until the system call has been completed
     _emulatedProcess->_systemCallCompletionSemaphore.acquire();
+    Q_ASSERT(_emulatedProcess->_systemCallCompletionSemaphore.available() == 0);
     Q_ASSERT(systemCall->outcomeKnown());
     if (_emulatedProcess->_workerThread->isInterruptionRequested())
     {   //  Stop at once!
@@ -59,6 +60,24 @@ ErrorCode EmulatedProcess::SystemCalls::openFile(const QString & fileName, OpenF
         return err;
     }
     fileHandle = systemCall.handle;
+    return ErrorCode::ERR_OK;
+}
+
+ErrorCode EmulatedProcess::SystemCalls::writeToFile(uint16_t handle, const void * data, uint32_t bytesToWrite,
+                                                    uint32_t & bytesWritten)
+{
+    Q_ASSERT(QThread::currentThread() == _emulatedProcess->_workerThread);
+
+    //  Issue "SVC"
+    util::ByteArrayBuffer buffer;
+    buffer.data.append((const char*)data, bytesToWrite);
+    WriteToFileSystemCall systemCall(_emulatedProcess, handle, &buffer);
+    ErrorCode err = makeSystemCall(&systemCall);
+    if (err != ErrorCode::ERR_OK)
+    {   //  OOPS! Something wrong!
+        return err;
+    }
+    bytesWritten = systemCall.bytesWritten;
     return ErrorCode::ERR_OK;
 }
 

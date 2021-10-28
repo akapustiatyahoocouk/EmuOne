@@ -27,6 +27,9 @@ EmulatedApplication * LoginProcess::application() const
 
 ErrorCode LoginProcess::run()
 {
+    uint32_t bytesWritten;
+    systemCalls.writeToFile(sysoutHandle(), "LOGIN:", 6, bytesWritten);
+
     return ErrorCode::ERR_OK;
 }
 

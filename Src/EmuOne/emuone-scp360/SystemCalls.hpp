@@ -108,6 +108,9 @@ namespace scp360
 
         //  The buffer to write from; must not be deleted before the system call.
         util::Buffer *const buffer;
+
+        //  The number of bytes actually written
+        size_t              bytesWritten = 0;
     };
 
     //////////

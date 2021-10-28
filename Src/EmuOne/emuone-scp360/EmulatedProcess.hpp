@@ -69,7 +69,7 @@ namespace scp360
             ErrorCode               openFile(const QString & fileName, OpenFileFlags openFlags,
                                              uint32_t recordSize, uint32_t blockSize, uint16_t & fileHandle);
 
-            ErrorCode               writeToFile(ResourceHandle handle, const void * data, uint32_t bytesToWrite,
+            ErrorCode               writeToFile(uint16_t handle, const void * data, uint32_t bytesToWrite,
                                                 uint32_t & bytesWritten);
 
 /*
@@ -147,13 +147,15 @@ namespace scp360
         //  Operations
     public:
         void                    markSystemCallComplete();
+        ResourceHandle          sysinHandle() const { return _sysinHandle; }
+        ResourceHandle          sysoutHandle() const { return _sysoutHandle; }
 
         //////////
         //  Implementation
     private:
         QSemaphore              _systemCallCompletionSemaphore;
-        uint16_t                _sysinHandle = 0;
-        uint16_t                _sysoutHandle = 0;
+        ResourceHandle          _sysinHandle = 0;
+        ResourceHandle          _sysoutHandle = 0;
 
         //  Helpers
         void                    _openStdIo();

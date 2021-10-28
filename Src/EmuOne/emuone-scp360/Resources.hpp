@@ -50,18 +50,23 @@ namespace scp360
         //////////
         //  Construction/destruction
     public:
-        IIoResource(Scp * scp, OpenFileFlags openFileFlags) : IResource(scp), _openFileFlags(openFileFlags) {}
+        IIoResource(Scp * scp, OpenFileFlags openFileFlags, size_t recordSize, size_t blockSize)
+            :   IResource(scp), _openFileFlags(openFileFlags), _recordSize(recordSize), _blockSize(blockSize) {}
         virtual ~IIoResource() {}
 
         //////////
         //  Operations
     public:
         OpenFileFlags       openFileFlags() const { return _openFileFlags; }
+        size_t              recordSize() const { return _recordSize; }
+        size_t              blockSize() const { return _blockSize; }
 
         //////////
         //  Implementation
     private:
         OpenFileFlags       _openFileFlags;
+        size_t              _recordSize;
+        size_t              _blockSize;
     };
 
     //////////
@@ -75,9 +80,9 @@ namespace scp360
         //////////
         //  Construction/destruction
     public:
-        DeviceResource(Scp * scp, OpenFileFlags openFileFlags, Device * device)
+        DeviceResource(Scp * scp, OpenFileFlags openFileFlags, size_t recordSize, size_t blockSize, Device * device)
             :   IResource(scp),
-                IIoResource(scp, openFileFlags),
+                IIoResource(scp, openFileFlags, recordSize, blockSize),
                 _device(device)
         {
             Q_ASSERT(_device != nullptr);
