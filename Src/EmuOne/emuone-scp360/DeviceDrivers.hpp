@@ -74,6 +74,15 @@ namespace scp360
         //  Writes a single record containing data from the specified "buffer"
         virtual ErrorCode       writeBlock(Device * device, const util::Buffer * buffer, TransferCompletionListener * transferCompletionListener) = 0;
 
+        //  Writes a stream of bytes containing data from the specified "buffer"
+        virtual ErrorCode       write(Device * device, const util::Buffer * buffer, TransferCompletionListener * transferCompletionListener) = 0;
+
+        //  Reads a single record containing data into the specified "buffer"
+        virtual ErrorCode       readBlock(Device * device, util::Buffer * buffer, TransferCompletionListener * transferCompletionListener) = 0;
+
+        //  Reads a stream of bytes containing data into the specified "buffer"
+        virtual ErrorCode       read(Device * device, util::Buffer * buffer, TransferCompletionListener * transferCompletionListener) = 0;
+
         //  Terminates any ongoing I/O operation on the specified "device" ASAP.
         virtual ErrorCode       haltIo(Device * device) = 0;
 
@@ -103,6 +112,9 @@ namespace scp360
         virtual ErrorCode       initialiseDevice(Device * device, IoCompletionListener * ioCompletionListener) override;
         virtual ErrorCode       deinitialiseDevice(Device * device, IoCompletionListener * ioCompletionListener) override;
         virtual ErrorCode       writeBlock(Device * device, const util::Buffer * buffer, TransferCompletionListener * transferCompletionListener) override;
+        virtual ErrorCode       write(Device * device, const util::Buffer * buffer, TransferCompletionListener * transferCompletionListener) override;
+        virtual ErrorCode       readBlock(Device * device, util::Buffer * buffer, TransferCompletionListener * transferCompletionListener) override;
+        virtual ErrorCode       read(Device * device, util::Buffer * buffer, TransferCompletionListener * transferCompletionListener) override;
         virtual ErrorCode       haltIo(Device * device) override;
         virtual ErrorCode       validateOpen(OpenFileFlags openFlags, uint32_t recordSize, uint32_t blockSize) const override;
 

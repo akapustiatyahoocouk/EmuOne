@@ -108,11 +108,11 @@ void InitProcess::_initialiseDevices()
     {
         if (ioCompletionListener->errorCode == ErrorCode::ERR_OK)
         {
-            systemCalls.writeToOperator("Device " + ioCompletionListener->device->name() + " initialised successfully");
+            systemCalls.writeToOperator("DEVICE " + ioCompletionListener->device->name() + " INITIALISED SUCCESSFULLY");
         }
         else
         {
-            systemCalls.writeToOperator("Device " + ioCompletionListener->device->name() + " failed to initialise");    //  TODO why ?
+            systemCalls.writeToOperator("DEVICE " + ioCompletionListener->device->name() + " FAILED TO INITIALISE");    //  TODO why ?
         }
     }
     //  Clear initialisation results

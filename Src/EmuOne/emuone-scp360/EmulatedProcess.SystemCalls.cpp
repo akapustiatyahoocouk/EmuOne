@@ -77,7 +77,56 @@ ErrorCode EmulatedProcess::SystemCalls::writeToFile(uint16_t handle, const void 
     {   //  OOPS! Something wrong!
         return err;
     }
-    bytesWritten = systemCall.bytesWritten;
+    bytesWritten = systemCall.bytesTransferred;
+    return ErrorCode::ERR_OK;
+}
+
+ErrorCode EmulatedProcess::SystemCalls::writeToFile(uint16_t handle, const QString & data,
+                                                    uint32_t & bytesWritten)
+{
+    Q_ASSERT(QThread::currentThread() == _emulatedProcess->_workerThread);
+
+    static util::CharacterSet::Encoder * encoder = util::Cp037CharacterSet::getInstance()->createEncoder();    //  Idempotent
+    QByteArray bytes;
+    encoder->encode(data, bytes);
+    return writeToFile(handle, bytes.data(), bytes.size(), bytesWritten);
+}
+
+ErrorCode EmulatedProcess::SystemCalls::readFromFile(uint16_t handle, void * data, uint32_t bytesToRead,
+                                                     uint32_t & bytesRead)
+{
+    Q_ASSERT(QThread::currentThread() == _emulatedProcess->_workerThread);
+
+    //  Issue "SVC"
+    util::ByteArrayBuffer buffer;
+    buffer.data.resize(bytesToRead);
+    ReadFromFileSystemCall systemCall(_emulatedProcess, handle, &buffer);
+    ErrorCode err = makeSystemCall(&systemCall);
+    if (err != ErrorCode::ERR_OK)
+    {   //  OOPS! Something wrong!
+        return err;
+    }
+    bytesRead = systemCall.bytesTransferred;
+    memcpy(data, buffer.data.data(), bytesRead);
+    return ErrorCode::ERR_OK;
+}
+
+ErrorCode EmulatedProcess::SystemCalls::readFromFile(uint16_t handle, QString & data, uint32_t bytesToRead,
+                                                     uint32_t & bytesRead)
+{
+    Q_ASSERT(QThread::currentThread() == _emulatedProcess->_workerThread);
+
+    static util::CharacterSet::Decoder * decoder = util::Cp037CharacterSet::getInstance()->createDecoder();    //  Idempotent
+
+    QByteArray bytes;
+    bytes.resize(bytesToRead);
+    ErrorCode err = readFromFile(handle, bytes.data(), bytesToRead, bytesRead);
+    if (err != ErrorCode::ERR_OK)
+    {
+        return err;
+    }
+    bytes.resize(bytesRead);
+    bytesRead = decoder->decode(bytes, 0, data);
     return ErrorCode::ERR_OK;
 }
 

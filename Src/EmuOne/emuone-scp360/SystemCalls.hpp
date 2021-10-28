@@ -88,17 +88,17 @@ namespace scp360
     };
 
     //////////
-    //  The "write to file" system call
-    class EMUONE_SCP360_EXPORT WriteToFileSystemCall : public SystemCall
+    //  A generic system call that involves data transfer
+    class EMUONE_SCP360_EXPORT TransferDataSystemCall : public SystemCall
     {
-        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(WriteToFileSystemCall)
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(TransferDataSystemCall)
 
         //////////
         //  Construction/destruction
     public:
-        WriteToFileSystemCall(Process * process, ResourceHandle handle, util::Buffer * buffer)
+        TransferDataSystemCall(Process * process, ResourceHandle handle, util::Buffer * buffer)
             :   SystemCall(process), handle(handle), buffer(buffer) { Q_ASSERT(buffer != nullptr); }
-        virtual ~WriteToFileSystemCall() {}
+        virtual ~TransferDataSystemCall() {}
 
         //////////
         //  Properties
@@ -109,8 +109,36 @@ namespace scp360
         //  The buffer to write from; must not be deleted before the system call.
         util::Buffer *const buffer;
 
-        //  The number of bytes actually written
-        size_t              bytesWritten = 0;
+        //  The number of bytes actually transferred
+        size_t              bytesTransferred = 0;
+    };
+
+    //////////
+    //  The "write to file" system call
+    class EMUONE_SCP360_EXPORT WriteToFileSystemCall : public TransferDataSystemCall
+    {
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(WriteToFileSystemCall)
+
+        //////////
+        //  Construction/destruction
+    public:
+        WriteToFileSystemCall(Process * process, ResourceHandle handle, util::Buffer * buffer)
+            :   TransferDataSystemCall(process, handle, buffer) {}
+        virtual ~WriteToFileSystemCall() {}
+    };
+
+    //////////
+    //  The "write to file" system call
+    class EMUONE_SCP360_EXPORT ReadFromFileSystemCall : public TransferDataSystemCall
+    {
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(ReadFromFileSystemCall)
+
+        //////////
+        //  Construction/destruction
+    public:
+        ReadFromFileSystemCall(Process * process, ResourceHandle handle, util::Buffer * buffer)
+            :   TransferDataSystemCall(process, handle, buffer) {}
+        virtual ~ReadFromFileSystemCall() {}
     };
 
     //////////

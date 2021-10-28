@@ -140,6 +140,105 @@ ErrorCode Ibm2741Driver::writeBlock(Device * device, const util::Buffer * buffer
     return ErrorCode::ERR_OK;
 }
 
+ErrorCode Ibm2741Driver::write(Device * device, const util::Buffer * buffer, TransferCompletionListener * transferCompletionListener)
+{
+    Q_ASSERT(device != nullptr);
+    Q_ASSERT(buffer != nullptr);
+    Q_ASSERT(transferCompletionListener != nullptr);
+
+    ibm360::Ibm2741 * ibm2741 = _resolveIbm2741(device);
+    if (ibm2741 == nullptr)
+    {
+        return ErrorCode::ERR_PAR;
+    }
+
+    //  Ask the IBM 2741 to begin writing
+    _Ibm2741TransferCompletionListener * ibm2741TransferCompletionListener = nullptr;
+    for (auto l : _ibm2741TransferCompletionListeners)
+    {   //  TODO speed up look-up!
+        if (l->_device == device)
+        {   //  This one
+            ibm2741TransferCompletionListener = l;
+            break;
+        }
+    }
+    ibm2741TransferCompletionListener->transferCompletionListener = transferCompletionListener;
+    ibm360::Ibm2741::ErrorCode ibm2741ErrorCode = ibm2741->beginWrite(buffer, ibm2741TransferCompletionListener);
+    if (ibm2741ErrorCode != ibm360::Ibm2741::ErrorCode::Success)
+    {   //  OOPS! Cound not start writing!
+        return _translateErrorCode(ibm2741ErrorCode);
+    }
+
+    //  Writing started - eventially device will notify the completion listener
+    return ErrorCode::ERR_OK;
+}
+
+ErrorCode Ibm2741Driver::readBlock(Device * device, util::Buffer * buffer, TransferCompletionListener * transferCompletionListener)
+{
+    Q_ASSERT(device != nullptr);
+    Q_ASSERT(buffer != nullptr);
+    Q_ASSERT(transferCompletionListener != nullptr);
+
+    ibm360::Ibm2741 * ibm2741 = _resolveIbm2741(device);
+    if (ibm2741 == nullptr)
+    {
+        return ErrorCode::ERR_PAR;
+    }
+
+    //  Ask the IBM 2741 to begin reading
+    _Ibm2741TransferCompletionListener * ibm2741TransferCompletionListener = nullptr;
+    for (auto l : _ibm2741TransferCompletionListeners)
+    {   //  TODO speed up look-up!
+        if (l->_device == device)
+        {   //  This one
+            ibm2741TransferCompletionListener = l;
+            break;
+        }
+    }
+    ibm2741TransferCompletionListener->transferCompletionListener = transferCompletionListener;
+    ibm360::Ibm2741::ErrorCode ibm2741ErrorCode = ibm2741->beginReadBlock(buffer, ibm2741TransferCompletionListener);
+    if (ibm2741ErrorCode != ibm360::Ibm2741::ErrorCode::Success)
+    {   //  OOPS! Cound not start writing!
+        return _translateErrorCode(ibm2741ErrorCode);
+    }
+
+    //  Reading started - eventially device will notify the completion listener
+    return ErrorCode::ERR_OK;
+}
+
+ErrorCode Ibm2741Driver::read(Device * device, util::Buffer * buffer, TransferCompletionListener * transferCompletionListener)
+{
+    Q_ASSERT(device != nullptr);
+    Q_ASSERT(buffer != nullptr);
+    Q_ASSERT(transferCompletionListener != nullptr);
+
+    ibm360::Ibm2741 * ibm2741 = _resolveIbm2741(device);
+    if (ibm2741 == nullptr)
+    {
+        return ErrorCode::ERR_PAR;
+    }
+
+    //  Ask the IBM 2741 to begin reading
+    _Ibm2741TransferCompletionListener * ibm2741TransferCompletionListener = nullptr;
+    for (auto l : _ibm2741TransferCompletionListeners)
+    {   //  TODO speed up look-up!
+        if (l->_device == device)
+        {   //  This one
+            ibm2741TransferCompletionListener = l;
+            break;
+        }
+    }
+    ibm2741TransferCompletionListener->transferCompletionListener = transferCompletionListener;
+    ibm360::Ibm2741::ErrorCode ibm2741ErrorCode = ibm2741->beginRead(buffer, ibm2741TransferCompletionListener);
+    if (ibm2741ErrorCode != ibm360::Ibm2741::ErrorCode::Success)
+    {   //  OOPS! Cound not start writing!
+        return _translateErrorCode(ibm2741ErrorCode);
+    }
+
+    //  Reading started - eventially device will notify the completion listener
+    return ErrorCode::ERR_OK;
+}
+
 ErrorCode Ibm2741Driver::haltIo(Device * device)
 {
     ibm360::Ibm2741 * ibm2741 = _resolveIbm2741(device);

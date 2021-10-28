@@ -31,6 +31,7 @@ public:
 protected:
     virtual void        paintEvent(QPaintEvent * event) override;
     virtual void        resizeEvent(QResizeEvent * event) override;
+    virtual void        keyPressEvent(QKeyEvent *event) override;
 
     //////////
     //  core::FullScreenWidget

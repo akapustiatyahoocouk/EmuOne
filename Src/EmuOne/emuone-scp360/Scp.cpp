@@ -381,6 +381,10 @@ void Scp::_handleSystemCallEvent(_SystemCallEvent * event)
     {
         _handleWriteToFileSystemCall(writeToFileSystemCall);
     }
+    else if (auto readFromFileSystemCall = dynamic_cast<ReadFromFileSystemCall*>(event->_systemCall))
+    {
+        _handleReadFromFileSystemCall(readFromFileSystemCall);
+    }
     else if (auto setEnvironmentVariableValueSystemCall = dynamic_cast<SetEnvironmentVariableValueSystemCall*>(event->_systemCall))
     {
         _handleSetEnvironmentVariableValueSystemCall(setEnvironmentVariableValueSystemCall);
@@ -549,9 +553,121 @@ void Scp::_handleWriteToFileSystemCall(WriteToFileSystemCall * systemCall)
         systemCall->setOutcome(ErrorCode::ERR_PAR);
         return;
     }
+    if ((ioResource->openFileFlags() & OpenFileFlags::DirectionMask) == OpenFileFlags::ReadOnly)
+    {   //  OOPS! Can't write!
+        systemCall->setOutcome(ErrorCode::ERR_SUP);
+        return;
+    }
 
-    //  TODO finish the implementation
-    systemCall->setOutcome(ErrorCode::ERR_OK);
+    if (DeviceResource * deviceResource = dynamic_cast<DeviceResource*>(ioResource))
+    {
+        DeviceDriver * deviceDriver = _deviceDrivers[deviceResource->device()];
+        switch (deviceResource->device()->state())
+        {
+            case Device::State::Unknown:
+            case Device::State::NonOperational:
+                systemCall->setOutcome(ErrorCode::ERR_SUP);
+                break;
+            case Device::State::Ready:
+                //  Begin I/O
+                ErrorCode err;
+                if ((deviceResource->openFileFlags() & OpenFileFlags::RecordsMask) == OpenFileFlags::UndefinedRecords)
+                {   //  Stream I/O
+                    err = deviceDriver->write(deviceResource->device(), systemCall->buffer, &_transferCompletionListener);
+                }
+                else
+                {   //  Record I/O
+                    err = deviceDriver->writeBlock(deviceResource->device(), systemCall->buffer, &_transferCompletionListener);
+                }
+                //  Has I/O started ?
+                if (err == ErrorCode::ERR_USE)
+                {   //  Schedule IORP
+                    Q_ASSERT(false);
+                }
+                else if (err != ErrorCode::ERR_OK)
+                {   //  OOPS!
+                    systemCall->setOutcome(ErrorCode::ERR_SUP);
+                    break;
+                }
+                _ioInProgress.insert(deviceResource->device(), systemCall->process());
+                break;
+            case Device::State::Busy:
+                Q_ASSERT(false);
+                //  TODO schedule I/O request package
+        }
+    }
+    else
+    {   //  TODO finish the implementation
+        systemCall->setOutcome(ErrorCode::ERR_SUP);
+    }
+}
+
+void Scp::_handleReadFromFileSystemCall(ReadFromFileSystemCall * systemCall)
+{
+    Q_ASSERT(QThread::currentThread() == _workerThread);
+    Q_ASSERT(systemCall != nullptr);
+
+    //  Resolve I/O resource handle
+    if (!systemCall->process()->_openHandles.contains(systemCall->handle))
+    {   //  OOPS! Handle not open!
+        systemCall->setOutcome(ErrorCode::ERR_PAR);
+        return;
+    }
+    IResource * resource = systemCall->process()->_openHandles[systemCall->handle];
+    Q_ASSERT(resource != nullptr);
+    IIoResource * ioResource = dynamic_cast<IIoResource *>(resource);
+    if (ioResource == nullptr)
+    {   //  OOPS! Handle does not refer to I/O resource!
+        systemCall->setOutcome(ErrorCode::ERR_PAR);
+        return;
+    }
+    if ((ioResource->openFileFlags() & OpenFileFlags::DirectionMask) == OpenFileFlags::WriteOnly)
+    {   //  OOPS! Can't read!
+        systemCall->setOutcome(ErrorCode::ERR_SUP);
+        return;
+    }
+
+    if (DeviceResource * deviceResource = dynamic_cast<DeviceResource*>(ioResource))
+    {
+        DeviceDriver * deviceDriver = _deviceDrivers[deviceResource->device()];
+        switch (deviceResource->device()->state())
+        {
+            case Device::State::Unknown:
+            case Device::State::NonOperational:
+                systemCall->setOutcome(ErrorCode::ERR_SUP);
+                break;
+            case Device::State::Ready:
+                //  Begin I/O
+                ErrorCode err;
+                if ((deviceResource->openFileFlags() & OpenFileFlags::RecordsMask) == OpenFileFlags::UndefinedRecords)
+                {   //  Stream I/O
+                    err = deviceDriver->read(deviceResource->device(), systemCall->buffer, &_transferCompletionListener);
+                }
+                else
+                {   //  Record I/O
+                    err = deviceDriver->readBlock(deviceResource->device(), systemCall->buffer, &_transferCompletionListener);
+                }
+                //  Has I/O started ?
+                if (err == ErrorCode::ERR_USE)
+                {   //  Schedule IORP
+                    Q_ASSERT(false);
+                }
+                else if (err != ErrorCode::ERR_OK)
+                {   //  OOPS!
+                    systemCall->setOutcome(ErrorCode::ERR_SUP);
+                    break;
+                }
+                _ioInProgress.insert(deviceResource->device(), systemCall->process());
+                break;
+            case Device::State::Busy:
+                Q_ASSERT(false);
+                //  TODO schedule I/O request package
+        }
+    }
+    else
+    {   //  TODO finish the implementation
+        systemCall->setOutcome(ErrorCode::ERR_SUP);
+    }
 }
 
 void Scp::_handleSetEnvironmentVariableValueSystemCall(SetEnvironmentVariableValueSystemCall * systemCall)
@@ -584,6 +700,10 @@ void Scp::_handleTransferCompleteEvent(_TransferCompleteEvent * event)
     Q_ASSERT(_systemCallsInProgress.contains(process));
     SystemCall * systemCall = _systemCallsInProgress[process];
     _systemCallsInProgress.remove(process);
+    if (TransferDataSystemCall * transferDataSystemCall = dynamic_cast<TransferDataSystemCall*>(systemCall))
+    {
+        transferDataSystemCall->bytesTransferred = event->_bytesTransferred;
+    }
     systemCall->setOutcome(event->_errorCode);
     //  The process is ready to continue running
     if (EmulatedProcess * emulatedProcess = dynamic_cast<EmulatedProcess*>(process))

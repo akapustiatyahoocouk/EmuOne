@@ -162,6 +162,18 @@ namespace ibm360
         //  Same as "beginWrite()", but goes to new line after writing
         ErrorCode               beginWriteBlock(const util::Buffer * buffer, TransferCompletionListener * completionListener);
 
+        //  Initiates a "read" operation in stream mode.
+        //  If a "read" begins successfully, the method returns "Success" and the
+        //  "completionListener" is guaranteed to eventually be notified when the
+        //  "read" is done. This is done on an internal worker thread.
+        //  If the "read" cannot be started, returns the non-"Success" error code.
+        //  At most "buffer.size()" bytes are read.
+        ErrorCode               beginRead(util::Buffer * buffer, TransferCompletionListener * completionListener);
+
+        //  Initiates a "read" operation in block mode.
+        //  Exactly 1 line of input is read; the '\n' is not added to the line's end.
+        ErrorCode               beginReadBlock(util::Buffer * buffer, TransferCompletionListener * completionListener);
+
         //  Instructs this device to halt any I/O-in-progress ASAP.
         //  If there was, the corresponding "completionListener" is notified that the
         //  I/O was finished by interruption; otherwise has no effect.
@@ -177,7 +189,13 @@ namespace ibm360
 
         //  Runtime state
         volatile DeviceState    _deviceState = DeviceState::NotOperational;
-        QStringList             _contents;
+        QStringList             _contents;      //  ASCII
+        QString                 _pendingInput;  //  ASCII
+
+        util::BlockingQueue<QChar>  _charsToEcho;
+
+        //  Helpers
+        void            _printChar(QChar ch);
 
         //////////
         //  Requests sent to the worker thread
@@ -245,6 +263,64 @@ namespace ibm360
             TransferCompletionListener *const   completionListener;
         };
 
+        class _ReadRequest : public _Request
+        {
+            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_ReadRequest)
+
+            //////////
+            //  Construction/destruction
+        public:
+            _ReadRequest(util::Buffer * buffer, TransferCompletionListener * completionListener)
+                :   buffer(buffer), completionListener(completionListener) {}
+            virtual ~_ReadRequest() {}
+
+            //////////
+            //  Properties
+        public:
+            util::Buffer *const                 buffer;
+            TransferCompletionListener *const   completionListener;
+        };
+
+        class _ReadBlockRequest : public _Request
+        {
+            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_ReadBlockRequest)
+
+            //////////
+            //  Construction/destruction
+        public:
+            _ReadBlockRequest(util::Buffer * buffer, TransferCompletionListener * completionListener)
+                :   buffer(buffer), completionListener(completionListener) {}
+            virtual ~_ReadBlockRequest() {}
+
+            //////////
+            //  Properties
+        public:
+            util::Buffer *const                 buffer;
+            TransferCompletionListener *const   completionListener;
+        };
+
+        class _EchoCompletionListener : public TransferCompletionListener
+        {
+            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_EchoCompletionListener)
+
+            //////////
+            //  Construction/destruction
+        public:
+            explicit _EchoCompletionListener(Ibm2741 * ibm2741) : _ibm2741(ibm2741) {}
+            virtual ~_EchoCompletionListener() {}
+
+            //////////
+            //  TransferCompletionListener
+        public:
+            virtual void        transferCompleted(uint32_t /*bytesTransferred*/, ErrorCode /*errorCode*/) override {}
+
+            //////////
+            //  Implementation
+        private:
+            Ibm2741 *const      _ibm2741;
+        };
+        _EchoCompletionListener _echoCompletionListener;
+
         //////////
         //  Threads
         util::BlockingQueue<_Request*>  _requestQueue;
@@ -252,6 +328,8 @@ namespace ibm360
         class _WorkerThread : public QThread
         {
             CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_WorkerThread)
+
+            friend class Ibm2741FullScreenWidget;
 
             //////////
             //  Construction/destruction
@@ -277,6 +355,8 @@ namespace ibm360
             volatile bool   _stopRequested = false;
             util::CharacterSet::Decoder * _ebcdicDecoder;
             QByteArray      _decodeBuffer;
+            util::CharacterSet::Encoder * _ebcdicEncoder;
+            QByteArray      _encodeBuffer;
 
             volatile bool   _haltIoRequested = false;
 
@@ -284,6 +364,8 @@ namespace ibm360
             void            _handleResetRequest(const _ResetRequest * request);
             void            _handleWriteRequest(const _WriteRequest * request);
             void            _handleWriteBlockRequest(const _WriteBlockRequest * request);
+            void            _handleReadRequest(const _ReadRequest * request);
+            void            _handleReadBlockRequest(const _ReadBlockRequest * request);
         };
         _WorkerThread *     _workerThread = nullptr;
     };

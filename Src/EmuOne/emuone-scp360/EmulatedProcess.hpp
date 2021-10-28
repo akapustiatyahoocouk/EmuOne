@@ -71,6 +71,12 @@ namespace scp360
 
             ErrorCode               writeToFile(uint16_t handle, const void * data, uint32_t bytesToWrite,
                                                 uint32_t & bytesWritten);
+            ErrorCode               writeToFile(uint16_t handle, const QString & data,
+                                                uint32_t & bytesWritten);
+            ErrorCode               readFromFile(uint16_t handle, void * data, uint32_t bytesToRead,
+                                                uint32_t & bytesRead);
+            ErrorCode               readFromFile(uint16_t handle, QString & data, uint32_t bytesToRead,
+                                                uint32_t & bytesRead);
 
 /*
     7.2.2	SC#EVCNT – Count Environment Variable Values

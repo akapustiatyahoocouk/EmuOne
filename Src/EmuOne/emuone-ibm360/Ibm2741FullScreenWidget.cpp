@@ -17,6 +17,7 @@ Ibm2741FullScreenWidget::Ibm2741FullScreenWidget(Ibm2741 * ibm2741)
     _ui->setupUi(this);
     Q_ASSERT(_ibm2741 != nullptr);
 
+    this->setFocusPolicy(Qt::FocusPolicy::ClickFocus);
     _repositionControls();
     _recalculateFont();
 
@@ -93,6 +94,27 @@ void Ibm2741FullScreenWidget::resizeEvent(QResizeEvent * /*event*/)
 {
     _repositionControls();
     _recalculateFont();
+}
+
+void Ibm2741FullScreenWidget::keyPressEvent(QKeyEvent * event)
+{
+    if (_ibm2741->deviceState() == Ibm2741::DeviceState::Idle ||
+        _ibm2741->deviceState() == Ibm2741::DeviceState::Reading)
+    {   //  Accept the input
+        if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
+        {   //  Newline
+            _ibm2741->_pendingInput += '\n';
+            _ibm2741->_charsToEcho.enqueue('\n');
+        }
+        else if (event->text().length() == 1 &&
+                 event->text()[0].unicode() >= 32 && event->text()[0].unicode() <= 126)
+        {   //  Echo
+            static util::CharacterSet::Encoder * encoder = util::Cp037CharacterSet::getInstance()->createEncoder();
+
+            _ibm2741->_pendingInput += event->text();
+            _ibm2741->_charsToEcho.enqueue(event->text()[0]);
+        }
+    }
 }
 
 //////////
