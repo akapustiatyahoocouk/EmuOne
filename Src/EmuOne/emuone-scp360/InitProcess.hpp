@@ -75,6 +75,7 @@ namespace scp360
 
         //  Helpers
         void                    _initialiseDevices();
+        ErrorCode               _enterCurrentDate(QDate & currentDate);
         void                    _createLoginProcesses();
     };
 }

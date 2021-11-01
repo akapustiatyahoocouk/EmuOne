@@ -146,16 +146,17 @@ void MainWindow::_refreshVirtualAppliancesList()
     {
         QListWidgetItem * item = _ui->vmListWidget->item(i);
         QString text = _virtualAppliances[i]->name() +
-                       " (" + _virtualAppliances[i]->type()->displayName() + ")";
+                       " (" + _virtualAppliances[i]->architecture()->displayName() +
+                              " " + _virtualAppliances[i]->type()->displayName() + ")";
         switch (_virtualAppliances[i]->state())
         {
             case core::VirtualAppliance::State::Stopped:
                 break;
             case core::VirtualAppliance::State::Running:
-                text += " (running)";
+                text += " - running";
                 break;
             case core::VirtualAppliance::State::Suspended:
-                text += " (suspended)";
+                text += " - suspended";
                 break;
         }
         item->setText(text);

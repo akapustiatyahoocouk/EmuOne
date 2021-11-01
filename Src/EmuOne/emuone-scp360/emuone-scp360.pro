@@ -30,7 +30,8 @@ SOURCES += \
     SegmentLock.cpp \
     SegmentMapping.cpp \
     SystemCalls.cpp \
-    Types.cpp
+    Types.cpp \
+    Validator.cpp
 
 HEADERS += \
     API.hpp \
@@ -46,7 +47,8 @@ HEADERS += \
     Resources.hpp \
     Scp.hpp \
     SystemCalls.hpp \
-    Types.hpp
+    Types.hpp \
+    Validator.hpp
 
 LIBS += -L../../../Bin/Debug -lemuone-ibm360 -lemuone-core -lemuone-util
 

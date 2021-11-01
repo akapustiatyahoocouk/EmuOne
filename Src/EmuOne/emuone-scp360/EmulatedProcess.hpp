@@ -62,6 +62,10 @@ namespace scp360
             //  Returns when the writing has completed one way or another.
             ErrorCode               writeToOperator(const QString & text);
 
+            //  Reads a single message (record) from the "operator console".
+            //  Returns when the reading has completed one way or another.
+            ErrorCode               readFromOperator(QString & text);
+
             //  Opens the file with the specified name.
             //  I/O redirection via environment is performed automatically.
             //  Upon success returns ERR_OK and stores a valid "fileHandle".

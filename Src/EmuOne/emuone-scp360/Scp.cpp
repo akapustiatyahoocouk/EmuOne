@@ -37,7 +37,7 @@ ComponentEditor * Scp::createEditor(QWidget * /*parent*/)
 
 QString Scp::shortStatus() const
 {
-    return "TODO";
+    return "V1.0";
 }
 
 core::ComponentUi * Scp::createUi()
@@ -373,6 +373,10 @@ void Scp::_handleSystemCallEvent(_SystemCallEvent * event)
     {
         _handleWriteToOperatorSystemCall(writeToOperatorSystemCall);
     }
+    else if (auto readFromOperatorSystemCall = dynamic_cast<ReadFromOperatorSystemCall*>(event->_systemCall))
+    {
+        _handleReadFromOperatorSystemCall(readFromOperatorSystemCall);
+    }
     else if (auto openFileSystemCall = dynamic_cast<OpenFileSystemCall*>(event->_systemCall))
     {
         _handleOpenFileSystemCall(openFileSystemCall);
@@ -443,6 +447,70 @@ void Scp::_handleWriteToOperatorSystemCall(WriteToOperatorSystemCall * systemCal
             //  Instruct the driver to begin writing
             {
                 ErrorCode err = operatorConsoleDriver->writeBlock(_operatorsConsole, systemCall->buffer, &_transferCompletionListener);
+                if (err == ErrorCode::ERR_OK)
+                {   //  I/O started - it will complete eventually
+                    _ioInProgress.insert(_operatorsConsole, systemCall->process());
+                    return;
+                }
+                if (err != ErrorCode::ERR_USE)
+                {   //  OOPS! Couldn't!
+                    systemCall->setOutcome(err);
+                    return;
+                }
+            }
+            //  Device is "ready", but perhaps another device on the same "controller" is
+            //  already performing I/O, and "controller" can only handle one I/O at a time.
+            //  Fall through - this will enqueue an "I/O request" for later completion
+        case Device::State::Busy:
+            //  Device is busy with another I/O - form an "I/O request" qnd queue it
+            Q_ASSERT(false);
+    }
+}
+
+void Scp::_handleReadFromOperatorSystemCall(ReadFromOperatorSystemCall * systemCall)
+{
+    Q_ASSERT(QThread::currentThread() == _workerThread);
+    Q_ASSERT(systemCall != nullptr);
+
+    //  Locate the device driver that drives the "operator console" device
+    if (_operatorsConsole == nullptr)
+    {   //  OOPS! No "operator console"
+        systemCall->setOutcome(ErrorCode::ERR_SUP);
+        return;
+    }
+    if (!_deviceDrivers.contains(_operatorsConsole))
+    {   //  OOPS! No device driver exists for "operator console"
+        systemCall->setOutcome(ErrorCode::ERR_SUP);
+        return;
+    }
+    DeviceDriver * operatorConsoleDriver = _deviceDrivers[_operatorsConsole];
+    //  Is the device ready for I/O ?
+    switch (_operatorsConsole->state())
+    {
+        case Device::State::Unknown:
+        case Device::State::NonOperational:
+            //  Can't perform I/O
+            systemCall->setOutcome(ErrorCode::ERR_SUP);
+            return;
+        case Device::State::Ready:
+            //  The input must be space-padded to the length of the buffer!
+            {
+                static util::CharacterSet::Encoder * encoder = util::Cp037CharacterSet::getInstance()->createEncoder();
+                static QByteArray spaceBytes;
+                if (spaceBytes.size() == 0)
+                {   //  Prepare ONCE
+                    QChar ch;
+                    encoder->encode(' ', spaceBytes);
+                    Q_ASSERT(spaceBytes.size() == 1);
+                }
+                for (int i = 0; i < systemCall->buffer->size(); i++)
+                {
+                    systemCall->buffer->setAt(i, spaceBytes[0]);
+                }
+            }
+            //  Instruct the driver to begin reading
+            {
+                ErrorCode err = operatorConsoleDriver->readBlock(_operatorsConsole, systemCall->buffer, &_transferCompletionListener);
                 if (err == ErrorCode::ERR_OK)
                 {   //  I/O started - it will complete eventually
                     _ioInProgress.insert(_operatorsConsole, systemCall->process());

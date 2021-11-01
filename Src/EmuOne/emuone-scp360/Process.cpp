@@ -15,7 +15,7 @@ Process::Process(Scp * scp, uint16_t id, const QString & name, Flags flags, Proc
         _flags(flags),
         _parent(parent)
 {
-    Q_ASSERT(isValidName(_name));
+    Q_ASSERT(Validator::isValidProcessName(_name));
     Q_ASSERT(_parent == nullptr || _parent->scp() == scp);
 
     if (_parent != nullptr)
@@ -46,23 +46,6 @@ Process::~Process()
 
 //////////
 //  Operations
-bool Process::isValidName(const QString & name)
-{
-    if (name.length() == 0 || name.length() > 16)
-    {   //  OOPS! Empty or too long!
-        return false;
-    }
-    for (int i = 0; i < name.length(); i++)
-    {
-        QChar ch = name[i];
-        if (!((ch >= 'A' && ch < 'Z') || (ch >= '0' || ch <= '9')))
-        {   //  OOPS! Not allowed in process names
-            return false;
-        }
-    }
-    return true;
-}
-
 void Process::setState(State state)
 {
     Q_ASSERT(scp()->onKernelThread());
@@ -112,7 +95,8 @@ ErrorCode Process::setEnvironmentVariableValue(const QString & name, const QStri
 {
     Q_ASSERT(scp()->onKernelThread());
 
-    if (!EnvironmentVariable::isValidName(name) || !EnvironmentVariable::isValidScalarValue(scalarValue))
+    if (!Validator::isValidEnvironmentVariableName(name) ||
+        !Validator::isValidEnvironmentVariableScalarValue(scalarValue))
     {
         return ErrorCode::ERR_PAR;
     }
@@ -130,7 +114,8 @@ ErrorCode Process::setEnvironmentVariableValue(const QString & name, const QStri
 {
     Q_ASSERT(scp()->onKernelThread());
 
-    if (!EnvironmentVariable::isValidName(name) || !EnvironmentVariable::isValidListValue(listValue))
+    if (!Validator::isValidEnvironmentVariableName(name) ||
+        !Validator::isValidEnvironmentVariableListValue(listValue))
     {
         return ErrorCode::ERR_PAR;
     }

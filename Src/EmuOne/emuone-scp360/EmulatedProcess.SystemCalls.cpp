@@ -47,6 +47,27 @@ ErrorCode EmulatedProcess::SystemCalls::writeToOperator(const QString & text)
     return makeSystemCall(&systemCall);
 }
 
+ErrorCode EmulatedProcess::SystemCalls::readFromOperator(QString & text)
+{
+    Q_ASSERT(QThread::currentThread() == _emulatedProcess->_workerThread);
+
+    //  Issue "SVC"
+    util::ByteArrayBuffer buffer;
+    buffer.data.resize(80);
+    ReadFromOperatorSystemCall systemCall(_emulatedProcess, &buffer);
+    ErrorCode err = makeSystemCall(&systemCall);
+    if (err != ErrorCode::ERR_OK)
+    {
+        return err;
+    }
+    buffer.data.resize(systemCall.bytesTransferred);
+
+    //  The "operator console" is a text device that produces EBCDIC bytes.
+    static util::CharacterSet::Decoder * decoder = util::Cp037CharacterSet::getInstance()->createDecoder(); //  Idempotent
+    decoder->decode(buffer.data, 0, text);
+    return ErrorCode::ERR_OK;
+}
+
 ErrorCode EmulatedProcess::SystemCalls::openFile(const QString & fileName, OpenFileFlags openFlags,
                                                  uint32_t recordSize, uint32_t blockSize, uint16_t & fileHandle)
 {

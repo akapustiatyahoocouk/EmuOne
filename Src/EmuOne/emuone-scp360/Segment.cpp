@@ -20,7 +20,7 @@ Segment::Segment(Scp * scp, Id id,
         _contentLocation(new StorageContentLocation(address)),
         _holdCount(0)
 {
-    Q_ASSERT(isValidName(_name));
+    Q_ASSERT(Validator::isValidSegmentName(_name));
     Q_ASSERT(_size <= 16 * 1024 * 1024);
     Q_ASSERT(address <= 16 * 1024 * 1024 && address % 2048 == 0);
     Q_ASSERT(address + _size <= 16 * 1024 * 1024);
@@ -36,26 +36,6 @@ Segment::~Segment()
 
 //////////
 //  Operations
-bool Segment::isValidName(const QString & name)
-{
-    if (name.isEmpty())
-    {   //  Anonymous segment
-        return true;
-    }
-    if (name.length() > 8)
-    {   //  OOPS! Too long!
-        return false;
-    }
-    for (int i = 0; i < name.length(); i++)
-    {
-        QChar ch = name[i];
-        if (!((ch >= 'A' && ch < 'Z') || (ch >= '0' || ch <= '9')))
-        {   //  OOPS! Not allowed in segment names
-            return false;
-        }
-    }
-    return true;
-}
 
 //////////
 //  Helper functions

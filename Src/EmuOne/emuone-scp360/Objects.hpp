@@ -115,8 +115,6 @@ namespace scp360
         //////////
         //  Operations
     public:
-        static bool         isValidName(const QString & name);
-
         QString             name() const { return _name; }
         uint32_t            size() const { return _size; }
         Flags               flags() const { return _flags; }
@@ -249,8 +247,6 @@ namespace scp360
         //////////
         //  Operations
     public:
-        static bool             isValidName(const QString & name);
-
         QString                 name() const { return _name; }
         Flags                   flags() const { return _flags; }
         State                   state() const { return _state; }
@@ -305,10 +301,6 @@ namespace scp360
         //////////
         //  Operations
     public:
-        static bool             isValidName(const QString & name);
-        static bool             isValidScalarValue(const QString & scalarValue);
-        static bool             isValidListValue(const QStringList & listValue);
-
         QString                 name() const { return _name; }
         QStringList             values() const { return _values; }
         int                     valueCount() const { return _values.size(); }
@@ -396,11 +388,6 @@ namespace scp360
         //////////
         //  Operations
     public:
-        static bool         isValidName(const QString & name);
-
-        //////////
-        //  Operations
-    public:
         ibm360::Device *    hardwareDevice() const { return _hardwareDevice; }
 
         //////////
@@ -427,7 +414,6 @@ namespace scp360
         //////////
         //  Operations
     public:
-        static bool         isValidName(const QString & name);
     };
 }
 

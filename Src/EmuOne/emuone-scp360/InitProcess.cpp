@@ -7,6 +7,8 @@
 #include "emuone-scp360/API.hpp"
 using namespace scp360;
 
+#define AUTO_CURRENT_DATE_TIME_ENTRY    1
+
 //////////
 //  Construction/destruction
 InitProcess::InitProcess(Scp * scp, uint16_t id, const QString & name, Process::Flags flags, Process * parent)
@@ -38,6 +40,10 @@ ErrorCode InitProcess::run()
                                 " " +
                                 QString(__TIME__).toUpper() +
                                 " ***");
+
+    QDate currentDate;
+    _enterCurrentDate(currentDate);
+    systemCalls.writeToOperator("SETTING CURRENT DATE TO " + currentDate.toString().toUpper());
 
     //  We need to create a "LOGIN" process for each "terminal"
     _createLoginProcesses();
@@ -121,6 +127,43 @@ void InitProcess::_initialiseDevices()
         delete ioCompletionListener;
     }
     _initialiseDeviceCompletionListeners.clear();
+}
+
+ErrorCode InitProcess::_enterCurrentDate(QDate & currentDate)
+{
+    ErrorCode err;
+
+    for (; ; )
+    {
+        if ((err = systemCalls.writeToOperator("ENTER CURRENT DATE (DD/MM/YYYY):")) != ErrorCode::ERR_OK)
+        {
+            return err;
+        }
+#ifdef AUTO_CURRENT_DATE_TIME_ENTRY
+        currentDate = QDateTime::currentDateTime().date();
+        if ((err = systemCalls.writeToOperator(currentDate.toString("dd/MM/yyyy"))) != ErrorCode::ERR_OK)
+        {
+            return err;
+        }
+        return ErrorCode::ERR_OK;
+#else
+        QString dateString;
+        if ((err = systemCalls.readFromOperator(dateString)) != ErrorCode::ERR_OK)
+        {
+            return err;
+        }
+        //  Parse
+        if ((currentDate = QDate::fromString(dateString, "dd/MM/yyyy")).isValid())
+        {   //  Got it!
+            return ErrorCode::ERR_OK;
+        }
+        //  OOPS! Report and retry
+        if ((err = systemCalls.writeToOperator("*** INVALID DATE")) != ErrorCode::ERR_OK)
+        {
+            return err;
+        }
+#endif
+    }
 }
 
 void InitProcess::_createLoginProcesses()

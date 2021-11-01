@@ -22,14 +22,6 @@ PhysicalDevice::~PhysicalDevice()
 
 //////////
 //  Operations
-bool PhysicalDevice::isValidName(const QString & name)
-{
-    return name.length() == 4 &&
-           name[0] == '#' &&
-           (name[1] >= '0' && name[0] <= '6') &&
-           ((name[2] >= '0' && name[2] <= '9') || (name[2] >= 'A' && name[2] <= 'F')) &&
-           ((name[3] >= '0' && name[3] <= '9') || (name[3] >= 'A' && name[3] <= 'F'));
-}
 
 //////////
 //  Implementation helpers

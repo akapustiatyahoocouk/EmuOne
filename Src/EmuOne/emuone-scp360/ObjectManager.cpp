@@ -77,7 +77,7 @@ PhysicalDevice * ObjectManager::findPhysicalDeviceByName(const QString & name) c
 
 ErrorCode ObjectManager::createSegment(const QString & name, uint32_t size, Segment::Flags flags, uint32_t address, Segment *& segment)
 {
-    if (!Segment::isValidName(name))
+    if (!Validator::isValidSegmentName(name))
     {
         segment = nullptr;
         return ErrorCode::ERR_PAR;
@@ -129,7 +129,7 @@ ErrorCode ObjectManager::destroySegment(Segment * segment)
 
 ErrorCode ObjectManager::createEmulatedProcess(const QString & name, Process::Flags flags, Process * parent, EmulatedApplication * emulatedApplication, EmulatedProcess *& process)
 {
-    if (!Process::isValidName(name))
+    if (!Validator::isValidProcessName(name))
     {
         process = nullptr;
         return ErrorCode::ERR_PAR;

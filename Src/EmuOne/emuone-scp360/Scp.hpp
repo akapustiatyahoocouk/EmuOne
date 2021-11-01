@@ -164,6 +164,7 @@ namespace scp360
 
         void                _handleSystemCallEvent(_SystemCallEvent * event);
         void                _handleWriteToOperatorSystemCall(WriteToOperatorSystemCall * systemCall);
+        void                _handleReadFromOperatorSystemCall(ReadFromOperatorSystemCall * systemCall);
         void                _handleOpenFileSystemCall(OpenFileSystemCall * systemCall);
         void                _handleWriteToFileSystemCall(WriteToFileSystemCall * systemCall);
         void                _handleReadFromFileSystemCall(ReadFromFileSystemCall * systemCall);
