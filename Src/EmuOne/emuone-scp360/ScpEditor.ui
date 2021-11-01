@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ScpEditor</class>
+ <widget class="QWidget" name="ScpEditor">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>339</width>
+    <height>215</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>4</number>
+   </property>
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="_sharedFoldersGroupBox">
+     <property name="title">
+      <string>Shared folders</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <property name="leftMargin">
+       <number>2</number>
+      </property>
+      <property name="topMargin">
+       <number>2</number>
+      </property>
+      <property name="rightMargin">
+       <number>2</number>
+      </property>
+      <property name="bottomMargin">
+       <number>2</number>
+      </property>
+      <property name="spacing">
+       <number>4</number>
+      </property>
+      <item row="0" column="0" colspan="3">
+       <widget class="QTreeWidget" name="_sharedFoldersTreeWidget">
+        <property name="columnCount">
+         <number>2</number>
+        </property>
+        <column>
+         <property name="text">
+          <string notr="true">1</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string notr="true">2</string>
+         </property>
+        </column>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QPushButton" name="_addSharedFolderPushButton">
+        <property name="text">
+         <string>Add</string>
+        </property>
+        <property name="icon">
+         <iconset resource="scp360.qrc">
+          <normaloff>:/emuone/scp360/Images/Actions/Add.png</normaloff>:/emuone/scp360/Images/Actions/Add.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="_removeSharedFolderPushButton">
+        <property name="text">
+         <string>Remove</string>
+        </property>
+        <property name="icon">
+         <iconset resource="scp360.qrc">
+          <normaloff>:/emuone/scp360/Images/Actions/Remove.png</normaloff>:/emuone/scp360/Images/Actions/Remove.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="_modifySharedFolderPushButton">
+        <property name="text">
+         <string>Modify</string>
+        </property>
+        <property name="icon">
+         <iconset resource="scp360.qrc">
+          <normaloff>:/emuone/scp360/Images/Actions/Modify.png</normaloff>:/emuone/scp360/Images/Actions/Modify.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="scp360.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>_addSharedFolderPushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ScpEditor</receiver>
+   <slot>_addSharedFolderPushButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>58</x>
+     <y>193</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>168</x>
+     <y>105</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_removeSharedFolderPushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ScpEditor</receiver>
+   <slot>_removeSharedFolderPushButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>168</x>
+     <y>193</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>168</x>
+     <y>105</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_modifySharedFolderPushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ScpEditor</receiver>
+   <slot>_modifySharedFolderPushButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>278</x>
+     <y>193</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>168</x>
+     <y>105</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>_addSharedFolderPushButtonClicked()</slot>
+  <slot>_removeSharedFolderPushButtonClicked()</slot>
+  <slot>_modifySharedFolderPushButtonClicked()</slot>
+ </slots>
+</ui>

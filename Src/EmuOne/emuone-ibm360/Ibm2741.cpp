@@ -236,6 +236,7 @@ Ibm2741::ErrorCode Ibm2741::haltIo()
                 _deviceState == DeviceState::Reading ||
                 _deviceState == DeviceState::Writing) ? ErrorCode::Success : ErrorCode::Unknown;
     }
+    return ErrorCode::Unknown;
 }
 
 //////////

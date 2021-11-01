@@ -43,7 +43,7 @@ QString VirtualMachine::Type::mnemonic() const
 
 QString VirtualMachine::Type::displayName() const
 {
-    return "Virtual Machine";
+    return "virtual machine";
 }
 
 QIcon VirtualMachine::Type::smallIcon() const

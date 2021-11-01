@@ -21,6 +21,11 @@ Scp::Scp(const QString & name)
 
 Scp::~Scp()
 {
+    //  Destroy live Editors
+    for (ScpEditor * editor : _editors)
+    {
+        delete editor;
+    }
 }
 
 //////////
@@ -30,9 +35,11 @@ Scp::Type * Scp::type() const
     return Scp::Type::getInstance();
 }
 
-ComponentEditor * Scp::createEditor(QWidget * /*parent*/)
+ComponentEditor * Scp::createEditor(QWidget * parent)
 {
-    return nullptr;
+    ScpEditor * editor = new ScpEditor(this, parent);;
+    _editors.append(editor);
+    return editor;
 }
 
 QString Scp::shortStatus() const
@@ -176,12 +183,35 @@ void Scp::disconnect() noexcept
 
 //////////
 //  Component (serialisation)
-void Scp::serialiseConfiguration(QDomElement & /*configurationElement*/) const
+void Scp::serialiseConfiguration(QDomElement & configurationElement) const
 {
+    for (SharedFolder * sharedFolder : _sharedFolders)
+    {
+        configurationElement.setAttribute("SharedFolders." + sharedFolder->volumeName(), sharedFolder->hostPath());
+    }
 }
 
-void Scp::deserialiseConfiguration(QDomElement & /*configurationElement*/)
+void Scp::deserialiseConfiguration(QDomElement & configurationElement)
 {
+    QDomNamedNodeMap attributes = configurationElement.attributes();
+    for (int i = 0; i < attributes.size(); i++)
+    {
+        QDomAttr attr = attributes.item(i).toAttr();
+        if (!attr.isNull())
+        {
+            QString name = attr.name();
+            QString value = attr.value();
+            if (name.startsWith("SharedFolders."))
+            {
+                QString volumeName = name.mid(14);
+                if (Validator::isValidVolumeName(volumeName) &&
+                    QFileInfo(value).canonicalFilePath() == value)
+                {
+                    createSharedFolder(volumeName, value);
+                }
+            }
+        }
+    }
 }
 
 //////////
@@ -205,6 +235,45 @@ void Scp::onExternalInterruption(uint16_t /*interruptionCode*/)
 
 void Scp::onMachineCheckInterruption(uint16_t /*interruptionCode*/)
 {
+}
+
+//////////
+//  Operations (configuration)
+Scp::SharedFolder * Scp::createSharedFolder(const QString & volumeName, const QString & hostPath)
+{
+    if (!Validator::isValidVolumeName(volumeName))
+    {
+        return nullptr;
+    }
+    //  Already known ?
+    if (_sharedFolders.contains(volumeName))
+    {   //  Modify instead
+        modifySharedFolder(volumeName, hostPath);
+        return _sharedFolders[volumeName];
+    }
+    //  Create a new one
+    SharedFolder * sharedFolder = new SharedFolder(volumeName, hostPath);
+    _sharedFolders.insert(volumeName, sharedFolder);
+    return sharedFolder;
+}
+
+void Scp::destroySharedFolder(const QString & volumeName)
+{
+    if (_sharedFolders.contains(volumeName))
+    {
+        delete _sharedFolders[volumeName];
+        _sharedFolders.remove(volumeName);
+    }
+}
+
+void Scp::modifySharedFolder(const QString & volumeName, const QString & hostPath)
+{
+    if (!Validator::isValidVolumeName(volumeName) || !_sharedFolders.contains(volumeName))
+    {
+        return;
+    }
+    SharedFolder * sharedFolder = _sharedFolders[volumeName];
+    sharedFolder->_hostPath = QFileInfo(hostPath).canonicalFilePath();
 }
 
 //////////
@@ -499,7 +568,6 @@ void Scp::_handleReadFromOperatorSystemCall(ReadFromOperatorSystemCall * systemC
                 static QByteArray spaceBytes;
                 if (spaceBytes.size() == 0)
                 {   //  Prepare ONCE
-                    QChar ch;
                     encoder->encode(' ', spaceBytes);
                     Q_ASSERT(spaceBytes.size() == 1);
                 }

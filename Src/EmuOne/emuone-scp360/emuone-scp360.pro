@@ -19,6 +19,7 @@ SOURCES += \
     Ibm2741Driver.cpp \
     InitProcess.cpp \
     LoginProcess.cpp \
+    NewSharedFolderDialog.cpp \
     Object.cpp \
     ObjectManager.cpp \
     PhysicalDevice.cpp \
@@ -26,6 +27,7 @@ SOURCES += \
     Process.cpp \
     Resources.cpp \
     Scp.cpp \
+    ScpEditor.cpp \
     Segment.cpp \
     SegmentLock.cpp \
     SegmentMapping.cpp \
@@ -42,10 +44,12 @@ HEADERS += \
     EmulatedProcess.hpp \
     InitProcess.hpp \
     LoginProcess.hpp \
+    NewSharedFolderDialog.hpp \
     ObjectManager.hpp \
     Objects.hpp \
     Resources.hpp \
     Scp.hpp \
+    ScpEditor.hpp \
     SystemCalls.hpp \
     Types.hpp \
     Validator.hpp
@@ -60,3 +64,10 @@ unix {
     target.path = /usr/lib
 }
 !isEmpty(target.path): INSTALLS += target
+
+FORMS += \
+    NewSharedFolderDialog.ui \
+    ScpEditor.ui
+
+RESOURCES += \
+    scp360.qrc

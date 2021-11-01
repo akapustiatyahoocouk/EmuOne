@@ -22,7 +22,7 @@ bool Validator::isValidSegmentName(const QString & name)
     for (int i = 0; i < name.length(); i++)
     {
         QChar ch = name[i];
-        if (!((ch >= 'A' && ch < 'Z') || (ch >= '0' || ch <= '9')))
+        if (!((ch >= 'A' && ch < 'Z') || (ch >= '0' && ch <= '9')))
         {   //  OOPS! Not allowed in segment names
             return false;
         }
@@ -39,7 +39,7 @@ bool Validator::isValidProcessName(const QString & name)
     for (int i = 0; i < name.length(); i++)
     {
         QChar ch = name[i];
-        if (!((ch >= 'A' && ch < 'Z') || (ch >= '0' || ch <= '9')))
+        if (!((ch >= 'A' && ch < 'Z') || (ch >= '0' && ch <= '9')))
         {   //  OOPS! Not allowed in process names
             return false;
         }
@@ -118,6 +118,23 @@ bool Validator::isValidPhysicalDeviceName(const QString & name)
 bool Validator::isValidLogicalDeviceName(const QString & name)
 {
     return false;   //  TODO implerment properly
+}
+
+bool Validator::isValidVolumeName(const QString & name)
+{
+    if (name.isEmpty() || name.length() > 8)
+    {   //  OOPS! Empty or Too long!
+        return false;
+    }
+    for (int i = 0; i < name.length(); i++)
+    {
+        QChar ch = name[i];
+        if (!((ch >= 'A' && ch < 'Z') || (ch >= '0' && ch <= '9') || (ch == '.')))
+        {   //  OOPS! Not allowed in volume names
+            return false;
+        }
+    }
+    return true;
 }
 
 //  End of emuone-scp360/Validator.cpp

@@ -133,21 +133,7 @@
        </widget>
       </item>
       <item row="1" column="0" colspan="2">
-       <widget class="QScrollArea" name="_componentEditorsScrollArea">
-        <property name="widgetResizable">
-         <bool>false</bool>
-        </property>
-        <widget class="QWidget" name="_scrollAreaWidgetContents">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>240</width>
-           <height>187</height>
-          </rect>
-         </property>
-        </widget>
-       </widget>
+       <widget class="QWidget" name="_componentEditorsPanel" native="true"/>
       </item>
      </layout>
     </widget>

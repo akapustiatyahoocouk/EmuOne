@@ -37,6 +37,9 @@
 #include "emuone-scp360/EmulatedProcess.hpp"
 #include "emuone-scp360/InitProcess.hpp"
 #include "emuone-scp360/LoginProcess.hpp"
+
 #include "emuone-scp360/Scp.hpp"
+#include "emuone-scp360/NewSharedFolderDialog.hpp"
+#include "emuone-scp360/ScpEditor.hpp"
 
 //  End of emuone-scp360/API.hpp

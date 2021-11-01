@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/emuone/scp360">
+        <file>Images/Actions/Add.png</file>
+        <file>Images/Actions/Modify.png</file>
+        <file>Images/Actions/Remove.png</file>
+    </qresource>
+</RCC>

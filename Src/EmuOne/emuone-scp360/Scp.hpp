@@ -15,6 +15,7 @@ namespace scp360
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Scp)
 
         friend class Object;
+        friend class ::ScpEditor;
         friend class EmulatedProcess;
         friend class InitProcess;
 
@@ -38,6 +39,37 @@ namespace scp360
             virtual core::ComponentCategory *   category() const override;
             virtual bool        isCompatibleWith(core::Architecture * architecture) const override;
             virtual Scp *       createComponent() override;
+        };
+
+        //  A "shared folder" configured for an SCP monitor, which makes a host
+        //  OS directory behave like a SCP "volume"
+        class EMUONE_SCP360_EXPORT SharedFolder final
+        {
+            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(SharedFolder)
+
+            friend class Scp;
+
+            //////////
+            //  Construction/destruction - from friends only
+        private:
+            SharedFolder(const QString & volumeName, const QString & hostPath)
+                :   _volumeName(volumeName), _hostPath(QFileInfo(hostPath).canonicalFilePath())
+            {
+                Q_ASSERT(Validator::isValidVolumeName(_volumeName));
+            }
+            ~SharedFolder() {}
+
+            //////////
+            //  Operations
+        public:
+            QString             volumeName() const { return _volumeName; }
+            QString             hostPath() const { return _hostPath; }
+
+            //////////
+            //  Implementation
+        private:
+            QString             _volumeName;
+            QString             _hostPath;
         };
 
         //////////
@@ -81,6 +113,28 @@ namespace scp360
         virtual void        onMachineCheckInterruption(uint16_t interruptionCode) override;
 
         //////////
+        //  Operations (configuration)
+    public:
+        //  An unordered list of all "shared folders" configured for this SCP
+        QList<SharedFolder*>sharedFolders() const { return _sharedFolders.values(); }
+
+        //  Creates a new SharedFolder with the specified properties.
+        //  If a SharedFolder with the specified "volumeName" already exists, it
+        //  is "modified" instead.
+        //  If the "volumeName" is not a valid SCP volume name, the call returns "nullptr".
+        SharedFolder *      createSharedFolder(const QString & volumeName, const QString & hostPath);
+
+        //  Destroys a SharedFolder with the specified "volumeName".
+        //  Has no effect if a SharedFolder with the specified "volumeName" does not exist.
+        //  If the "volumeName" is not a valid SCP volume name, the call has no effect.
+        void                destroySharedFolder(const QString & volumeName);
+
+        //  Modifies the "hostPath" of an existing SharedFolder.
+        //  If the "volumeName" is not a valid SCP volume name OR the SharedFolder with that
+        //  "volumeName" does not exist, the call has no effect.
+        void                modifySharedFolder(const QString & volumeName, const QString & hostPath);
+
+        //////////
         //  Operations
     public:
         //  Checks if the caller is running on the SCP worker (kernel) thread
@@ -93,6 +147,12 @@ namespace scp360
         State                   _state = State::Constructed;
         mutable QRecursiveMutex _stateGuard;
 
+        ScpEditorList           _editors;   //  ...that have been created so far
+
+        //  Configuration
+        QMap<QString, SharedFolder*>    _sharedFolders; //  volume name -> shared folder definition
+
+        //  Runtime state
         QMap<uint16_t, ibm360::Device*> _hardwareDevices;   //  Keyed by I/O address, populated by "connect()"
         QMap<Device*, DeviceDriver*>    _deviceDrivers;     //  Drivers to use for Devices, populated by "initialise()"
         PhysicalDevice *                _operatorsConsole = nullptr;

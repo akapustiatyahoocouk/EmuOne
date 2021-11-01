@@ -24,6 +24,7 @@ namespace scp360
         static bool         isValidEnvironmentVariableListValue(const QStringList & listValue);
         static bool         isValidPhysicalDeviceName(const QString & name);
         static bool         isValidLogicalDeviceName(const QString & name);
+        static bool         isValidVolumeName(const QString & name);
     };
 }
 

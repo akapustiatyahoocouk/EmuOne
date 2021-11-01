@@ -28,34 +28,39 @@ EmulatedApplication * LoginProcess::application() const
 ErrorCode LoginProcess::run()
 {
     ErrorCode err;
-
     uint32_t bytesWritten;
-    err = systemCalls.writeToFile(sysoutHandle(), "LOGIN:", bytesWritten);
-    if (err != ErrorCode::ERR_OK)
-    {   //  OOPS! Report and abort/retry ?
-        Q_ASSERT(false);
-    }
+    uint32_t bytesRead;
 
     QString login;
-    uint32_t bytesRead;
-    err = systemCalls.readFromFile(sysinHandle(), login, 16, bytesRead);    //  TODO max. user name length ?
-    if (err != ErrorCode::ERR_OK)
-    {   //  OOPS! Report and abort/retry ?
-        Q_ASSERT(false);
+    while (login.isEmpty())
+    {
+        err = systemCalls.writeToFile(sysoutHandle(), "LOGIN:", bytesWritten);
+        if (err != ErrorCode::ERR_OK)
+        {   //  OOPS! Report and abort/retry ?
+            Q_ASSERT(false);
+        }
+
+        err = systemCalls.readFromFile(sysinHandle(), login, 16, bytesRead);    //  TODO max. user name length ?
+        if (err != ErrorCode::ERR_OK)
+        {   //  OOPS! Report and abort/retry ?
+            Q_ASSERT(false);
+        }
     }
     err = systemCalls.writeToFile(sysoutHandle(), "HELLO, " + login + "!", bytesWritten);
 
-    err = systemCalls.writeToFile(sysoutHandle(), "PASSWORD:", bytesWritten);
-    if (err != ErrorCode::ERR_OK)
-    {   //  OOPS! Report and abort/retry ?
-        Q_ASSERT(false);
-    }
-
     QString password;
-    err = systemCalls.readFromFile(sysinHandle(), password, 32, bytesRead);    //  TODO max. user password length ?
-    if (err != ErrorCode::ERR_OK)
-    {   //  OOPS! Report and abort/retry ?
-        Q_ASSERT(false);
+    {
+        err = systemCalls.writeToFile(sysoutHandle(), "PASSWORD:", bytesWritten);
+        if (err != ErrorCode::ERR_OK)
+        {   //  OOPS! Report and abort/retry ?
+            Q_ASSERT(false);
+        }
+
+        err = systemCalls.readFromFile(sysinHandle(), password, 32, bytesRead);    //  TODO max. user password length ?
+        if (err != ErrorCode::ERR_OK)
+        {   //  OOPS! Report and abort/retry ?
+            Q_ASSERT(false);
+        }
     }
 
     return ErrorCode::ERR_OK;

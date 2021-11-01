@@ -15,6 +15,9 @@ ConfigureVmDialog::ConfigureVmDialog(core::VirtualAppliance * virtualAppliance, 
     Q_ASSERT(_virtualAppliance != nullptr);
 
     _ui->setupUi(this);
+    _componentEditorsPanelLayout = new QGridLayout(_ui->_componentEditorsPanel);
+    _componentEditorsPanelLayout->setContentsMargins(0, 0, 0, 0);
+    _ui->_componentEditorsPanel->setLayout(_componentEditorsPanelLayout);
 
     _ui->_nameLineEdit->setText(virtualAppliance->name());
     _ui->_locationLineEdit->setText(virtualAppliance->location());
@@ -25,20 +28,22 @@ ConfigureVmDialog::ConfigureVmDialog(core::VirtualAppliance * virtualAppliance, 
     //  Populate the "component editors" map for current VA components
     for (core::Component * component : virtualAppliance->components())
     {
-        if (ComponentEditor * componentEditor = component->createEditor(_ui->_componentEditorsScrollArea))
+        if (ComponentEditor * componentEditor = component->createEditor(_ui->_componentEditorsPanel))
         {
             componentEditor->setVisible(false);
             _componentEditors.insert(component, componentEditor);
             connect(componentEditor, &ComponentEditor::componentConfigurationChanged, this, &ConfigureVmDialog::_componentConfigurationChanged);
+            _componentEditorsPanelLayout->addWidget(componentEditor, 0, 0);
         }
     }
     for (core::Adaptor * adaptor : virtualAppliance->adaptors())
     {
-        if (ComponentEditor * componentEditor = adaptor->createEditor(_ui->_componentEditorsScrollArea))
+        if (ComponentEditor * componentEditor = adaptor->createEditor(_ui->_componentEditorsPanel))
         {
             componentEditor->setVisible(false);
             _componentEditors.insert(adaptor, componentEditor);
             connect(componentEditor, &ComponentEditor::componentConfigurationChanged, this, &ConfigureVmDialog::_componentConfigurationChanged);
+            _componentEditorsPanelLayout->addWidget(componentEditor, 0, 0);
         }
     }
 
@@ -222,11 +227,12 @@ core::Component * ConfigureVmDialog::_addComponent(core::ComponentType * compone
         _virtualAppliance->addComponent(component);
         _refreshComponentsTree();
         //  Are there editor(s) involved ?
-        if (ComponentEditor * componentEditor = component->createEditor(_ui->_componentEditorsScrollArea))
+        if (ComponentEditor * componentEditor = component->createEditor(_ui->_componentEditorsPanel))
         {
             componentEditor->setVisible(false);
             _componentEditors.insert(component, componentEditor);
             connect(componentEditor, &ComponentEditor::componentConfigurationChanged, this, &ConfigureVmDialog::_componentConfigurationChanged);
+            _componentEditorsPanelLayout->addWidget(componentEditor, 0, 0);
         }
         //  TODO if the "component" is "adapted", there may be an editor for the "adaptor"
         //  Update UI
@@ -259,6 +265,7 @@ void ConfigureVmDialog::_removeComponent(core::Component * component)
         if (_componentEditors.contains(component))
         {
             ComponentEditor * componentEditor = _componentEditors[component];
+            _componentEditorsPanelLayout->removeWidget(componentEditor);
             _componentEditors.remove(component);
             delete componentEditor;
         }

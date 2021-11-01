@@ -28,6 +28,7 @@ private:
     Ui::ConfigureVmDialog * _ui;
     core::VirtualAppliance *_virtualAppliance;
     bool                    _refreshUnderway = false;
+    QGridLayout *           _componentEditorsPanelLayout;
 
     QMap<core::Component*, ComponentEditor*>    _componentEditors;
 

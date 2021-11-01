@@ -43,7 +43,7 @@ QString RemoteTerminal::Type::mnemonic() const
 
 QString RemoteTerminal::Type::displayName() const
 {
-    return "Remote Terminal";
+    return "remote terminal";
 }
 
 QIcon RemoteTerminal::Type::smallIcon() const

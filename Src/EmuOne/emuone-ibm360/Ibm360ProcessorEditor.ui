@@ -6,150 +6,152 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>250</width>
-    <height>234</height>
+    <width>352</width>
+    <height>286</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLabel" name="_clockFrequencyLabel">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>111</width>
-     <height>21</height>
-    </rect>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>0</number>
    </property>
-   <property name="text">
-    <string>Clock frequency:</string>
+   <property name="topMargin">
+    <number>0</number>
    </property>
-  </widget>
-  <widget class="QComboBox" name="_clockFrequencyUnitComboBox">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>10</y>
-     <width>71</width>
-     <height>23</height>
-    </rect>
+   <property name="rightMargin">
+    <number>0</number>
    </property>
-  </widget>
-  <widget class="QLineEdit" name="_clockFrequencyLineEdit">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>10</y>
-     <width>51</width>
-     <height>23</height>
-    </rect>
+   <property name="bottomMargin">
+    <number>0</number>
    </property>
-  </widget>
-  <widget class="QGroupBox" name="_featuresGroupBox">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>40</y>
-     <width>231</width>
-     <height>181</height>
-    </rect>
+   <property name="spacing">
+    <number>4</number>
    </property>
-   <property name="title">
-    <string>Features</string>
-   </property>
-   <widget class="QCheckBox" name="_fetchProtectionCheckBox">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>191</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Fetch protection</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="_storeProtectionCheckBox">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>50</y>
-      <width>191</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Store protection</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="_decimalCheckBox">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>70</y>
-      <width>191</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Decimal</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="_floatingPointCheckBox">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>90</y>
-      <width>191</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Floating point</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="_byteOrientedOperandCheckBox">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>110</y>
-      <width>191</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Byte-oriented operand</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="_timerCheckBox">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>130</y>
-      <width>191</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Timer</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="_directControlCheckBox">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>150</y>
-      <width>191</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Direct control</string>
-    </property>
-   </widget>
-  </widget>
+   <item row="0" column="2">
+    <widget class="QComboBox" name="_clockFrequencyUnitComboBox"/>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="_clockFrequencyLabel">
+     <property name="text">
+      <string>Clock frequency:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLineEdit" name="_clockFrequencyLineEdit">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="inputMask">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="3">
+    <widget class="QGroupBox" name="_featuresGroupBox">
+     <property name="title">
+      <string>Features</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <property name="leftMargin">
+       <number>2</number>
+      </property>
+      <property name="topMargin">
+       <number>2</number>
+      </property>
+      <property name="rightMargin">
+       <number>2</number>
+      </property>
+      <property name="bottomMargin">
+       <number>2</number>
+      </property>
+      <property name="spacing">
+       <number>4</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="_fetchProtectionCheckBox">
+        <property name="text">
+         <string>Fetch protection</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="_storeProtectionCheckBox">
+        <property name="text">
+         <string>Store protection</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="_decimalCheckBox">
+        <property name="text">
+         <string>Decimal</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="_floatingPointCheckBox">
+        <property name="text">
+         <string>Floating point</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="_byteOrientedOperandCheckBox">
+        <property name="text">
+         <string>Byte-oriented operand</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QCheckBox" name="_timerCheckBox">
+        <property name="text">
+         <string>Timer</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QCheckBox" name="_directControlCheckBox">
+        <property name="text">
+         <string>Direct control</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="3">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>266</width>
+       <height>37</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="0" column="3">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections>

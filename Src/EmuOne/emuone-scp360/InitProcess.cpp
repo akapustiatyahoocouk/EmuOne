@@ -45,6 +45,10 @@ ErrorCode InitProcess::run()
     _enterCurrentDate(currentDate);
     systemCalls.writeToOperator("SETTING CURRENT DATE TO " + currentDate.toString().toUpper());
 
+    QTime currentTime;
+    _enterCurrentTime(currentTime);
+    systemCalls.writeToOperator("SETTING CURRENT TIME TO " + currentTime.toString().toUpper());
+
     //  We need to create a "LOGIN" process for each "terminal"
     _createLoginProcesses();
 
@@ -159,6 +163,43 @@ ErrorCode InitProcess::_enterCurrentDate(QDate & currentDate)
         }
         //  OOPS! Report and retry
         if ((err = systemCalls.writeToOperator("*** INVALID DATE")) != ErrorCode::ERR_OK)
+        {
+            return err;
+        }
+#endif
+    }
+}
+
+ErrorCode InitProcess::_enterCurrentTime(QTime & currentTime)
+{
+    ErrorCode err;
+
+    for (; ; )
+    {
+        if ((err = systemCalls.writeToOperator("ENTER CURRENT TIME (HH:MM:SS):")) != ErrorCode::ERR_OK)
+        {
+            return err;
+        }
+#ifdef AUTO_CURRENT_DATE_TIME_ENTRY
+        currentTime = QDateTime::currentDateTime().time();
+        if ((err = systemCalls.writeToOperator(currentTime.toString("hh:mm:ss"))) != ErrorCode::ERR_OK)
+        {
+            return err;
+        }
+        return ErrorCode::ERR_OK;
+#else
+        QString timeString;
+        if ((err = systemCalls.readFromOperator(timeString)) != ErrorCode::ERR_OK)
+        {
+            return err;
+        }
+        //  Parse
+        if ((currentTime = QTime::fromString(timeString, "hh:mm:ss")).isValid())
+        {   //  Got it!
+            return ErrorCode::ERR_OK;
+        }
+        //  OOPS! Report and retry
+        if ((err = systemCalls.writeToOperator("*** INVALID TIME")) != ErrorCode::ERR_OK)
         {
             return err;
         }

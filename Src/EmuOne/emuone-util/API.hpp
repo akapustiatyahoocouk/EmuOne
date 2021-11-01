@@ -16,6 +16,7 @@
 #include <QDomDocument>
 #include <QException>
 #include <QFileDialog>
+#include <QGridLayout>
 #include <QIcon>
 #include <QLibrary>
 #include <QMenu>
