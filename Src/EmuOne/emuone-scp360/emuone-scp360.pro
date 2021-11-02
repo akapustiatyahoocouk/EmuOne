@@ -19,6 +19,7 @@ SOURCES += \
     Ibm2741Driver.cpp \
     InitProcess.cpp \
     LoginProcess.cpp \
+    ModifySharedFolderDialog.cpp \
     NewSharedFolderDialog.cpp \
     Object.cpp \
     ObjectManager.cpp \
@@ -44,6 +45,7 @@ HEADERS += \
     EmulatedProcess.hpp \
     InitProcess.hpp \
     LoginProcess.hpp \
+    ModifySharedFolderDialog.hpp \
     NewSharedFolderDialog.hpp \
     ObjectManager.hpp \
     Objects.hpp \
@@ -66,6 +68,7 @@ unix {
 !isEmpty(target.path): INSTALLS += target
 
 FORMS += \
+    ModifySharedFolderDialog.ui \
     NewSharedFolderDialog.ui \
     ScpEditor.ui
 

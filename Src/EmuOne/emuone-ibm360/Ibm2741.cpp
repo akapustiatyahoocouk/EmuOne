@@ -79,6 +79,11 @@ void Ibm2741::initialise()
     }
 
     _deviceState = DeviceState::Idle;
+
+    _content._lines.clear();
+    _content._lines.append(_Line());
+    _cursorY = _cursorX = 0;
+
     _pendingInput = "";
 
     //  Done
@@ -127,6 +132,11 @@ void Ibm2741::deinitialise() noexcept
     }
 
     _deviceState = DeviceState::NotOperational;
+
+    _content._lines.clear();
+    _cursorY = _cursorX = 0;
+
+    _pendingInput = "";
 
     //  Done
     _state = State::Connected;
@@ -247,26 +257,49 @@ void Ibm2741::_printChar(QChar ch)
 
     if (ch == '\n')
     {   //  Start a new line
-        _contents.append("");
+        _newLine();
     }
-    else
-    {
-        if (_contents.isEmpty())
+    else if (ch == '\b')
+    {   //  Backspace
+        if (_cursorX > 0)
         {
-            _contents.append(QString(1, ch));
+            _cursorX--;
         }
-        else if (_contents[_contents.size() - 1].length() >= 79)
-        {   //  Printing the 80th column - need to start a new line
-            _contents[_contents.size() - 1] += ch;
-            _contents.append("");
+    }
+    else if (ch.unicode() >= 32 && ch.unicode() != 127)
+    {   //  We have a printable character
+        if (_cursorX == 80)
+        {   //  ...which must be printed at the beginning of the next line
+            _newLine();
+        }
+        if (_cursorX < _content._lines[_cursorY]._cells.size())
+        {   //  Over-printing an existing cell
+            _content._lines[_cursorY]._cells[_cursorX].chars.append(ch);
+        }
+        else if (_cursorX == _content._lines[_cursorY]._cells.size())
+        {   //  Printing a new cell
+            _content._lines[_cursorY]._cells.append(_Cell(ch));
         }
         else
-        {   //  Adding to the current line
-            _contents[_contents.size() - 1] += ch;
+        {   //  TODO ?
+            Q_ASSERT(false);
         }
+        _cursorX++;
     }
     //  ...and simulate delay
     QThread::msleep(70);    //  14.1 CPS
+}
+
+void Ibm2741::_newLine()
+{
+    Q_ASSERT(QThread::currentThread() == _workerThread);
+
+    if (_cursorY == _content._lines.size() - 1)
+    {   //  We are already at the last line, so add 1 more line
+        _content._lines.append(_Line());
+        _cursorY = _content._lines.size() - 1;
+        _cursorX = 0;
+    }
 }
 
 //////////
@@ -400,30 +433,8 @@ void Ibm2741::_WorkerThread::_handleWriteRequest(const _WriteRequest * request)
         {
             ch = '?';
         }
-        //  ...print...
-        if (ch == '\n')
-        {   //  Start a new line
-            _ibm2741->_contents.append("");
-        }
-        else
-        {
-            if (_ibm2741->_contents.isEmpty())
-            {
-                _ibm2741->_contents.append(QString(1, ch));
-            }
-            else if (_ibm2741->_contents[_ibm2741->_contents.size() - 1].length() >= 79)
-            {   //  Printing the 80th column - need to start a new line
-                _ibm2741->_contents[_ibm2741->_contents.size() - 1] += ch;
-                _ibm2741->_contents.append("");
-            }
-            else
-            {   //  Adding to the current line
-                _ibm2741->_contents[_ibm2741->_contents.size() - 1] += ch;
-            }
-        }
-        //  ...and simulate delay
-        QThread::msleep(70);    //  14.1 CPS
-
+        //  ...and print
+        _ibm2741->_printChar(ch);
     }
     _ibm2741->_deviceState = DeviceState::Idle;
     request->completionListener->transferCompleted(request->buffer->size(), ErrorCode::Success);
@@ -449,10 +460,10 @@ void Ibm2741::_WorkerThread::_handleWriteBlockRequest(const _WriteBlockRequest *
         {
             ch = '?';
         }
-        //  ...print...
+        //  ...and print
         _ibm2741->_printChar(ch);
     }
-    _ibm2741->_contents.append(""); //  ...to start a new line
+    _ibm2741->_printChar('\n');
     _ibm2741->_deviceState = DeviceState::Idle;
     request->completionListener->transferCompleted(request->buffer->size(), ErrorCode::Success);
 }

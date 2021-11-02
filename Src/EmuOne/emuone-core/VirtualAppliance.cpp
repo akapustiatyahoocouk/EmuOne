@@ -272,6 +272,30 @@ AdaptorList VirtualAppliance::adaptors(ComponentCategory * componentCategory)
     return result;
 }
 
+QString VirtualAppliance::toRelativePath(const QString & path) const
+{
+    QDir vaDir(QFileInfo(_location).absoluteDir());
+    QString relativePath = vaDir.relativeFilePath(path);
+    if (!relativePath.contains(".."))
+    {   //  Good to go, but we want it to look like a path still
+        if (QFileInfo(relativePath).fileName() == path)
+        {   //  ...so prepend with "./"
+            relativePath = "./" + relativePath;
+        }
+        return relativePath;
+    }
+    return path;
+}
+
+QString VirtualAppliance::toAbsolutePath(const QString & path) const
+{
+    if (QFileInfo(path).isRelative())
+    {   //  Convert to absolute using VA's location as starting point
+        return QFileInfo(QFileInfo(_location).dir(), path).canonicalFilePath();
+    }
+    return path;
+}
+
 //////////
 //  Operations (state control)
 VirtualAppliance::State VirtualAppliance::state() const

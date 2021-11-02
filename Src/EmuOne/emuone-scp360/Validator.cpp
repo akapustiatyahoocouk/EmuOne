@@ -122,7 +122,7 @@ bool Validator::isValidLogicalDeviceName(const QString & name)
 
 bool Validator::isValidVolumeName(const QString & name)
 {
-    if (name.isEmpty() || name.length() > 8)
+    if (name.length() == 0 || name.length() > 8)
     {   //  OOPS! Empty or Too long!
         return false;
     }
@@ -133,6 +133,10 @@ bool Validator::isValidVolumeName(const QString & name)
         {   //  OOPS! Not allowed in volume names
             return false;
         }
+    }
+    if (name.startsWith(".") || name.endsWith(".") || name.contains(".."))
+    {   //  OOPS! Invalid syntax!
+        return false;
     }
     return true;
 }

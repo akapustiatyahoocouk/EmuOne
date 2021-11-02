@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ScpEditor</class>
- <widget class="QWidget" name="ScpEditor">
+ <class>scp360::ScpEditor</class>
+ <widget class="QWidget" name="scp360::ScpEditor">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -52,6 +52,15 @@
       </property>
       <item row="0" column="0" colspan="3">
        <widget class="QTreeWidget" name="_sharedFoldersTreeWidget">
+        <property name="rootIsDecorated">
+         <bool>false</bool>
+        </property>
+        <property name="itemsExpandable">
+         <bool>false</bool>
+        </property>
+        <property name="expandsOnDoubleClick">
+         <bool>false</bool>
+        </property>
         <property name="columnCount">
          <number>2</number>
         </property>
@@ -112,7 +121,7 @@
   <connection>
    <sender>_addSharedFolderPushButton</sender>
    <signal>clicked()</signal>
-   <receiver>ScpEditor</receiver>
+   <receiver>scp360::ScpEditor</receiver>
    <slot>_addSharedFolderPushButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -128,7 +137,7 @@
   <connection>
    <sender>_removeSharedFolderPushButton</sender>
    <signal>clicked()</signal>
-   <receiver>ScpEditor</receiver>
+   <receiver>scp360::ScpEditor</receiver>
    <slot>_removeSharedFolderPushButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -144,7 +153,7 @@
   <connection>
    <sender>_modifySharedFolderPushButton</sender>
    <signal>clicked()</signal>
-   <receiver>ScpEditor</receiver>
+   <receiver>scp360::ScpEditor</receiver>
    <slot>_modifySharedFolderPushButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -157,10 +166,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>_sharedFoldersTreeWidget</sender>
+   <signal>itemSelectionChanged()</signal>
+   <receiver>scp360::ScpEditor</receiver>
+   <slot>_sharedFoldersTreeWidgetItemSelectionChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>169</x>
+     <y>102</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>169</x>
+     <y>107</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>_addSharedFolderPushButtonClicked()</slot>
   <slot>_removeSharedFolderPushButtonClicked()</slot>
   <slot>_modifySharedFolderPushButtonClicked()</slot>
+  <slot>_sharedFoldersTreeWidgetItemSelectionChanged()</slot>
  </slots>
 </ui>

@@ -204,8 +204,7 @@ void Scp::deserialiseConfiguration(QDomElement & configurationElement)
             if (name.startsWith("SharedFolders."))
             {
                 QString volumeName = name.mid(14);
-                if (Validator::isValidVolumeName(volumeName) &&
-                    QFileInfo(value).canonicalFilePath() == value)
+                if (Validator::isValidVolumeName(volumeName))
                 {
                     createSharedFolder(volumeName, value);
                 }
@@ -252,7 +251,7 @@ Scp::SharedFolder * Scp::createSharedFolder(const QString & volumeName, const QS
         return _sharedFolders[volumeName];
     }
     //  Create a new one
-    SharedFolder * sharedFolder = new SharedFolder(volumeName, hostPath);
+    SharedFolder * sharedFolder = new SharedFolder(this, volumeName, hostPath);
     _sharedFolders.insert(volumeName, sharedFolder);
     return sharedFolder;
 }
@@ -273,7 +272,7 @@ void Scp::modifySharedFolder(const QString & volumeName, const QString & hostPat
         return;
     }
     SharedFolder * sharedFolder = _sharedFolders[volumeName];
-    sharedFolder->_hostPath = QFileInfo(hostPath).canonicalFilePath();
+    sharedFolder->_hostPath = hostPath;
 }
 
 //////////

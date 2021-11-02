@@ -40,6 +40,7 @@
 
 #include "emuone-scp360/Scp.hpp"
 #include "emuone-scp360/NewSharedFolderDialog.hpp"
+#include "emuone-scp360/ModifySharedFolderDialog.hpp"
 #include "emuone-scp360/ScpEditor.hpp"
 
 //  End of emuone-scp360/API.hpp

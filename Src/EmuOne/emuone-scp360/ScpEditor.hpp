@@ -8,41 +8,50 @@
 #include "emuone-scp360/API.hpp"
 #include <QWidget>
 
-namespace Ui { class ScpEditor; }
-
-//////////
-//  Configuration editor for SCP component
-class ScpEditor : public ComponentEditor
+namespace scp360
 {
-    Q_OBJECT
-
-    CANNOT_ASSIGN_OR_COPY_CONSTRUCT(ScpEditor)
+    namespace Ui { class ScpEditor; }
 
     //////////
-    //  Construction/destruction
-public:
-    explicit ScpEditor(scp360::Scp * scp, QWidget * parent = nullptr);
-    virtual ~ScpEditor();
+    //  Configuration editor for SCP component
+    class ScpEditor : public ComponentEditor
+    {
+        Q_OBJECT
 
-    //////////
-    //  ComponentEditor
-public:
-    virtual void            refresh() override;
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(ScpEditor)
 
-    //////////
-    //  Implementation
-private:
-    Ui::ScpEditor *         _ui;
-    scp360::Scp *const      _scp;
-    bool                    _refreshUnderway = false;
+        //////////
+        //  Construction/destruction
+    public:
+        explicit ScpEditor(scp360::Scp * scp, QWidget * parent = nullptr);
+        virtual ~ScpEditor();
 
-    //////////
-    //  Event handlers
-private slots:
-    void                    _addSharedFolderPushButtonClicked();
-    void                    _removeSharedFolderPushButtonClicked();
-    void                    _modifySharedFolderPushButtonClicked();
-};
+        //////////
+        //  ComponentEditor
+    public:
+        virtual void            refresh() override;
+
+        //////////
+        //  Implementation
+    private:
+        Ui::ScpEditor *         _ui;
+        scp360::Scp *const      _scp;
+        bool                    _refreshUnderway = false;
+
+        //  Helpers
+        void                    _refreshSharedFoldersList();
+        scp360::Scp::SharedFolder * _selectedSharedFolder();
+        void                    _setSelectedSharedFolder(scp360::Scp::SharedFolder * sharedFolder);
+
+        //////////
+        //  Event handlers
+    private slots:
+        void                    _sharedFoldersTreeWidgetItemSelectionChanged();
+        void                    _addSharedFolderPushButtonClicked();
+        void                    _removeSharedFolderPushButtonClicked();
+        void                    _modifySharedFolderPushButtonClicked();
+    };
+}
 
 //  End of emuone-scp360/ScpEditor.hpp
 

@@ -189,13 +189,38 @@ namespace ibm360
 
         //  Runtime state
         volatile DeviceState    _deviceState = DeviceState::NotOperational;
-        QStringList             _contents;      //  ASCII
+
+        class _Cell
+        {   //  A position where a single character can be printed or
+            //  several characters can be over-printed
+        public:
+            _Cell(QChar ch) { chars.append(ch); }
+
+            QList<QChar>      chars;
+        };
+
+        class _Line
+        {   //  A single printed line
+        public:
+            QList<_Cell>        _cells; //  0 <= length <= 80
+        };
+
+        class _Content
+        {   //  The entire content printed so far
+        public:
+            QList<_Line>        _lines;
+        };
+
+        _Content                _content;       //  ASCII
+        int                     _cursorY;       //  0 <= _cursorY < _content._lines.size()
+        int                     _cursorX;       //  0 <= _cursorX <= 80
         QString                 _pendingInput;  //  ASCII
 
         util::BlockingQueue<QChar>  _charsToEcho;
 
         //  Helpers
         void            _printChar(QChar ch);
+        void            _newLine();
 
         //////////
         //  Requests sent to the worker thread

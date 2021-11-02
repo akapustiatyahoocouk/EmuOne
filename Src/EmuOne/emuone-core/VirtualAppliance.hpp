@@ -113,6 +113,16 @@ namespace core
         template <class T>
         QList<T*>                   findAdaptors() const;
 
+        //  *   If the "path" is relative, returns it "as is".
+        //  *   If the "path" is absolute, attempts to express it as relative to
+        //      this VA's "location" directory; returns "path" if that cannot be done.
+        QString                     toRelativePath(const QString & path) const;
+
+        //  *   If the "path" is relative, returns its absolute form taking
+        //      this VA's location directory as base.
+        //  *   If the "path" is absolute, returns it "as is".
+        QString                     toAbsolutePath(const QString & path) const;
+
         //  Operations (state control) - all thread-safe
     public:
         State                       state() const;

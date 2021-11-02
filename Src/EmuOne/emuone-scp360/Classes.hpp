@@ -34,11 +34,9 @@ namespace scp360
     using ProcessList = QList<Process*>;
 }
 
-//  QT does not play well with "form" classes
-class EMUONE_SCP360_EXPORT ScpEditor;
-
 namespace scp360
 {
+    class EMUONE_SCP360_EXPORT ScpEditor;
     using ScpEditorList = QList<ScpEditor*>;
 }
 

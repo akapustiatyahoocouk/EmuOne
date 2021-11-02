@@ -47,6 +47,7 @@ private:
 
     QFont               _font;
     int                 _fontHeight = 0;    //  in pixels
+    int                 _fontWidth = 0;     //  in pixels
 
     QTimer              _refreshTimer;
 

@@ -15,7 +15,7 @@ namespace scp360
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Scp)
 
         friend class Object;
-        friend class ::ScpEditor;
+        friend class ScpEditor;
         friend class EmulatedProcess;
         friend class InitProcess;
 
@@ -52,9 +52,10 @@ namespace scp360
             //////////
             //  Construction/destruction - from friends only
         private:
-            SharedFolder(const QString & volumeName, const QString & hostPath)
-                :   _volumeName(volumeName), _hostPath(QFileInfo(hostPath).canonicalFilePath())
+            SharedFolder(Scp * scp, const QString & volumeName, const QString & hostPath)
+                :   _scp(scp), _volumeName(volumeName), _hostPath(hostPath)
             {
+                Q_ASSERT(_scp != nullptr);
                 Q_ASSERT(Validator::isValidVolumeName(_volumeName));
             }
             ~SharedFolder() {}
@@ -62,14 +63,17 @@ namespace scp360
             //////////
             //  Operations
         public:
+            Scp *               scp() const { return _scp; }
             QString             volumeName() const { return _volumeName; }
             QString             hostPath() const { return _hostPath; }
+            void                setHostPath(const QString & hostPath) { _hostPath = hostPath; }
 
             //////////
             //  Implementation
         private:
+            Scp *               _scp;
             QString             _volumeName;
-            QString             _hostPath;
+            QString             _hostPath;  //  If relative, then relative to the containing VA's "location"
         };
 
         //////////
