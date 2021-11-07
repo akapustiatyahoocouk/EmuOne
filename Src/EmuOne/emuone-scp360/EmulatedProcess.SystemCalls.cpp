@@ -39,7 +39,7 @@ ErrorCode EmulatedProcess::SystemCalls::writeToOperator(const QString & text)
 
     //  The "operator console" is a text device that expects EBCDIC bytes.
     util::ByteArrayBuffer buffer;
-    std::unique_ptr<util::CharacterSet::Encoder> encoder(util::Cp037CharacterSet::getInstance()->createEncoder());
+    std::unique_ptr<util::CharacterSet::Encoder> encoder(util::Cp037CharacterSet::instance()->createEncoder());
     encoder->encode(text, buffer.data);
 
     //  Issue "SVC"
@@ -63,7 +63,7 @@ ErrorCode EmulatedProcess::SystemCalls::readFromOperator(QString & text)
     buffer.data.resize(systemCall.bytesTransferred);
 
     //  The "operator console" is a text device that produces EBCDIC bytes.
-    static util::CharacterSet::Decoder * decoder = util::Cp037CharacterSet::getInstance()->createDecoder(); //  Idempotent
+    static util::CharacterSet::Decoder * decoder = util::Cp037CharacterSet::instance()->createDecoder(); //  Idempotent
     decoder->decode(buffer.data, 0, text);
     return ErrorCode::ERR_OK;
 }
@@ -107,7 +107,7 @@ ErrorCode EmulatedProcess::SystemCalls::writeToFile(uint16_t handle, const QStri
 {
     Q_ASSERT(QThread::currentThread() == _emulatedProcess->_workerThread);
 
-    static util::CharacterSet::Encoder * encoder = util::Cp037CharacterSet::getInstance()->createEncoder();    //  Idempotent
+    static util::CharacterSet::Encoder * encoder = util::Cp037CharacterSet::instance()->createEncoder();    //  Idempotent
     QByteArray bytes;
     encoder->encode(data, bytes);
     return writeToFile(handle, bytes.data(), bytes.size(), bytesWritten);
@@ -137,7 +137,7 @@ ErrorCode EmulatedProcess::SystemCalls::readFromFile(uint16_t handle, QString & 
 {
     Q_ASSERT(QThread::currentThread() == _emulatedProcess->_workerThread);
 
-    static util::CharacterSet::Decoder * decoder = util::Cp037CharacterSet::getInstance()->createDecoder();    //  Idempotent
+    static util::CharacterSet::Decoder * decoder = util::Cp037CharacterSet::instance()->createDecoder();    //  Idempotent
 
     QByteArray bytes;
     bytes.resize(bytesToRead);

@@ -11,15 +11,15 @@ namespace ibm360
     class EMUONE_IBM360_EXPORT Monitor;
 }
 
-//  QT does not play well with "form" classes
-class EMUONE_IBM360_EXPORT Ibm360StorageEditor;
-class EMUONE_IBM360_EXPORT Ibm360ProcessorEditor;
-
-class EMUONE_IBM360_EXPORT Ibm2741Editor;
-class EMUONE_IBM360_EXPORT Ibm2741FullScreenWidget;
 
 namespace ibm360
 {
+    class EMUONE_IBM360_EXPORT Ibm360StorageEditor;
+    class EMUONE_IBM360_EXPORT Ibm360ProcessorEditor;
+
+    class EMUONE_IBM360_EXPORT Ibm2741Editor;
+    class EMUONE_IBM360_EXPORT Ibm2741FullScreenWidget;
+
     using Ibm2741EditorList = QList<Ibm2741Editor*>;
 }
 

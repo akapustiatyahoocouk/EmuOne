@@ -25,12 +25,12 @@ namespace ibm360
     public:
         virtual void initialise()
         {
-            Architecture::registerArchitecture(Architecture::getInstance());
-            Architecture::getInstance()->addVirtualMachineTemplate(H40VirtualMachineTemplate::getInstance());
+            Architecture::registerArchitecture(Architecture::instance());
+            Architecture::instance()->addVirtualMachineTemplate(H40VirtualMachineTemplate::instance());
 
-            core::ComponentType::registerComponentType(Processor::Type::getInstance());
-            core::ComponentType::registerComponentType(Storage::Type::getInstance());
-            core::ComponentType::registerComponentType(Ibm2741::Type::getInstance());
+            core::ComponentType::registerComponentType(Processor::Type::instance());
+            core::ComponentType::registerComponentType(Storage::Type::instance());
+            core::ComponentType::registerComponentType(Ibm2741::Type::instance());
         }
     };
 }

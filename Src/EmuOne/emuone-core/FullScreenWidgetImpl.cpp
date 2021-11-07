@@ -22,7 +22,7 @@ namespace
 //////////
 //  Construction/destruction
 FullScreenWidgetImpl::FullScreenWidgetImpl()
-    :   QWidget(HiddenParent::getInstance())
+    :   QWidget(HiddenParent::instance())
 {
 }
 

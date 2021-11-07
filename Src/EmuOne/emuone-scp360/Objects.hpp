@@ -415,6 +415,32 @@ namespace scp360
         //  Operations
     public:
     };
+
+    //////////
+    //  A generic "principal" - access control subject
+    class EMUONE_SCP360_EXPORT Principal : public Object
+    {
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Principal)
+
+        //////////
+        //  Construction/destruction
+    public:
+        Principal(Scp * scp, Id id,
+                  const QString & name, bool enabled);
+        virtual ~Principal();
+
+        //////////
+        //  Operations
+    public:
+        QString             name() const { return _name; }
+        bool                enabled() const { return _enabled; }
+
+        //////////
+        //  Implementation
+    private:
+        QString             _name;
+        bool                _enabled;
+    };
 }
 
 //  End of emuone-scp360/Objects.hpp

@@ -22,7 +22,7 @@ RemoteTerminal::~RemoteTerminal()
 //  VirtualAppliance
 VirtualApplianceType * RemoteTerminal::type() const
 {
-    return Type::getInstance();
+    return Type::instance();
 }
 
 RemoteTerminalTemplate * RemoteTerminal::initialTemplate() const

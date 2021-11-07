@@ -51,7 +51,7 @@ CharacterSet::Decoder * Iso88591CharacterSet::createDecoder()
 //  Iso88591CharacterSet::_Encoder
 CharacterSet * Iso88591CharacterSet::_Encoder::characterSet() const
 {
-    return Iso88591CharacterSet::getInstance();
+    return Iso88591CharacterSet::instance();
 }
 
 void Iso88591CharacterSet::_Encoder::reset()
@@ -87,7 +87,7 @@ int Iso88591CharacterSet::_Encoder::encode(const QString & s, QByteArray & bytes
 //  Iso88591CharacterSet::_Decoder
 CharacterSet * Iso88591CharacterSet::_Decoder::characterSet() const
 {
-    return Iso88591CharacterSet::getInstance();
+    return Iso88591CharacterSet::instance();
 }
 
 void Iso88591CharacterSet::_Decoder::reset()

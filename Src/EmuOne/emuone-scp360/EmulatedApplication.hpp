@@ -23,8 +23,8 @@ namespace scp360
         //////////
         //  StockObject
     public:
-        virtual QIcon       smallIcon() const override { return core::StandardComponentCategories::Software::getInstance()->smallIcon(); }
-        virtual QIcon       largeIcon() const override { return core::StandardComponentCategories::Software::getInstance()->largeIcon(); }
+        virtual QIcon       smallIcon() const override { return core::StandardComponentCategories::Software::instance()->smallIcon(); }
+        virtual QIcon       largeIcon() const override { return core::StandardComponentCategories::Software::instance()->largeIcon(); }
 
         //////////
         //  Operations

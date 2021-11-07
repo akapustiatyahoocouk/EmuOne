@@ -8,58 +8,59 @@
 #include "emuone-ibm360/API.hpp"
 #include <QWidget>
 
-using namespace ibm360;
-
-namespace Ui { class Ibm2741FullScreenWidget; }
-
-//////////
-//  The full-screen widget of the IBM 2741 UI
-class Ibm2741FullScreenWidget : public core::FullScreenWidget
+namespace ibm360
 {
-    Q_OBJECT
-
-    CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Ibm2741FullScreenWidget)
+    namespace Ui { class Ibm2741FullScreenWidget; }
 
     //////////
-    //  Construction/destruction
-public:
-    explicit Ibm2741FullScreenWidget(Ibm2741 * ibm2741);
-    virtual ~Ibm2741FullScreenWidget();
+    //  The full-screen widget of the IBM 2741 UI
+    class Ibm2741FullScreenWidget : public core::FullScreenWidget
+    {
+        Q_OBJECT
 
-    //////////
-    //  QWidget
-protected:
-    virtual void        paintEvent(QPaintEvent * event) override;
-    virtual void        resizeEvent(QResizeEvent * event) override;
-    virtual void        keyPressEvent(QKeyEvent *event) override;
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Ibm2741FullScreenWidget)
 
-    //////////
-    //  core::FullScreenWidget
-public:
-    virtual core::Component *   component() override;
-    virtual QString     displayName() override;
+        //////////
+        //  Construction/destruction
+    public:
+        explicit Ibm2741FullScreenWidget(Ibm2741 * ibm2741);
+        virtual ~Ibm2741FullScreenWidget();
 
-    //////////
-    //  Implementation
-private:
-    Ui::Ibm2741FullScreenWidget *   _ui;
-    Ibm2741 *const      _ibm2741;
+        //////////
+        //  QWidget
+    protected:
+        virtual void        paintEvent(QPaintEvent * event) override;
+        virtual void        resizeEvent(QResizeEvent * event) override;
+        virtual void        keyPressEvent(QKeyEvent *event) override;
 
-    QFont               _font;
-    int                 _fontHeight = 0;    //  in pixels
-    int                 _fontWidth = 0;     //  in pixels
+        //////////
+        //  core::FullScreenWidget
+    public:
+        virtual core::Component *   component() override;
+        virtual QString     displayName() override;
 
-    QTimer              _refreshTimer;
+        //////////
+        //  Implementation
+    private:
+        Ui::Ibm2741FullScreenWidget *   _ui;
+        Ibm2741 *const      _ibm2741;
 
-    //  Helpers
-    QRect               _clientRect();
-    void                _repositionControls();
-    void                _recalculateFont();
+        QFont               _font;
+        int                 _fontHeight = 0;    //  in pixels
+        int                 _fontWidth = 0;     //  in pixels
 
-    //////////
-    //  Event handlers
-private slots:
-    void                _refreshTimerTimeout();
-};
+        QTimer              _refreshTimer;
+
+        //  Helpers
+        QRect               _clientRect();
+        void                _repositionControls();
+        void                _recalculateFont();
+
+        //////////
+        //  Event handlers
+    private slots:
+        void                _refreshTimerTimeout();
+    };
+}
 
 //  Endof emuone-ibm360/Ibm2741FullScreenWidget.hpp

@@ -169,8 +169,8 @@ void NewVmDialog::_accept()
 {
     _virtualApplianceType =
             _ui->_virtualMachineRadioButton->isChecked() ?
-                (core::VirtualApplianceType*)core::VirtualMachine::Type::getInstance() :
-                (core::VirtualApplianceType*)core::RemoteTerminal::Type::getInstance();
+                (core::VirtualApplianceType*)core::VirtualMachine::Type::instance() :
+                (core::VirtualApplianceType*)core::RemoteTerminal::Type::instance();
     _virtualApplianceArchitecture = _getSelectedArchitecture();
     _virtualApplianceTemplate = _getSelectedTemplate();
     _virtualApplianceName = _ui->_nameLineEdit->text();

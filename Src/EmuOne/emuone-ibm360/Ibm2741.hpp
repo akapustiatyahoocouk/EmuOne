@@ -14,8 +14,8 @@ namespace ibm360
     {
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Ibm2741)
 
-        friend class ::Ibm2741Editor;
-        friend class ::Ibm2741FullScreenWidget;
+        friend class Ibm2741Editor;
+        friend class Ibm2741FullScreenWidget;
 
         //////////
         //  Types

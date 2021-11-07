@@ -22,7 +22,7 @@ VirtualMachine::~VirtualMachine()
 //  VirtualAppliance
 VirtualApplianceType * VirtualMachine::type() const
 {
-    return Type::getInstance();
+    return Type::instance();
 }
 
 VirtualMachineTemplate * VirtualMachine::initialTemplate() const

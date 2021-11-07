@@ -137,7 +137,7 @@ namespace scp360
             //////////
             //  ibm360::Ibm2741::IoCompletionListener
         public:
-            virtual void        ioCompleted(Ibm2741::ErrorCode errorCode) override;
+            virtual void        ioCompleted(ibm360::Ibm2741::ErrorCode errorCode) override;
 
             //////////
             //  Properties
@@ -166,7 +166,7 @@ namespace scp360
             //////////
             //  ibm360::Ibm2741::TransferCompletionListener
         public:
-            virtual void        transferCompleted(uint32_t bytesTransferred, Ibm2741::ErrorCode errorCode) override;
+            virtual void        transferCompleted(uint32_t bytesTransferred, ibm360::Ibm2741::ErrorCode errorCode) override;
 
             //////////
             //  Properties

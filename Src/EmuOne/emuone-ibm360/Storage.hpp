@@ -14,7 +14,7 @@ namespace ibm360
     {
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Storage)
 
-        friend class ::Ibm360StorageEditor;
+        friend class Ibm360StorageEditor;
 
         //////////
         //  Types

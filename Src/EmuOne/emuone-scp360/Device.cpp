@@ -9,7 +9,7 @@ using namespace scp360;
 
 //////////
 //  Construction/destruction
-scp360::Device::Device(Scp * scp, Id id, const QString & name, Flags flags, DeviceDriver * driver)
+Device::Device(Scp * scp, Id id, const QString & name, Flags flags, DeviceDriver * driver)
     :   Object(scp, id),
         _name(name),
         _flags(flags),
@@ -18,29 +18,29 @@ scp360::Device::Device(Scp * scp, Id id, const QString & name, Flags flags, Devi
     Q_ASSERT(_driver != nullptr);
 }
 
-scp360::Device::~Device()
+Device::~Device()
 {
 }
 
 //////////
 //  Helper functions
-EMUONE_SCP360_EXPORT scp360::Device::Flags scp360::operator & (Device::Flags op1, Device::Flags op2)
+EMUONE_SCP360_EXPORT Device::Flags scp360::operator & (Device::Flags op1, Device::Flags op2)
 {
-    return scp360::Device::Flags(uint16_t(op1) & uint16_t(op2));
+    return Device::Flags(uint16_t(op1) & uint16_t(op2));
 }
 
-EMUONE_SCP360_EXPORT scp360::Device::Flags scp360::operator | (Device::Flags op1, Device::Flags op2)
+EMUONE_SCP360_EXPORT Device::Flags scp360::operator | (Device::Flags op1, Device::Flags op2)
 {
-    return scp360::Device::Flags(uint16_t(op1) | uint16_t(op2));
+    return Device::Flags(uint16_t(op1) | uint16_t(op2));
 }
 
-EMUONE_SCP360_EXPORT scp360::Device::Flags & scp360::operator &= (Device::Flags & op1, Device::Flags op2)
+EMUONE_SCP360_EXPORT Device::Flags & scp360::operator &= (Device::Flags & op1, Device::Flags op2)
 {
     op1 = op1 & op2;
     return op1;
 }
 
-EMUONE_SCP360_EXPORT scp360::Device::Flags & scp360::operator |= (Device::Flags & op1, Device::Flags op2)
+EMUONE_SCP360_EXPORT Device::Flags & scp360::operator |= (Device::Flags & op1, Device::Flags op2)
 {
     op1 = op1 | op2;
     return op1;

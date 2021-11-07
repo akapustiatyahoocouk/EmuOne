@@ -24,10 +24,10 @@ public:
 public:
     virtual void initialise()
     {
-        ComponentCategory::registerComponentCategory(StandardComponentCategories::Memory::getInstance());
-        ComponentCategory::registerComponentCategory(StandardComponentCategories::Processors::getInstance());
-        ComponentCategory::registerComponentCategory(StandardComponentCategories::Terminals::getInstance());
-        ComponentCategory::registerComponentCategory(StandardComponentCategories::Software::getInstance());
+        ComponentCategory::registerComponentCategory(StandardComponentCategories::Memory::instance());
+        ComponentCategory::registerComponentCategory(StandardComponentCategories::Processors::instance());
+        ComponentCategory::registerComponentCategory(StandardComponentCategories::Terminals::instance());
+        ComponentCategory::registerComponentCategory(StandardComponentCategories::Software::instance());
     }
 };
 

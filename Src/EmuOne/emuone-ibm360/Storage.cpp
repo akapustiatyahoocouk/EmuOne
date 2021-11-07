@@ -23,7 +23,7 @@ Storage::~Storage()
 //  Component
 core::ComponentType * Storage::type() const
 {
-    return Storage::Type::getInstance();
+    return Storage::Type::instance();
 }
 
 ComponentEditor * Storage::createEditor(QWidget * parent)
@@ -192,12 +192,12 @@ QString Storage::Type::displayName() const
 
 core::ComponentCategory * Storage::Type::category() const
 {
-    return core::StandardComponentCategories::Memory::getInstance();
+    return core::StandardComponentCategories::Memory::instance();
 }
 
 bool Storage::Type::isCompatibleWith(core::Architecture * architecture) const
 {
-    return architecture == Architecture::getInstance();
+    return architecture == Architecture::instance();
 }
 
 Storage * Storage::Type::createComponent()

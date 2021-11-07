@@ -52,7 +52,7 @@ namespace ibm360
     {
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Processor)
 
-        friend class ::Ibm360ProcessorEditor;
+        friend class Ibm360ProcessorEditor;
 
         //////////
         //  Types

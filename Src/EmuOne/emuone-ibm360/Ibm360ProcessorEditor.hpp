@@ -8,44 +8,47 @@
 #include "emuone-ibm360/API.hpp"
 #include <QWidget>
 
-namespace Ui { class Ibm360ProcessorEditor; }
-
-//////////
-//  The "IBM/360 processorm editor" control
-class Ibm360ProcessorEditor : public ComponentEditor
+namespace ibm360
 {
-    Q_OBJECT
+    namespace Ui { class Ibm360ProcessorEditor; }
 
     //////////
-    //  Construction/destruction
-public:
-    explicit Ibm360ProcessorEditor(ibm360::Processor * processor, QWidget * parent = nullptr);
-    virtual ~Ibm360ProcessorEditor();
+    //  The "IBM/360 processorm editor" control
+    class Ibm360ProcessorEditor : public ComponentEditor
+    {
+        Q_OBJECT
 
-    //////////
-    //  ComponentEditor
-public:
-    virtual void                refresh() override;
+        //////////
+        //  Construction/destruction
+    public:
+        explicit Ibm360ProcessorEditor(ibm360::Processor * processor, QWidget * parent = nullptr);
+        virtual ~Ibm360ProcessorEditor();
 
-    //////////
-    //  Implementation
-private:
-    Ui::Ibm360ProcessorEditor * _ui;
-    ibm360::Processor *         _processor;
-    bool                        _refreshUnderway = false;
+        //////////
+        //  ComponentEditor
+    public:
+        virtual void                refresh() override;
 
-    //////////
-    //  Event handlers
-private slots:
-    void                        _clockFrequencyLineEditTextChanged(const QString &);
-    void                        _clockFrequencyUnitComboBoxCurrentIndexChanged(int);
-    void                        _fetchProtectionCheckBoxClicked();
-    void                        _storeProtectionCheckBoxClicked();
-    void                        _decimalCheckBoxClicked();
-    void                        _floatingPointCheckBoxClicked();
-    void                        _byteOrientedOperandCheckBoxClicked();
-    void                        _timerCheckBoxClicked();
-    void                        _directControlCheckBoxClicked();
-};
+        //////////
+        //  Implementation
+    private:
+        Ui::Ibm360ProcessorEditor * _ui;
+        ibm360::Processor *         _processor;
+        bool                        _refreshUnderway = false;
+
+        //////////
+        //  Event handlers
+    private slots:
+        void                        _clockFrequencyLineEditTextChanged(const QString &);
+        void                        _clockFrequencyUnitComboBoxCurrentIndexChanged(int);
+        void                        _fetchProtectionCheckBoxClicked();
+        void                        _storeProtectionCheckBoxClicked();
+        void                        _decimalCheckBoxClicked();
+        void                        _floatingPointCheckBoxClicked();
+        void                        _byteOrientedOperandCheckBoxClicked();
+        void                        _timerCheckBoxClicked();
+        void                        _directControlCheckBoxClicked();
+    };
+}
 
 //  End of emuone-ibm360/Ibm360ProcessorEditor.hpp

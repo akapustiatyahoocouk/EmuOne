@@ -319,7 +319,7 @@ CharacterSet::Decoder * Cp037CharacterSet::createDecoder()
 //  Cp037CharacterSet::_Encoder
 CharacterSet * Cp037CharacterSet::_Encoder::characterSet() const
 {
-    return Cp037CharacterSet::getInstance();
+    return Cp037CharacterSet::instance();
 }
 
 void Cp037CharacterSet::_Encoder::reset()
@@ -355,7 +355,7 @@ int Cp037CharacterSet::_Encoder::encode(const QString & s, QByteArray & bytes)
 //  Cp037CharacterSet::_Decoder
 CharacterSet * Cp037CharacterSet::_Decoder::characterSet() const
 {
-    return Cp037CharacterSet::getInstance();
+    return Cp037CharacterSet::instance();
 }
 
 void Cp037CharacterSet::_Decoder::reset()

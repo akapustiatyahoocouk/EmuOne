@@ -19,7 +19,7 @@ Ibm2741Driver::~Ibm2741Driver()
 
 //////////
 //  DeviceDriver
-scp360::Device::Flags Ibm2741Driver::deviceFlags() const
+Device::Flags Ibm2741Driver::deviceFlags() const
 {
     return Device::Flags::WriteBlock;
 }
@@ -334,7 +334,7 @@ ErrorCode Ibm2741Driver::_translateErrorCode(ibm360::Ibm2741::ErrorCode ibm2741E
 
 //////////
 //  Ibm2741Driver::_Ibm2741IoCompletionListener
-void Ibm2741Driver::_Ibm2741IoCompletionListener::ioCompleted(Ibm2741::ErrorCode errorCode)
+void Ibm2741Driver::_Ibm2741IoCompletionListener::ioCompleted(ibm360::Ibm2741::ErrorCode errorCode)
 {
     Q_ASSERT(ioCompletionListener != nullptr);
     ioCompletionListener->ioCompleted(_device, _translateErrorCode(errorCode));
@@ -342,7 +342,7 @@ void Ibm2741Driver::_Ibm2741IoCompletionListener::ioCompleted(Ibm2741::ErrorCode
 
 //////////
 //  Ibm2741Driver::_Ibm2741TransferCompletionListener
-void Ibm2741Driver::_Ibm2741TransferCompletionListener::transferCompleted(uint32_t bytesTransferred, Ibm2741::ErrorCode errorCode)
+void Ibm2741Driver::_Ibm2741TransferCompletionListener::transferCompleted(uint32_t bytesTransferred, ibm360::Ibm2741::ErrorCode errorCode)
 {
     Q_ASSERT(transferCompletionListener != nullptr);
     transferCompletionListener->transferCompleted(_device, bytesTransferred, _translateErrorCode(errorCode));

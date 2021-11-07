@@ -22,13 +22,13 @@
         Clazz();                                \
         ~Clazz();                               \
     public:                                     \
-        static Clazz * getInstance();
+        static Clazz * instance();
 
 #define IMPLEMENT_SINGLETON(Clazz)              \
-    Clazz * Clazz::getInstance()                \
+    Clazz * Clazz::instance()                   \
     {                                           \
-        static Clazz instance;                  \
-        return &instance;                       \
+        static Clazz theInstance;               \
+        return &theInstance;                    \
     }
 
 //  End of emuone-util/Macros.hpp

@@ -32,7 +32,7 @@ Scp::~Scp()
 //  Component
 Scp::Type * Scp::type() const
 {
-    return Scp::Type::getInstance();
+    return Scp::Type::instance();
 }
 
 ComponentEditor * Scp::createEditor(QWidget * parent)
@@ -312,12 +312,12 @@ QString Scp::Type::displayName() const
 
 core::ComponentCategory * Scp::Type::category() const
 {
-    return core::StandardComponentCategories::Software::getInstance();
+    return core::StandardComponentCategories::Software::instance();
 }
 
 bool Scp::Type::isCompatibleWith(core::Architecture * architecture) const
 {
-    return architecture == Architecture::getInstance();
+    return architecture == ibm360::Architecture::instance();
 }
 
 Scp * Scp::Type::createComponent()
@@ -563,7 +563,7 @@ void Scp::_handleReadFromOperatorSystemCall(ReadFromOperatorSystemCall * systemC
         case Device::State::Ready:
             //  The input must be space-padded to the length of the buffer!
             {
-                static util::CharacterSet::Encoder * encoder = util::Cp037CharacterSet::getInstance()->createEncoder();
+                static util::CharacterSet::Encoder * encoder = util::Cp037CharacterSet::instance()->createEncoder();
                 static QByteArray spaceBytes;
                 if (spaceBytes.size() == 0)
                 {   //  Prepare ONCE
@@ -872,10 +872,10 @@ void Scp::_WorkerThread::run()
     }
     //  Create the INIT process
     EmulatedProcess * initProcess = nullptr;
-    _scp->_objectManager.createEmulatedProcess(InitProcess::Application::getInstance()->mnemonic(),
+    _scp->_objectManager.createEmulatedProcess(InitProcess::Application::instance()->mnemonic(),
                                                Process::Flags::System,
                                                nullptr,
-                                               InitProcess::Application::getInstance(),
+                                               InitProcess::Application::instance(),
                                                initProcess);
     //  Go!
     initProcess->start();

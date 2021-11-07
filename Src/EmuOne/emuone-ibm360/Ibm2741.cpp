@@ -28,7 +28,7 @@ Ibm2741::~Ibm2741()
 //  Component
 core::ComponentType * Ibm2741::type() const
 {
-    return Ibm2741::Type::getInstance();
+    return Ibm2741::Type::instance();
 }
 
 ComponentEditor * Ibm2741::createEditor(QWidget * parent)
@@ -320,12 +320,12 @@ QString Ibm2741::Type::displayName() const
 
 core::ComponentCategory * Ibm2741::Type::category() const
 {
-    return core::StandardComponentCategories::Terminals::getInstance();
+    return core::StandardComponentCategories::Terminals::instance();
 }
 
 bool Ibm2741::Type::isCompatibleWith(core::Architecture * architecture) const
 {
-    return architecture == Architecture::getInstance();
+    return architecture == Architecture::instance();
 }
 
 Ibm2741 * Ibm2741::Type::createComponent()
@@ -356,8 +356,8 @@ core::FullScreenWidgetList Ibm2741::Ui::fullScreenWidgets()
 //  Ibm2741::_WorkerThread
 Ibm2741::_WorkerThread::_WorkerThread(Ibm2741 * ibm2741)
     :   _ibm2741(ibm2741) ,
-        _ebcdicDecoder(util::Cp037CharacterSet::getInstance()->createDecoder()),
-        _ebcdicEncoder(util::Cp037CharacterSet::getInstance()->createEncoder())
+        _ebcdicDecoder(util::Cp037CharacterSet::instance()->createDecoder()),
+        _ebcdicEncoder(util::Cp037CharacterSet::instance()->createEncoder())
 {
 }
 

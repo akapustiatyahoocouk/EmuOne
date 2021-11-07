@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Ibm360StorageEditor</class>
- <widget class="QWidget" name="Ibm360StorageEditor">
+ <class>ibm360::Ibm360StorageEditor</class>
+ <widget class="QWidget" name="ibm360::Ibm360StorageEditor">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -85,7 +85,7 @@
   <connection>
    <sender>_sizeLineEdit</sender>
    <signal>textChanged(QString)</signal>
-   <receiver>Ibm360StorageEditor</receiver>
+   <receiver>ibm360::Ibm360StorageEditor</receiver>
    <slot>_sizeLineEditTextChanged(QString)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -101,7 +101,7 @@
   <connection>
    <sender>_sizeUnitComboBox</sender>
    <signal>currentIndexChanged(int)</signal>
-   <receiver>Ibm360StorageEditor</receiver>
+   <receiver>ibm360::Ibm360StorageEditor</receiver>
    <slot>_sizeUnitComboBoxCurrentIndexChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">

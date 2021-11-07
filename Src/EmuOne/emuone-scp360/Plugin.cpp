@@ -25,10 +25,10 @@ namespace scp360
     public:
         virtual void initialise()
         {
-            core::ComponentType::registerComponentType(Scp::Type::getInstance());
+            core::ComponentType::registerComponentType(Scp::Type::instance());
 
-            EmulatedApplication::registerEmulatedApplication(InitProcess::Application::getInstance());
-            EmulatedApplication::registerEmulatedApplication(LoginProcess::Application::getInstance());
+            EmulatedApplication::registerEmulatedApplication(InitProcess::Application::instance());
+            EmulatedApplication::registerEmulatedApplication(LoginProcess::Application::instance());
         }
     };
 }

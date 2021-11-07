@@ -10,7 +10,7 @@ using namespace scp360;
 
 //////////
 //  Construction/destruction
-ModifySharedFolderDialog::ModifySharedFolderDialog(scp360::Scp::SharedFolder * sharedFolder, QWidget * parent)
+ModifySharedFolderDialog::ModifySharedFolderDialog(Scp::SharedFolder * sharedFolder, QWidget * parent)
     :   QDialog(parent),
         _ui(new Ui::ModifySharedFolderDialog),
         _sharedFolder(sharedFolder)

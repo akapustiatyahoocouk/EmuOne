@@ -24,8 +24,8 @@ public:
 public:
     virtual void initialise()
     {
-        CharacterSet::registerCharacterSet(Iso88591CharacterSet::getInstance());
-        CharacterSet::registerCharacterSet(Cp037CharacterSet::getInstance());
+        CharacterSet::registerCharacterSet(Iso88591CharacterSet::instance());
+        CharacterSet::registerCharacterSet(Cp037CharacterSet::instance());
     }
 };
 

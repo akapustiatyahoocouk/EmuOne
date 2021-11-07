@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Ibm2741Editor</class>
- <widget class="QWidget" name="Ibm2741Editor">
+ <class>ibm360::Ibm2741Editor</class>
+ <widget class="QWidget" name="ibm360::Ibm2741Editor">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -82,7 +82,7 @@
   <connection>
    <sender>_addressLineEdit</sender>
    <signal>textChanged(QString)</signal>
-   <receiver>Ibm2741Editor</receiver>
+   <receiver>ibm360::Ibm2741Editor</receiver>
    <slot>_addressLineEditTextChanged(QString)</slot>
    <hints>
     <hint type="sourcelabel">

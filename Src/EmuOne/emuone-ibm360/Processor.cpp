@@ -24,7 +24,7 @@ Processor::~Processor()
 //  Component
 core::ComponentType * Processor::type() const
 {
-    return Processor::Type::getInstance();
+    return Processor::Type::instance();
 }
 
 ComponentEditor * Processor::createEditor(QWidget * parent)
@@ -244,12 +244,12 @@ QString Processor::Type::displayName() const
 
 core::ComponentCategory * Processor::Type::category() const
 {
-    return core::StandardComponentCategories::Processors::getInstance();
+    return core::StandardComponentCategories::Processors::instance();
 }
 
 bool Processor::Type::isCompatibleWith(core::Architecture * architecture) const
 {
-    return architecture == Architecture::getInstance();
+    return architecture == Architecture::instance();
 }
 
 Processor * Processor::Type::createComponent()

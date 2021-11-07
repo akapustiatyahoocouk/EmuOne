@@ -25,7 +25,7 @@ QString H40VirtualMachineTemplate::displayName() const
 
 Architecture * H40VirtualMachineTemplate::architecture() const
 {
-    return Architecture::getInstance();
+    return Architecture::instance();
 }
 
 void H40VirtualMachineTemplate::populateVirtualAppliance(core::VirtualAppliance * virtualAppliance)

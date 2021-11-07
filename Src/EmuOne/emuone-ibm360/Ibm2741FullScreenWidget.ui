@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Ibm2741FullScreenWidget</class>
- <widget class="QWidget" name="Ibm2741FullScreenWidget">
+ <class>ibm360::Ibm2741FullScreenWidget</class>
+ <widget class="QWidget" name="ibm360::Ibm2741FullScreenWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

@@ -22,7 +22,7 @@ LoginProcess::~LoginProcess()
 //  EmulatedProcess
 EmulatedApplication * LoginProcess::application() const
 {
-    return LoginProcess::Application::getInstance();
+    return LoginProcess::Application::instance();
 }
 
 ErrorCode LoginProcess::run()

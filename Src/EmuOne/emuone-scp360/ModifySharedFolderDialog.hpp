@@ -23,14 +23,14 @@ namespace scp360
         //////////
         //  Construction/destruction
     public:
-        explicit ModifySharedFolderDialog(scp360::Scp::SharedFolder * sharedFolder, QWidget *parent = nullptr);
+        explicit ModifySharedFolderDialog(Scp::SharedFolder * sharedFolder, QWidget *parent = nullptr);
         ~ModifySharedFolderDialog();
 
         //////////
         //  Implementation
     private:
         Ui::ModifySharedFolderDialog *  _ui;
-        scp360::Scp::SharedFolder *     _sharedFolder;
+        Scp::SharedFolder *             _sharedFolder;
 
         //////////
         //  Helpers

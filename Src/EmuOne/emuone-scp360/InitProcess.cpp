@@ -24,7 +24,7 @@ InitProcess::~InitProcess()
 //  EmulatedProcess
 EmulatedApplication * InitProcess::application() const
 {
-    return InitProcess::Application::getInstance();
+    return InitProcess::Application::instance();
 }
 
 ErrorCode InitProcess::run()
@@ -213,13 +213,13 @@ void InitProcess::_createLoginProcesses()
     {
         if (Scp::_isTerminal(physicalDevice->hardwareDevice()))
         {   //  This one! TODO use system calls to create LOGIN process
-            QString loginProcessName = LoginProcess::Application::getInstance()->mnemonic() +
+            QString loginProcessName = LoginProcess::Application::instance()->mnemonic() +
                                        ("000" + QString::number(physicalDevice->hardwareDevice()->address(), 16)).right(3).toUpper();
             EmulatedProcess * loginProcess;
             ErrorCode err = scp()->_objectManager.createEmulatedProcess(loginProcessName,
                                                                         Process::Flags::None,
                                                                         this,
-                                                                        LoginProcess::Application::getInstance(),
+                                                                        LoginProcess::Application::instance(),
                                                                         loginProcess);
             if (err != ErrorCode::ERR_OK)
             {   //  OOPS!
