@@ -6,6 +6,7 @@
 //////////
 #include "emuone-core/API.hpp"
 #include <QMainWindow>
+using namespace core;
 
 namespace
 {
@@ -21,12 +22,12 @@ namespace
 
 //////////
 //  Construction/destruction
-FullScreenWidgetImpl::FullScreenWidgetImpl()
+FullScreenWidget::FullScreenWidget()
     :   QWidget(HiddenParent::instance())
 {
 }
 
-FullScreenWidgetImpl::~FullScreenWidgetImpl()
+FullScreenWidget::~FullScreenWidget()
 {
 }
 

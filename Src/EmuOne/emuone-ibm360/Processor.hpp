@@ -85,10 +85,10 @@ namespace ibm360
         //////////
         //  Component
     public:
-        virtual core::ComponentType*type() const override;
-        virtual ComponentEditor *   createEditor(QWidget * parent) override;
-        virtual QString             shortStatus() const override;
-        virtual core::ComponentUi * createUi() override;
+        virtual core::ComponentType *   type() const override;
+        virtual core::ComponentEditor * createEditor(QWidget * parent) override;
+        virtual QString                 shortStatus() const override;
+        virtual core::ComponentUi *     createUi() override;
 
         //////////
         //  Component (state control) - all thread-safe

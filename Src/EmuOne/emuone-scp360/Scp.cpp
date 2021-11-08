@@ -35,7 +35,7 @@ Scp::Type * Scp::type() const
     return Scp::Type::instance();
 }
 
-ComponentEditor * Scp::createEditor(QWidget * parent)
+core::ComponentEditor * Scp::createEditor(QWidget * parent)
 {
     ScpEditor * editor = new ScpEditor(this, parent);;
     _editors.append(editor);

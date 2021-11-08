@@ -28,21 +28,21 @@ ConfigureVmDialog::ConfigureVmDialog(core::VirtualAppliance * virtualAppliance, 
     //  Populate the "component editors" map for current VA components
     for (core::Component * component : virtualAppliance->components())
     {
-        if (ComponentEditor * componentEditor = component->createEditor(_ui->_componentEditorsPanel))
+        if (core::ComponentEditor * componentEditor = component->createEditor(_ui->_componentEditorsPanel))
         {
             componentEditor->setVisible(false);
             _componentEditors.insert(component, componentEditor);
-            connect(componentEditor, &ComponentEditor::componentConfigurationChanged, this, &ConfigureVmDialog::_componentConfigurationChanged);
+            connect(componentEditor, &core::ComponentEditor::componentConfigurationChanged, this, &ConfigureVmDialog::_componentConfigurationChanged);
             _componentEditorsPanelLayout->addWidget(componentEditor, 0, 0);
         }
     }
     for (core::Adaptor * adaptor : virtualAppliance->adaptors())
     {
-        if (ComponentEditor * componentEditor = adaptor->createEditor(_ui->_componentEditorsPanel))
+        if (core::ComponentEditor * componentEditor = adaptor->createEditor(_ui->_componentEditorsPanel))
         {
             componentEditor->setVisible(false);
             _componentEditors.insert(adaptor, componentEditor);
-            connect(componentEditor, &ComponentEditor::componentConfigurationChanged, this, &ConfigureVmDialog::_componentConfigurationChanged);
+            connect(componentEditor, &core::ComponentEditor::componentConfigurationChanged, this, &ConfigureVmDialog::_componentConfigurationChanged);
             _componentEditorsPanelLayout->addWidget(componentEditor, 0, 0);
         }
     }
@@ -116,8 +116,8 @@ void ConfigureVmDialog::_refresh()
     _ui->_componentNameLineEdit->setText((selectedComponent != nullptr) ? selectedComponent->name() : "");
 
     //  Refresh all "component editors", making sure only the right one is visible
-    ComponentEditor * currentComponentEditor = nullptr;
-    for (ComponentEditor * componentEditor : _componentEditors)
+    core::ComponentEditor * currentComponentEditor = nullptr;
+    for (core::ComponentEditor * componentEditor : _componentEditors)
     {
         componentEditor->refresh();
         if (componentEditor->component() == selectedComponent)
@@ -227,11 +227,11 @@ core::Component * ConfigureVmDialog::_addComponent(core::ComponentType * compone
         _virtualAppliance->addComponent(component);
         _refreshComponentsTree();
         //  Are there editor(s) involved ?
-        if (ComponentEditor * componentEditor = component->createEditor(_ui->_componentEditorsPanel))
+        if (core::ComponentEditor * componentEditor = component->createEditor(_ui->_componentEditorsPanel))
         {
             componentEditor->setVisible(false);
             _componentEditors.insert(component, componentEditor);
-            connect(componentEditor, &ComponentEditor::componentConfigurationChanged, this, &ConfigureVmDialog::_componentConfigurationChanged);
+            connect(componentEditor, &core::ComponentEditor::componentConfigurationChanged, this, &ConfigureVmDialog::_componentConfigurationChanged);
             _componentEditorsPanelLayout->addWidget(componentEditor, 0, 0);
         }
         //  TODO if the "component" is "adapted", there may be an editor for the "adaptor"
@@ -264,7 +264,7 @@ void ConfigureVmDialog::_removeComponent(core::Component * component)
         //  Are there editor(s) involved ?
         if (_componentEditors.contains(component))
         {
-            ComponentEditor * componentEditor = _componentEditors[component];
+            core::ComponentEditor * componentEditor = _componentEditors[component];
             _componentEditorsPanelLayout->removeWidget(componentEditor);
             _componentEditors.remove(component);
             delete componentEditor;

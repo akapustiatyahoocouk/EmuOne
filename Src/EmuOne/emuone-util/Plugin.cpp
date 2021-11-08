@@ -26,6 +26,8 @@ public:
     {
         CharacterSet::registerCharacterSet(Iso88591CharacterSet::instance());
         CharacterSet::registerCharacterSet(Cp037CharacterSet::instance());
+
+        MessageDigest::registerMessageDigest(Sha1MessageDigest::instance());
     }
 };
 

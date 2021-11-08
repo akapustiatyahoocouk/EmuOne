@@ -30,8 +30,11 @@
 #include "emuone-core/ComponentType.hpp"
 #include "emuone-core/Component.hpp"
 #include "emuone-core/ComponentEditor.hpp"
-#include "emuone-core/FullScreenWidgetImpl.hpp"
+#include "emuone-core/FullScreenWidget.hpp"
 #include "emuone-core/ComponentUi.hpp"
+
+#include "emuone-core/StandardMemory.hpp"
+//#include "emuone-core/ResidentRamUnit64Editor.hpp"
 
 #include "emuone-core/VirtualAppliance.hpp"
 

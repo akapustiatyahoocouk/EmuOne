@@ -14,7 +14,7 @@ namespace scp360
 
     //////////
     //  Configuration editor for SCP component
-    class ScpEditor : public ComponentEditor
+    class ScpEditor : public core::ComponentEditor
     {
         Q_OBJECT
 

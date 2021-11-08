@@ -14,7 +14,7 @@ namespace ibm360
 
     //////////
     //  The IBM 2741 editor
-    class EMUONE_IBM360_EXPORT Ibm2741Editor : public ComponentEditor
+    class EMUONE_IBM360_EXPORT Ibm2741Editor : public core::ComponentEditor
     {
         Q_OBJECT
 

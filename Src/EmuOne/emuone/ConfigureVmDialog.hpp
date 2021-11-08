@@ -30,7 +30,7 @@ private:
     bool                    _refreshUnderway = false;
     QGridLayout *           _componentEditorsPanelLayout;
 
-    QMap<core::Component*, ComponentEditor*>    _componentEditors;
+    QMap<core::Component*, core::ComponentEditor*>  _componentEditors;
 
     class _AddComponentAction : public QAction
     {

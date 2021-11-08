@@ -27,7 +27,7 @@ core::ComponentType * Processor::type() const
     return Processor::Type::instance();
 }
 
-ComponentEditor * Processor::createEditor(QWidget * parent)
+core::ComponentEditor * Processor::createEditor(QWidget * parent)
 {
     return new Ibm360ProcessorEditor(this, parent);
 }

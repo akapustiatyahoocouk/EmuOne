@@ -13,8 +13,10 @@ SOURCES += \
     CharacterSet.cpp \
     Cp037CharacterSet.cpp \
     Iso88591CharacterSet.cpp \
+    MessageDigest.cpp \
     Plugin.cpp \
-    PluginManager.cpp
+    PluginManager.cpp \
+    Sha1MessageDigest.cpp
 
 HEADERS += \
     API.hpp \
@@ -23,6 +25,8 @@ HEADERS += \
     CharacterSets.hpp \
     Classes.hpp \
     Macros.hpp \
+    Memory.hpp \
+    MessageDigest.hpp \
     PluginManager.hpp \
     StockObject.hpp
 

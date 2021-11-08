@@ -14,7 +14,7 @@ namespace ibm360
 
     //////////
     //  The "IBM/360 processorm editor" control
-    class Ibm360ProcessorEditor : public ComponentEditor
+    class Ibm360ProcessorEditor : public core::ComponentEditor
     {
         Q_OBJECT
 

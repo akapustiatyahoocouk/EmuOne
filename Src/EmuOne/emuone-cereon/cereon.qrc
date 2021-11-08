@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/emuone/cereon">
+        <file>Images/ArchitectureLarge.png</file>
+        <file>Images/ArchitectureSmall.png</file>
+    </qresource>
+</RCC>

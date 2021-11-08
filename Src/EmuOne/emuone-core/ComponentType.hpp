@@ -36,7 +36,8 @@ namespace core
         //  used directly by) virtual appliances of the specified "architecture"
         virtual bool                isCompatibleWith(Architecture * architecture) const = 0;
 
-        //  Creates and returns a new Component of this type with default configuration
+        //  Creates and returns a new Component of this type with default configuration.
+        //  Throws VirtualApplianceException if the component creation fails.
         virtual Component *         createComponent() = 0;
 
         //////////

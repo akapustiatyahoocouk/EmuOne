@@ -17,10 +17,14 @@ SOURCES += \
     ComponentCategory.cpp \
     ComponentEditor.cpp \
     ComponentType.cpp \
-    FullScreenWidgetImpl.cpp \
+    FullScreenWidget.cpp \
     MemorySize.cpp \
+    MemoryUnit64.cpp \
     Plugin.cpp \
     RemoteTerminal.cpp \
+    ResidentRamUnit64.cpp \
+    ResidentRamUnit64Editor.cpp \
+    ResidentRomUnit64.cpp \
     StandardComponentCategories.cpp \
     VirtualAppliance.cpp \
     VirtualApplianceType.cpp \
@@ -37,8 +41,10 @@ HEADERS += \
     ComponentType.hpp \
     ComponentUi.hpp \
     Exceptions.hpp \
-    FullScreenWidgetImpl.hpp \
+    FullScreenWidget.hpp \
     MemorySize.hpp \
+    ResidentRamUnit64Editor.hpp \
+    StandardMemory.hpp \
     Template.hpp \
     VirtualAppliance.hpp
 
@@ -55,3 +61,6 @@ unix {
 
 RESOURCES += \
     core.qrc
+
+FORMS += \
+    ResidentRamUnit64Editor.ui

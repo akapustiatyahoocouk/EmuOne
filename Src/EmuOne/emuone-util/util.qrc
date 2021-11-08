@@ -2,5 +2,7 @@
     <qresource prefix="/emuone/util">
         <file>Images/CharacterSetLarge.png</file>
         <file>Images/CharacterSetSmall.png</file>
+        <file>Images/MessageDigestLarge.png</file>
+        <file>Images/MessageDigestSmall.png</file>
     </qresource>
 </RCC>

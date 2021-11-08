@@ -26,7 +26,7 @@ core::ComponentType * Storage::type() const
     return Storage::Type::instance();
 }
 
-ComponentEditor * Storage::createEditor(QWidget * parent)
+core::ComponentEditor * Storage::createEditor(QWidget * parent)
 {
     return new Ibm360StorageEditor(this, parent);
 }

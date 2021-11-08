@@ -14,7 +14,7 @@ namespace ibm360
 
     //////////
     //  The IBM/360 storage editor
-    class EMUONE_IBM360_EXPORT Ibm360StorageEditor : public ComponentEditor
+    class EMUONE_IBM360_EXPORT Ibm360StorageEditor : public core::ComponentEditor
     {
         Q_OBJECT
 

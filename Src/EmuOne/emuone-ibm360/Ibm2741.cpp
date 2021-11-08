@@ -31,7 +31,7 @@ core::ComponentType * Ibm2741::type() const
     return Ibm2741::Type::instance();
 }
 
-ComponentEditor * Ibm2741::createEditor(QWidget * parent)
+core::ComponentEditor * Ibm2741::createEditor(QWidget * parent)
 {
     Ibm2741Editor * editor = new Ibm2741Editor(this, parent);;
     _editors.append(editor);
