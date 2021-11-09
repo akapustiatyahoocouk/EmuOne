@@ -1,23 +1,22 @@
 //
 //  emuone-core/ResidentRamUnit64Editor.cpp
 //
-//  The editor of the ResidentRamUnit64 components
+//  "Resident RAM unit editor" control
 //
 //////////
 #include "emuone-core/API.hpp"
 #include "ui_ResidentRamUnit64Editor.h"
-#include "emuone-core/ResidentRamUnit64Editor.hpp"
-
 using namespace core;
+#include "emuone-core/ResidentRamUnit64Editor.hpp"
 
 //////////
 //  Construction/destruction
-ResidentRamUnit64Editor::ResidentRamUnit64Editor(ResidentRamUnit64 * ramInit, QWidget * parent)
-    :   ComponentEditor(ramInit, parent),
+ResidentRamUnit64Editor::ResidentRamUnit64Editor(ResidentRamUnit64 * ramUnit, QWidget *parent)
+    :   ComponentEditor(ramUnit, parent),
         _ui(new Ui::ResidentRamUnit64Editor),
-        _ramInit(ramInit)
+        _ramUnit(ramUnit)
 {
-    Q_ASSERT(_ramInit != nullptr);
+    Q_ASSERT(_ramUnit != nullptr);
 
     _ui->setupUi(this);
     _ui->_sizeUnitComboBox->addItem("B");
@@ -28,7 +27,6 @@ ResidentRamUnit64Editor::ResidentRamUnit64Editor(ResidentRamUnit64 * ramInit, QW
 
 ResidentRamUnit64Editor::~ResidentRamUnit64Editor()
 {
-    _ramInit->_editors.removeOne(this);
     delete _ui;
 }
 
@@ -38,33 +36,54 @@ void ResidentRamUnit64Editor::refresh()
 {
     _refreshUnderway = true;
 
-    _ui->_addressLineEdit->setText(("0000000000000000" + QString::number(_ramInit->startAddress(), 16)).toUpper().right(16));
-
-    switch (_ramInit->size().unit())
-    {
-        case core::MemorySize::Unit::B:
-            _ui->_sizeUnitComboBox->setCurrentIndex(0);
-            _ui->_sizeLineEdit->setText(QString::number(_ramInit->size().numberOfUnits()));
-            break;
-        case core::MemorySize::Unit::KB:
-            _ui->_sizeUnitComboBox->setCurrentIndex(1);
-            _ui->_sizeLineEdit->setText(QString::number(_ramInit->size().numberOfUnits()));
-            break;
-        case core::MemorySize::Unit::MB:
-            _ui->_sizeUnitComboBox->setCurrentIndex(2);
-            _ui->_sizeLineEdit->setText(QString::number(_ramInit->size().numberOfUnits()));
-            break;
-        case core::MemorySize::Unit::GB:
-            _ui->_sizeUnitComboBox->setCurrentIndex(3);
-            _ui->_sizeLineEdit->setText(QString::number(_ramInit->size().numberOfUnits()));
-            break;
-        default:
-            _ui->_sizeUnitComboBox->setCurrentIndex(0);  //  MB
-            _ui->_sizeLineEdit->setText(QString::number(_ramInit->size().toUnits(core::MemorySize::Unit::MB)));
-            break;
-    }
+    _ui->_addressLineEdit->setText(("0000000000000000" + QString::number(_ramUnit->startAddress(), 16)).right(16).toUpper());
+    _ui->_sizeLineEdit->setText(QString::number(_ramUnit->size().numberOfUnits()));
+    _ui->_sizeUnitComboBox->setCurrentIndex((int)_ramUnit->size().unit());
 
     _refreshUnderway = false;
+}
+
+//////////
+//  Event handlers
+void ResidentRamUnit64Editor::_addressLineEditTextChanged(const QString &)
+{
+    if (!_refreshUnderway)
+    {
+        bool parsedOk = false;
+        uint64_t address = (uint64_t)_ui->_addressLineEdit->text().toULongLong(&parsedOk, 16);
+        _ramUnit->setStartAddress(address);
+        emit componentConfigurationChanged(component());
+    }
+}
+
+void ResidentRamUnit64Editor::_sizeLineEditTextChanged(const QString &)
+{
+    if (!_refreshUnderway)
+    {
+        core::MemorySize::Unit unit = (core::MemorySize::Unit)_ui->_sizeUnitComboBox->currentIndex();
+        uint64_t numberOfUnits = _ui->_sizeLineEdit->text().toUInt();
+        if (numberOfUnits > 0)
+        {   //  Parsed successfully
+            core::MemorySize newSize(unit, numberOfUnits);
+            _ramUnit->setSize(newSize);
+            emit componentConfigurationChanged(component());
+        }
+    }
+}
+
+void ResidentRamUnit64Editor::_sizeUnitComboBoxCurrentIndexChanged(int)
+{
+    if (!_refreshUnderway)
+    {
+        core::MemorySize::Unit unit = (core::MemorySize::Unit)_ui->_sizeUnitComboBox->currentIndex();
+        uint64_t numberOfUnits = _ui->_sizeLineEdit->text().toUInt();
+        if (numberOfUnits > 0)
+        {   //  Parsed successfully
+            core::MemorySize newSize(unit, numberOfUnits);
+            _ramUnit->setSize(newSize);
+            emit componentConfigurationChanged(component());
+        }
+    }
 }
 
 //  End of emuone-core/ResidentRamUnit64Editor.cpp

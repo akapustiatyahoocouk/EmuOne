@@ -1,7 +1,7 @@
 //
-//  emuone-core/ResidentRamUnit64.cpp
+//  emuone-core/StandardResidentRamUnit64.cpp
 //
-//  The core::ResidentRamUnit64 class implementation
+//  The core::StandardResidentRamUnit64 class implementation
 //
 //////////
 #include "emuone-core/API.hpp"
@@ -10,43 +10,43 @@ using namespace core;
 
 //////////
 //  Construction/destruction
-ResidentRamUnit64::ResidentRamUnit64(const QString & name, uint64_t startAddress, const MemorySize & size)
+StandardResidentRamUnit64::StandardResidentRamUnit64(const QString & name, uint64_t startAddress, const MemorySize & size)
     :   MemoryUnit64(name, startAddress, size)
 {
 }
 
-ResidentRamUnit64::~ResidentRamUnit64()
+StandardResidentRamUnit64::~StandardResidentRamUnit64()
 {
 }
 
 //////////
 //  Component
-ComponentEditor * ResidentRamUnit64::createEditor(QWidget * parent)
+ComponentEditor * StandardResidentRamUnit64::createEditor(QWidget * parent)
 {
     ResidentRamUnit64Editor * editor = new ResidentRamUnit64Editor(this, parent);
     _editors.append(editor);
     return editor;
 }
 
-QString ResidentRamUnit64::shortStatus() const
+QString StandardResidentRamUnit64::shortStatus() const
 {
     return this->size().toString() + " @ " + ("0000000000000000" + QString::number(startAddress(), 16)).right(16).toUpper();
 }
 
-ComponentUi * ResidentRamUnit64::createUi()
+ComponentUi * StandardResidentRamUnit64::createUi()
 {
     return nullptr;
 }
 
 //////////
 //  Component (state control) - all thread-safe
-Component::State ResidentRamUnit64::state() const
+Component::State StandardResidentRamUnit64::state() const
 {
     QMutexLocker lock(&_stateGuard);
     return _state;
 }
 
-void ResidentRamUnit64::connect()
+void StandardResidentRamUnit64::connect()
 {
     QMutexLocker lock(&_stateGuard);
 
@@ -59,7 +59,7 @@ void ResidentRamUnit64::connect()
     _state = State::Connected;
 }
 
-void ResidentRamUnit64::initialise()
+void StandardResidentRamUnit64::initialise()
 {
     QMutexLocker lock(&_stateGuard);
 
@@ -88,7 +88,7 @@ void ResidentRamUnit64::initialise()
     _state = State::Initialised;
 }
 
-void ResidentRamUnit64::start()
+void StandardResidentRamUnit64::start()
 {
     QMutexLocker lock(&_stateGuard);
 
@@ -101,7 +101,7 @@ void ResidentRamUnit64::start()
     _state = State::Running;
 }
 
-void ResidentRamUnit64::stop() noexcept
+void StandardResidentRamUnit64::stop() noexcept
 {
     QMutexLocker lock(&_stateGuard);
 
@@ -114,7 +114,7 @@ void ResidentRamUnit64::stop() noexcept
     _state = State::Initialised;
 }
 
-void ResidentRamUnit64::deinitialise() noexcept
+void StandardResidentRamUnit64::deinitialise() noexcept
 {
     QMutexLocker lock(&_stateGuard);
 
@@ -130,7 +130,7 @@ void ResidentRamUnit64::deinitialise() noexcept
     _state = State::Connected;
 }
 
-void ResidentRamUnit64::disconnect() noexcept
+void StandardResidentRamUnit64::disconnect() noexcept
 {
     QMutexLocker lock(&_stateGuard);
 
@@ -146,4 +146,4 @@ void ResidentRamUnit64::disconnect() noexcept
 //////////
 //  Operations (serialisation)
 
-//  End of emuone-core/ResidentRamUnit64.cpp
+//  End of emuone-core/StandardesidentRamUnit64.cpp

@@ -5,6 +5,7 @@
 //
 //////////
 #include "emuone-core/API.hpp"
+#include "emuone-core/ResidentRomUnit64Editor.hpp"
 using namespace core;
 
 //////////
@@ -21,9 +22,11 @@ ResidentRomUnit64::~ResidentRomUnit64()
 
 //////////
 //  Component
-ComponentEditor * ResidentRomUnit64::createEditor(QWidget * /*parent*/)
+ComponentEditor * ResidentRomUnit64::createEditor(QWidget * parent)
 {
-    return nullptr;
+    ResidentRomUnit64Editor * editor = new ResidentRomUnit64Editor(this, parent);
+    _editors.append(editor);
+    return editor;
 }
 
 QString ResidentRomUnit64::shortStatus() const

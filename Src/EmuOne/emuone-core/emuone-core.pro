@@ -19,13 +19,15 @@ SOURCES += \
     ComponentType.cpp \
     FullScreenWidget.cpp \
     MemorySize.cpp \
-    MemoryUnit64.cpp \
     Plugin.cpp \
     RemoteTerminal.cpp \
-    ResidentRamUnit64.cpp \
     ResidentRamUnit64Editor.cpp \
     ResidentRomUnit64.cpp \
+    ResidentRomUnit64Editor.cpp \
     StandardComponentCategories.cpp \
+    StandardMemoryBus64.cpp \
+    StandardMemoryUnit64.cpp \
+    StandardResidentRamUnit64.cpp \
     VirtualAppliance.cpp \
     VirtualApplianceType.cpp \
     VirtualMachine.cpp
@@ -44,6 +46,7 @@ HEADERS += \
     FullScreenWidget.hpp \
     MemorySize.hpp \
     ResidentRamUnit64Editor.hpp \
+    ResidentRomUnit64Editor.hpp \
     StandardMemory.hpp \
     Template.hpp \
     VirtualAppliance.hpp
@@ -63,4 +66,5 @@ RESOURCES += \
     core.qrc
 
 FORMS += \
-    ResidentRamUnit64Editor.ui
+    ResidentRamUnit64Editor.ui \
+    ResidentRomUnit64Editor.ui

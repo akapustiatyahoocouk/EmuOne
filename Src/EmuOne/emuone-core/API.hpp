@@ -34,7 +34,6 @@
 #include "emuone-core/ComponentUi.hpp"
 
 #include "emuone-core/StandardMemory.hpp"
-//#include "emuone-core/ResidentRamUnit64Editor.hpp"
 
 #include "emuone-core/VirtualAppliance.hpp"
 

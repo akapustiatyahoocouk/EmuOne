@@ -9,26 +9,26 @@ using namespace core;
 
 //////////
 //  Construction/destruction
-MemoryUnit64::MemoryUnit64(const QString & name, uint64_t startAddress, const MemorySize & size)
+StandardMemoryUnit64::StandardMemoryUnit64(const QString & name, uint64_t startAddress, const MemorySize & size)
     :   Component(name),
         _startAddress(startAddress),
         _size(size)
 {
 }
 
-MemoryUnit64::~MemoryUnit64()
+StandardMemoryUnit64::~StandardMemoryUnit64()
 {
 }
 
 //////////
 //  Component (serialisation)
-void MemoryUnit64::serialiseConfiguration(QDomElement & configurationElement) const
+void StandardMemoryUnit64::serialiseConfiguration(QDomElement & configurationElement) const
 {
     configurationElement.setAttribute("StartAddress", ("0000000000000000" + QString::number(_startAddress, 16).toUpper()).right(16));
     configurationElement.setAttribute("Size", _size.toString());
 }
 
-void MemoryUnit64::deserialiseConfiguration(QDomElement & configurationElement)
+void StandardMemoryUnit64::deserialiseConfiguration(QDomElement & configurationElement)
 {
     QString startAddressString = configurationElement.attribute("StartAddress", ("0000000000000000" + QString::number(_startAddress, 16).toUpper()).right(16));
     bool ok = false;

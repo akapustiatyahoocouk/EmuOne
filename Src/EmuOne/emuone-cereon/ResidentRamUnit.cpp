@@ -10,7 +10,7 @@ using namespace cereon;
 //////////
 //  Construction/destruction
 ResidentRamUnit::ResidentRamUnit()
-    :   core::ResidentRamUnit64("RAM", 0, core::MemorySize(core::MemorySize::Unit::MB, 64))
+    :   core::StandardResidentRamUnit64("RAM", 0, core::MemorySize(core::MemorySize::Unit::MB, 64))
 {
 }
 

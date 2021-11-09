@@ -278,7 +278,7 @@ QString VirtualAppliance::toRelativePath(const QString & path) const
     QString relativePath = vaDir.relativeFilePath(path);
     if (!relativePath.contains(".."))
     {   //  Good to go, but we want it to look like a path still
-        if (QFileInfo(relativePath).fileName() == path)
+        if (!relativePath.contains("/"))
         {   //  ...so prepend with "./"
             relativePath = "./" + relativePath;
         }

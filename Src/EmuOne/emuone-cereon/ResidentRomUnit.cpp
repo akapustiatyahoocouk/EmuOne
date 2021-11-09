@@ -10,7 +10,7 @@ using namespace cereon;
 //////////
 //  Construction/destruction
 ResidentRomUnit::ResidentRomUnit()
-    :   core::ResidentRomUnit64("ROM", UINT64_C(0xFFFFFFFFFFF00000), core::MemorySize(core::MemorySize::Unit::MB, 1), "rom.bin")
+    :   core::StandardResidentRomUnit64("ROM", UINT64_C(0xFFFFFFFFFFF00000), core::MemorySize(core::MemorySize::Unit::MB, 1), "rom.bin")
 {
 }
 

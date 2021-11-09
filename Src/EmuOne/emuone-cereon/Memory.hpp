@@ -10,9 +10,9 @@ namespace cereon
 {
     //////////
     //  Cereon RAM
-    class EMUONE_CEREON_EXPORT ResidentRamUnit : public core::ResidentRamUnit64
+    class EMUONE_CEREON_EXPORT RamUnit : public core::ResidentMemoryUnit<64, 8>
     {
-        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(ResidentRamUnit)
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(RamUnit)
 
         //////////
         //  Types
@@ -39,8 +39,8 @@ namespace cereon
         //////////
         //  Construction/destruction
     public:
-        ResidentRamUnit();
-        virtual ~ResidentRamUnit();
+        RamUnit();
+        virtual ~RamUnit();
 
         //////////
         //  core::Component
@@ -50,9 +50,9 @@ namespace cereon
 
     //////////
     //  Cereon ROM
-    class EMUONE_CEREON_EXPORT ResidentRomUnit : public core::ResidentRomUnit64
+    class EMUONE_CEREON_EXPORT RomUnit : public core::ResidentMemoryUnit<64, 8>
     {
-        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(ResidentRomUnit)
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(RomUnit)
 
         //////////
         //  Types
@@ -79,8 +79,8 @@ namespace cereon
         //////////
         //  Construction/destruction
     public:
-        ResidentRomUnit();
-        virtual ~ResidentRomUnit();
+        RomUnit();
+        virtual ~RomUnit();
 
         //////////
         //  core::Component

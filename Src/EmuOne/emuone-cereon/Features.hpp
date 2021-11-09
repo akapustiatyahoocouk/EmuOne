@@ -24,6 +24,28 @@ namespace cereon
         None                    = 0x0000,
         All                     = 0x007F
     };
+
+    inline Features operator | (Features op1, Features op2)
+    {
+        return Features(uint16_t(op1) | uint16_t(op2));
+    }
+
+    inline Features operator & (Features op1, Features op2)
+    {
+        return Features(uint16_t(op1) & uint16_t(op2));
+    }
+
+    inline Features & operator |= (Features & op1, Features op2)
+    {
+        op1 = Features(uint16_t(op1) | uint16_t(op2));
+        return op1;
+    }
+
+    inline Features & operator &= (Features & op1, Features op2)
+    {
+        op1 = Features(uint16_t(op1) & uint16_t(op2));
+        return op1;
+    }
 }
 
 //  End of emuone-cereon/Features.hpp
