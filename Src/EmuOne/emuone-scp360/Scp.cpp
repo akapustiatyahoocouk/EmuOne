@@ -70,19 +70,7 @@ void Scp::connect()
     }
 
     //  Discover hardware devices
-    QSet<core::Component*> adaptedComponents;
-    for (core::Adaptor * adaptor : virtualAppliance()->adaptors())
-    {
-        adaptedComponents.insert(adaptor->adaptedComponent());
-    }
-    for (ibm360::Device * hardwareDevice : virtualAppliance()->findComponents<ibm360::Device>())
-    {
-        if (!adaptedComponents.contains(hardwareDevice))
-        {
-            _registerHardwareDevice(hardwareDevice);
-        }
-    }
-    for (ibm360::Device * hardwareDevice : virtualAppliance()->findAdaptors<ibm360::Device>())
+    for (ibm360::Device * hardwareDevice : virtualAppliance()->findComponentsByRole<ibm360::Device>())
     {
         _registerHardwareDevice(hardwareDevice);
     }

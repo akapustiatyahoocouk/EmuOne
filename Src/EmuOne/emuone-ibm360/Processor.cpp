@@ -54,7 +54,7 @@ void Processor::connect()
         return;
     }
 
-    QList<Storage*> storages = this->virtualAppliance()->findComponents<Storage>();
+    QList<Storage*> storages = this->virtualAppliance()->findComponentsByRole<Storage>();
     if (storages.isEmpty())
     {
         throw core::VirtualApplianceException("ibm360::Processor cannot locate ibm360::Storage");
@@ -65,7 +65,7 @@ void Processor::connect()
     }
     _storage = storages[0];
 
-    QList<Monitor*> monitors = this->virtualAppliance()->findComponents<Monitor>();
+    QList<Monitor*> monitors = this->virtualAppliance()->findComponentsByRole<Monitor>();
     if (monitors.size() > 1)
     {
         throw core::VirtualApplianceException("ibm360::Processor located multiple ibm360::Monitor");

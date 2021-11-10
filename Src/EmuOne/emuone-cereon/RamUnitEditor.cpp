@@ -36,7 +36,7 @@ void RamUnitEditor::refresh()
 {
     _refreshUnderway = true;
 
-    _ui->_addressLineEdit->setText(("0000000000000000" + QString::number(_ramUnit->startAddress(), 16)).right(16).toUpper());
+    _ui->_addressLineEdit->setText(_ramUnit->startAddressString());
     _ui->_sizeLineEdit->setText(QString::number(_ramUnit->size().numberOfUnits()));
     _ui->_sizeUnitComboBox->setCurrentIndex((int)_ramUnit->size().unit());
 

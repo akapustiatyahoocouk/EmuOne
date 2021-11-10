@@ -107,11 +107,10 @@ namespace core
         AdaptorList                 adaptors() const { return _adaptors; }
         AdaptorList                 adaptors(ComponentCategory * componentCategory);
 
+        //  Returns an unordered list of all a) compatible components and
+        //  b) adaptors which implement the specified interface T
         template <class T>
-        QList<T*>                   findComponents() const;
-
-        template <class T>
-        QList<T*>                   findAdaptors() const;
+        QList<T*>                   findComponentsByRole() const;
 
         //  *   If the "path" is relative, returns it "as is".
         //  *   If the "path" is absolute, attempts to express it as relative to
@@ -157,23 +156,16 @@ namespace core
     };
 
     template <class T>
-    QList<T*> VirtualAppliance::findComponents() const
+    QList<T*> VirtualAppliance::findComponentsByRole() const
     {
         QList<T*> result;
-        for (Component * component : _components)
+        for (Component * component : _compatibleComponents)
         {
             if (T * t = dynamic_cast<T*>(component))
             {
                 result.append(t);
             }
         }
-        return result;
-    }
-
-    template <class T>
-    QList<T*> VirtualAppliance::findAdaptors() const
-    {
-        QList<T*> result;
         for (Adaptor * adaptor : _adaptors)
         {
             if (T * t = dynamic_cast<T*>(adaptor))

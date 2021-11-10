@@ -11,10 +11,8 @@ namespace cereon
     //////////
     //  A generic "memory unit" handles memory bus accesses for a continuous range
     //  of addresses
-    class EMUONE_CEREON_EXPORT MemoryUnit
+    class EMUONE_CEREON_EXPORT IMemoryUnit
     {
-        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(MemoryUnit)
-
         //////////
         //  Types
     public:
@@ -29,10 +27,9 @@ namespace cereon
         };
 
         //////////
-        //  Construction/destruction
+        //  This is an interface
     public:
-        MemoryUnit() {}
-        virtual ~MemoryUnit() {}
+        virtual ~IMemoryUnit() {}
 
         //////////
         //  Operations
@@ -50,19 +47,16 @@ namespace cereon
         virtual AccessOutcome       storeWord(uint64_t offset, util::ByteOrder byteOrder, uint32_t value) = 0;
         virtual AccessOutcome       storeLongWord(uint64_t offset, util::ByteOrder byteOrder, uint64_t value) = 0;
     };
-    using MemoryUnitList = QList<MemoryUnit*>;
+    using MemoryUnitList = QList<IMemoryUnit*>;
 
     //////////
     //  A "memory unit" that starts at a known address
-    class EMUONE_CEREON_EXPORT BoundMemoryUnit : public MemoryUnit
+    class EMUONE_CEREON_EXPORT IBoundMemoryUnit : public virtual IMemoryUnit
     {
-        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(BoundMemoryUnit)
-
         //////////
-        //  Cobstruction/destruction
+        //  This is an interface
     public:
-        BoundMemoryUnit() {}
-        virtual ~BoundMemoryUnit() {}
+        virtual ~IBoundMemoryUnit() {}
 
         //////////
         //  Operations
@@ -70,8 +64,12 @@ namespace cereon
         //  The "start address" of this memory unit in the address space.
         //  The memory unit covers the address range [<start address> ... <start address>+<size>)
         virtual uint64_t            startAddress() const = 0;
+
+        //  The 16-digit hex representation of this unit's start address
+        QString                     startAddressString() const { return ("0000000000000000" + QString::number(startAddress(), 16)).right(16).toUpper(); }
+
     };
-    using BoundMemoryUnitList = QList<BoundMemoryUnit*>;
+    using BoundMemoryUnitList = QList<IBoundMemoryUnit*>;
 
     //////////
     //  An interface to a component that responds to memory bus accesses
@@ -92,7 +90,7 @@ namespace cereon
     //////////
     //  Cereon RAM unit
     class EMUONE_CEREON_EXPORT RamUnit : public core::Component,
-                                         public BoundMemoryUnit, public virtual IMemoryBusClient
+                                         public virtual IBoundMemoryUnit, public virtual IMemoryBusClient
     {
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(RamUnit)
 
@@ -152,7 +150,7 @@ namespace cereon
         virtual void                deserialiseConfiguration(QDomElement & configurationElement) override;
 
         //////////
-        //  MemoryUnit
+        //  IMemoryUnit
     public:
         virtual core::MemorySize    size() const override { return _size; }
         virtual AccessOutcome       loadByte(uint64_t offset, uint8_t & value) override;
@@ -165,7 +163,7 @@ namespace cereon
         virtual AccessOutcome       storeLongWord(uint64_t offset, util::ByteOrder byteOrder, uint64_t value) override;
 
         //////////
-        //  BoundMemoryUnit
+        //  IBoundMemoryUnit
     public:
         virtual uint64_t            startAddress() const override { return _startAddress; }
 
@@ -203,7 +201,7 @@ namespace cereon
     //////////
     //  Cereon ROM unit
     class EMUONE_CEREON_EXPORT RomUnit : public core::Component,
-                                         public BoundMemoryUnit, public virtual IMemoryBusClient
+                                         public virtual IBoundMemoryUnit, public virtual IMemoryBusClient
     {
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(RomUnit)
 
@@ -263,7 +261,7 @@ namespace cereon
         virtual void                deserialiseConfiguration(QDomElement & configurationElement) override;
 
         //////////
-        //  MemoryUnit
+        //  IMemoryUnit
     public:
         virtual core::MemorySize    size() const override { return _size; }
         virtual AccessOutcome       loadByte(uint64_t offset, uint8_t & value) override;
@@ -276,7 +274,7 @@ namespace cereon
         virtual AccessOutcome       storeLongWord(uint64_t offset, util::ByteOrder byteOrder, uint64_t value) override;
 
         //////////
-        //  BoundMemoryUnit
+        //  IBoundMemoryUnit
     public:
         virtual uint64_t            startAddress() const override { return _startAddress; }
 
@@ -344,7 +342,7 @@ namespace cereon
             virtual core::Component *           createComponent() override;
         };
 
-        typedef MemoryUnit::AccessOutcome AccessOutcome;
+        typedef IMemoryUnit::AccessOutcome AccessOutcome;
 
         //////////
         //  Construction/destruction
@@ -382,7 +380,7 @@ namespace cereon
     public:
         AccessOutcome               loadByte(uint64_t address, uint8_t & value)
         {
-            if (MemoryUnit * memoryUnit = _findMemoryUnit(address))
+            if (IMemoryUnit * memoryUnit = _findMemoryUnit(address))
             {   //  The "address" is now the offset within the "memoryUnit"
                 return memoryUnit->loadByte(address, value);
             }
@@ -391,7 +389,7 @@ namespace cereon
 
         AccessOutcome               loadHalfWord(uint64_t address, util::ByteOrder byteOrder, uint16_t & value)
         {
-            if (MemoryUnit * memoryUnit = _findMemoryUnit(address))
+            if (IMemoryUnit * memoryUnit = _findMemoryUnit(address))
             {   //  The "address" is now the offset within the "memoryUnit"
                 return memoryUnit->loadHalfWord(address, byteOrder, value);
             }
@@ -400,7 +398,7 @@ namespace cereon
 
         AccessOutcome               loadWord(uint64_t address, util::ByteOrder byteOrder, uint32_t & value)
         {
-            if (MemoryUnit * memoryUnit = _findMemoryUnit(address))
+            if (IMemoryUnit * memoryUnit = _findMemoryUnit(address))
             {   //  The "address" is now the offset within the "memoryUnit"
                 return memoryUnit->loadWord(address, byteOrder, value);
             }
@@ -409,7 +407,7 @@ namespace cereon
 
         AccessOutcome               loadLongWord(uint64_t address, util::ByteOrder byteOrder, uint64_t & value)
         {
-            if (MemoryUnit * memoryUnit = _findMemoryUnit(address))
+            if (IMemoryUnit * memoryUnit = _findMemoryUnit(address))
             {   //  The "address" is now the offset within the "memoryUnit"
                 return memoryUnit->loadLongWord(address, byteOrder, value);
             }
@@ -418,7 +416,7 @@ namespace cereon
 
         AccessOutcome               storeByte(uint64_t address, uint8_t value)
         {
-            if (MemoryUnit * memoryUnit = _findMemoryUnit(address))
+            if (IMemoryUnit * memoryUnit = _findMemoryUnit(address))
             {   //  The "address" is now the offset within the "memoryUnit"
                 return memoryUnit->storeByte(address, value);
             }
@@ -427,7 +425,7 @@ namespace cereon
 
         AccessOutcome               storeHalfWord(uint64_t address, util::ByteOrder byteOrder, uint16_t value)
         {
-            if (MemoryUnit * memoryUnit = _findMemoryUnit(address))
+            if (IMemoryUnit * memoryUnit = _findMemoryUnit(address))
             {   //  The "address" is now the offset within the "memoryUnit"
                 return memoryUnit->storeHalfWord(address, byteOrder, value);
             }
@@ -436,7 +434,7 @@ namespace cereon
 
         AccessOutcome               storeWord(uint64_t address, util::ByteOrder byteOrder, uint32_t value)
         {
-            if (MemoryUnit * memoryUnit = _findMemoryUnit(address))
+            if (IMemoryUnit * memoryUnit = _findMemoryUnit(address))
             {   //  The "address" is now the offset within the "memoryUnit"
                 return memoryUnit->storeWord(address, byteOrder, value);
             }
@@ -445,7 +443,7 @@ namespace cereon
 
         AccessOutcome               storeLongWord(uint64_t address, util::ByteOrder byteOrder, uint64_t value)
         {
-            if (MemoryUnit * memoryUnit = _findMemoryUnit(address))
+            if (IMemoryUnit * memoryUnit = _findMemoryUnit(address))
             {   //  The "address" is now the offset within the "memoryUnit"
                 return memoryUnit->storeLongWord(address, byteOrder, value);
             }
@@ -463,13 +461,13 @@ namespace cereon
         {
             uint64_t                _startAddress;  //  ...inclusive
             uint64_t                _endAddress;    //  ...inclusive
-            MemoryUnit *            _memoryUnit;    //  ...covering the range [_startAddress .. _endAddress]
+            IMemoryUnit *           _memoryUnit;    //  ...covering the range [_startAddress .. _endAddress]
         };
         size_t                      _numMemoryUnitMappings = 0;
         _MemoryUnitMapping *        _memoryUnitMappings = nullptr;  //  array of _numMemoryUnitMappings elements, sorted by "_startAddress"
 
         //  Helpers
-        MemoryUnit *                _findMemoryUnit(uint64_t & address) const
+        IMemoryUnit *               _findMemoryUnit(uint64_t & address) const
         {
             for (size_t i = 0; i < _numMemoryUnitMappings; i++)
             {

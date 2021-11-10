@@ -54,7 +54,7 @@ void Storage::connect()
     }
 
     //  Locate the Processor - we need its Features for protection
-    QList<Processor*> processors = this->virtualAppliance()->findComponents<Processor>();
+    QList<Processor*> processors = this->virtualAppliance()->findComponentsByRole<Processor>();
     if (processors.isEmpty())
     {
         throw core::VirtualApplianceException("ibm360::Storage cannot locate ibm360::Processor");

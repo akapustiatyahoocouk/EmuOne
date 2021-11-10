@@ -34,26 +34,80 @@ Processor::State Processor::state() const
 
 void Processor::connect()
 {
+    QMutexLocker lock(&_stateGuard);
+
+    if (_state != State::Constructed)
+    {   //  OOPS! Can't make this state transiton!
+        return;
+    }
+
+    //  Done
+    _state = State::Connected;
 }
 
 void Processor::initialise()
 {
+    QMutexLocker lock(&_stateGuard);
+
+    if (_state != State::Connected)
+    {   //  OOPS! Can't make this state transiton!
+        return;
+    }
+
+    //  Done
+    _state = State::Initialised;
 }
 
 void Processor::start()
 {
+    QMutexLocker lock(&_stateGuard);
+
+    if (_state != State::Initialised)
+    {   //  OOPS! Can't make this state transiton!
+        return;
+    }
+
+    //  Done
+    _state = State::Running;
 }
 
 void Processor::stop() noexcept
 {
+    QMutexLocker lock(&_stateGuard);
+
+    if (_state != State::Running)
+    {   //  OOPS! Can't make this state transiton!
+        return;
+    }
+
+    //  Done
+    _state = State::Initialised;
 }
 
 void Processor::deinitialise() noexcept
 {
+    QMutexLocker lock(&_stateGuard);
+
+    if (_state != State::Initialised)
+    {   //  OOPS! Can't make this state transiton!
+        return;
+    }
+
+    //  Done
+    _state = State::Connected;
 }
 
 void Processor::disconnect() noexcept
 {
+    QMutexLocker lock(&_stateGuard);
+
+    if (_state != State::Connected)
+    {   //  OOPS! Can't make this state transiton!
+        return;
+    }
+
+    //  Done
+    _state = State::Constructed;
 }
 
 //////////

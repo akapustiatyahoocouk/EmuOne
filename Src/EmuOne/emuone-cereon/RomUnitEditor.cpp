@@ -36,7 +36,7 @@ void RomUnitEditor::refresh()
 {
     _refreshUnderway = true;
 
-    _ui->_addressLineEdit->setText(("0000000000000000" + QString::number(_romUnit->startAddress(), 16)).right(16).toUpper());
+    _ui->_addressLineEdit->setText(_romUnit->startAddressString());
     _ui->_sizeLineEdit->setText(QString::number(_romUnit->size().numberOfUnits()));
     _ui->_sizeUnitComboBox->setCurrentIndex((int)_romUnit->size().unit());
     _ui->_contentLineEdit->setText(_romUnit->contentFileName());

@@ -60,16 +60,52 @@ void MemoryBus::connect()
 
     //  Locate all memory units
     BoundMemoryUnitList memoryUnits;
-    for (IMemoryBusClient * memoryBusClient : virtualAppliance()->findComponents<IMemoryBusClient>())
+    for (IMemoryBusClient * memoryBusClient : virtualAppliance()->findComponentsByRole<IMemoryBusClient>())
     {
         memoryUnits.append(memoryBusClient->memoryUnits());
     }
-    for (IMemoryBusClient * memoryBusClient : virtualAppliance()->findAdaptors<IMemoryBusClient>())
-    {
-        memoryUnits.append(memoryBusClient->memoryUnits());
-    }
+
     //  Validate them
+    for (IBoundMemoryUnit * memoryUnit : memoryUnits)
+    {
+        if (memoryUnit->size().toBytes() == 0)
+        {   //  OOPS! Empty!
+            throw core::VirtualApplianceException("Memory unit at " + memoryUnit->startAddressString() + " is empty");
+        }
+        if (memoryUnit->startAddress() + (memoryUnit->size().toBytes() - 1) < memoryUnit->startAddress())
+        {   //  OOPS! Empty!
+            throw core::VirtualApplianceException("Memory unit at " + memoryUnit->startAddressString() + " overflows");
+        }
+    }
+    for (IBoundMemoryUnit * memoryUnit1 : memoryUnits)
+    {
+        for (IBoundMemoryUnit * memoryUnit2 : memoryUnits)
+        {
+            if (memoryUnit1 != memoryUnit2)
+            {
+                uint64_t intersectionStart = qMax(memoryUnit1->startAddress(), memoryUnit2->startAddress());
+                uint64_t intersectionEnd = qMin(memoryUnit1->startAddress() + (memoryUnit1->size().toBytes() - 1), memoryUnit2->startAddress() + (memoryUnit2->size().toBytes() - 1));
+                if (intersectionStart <= intersectionEnd)
+                {   //  OOPS!
+                    throw core::VirtualApplianceException("Memory units at " + memoryUnit1->startAddressString() + " and " + memoryUnit2->startAddressString() + " overlap");
+                }
+            }
+        }
+    }
+
     //  Attach
+    _numMemoryUnitMappings = memoryUnits.size();
+    _memoryUnitMappings = new _MemoryUnitMapping[memoryUnits.size()];
+    for (int i = 0; i < memoryUnits.size(); i++)
+    {
+        _memoryUnitMappings[i]._startAddress =  memoryUnits[i]->startAddress();
+        _memoryUnitMappings[i]._endAddress =  memoryUnits[i]->startAddress() + (memoryUnits[i]->size().toBytes() - 1);
+        _memoryUnitMappings[i]._memoryUnit = memoryUnits[i];
+    }
+    //  ...and keep sorted by "start address"
+    std::sort(_memoryUnitMappings + 0,
+              _memoryUnitMappings + _numMemoryUnitMappings,
+              [](auto a, auto b) -> bool { return a._startAddress < b._startAddress; });
 
     //  Done
     _state = State::Connected;
