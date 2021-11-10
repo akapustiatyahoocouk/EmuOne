@@ -33,8 +33,6 @@
 #include "emuone-core/FullScreenWidget.hpp"
 #include "emuone-core/ComponentUi.hpp"
 
-#include "emuone-core/StandardMemory.hpp"
-
 #include "emuone-core/VirtualAppliance.hpp"
 
 //  End of emuone-core/API.hpp
