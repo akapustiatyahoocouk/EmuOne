@@ -32,6 +32,7 @@ namespace cereon
 
             core::ComponentType::registerComponentType(RamUnit::Type::instance());
             core::ComponentType::registerComponentType(RomUnit::Type::instance());
+            core::ComponentType::registerComponentType(MemoryBus::Type::instance());
         }
     };
 }

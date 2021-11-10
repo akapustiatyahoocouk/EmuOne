@@ -38,12 +38,8 @@ namespace core
 {
     class EMUONE_CORE_EXPORT ComponentEditor;
     class EMUONE_CORE_EXPORT FullScreenWidget;
-    class EMUONE_CORE_EXPORT ResidentRamUnit64Editor;
-    class EMUONE_CORE_EXPORT ResidentRomUnit64Editor;
 
     using FullScreenWidgetList = QList<FullScreenWidget*>;
-    using ResidentRamUnit64EditorList = QList<ResidentRamUnit64Editor*>;
-    using ResidentRomUnit64EditorList = QList<ResidentRomUnit64Editor*>;
 }
 
 //  End of emuone-core/Classes.hpp

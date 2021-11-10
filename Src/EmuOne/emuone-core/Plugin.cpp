@@ -26,6 +26,7 @@ public:
     {
         ComponentCategory::registerComponentCategory(StandardComponentCategories::Memory::instance());
         ComponentCategory::registerComponentCategory(StandardComponentCategories::Processors::instance());
+        ComponentCategory::registerComponentCategory(StandardComponentCategories::Motherboard::instance());
         ComponentCategory::registerComponentCategory(StandardComponentCategories::Terminals::instance());
         ComponentCategory::registerComponentCategory(StandardComponentCategories::Software::instance());
     }

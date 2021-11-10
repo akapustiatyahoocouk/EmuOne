@@ -12,11 +12,15 @@ QMAKE_LFLAGS += -zdefs
 SOURCES += \
     Architectures.cpp \
     InstructionSets.cpp \
+    MemoryBus.cpp \
     Plugin.cpp \
     Processor.cpp \
     Processor1P1B.cpp \
-    ResidentRamUnit.cpp \
+    RamUnit.cpp \
+    RamUnitEditor.cpp \
     ResidentRomUnit.cpp \
+    RomUnit.cpp \
+    RomUnitEditor.cpp \
     Templates.cpp
 
 HEADERS += \
@@ -28,6 +32,8 @@ HEADERS += \
     InstructionTypes.hpp \
     Memory.hpp \
     Processors.hpp \
+    RamUnitEditor.hpp \
+    RomUnitEditor.hpp \
     Templates.hpp
 
 LIBS += -L../../../Bin/Debug -lemuone-core -lemuone-util
@@ -43,3 +49,7 @@ unix {
 
 RESOURCES += \
     cereon.qrc
+
+FORMS += \
+    RamUnitEditor.ui \
+    RomUnitEditor.ui

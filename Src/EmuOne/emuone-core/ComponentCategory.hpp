@@ -85,6 +85,25 @@ namespace core
             mutable QIcon       _largeIcon;
         };
 
+        class EMUONE_CORE_EXPORT Motherboard : public ComponentCategory
+        {
+            DECLARE_SINGLETON(Motherboard)
+
+            //////////
+            //  StockObject
+        public:
+            virtual QString     mnemonic() const override;
+            virtual QString     displayName() const override;
+            virtual QIcon       smallIcon() const override;
+            virtual QIcon       largeIcon() const override;
+
+            //////////
+            //  Implementation
+        private:
+            mutable QIcon       _smallIcon;
+            mutable QIcon       _largeIcon;
+        };
+
         class EMUONE_CORE_EXPORT Terminals : public ComponentCategory
         {
             DECLARE_SINGLETON(Terminals)

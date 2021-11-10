@@ -28,8 +28,17 @@ CereonWorkstationArchitecture * CereonWorkstationMiniTemplate::architecture() co
     return CereonWorkstationArchitecture::instance();
 }
 
-void CereonWorkstationMiniTemplate::populateVirtualAppliance(core::VirtualAppliance * /*virtualAppliance*/)
+void CereonWorkstationMiniTemplate::populateVirtualAppliance(core::VirtualAppliance * virtualAppliance)
 {
+    RamUnit * ram = new RamUnit("RAM", core::MemorySize(core::MemorySize::Unit::MB, 64), 0);
+    virtualAppliance->addComponent(ram);
+
+    RomUnit * rom = new RomUnit("ROM", core::MemorySize(core::MemorySize::Unit::MB, 1), UINT64_C(0xFFFFFFFFFFF00000), "./rom.bin");
+    virtualAppliance->addComponent(rom);
+    //  TODO create "rom bin" from resources ?
+
+    Processor * processor = new Processor1P1B();
+    virtualAppliance->addComponent(processor);
 }
 
 //  End of emuone-cereon/Templates.cpp

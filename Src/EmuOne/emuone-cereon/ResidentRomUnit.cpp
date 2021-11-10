@@ -1,3 +1,4 @@
+#if 0
 //
 //  emuone-cereon/ResidentRomUnit.cpp
 //
@@ -57,3 +58,4 @@ core::Component * ResidentRomUnit::Type::createComponent()
 }
 
 //  End of emuone-cereon/ResidentRomUnit.cpp
+#endif

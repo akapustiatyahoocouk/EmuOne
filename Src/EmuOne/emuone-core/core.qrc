@@ -12,5 +12,7 @@
         <file>Images/TerminalsSmall.png</file>
         <file>Images/SoftwareLarge.png</file>
         <file>Images/SoftwareSmall.png</file>
+        <file>Images/MotherboardLarge.png</file>
+        <file>Images/MotherboardSmall.png</file>
     </qresource>
 </RCC>

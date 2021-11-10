@@ -76,6 +76,40 @@ QIcon StandardComponentCategories::Processors::largeIcon() const
 }
 
 //////////
+//  StandardComponentCategories::Motherboard
+IMPLEMENT_SINGLETON(StandardComponentCategories::Motherboard)
+StandardComponentCategories::Motherboard::Motherboard() {}
+StandardComponentCategories::Motherboard::~Motherboard() {}
+
+QString StandardComponentCategories::Motherboard::mnemonic() const
+{
+    return "Motherboard";
+}
+
+QString StandardComponentCategories::Motherboard::displayName() const
+{
+    return "Motherboard";
+}
+
+QIcon StandardComponentCategories::Motherboard::smallIcon() const
+{
+    if (_smallIcon.isNull())
+    {
+        _smallIcon = QIcon(":/emuone/core/Images/MotherboardSmall.png");
+    }
+    return _smallIcon;
+}
+
+QIcon StandardComponentCategories::Motherboard::largeIcon() const
+{
+    if (_largeIcon.isNull())
+    {
+        _largeIcon = QIcon(":/emuone/core/Images/MotherboardLarge.png");
+    }
+    return _largeIcon;
+}
+
+//////////
 //  StandardComponentCategories::Terminals
 IMPLEMENT_SINGLETON(StandardComponentCategories::Terminals)
 StandardComponentCategories::Terminals::Terminals() {}
