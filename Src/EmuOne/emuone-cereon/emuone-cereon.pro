@@ -15,7 +15,7 @@ SOURCES += \
     Plugin.cpp \
     Processor.cpp \
     Processor1P1B.cpp \
-    ResidentRamUnit.cpp \
+    RamUnit.cpp \
     ResidentRomUnit.cpp \
     Templates.cpp
 

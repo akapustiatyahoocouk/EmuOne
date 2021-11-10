@@ -31,7 +31,7 @@ namespace cereon
             core::ComponentType::registerComponentType(Processor1P1B::Type::instance());
 
             core::ComponentType::registerComponentType(RamUnit::Type::instance());
-            core::ComponentType::registerComponentType(RomUnit::Type::instance());
+            //core::ComponentType::registerComponentType(RomUnit::Type::instance());
         }
     };
 }

@@ -29,17 +29,26 @@ namespace cereon
         };
 
         //////////
+        //  Construction/destruction
+    public:
+        MemoryUnit() {}
+        virtual ~MemoryUnit() {}
+
+        //////////
         //  Operations
     public:
-        virtual MemorySize      size() const = 0;
-        virtual AccessOutcome   loadByte(uint64_t offset, uint8_t & value) = 0;
-        virtual AccessOutcome   loadHalfWord(uint64_t offset, util::ByteOrder byteOrder, uint16_t & value) = 0;
-        virtual AccessOutcome   loadWord(uint64_t offset, util::ByteOrder byteOrder, uint32_t & value) = 0;
-        virtual AccessOutcome   loadLongWord(uint64_t offset, util::ByteOrder byteOrder, uint64_t & value) = 0;
-        virtual AccessOutcome   storeByte(uint64_t offset, uint8_t value) = 0;
-        virtual AccessOutcome   storeHalfWord(uint64_t offset, util::ByteOrder byteOrder, uint16_t value) = 0;
-        virtual AccessOutcome   storeWord(uint64_t offset, util::ByteOrder byteOrder, uint32_t value) = 0;
-        virtual AccessOutcome   storeLongWord(uint64_t offset, util::ByteOrder byteOrder, uint64_t value) = 0;
+        //  The size of this memory unit.
+        virtual core::MemorySize    size() const = 0;
+
+        //  Performs a load/store. IMPORTANT: Must be naturally aligned.
+        virtual AccessOutcome       loadByte(uint64_t offset, uint8_t & value) = 0;
+        virtual AccessOutcome       loadHalfWord(uint64_t offset, util::ByteOrder byteOrder, uint16_t & value) = 0;
+        virtual AccessOutcome       loadWord(uint64_t offset, util::ByteOrder byteOrder, uint32_t & value) = 0;
+        virtual AccessOutcome       loadLongWord(uint64_t offset, util::ByteOrder byteOrder, uint64_t & value) = 0;
+        virtual AccessOutcome       storeByte(uint64_t offset, uint8_t value) = 0;
+        virtual AccessOutcome       storeHalfWord(uint64_t offset, util::ByteOrder byteOrder, uint16_t value) = 0;
+        virtual AccessOutcome       storeWord(uint64_t offset, util::ByteOrder byteOrder, uint32_t value) = 0;
+        virtual AccessOutcome       storeLongWord(uint64_t offset, util::ByteOrder byteOrder, uint64_t value) = 0;
     };
 
     //////////
@@ -49,9 +58,17 @@ namespace cereon
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(BoundMemoryUnit)
 
         //////////
+        //  Cobstruction/destruction
+    public:
+        BoundMemoryUnit() {}
+        virtual ~BoundMemoryUnit() {}
+
+        //////////
         //  Operations
     public:
-        virtual uint64_t        startAddress() const = 0;
+        //  The "start address" of this memory unit in the address space.
+        //  The memory unit covers the address range [<start address> ... <start address>+<size>)
+        virtual uint64_t            startAddress() const = 0;
     };
     using BoundMemoryUnitList = QList<BoundMemoryUnit*>;
 
@@ -89,8 +106,8 @@ namespace cereon
             //////////
             //  util::StockObject
         public:
-            virtual QString     mnemonic() const override;
-            virtual QString     displayName() const override;
+            virtual QString         mnemonic() const override;
+            virtual QString         displayName() const override;
 
             //////////
             //  core::ComponentType
@@ -109,65 +126,73 @@ namespace cereon
         //////////
         //  core::Component
     public:
-        virtual ComponentType *     type() const override;
-        virtual ComponentEditor *   createEditor(QWidget * parent) override;
-        virtual QString             shortStatus() const override;
-        virtual ComponentUi *       createUi() override;
+        virtual core::ComponentType *   type() const override;
+        virtual core::ComponentEditor * createEditor(QWidget * parent) override;
+        virtual QString                 shortStatus() const override;
+        virtual core::ComponentUi *     createUi() override;
 
         //////////
         //  core::Component (state control) - all thread-safe
     public:
-        virtual State           state() const override;
-        virtual void            connect() override;
-        virtual void            initialise() override;
-        virtual void            start() override;
-        virtual void            stop() noexcept override;
-        virtual void            deinitialise() noexcept override;
-        virtual void            disconnect() noexcept override;
+        virtual State               state() const override;
+        virtual void                connect() override;
+        virtual void                initialise() override;
+        virtual void                start() override;
+        virtual void                stop() noexcept override;
+        virtual void                deinitialise() noexcept override;
+        virtual void                disconnect() noexcept override;
 
         //////////
         //  core::Component (serialisation)
     public:
-        virtual void            serialiseConfiguration(QDomElement & configurationElement) const override;
-        virtual void            deserialiseConfiguration(QDomElement & configurationElement) override;
+        virtual void                serialiseConfiguration(QDomElement & configurationElement) const override;
+        virtual void                deserialiseConfiguration(QDomElement & configurationElement) override;
 
         //////////
         //  MemoryUnit
     public:
-        virtual MemorySize      size() const override;
-        virtual AccessOutcome   loadByte(uint64_t offset, uint8_t & value) override;
-        virtual AccessOutcome   loadHalfWord(uint64_t offset, util::ByteOrder byteOrder, uint16_t & value) override;
-        virtual AccessOutcome   loadWord(uint64_t offset, util::ByteOrder byteOrder, uint32_t & value) override;
-        virtual AccessOutcome   loadLongWord(uint64_t offset, util::ByteOrder byteOrder, uint64_t & value) override;
-        virtual AccessOutcome   storeByte(uint64_t offset, uint8_t value) override;
-        virtual AccessOutcome   storeHalfWord(uint64_t offset, util::ByteOrder byteOrder, uint16_t value) override;
-        virtual AccessOutcome   storeWord(uint64_t offset, util::ByteOrder byteOrder, uint32_t value) override;
-        virtual AccessOutcome   storeLongWord(uint64_t offset, util::ByteOrder byteOrder, uint64_t value) override;
+        virtual core::MemorySize    size() const override;
+        virtual AccessOutcome       loadByte(uint64_t offset, uint8_t & value) override;
+        virtual AccessOutcome       loadHalfWord(uint64_t offset, util::ByteOrder byteOrder, uint16_t & value) override;
+        virtual AccessOutcome       loadWord(uint64_t offset, util::ByteOrder byteOrder, uint32_t & value) override;
+        virtual AccessOutcome       loadLongWord(uint64_t offset, util::ByteOrder byteOrder, uint64_t & value) override;
+        virtual AccessOutcome       storeByte(uint64_t offset, uint8_t value) override;
+        virtual AccessOutcome       storeHalfWord(uint64_t offset, util::ByteOrder byteOrder, uint16_t value) override;
+        virtual AccessOutcome       storeWord(uint64_t offset, util::ByteOrder byteOrder, uint32_t value) override;
+        virtual AccessOutcome       storeLongWord(uint64_t offset, util::ByteOrder byteOrder, uint64_t value) override;
 
         //////////
         //  BoundMemoryUnit
     public:
-        virtual uint64_t        startAddress() const override;
+        virtual uint64_t            startAddress() const override;
+
+        //////////
+        //  IMemoryBusClient
+    public:
+        virtual BoundMemoryUnitList memoryUnits() override;
 
         //////////
         //  Operations
     public:
-        virtual void            setSize(const MemorySize & size);
-        virtual void            setStartAddress(uint64_t startAddress);
+        //  Sets the size of this RAM unit.
+        virtual void                setSize(const core::MemorySize & size);
+
+        //  Sets the start address of this RAM unit.
+        virtual void                setStartAddress(uint64_t startAddress);
 
         //////////
         //  Implementation
     private:
-        State                   _state = State::Constructed;
-        QRecursiveMutex         _stateGuard;
+        State                       _state = State::Constructed;
+        mutable QRecursiveMutex     _stateGuard;
 
         //  Configuration
-        core::MemorySize        _size;
-        uint64_t                _startAddress;
+        core::MemorySize            _size;
+        uint64_t                    _startAddress;
 
         //  Runtime state
-        uint8_t *               _data = nullptr;
-        size_t                  _dataSize = 0;
+        uint8_t *                   _data = nullptr;
+        size_t                      _dataSize = 0;
     };
 
 /*

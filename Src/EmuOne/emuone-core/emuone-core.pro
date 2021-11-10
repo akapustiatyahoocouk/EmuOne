@@ -21,11 +21,7 @@ SOURCES += \
     MemorySize.cpp \
     Plugin.cpp \
     RemoteTerminal.cpp \
-    ResidentRomUnit64.cpp \
     StandardComponentCategories.cpp \
-    StandardMemoryBus64.cpp \
-    StandardMemoryUnit64.cpp \
-    StandardResidentRamUnit64.cpp \
     VirtualAppliance.cpp \
     VirtualApplianceType.cpp \
     VirtualMachine.cpp
