@@ -87,6 +87,7 @@ namespace util
             return (byteOrder == ByteOrder::Host) ? (*bytes) : changeByteOrder(*bytes);
         }
 
+<<<<<<< HEAD
         static void         storeUInt8(void * p, uint8_t value)
         {
             uint8_t * bytes = (uint8_t *)p;
@@ -134,6 +135,16 @@ namespace util
             int64_t * bytes = (int64_t *)p;
             *bytes = (byteOrder == ByteOrder::Host) ? (value) : changeByteOrder(value);
         }
+=======
+        static void         storeUInt8(const void * p, uint8_t value);
+        static void         storeUInt16(const void * p, uint16_t value, ByteOrder byteOrder);
+        static void         storeUInt32(const void * p, uint32_t value, ByteOrder byteOrder);
+        static void         storeUInt64(const void * p, uint64_t value, ByteOrder byteOrder);
+        static void         storeInt8(const void * p, int8_t value);
+        static void         storeInt16(const void * p, int16_t value, ByteOrder byteOrder);
+        static void         storeInt32(const void * p, int32_t value, ByteOrder byteOrder);
+        static void         storeInt64(const void * p, int64_t value, ByteOrder byteOrder);
+>>>>>>> 2336cc68696697697436096ab3c8040086b9d800
 
         static uint8_t      loadUnalignedUInt8(const void * p);
         static uint16_t     loadUnalignedUInt16(const void * p, ByteOrder byteOrder);

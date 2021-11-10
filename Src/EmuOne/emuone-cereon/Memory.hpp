@@ -27,9 +27,16 @@ namespace cereon
         };
 
         //////////
+<<<<<<< HEAD
         //  This is an interface
     public:
         virtual ~IMemoryUnit() {}
+=======
+        //  Construction/destruction
+    public:
+        MemoryUnit() {}
+        virtual ~MemoryUnit() {}
+>>>>>>> 2336cc68696697697436096ab3c8040086b9d800
 
         //////////
         //  Operations
@@ -59,15 +66,24 @@ namespace cereon
         virtual ~IBoundMemoryUnit() {}
 
         //////////
+        //  Cobstruction/destruction
+    public:
+        BoundMemoryUnit() {}
+        virtual ~BoundMemoryUnit() {}
+
+        //////////
         //  Operations
     public:
         //  The "start address" of this memory unit in the address space.
         //  The memory unit covers the address range [<start address> ... <start address>+<size>)
         virtual uint64_t            startAddress() const = 0;
+<<<<<<< HEAD
 
         //  The 16-digit hex representation of this unit's start address
         QString                     startAddressString() const { return ("0000000000000000" + QString::number(startAddress(), 16)).right(16).toUpper(); }
 
+=======
+>>>>>>> 2336cc68696697697436096ab3c8040086b9d800
     };
     using BoundMemoryUnitList = QList<IBoundMemoryUnit*>;
 
@@ -148,6 +164,7 @@ namespace cereon
     public:
         virtual void                serialiseConfiguration(QDomElement & configurationElement) const override;
         virtual void                deserialiseConfiguration(QDomElement & configurationElement) override;
+<<<<<<< HEAD
 
         //////////
         //  IMemoryUnit
@@ -161,33 +178,65 @@ namespace cereon
         virtual AccessOutcome       storeHalfWord(uint64_t offset, util::ByteOrder byteOrder, uint16_t value) override;
         virtual AccessOutcome       storeWord(uint64_t offset, util::ByteOrder byteOrder, uint32_t value) override;
         virtual AccessOutcome       storeLongWord(uint64_t offset, util::ByteOrder byteOrder, uint64_t value) override;
+=======
+>>>>>>> 2336cc68696697697436096ab3c8040086b9d800
 
         //////////
         //  IBoundMemoryUnit
     public:
+<<<<<<< HEAD
         virtual uint64_t            startAddress() const override { return _startAddress; }
+=======
+        virtual core::MemorySize    size() const override;
+        virtual AccessOutcome       loadByte(uint64_t offset, uint8_t & value) override;
+        virtual AccessOutcome       loadHalfWord(uint64_t offset, util::ByteOrder byteOrder, uint16_t & value) override;
+        virtual AccessOutcome       loadWord(uint64_t offset, util::ByteOrder byteOrder, uint32_t & value) override;
+        virtual AccessOutcome       loadLongWord(uint64_t offset, util::ByteOrder byteOrder, uint64_t & value) override;
+        virtual AccessOutcome       storeByte(uint64_t offset, uint8_t value) override;
+        virtual AccessOutcome       storeHalfWord(uint64_t offset, util::ByteOrder byteOrder, uint16_t value) override;
+        virtual AccessOutcome       storeWord(uint64_t offset, util::ByteOrder byteOrder, uint32_t value) override;
+        virtual AccessOutcome       storeLongWord(uint64_t offset, util::ByteOrder byteOrder, uint64_t value) override;
+>>>>>>> 2336cc68696697697436096ab3c8040086b9d800
 
         //////////
         //  IMemoryBusClient
     public:
+<<<<<<< HEAD
+=======
+        virtual uint64_t            startAddress() const override;
+
+        //////////
+        //  IMemoryBusClient
+    public:
+>>>>>>> 2336cc68696697697436096ab3c8040086b9d800
         virtual BoundMemoryUnitList memoryUnits() override;
 
         //////////
         //  Operations
     public:
         //  Sets the size of this RAM unit.
+<<<<<<< HEAD
         void                        setSize(const core::MemorySize & size) { _size = size; }
 
         //  Sets the start address of this RAM unit.
         void                        setStartAddress(uint64_t startAddress) { _startAddress = startAddress; }
+=======
+        virtual void                setSize(const core::MemorySize & size);
+
+        //  Sets the start address of this RAM unit.
+        virtual void                setStartAddress(uint64_t startAddress);
+>>>>>>> 2336cc68696697697436096ab3c8040086b9d800
 
         //////////
         //  Implementation
     private:
         State                       _state = State::Constructed;
         mutable QRecursiveMutex     _stateGuard;
+<<<<<<< HEAD
 
         RamUnitEditorList           _editors;
+=======
+>>>>>>> 2336cc68696697697436096ab3c8040086b9d800
 
         //  Configuration
         core::MemorySize            _size;

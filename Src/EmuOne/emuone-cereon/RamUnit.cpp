@@ -30,9 +30,12 @@ core::ComponentType * RamUnit::type() const
 
 core::ComponentEditor * RamUnit::createEditor(QWidget * parent)
 {
+<<<<<<< HEAD
     RamUnitEditor * editor = new RamUnitEditor(this, parent);
     _editors.append(editor);
     return editor;
+=======
+>>>>>>> 2336cc68696697697436096ab3c8040086b9d800
 }
 
 QString RamUnit::shortStatus() const
@@ -175,6 +178,14 @@ void RamUnit::deserialiseConfiguration(QDomElement & configurationElement)
 
 //////////
 //  MemoryUnit
+<<<<<<< HEAD
+=======
+core::MemorySize RamUnit::size() const
+{
+    return _size;
+}
+
+>>>>>>> 2336cc68696697697436096ab3c8040086b9d800
 RamUnit::AccessOutcome RamUnit::loadByte(uint64_t offset, uint8_t & value)
 {
     if (_data == nullptr)
@@ -337,6 +348,13 @@ RamUnit::AccessOutcome RamUnit::storeLongWord(uint64_t offset, util::ByteOrder b
 
 //////////
 //  BoundMemoryUnit
+<<<<<<< HEAD
+=======
+uint64_t RamUnit::startAddress() const
+{
+    return _startAddress;
+}
+>>>>>>> 2336cc68696697697436096ab3c8040086b9d800
 
 //////////
 //  IMemoryBusClient
@@ -349,6 +367,18 @@ BoundMemoryUnitList RamUnit::memoryUnits()
 
 //////////
 //  Operations
+<<<<<<< HEAD
+=======
+void RamUnit::setSize(const core::MemorySize & size)
+{
+    _size = size;
+}
+
+void RamUnit::setStartAddress(uint64_t startAddress)
+{
+    _startAddress = startAddress;
+}
+>>>>>>> 2336cc68696697697436096ab3c8040086b9d800
 
 //////////
 //  RamUnit::Type
@@ -363,7 +393,11 @@ QString RamUnit::Type::mnemonic() const
 
 QString RamUnit::Type::displayName() const
 {
+<<<<<<< HEAD
     return "Cereon RAM unit";
+=======
+    return "Cereon resident RAM unit";
+>>>>>>> 2336cc68696697697436096ab3c8040086b9d800
 }
 
 core::ComponentCategory * RamUnit::Type::category() const
