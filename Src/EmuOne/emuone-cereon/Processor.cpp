@@ -12,6 +12,7 @@ using namespace cereon;
 Processor::Processor(const QString & name, Features features, InstructionSet * instructionSet,
                      core::ClockFrequency clockFrequency, util::ByteOrder byteOrder)
     :   core::Component(name),
+        registers(),
         _features(features),
         _instructionSet(instructionSet),
         _clockFrequency(clockFrequency),
@@ -52,7 +53,18 @@ void Processor::connect()
         throw core::VirtualApplianceException("cereon::Processor found multiple MemoryBuses");
     }
 
+    QList<IoBus*> ioBuses = this->virtualAppliance()->findComponentsByRole<IoBus>();
+    if (ioBuses.size() == 0)
+    {
+        throw core::VirtualApplianceException("cereon::Processor cannot find an IoBus");
+    }
+    if (ioBuses.size() > 1)
+    {
+        throw core::VirtualApplianceException("cereon::Processor found multiple IoBuses");
+    }
+
     _memoryBus = memoryBuses[0];
+    _ioBus = ioBuses[0];
 
     //  Done
     _state = State::Connected;
@@ -120,6 +132,7 @@ void Processor::disconnect() noexcept
     }
 
     _memoryBus = nullptr;
+    _ioBus = nullptr;
 
     //  Done
     _state = State::Constructed;

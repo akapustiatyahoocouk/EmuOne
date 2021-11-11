@@ -5,7 +5,9 @@ DEFINES += EMUONECEREON_LIBRARY
 
 SOURCES += \
     Architectures.cpp \
+    Cmos1.cpp \
     InstructionSets.cpp \
+    IoBus.cpp \
     MemoryBus.cpp \
     Plugin.cpp \
     Processor.cpp \
@@ -20,9 +22,11 @@ HEADERS += \
     API.hpp \
     Architectures.hpp \
     Classes.hpp \
+    Cmos1.hpp \
     Features.hpp \
     InstructionSets.hpp \
     InstructionTypes.hpp \
+    Io.hpp \
     Memory.hpp \
     Processors.hpp \
     RamUnitEditor.hpp \

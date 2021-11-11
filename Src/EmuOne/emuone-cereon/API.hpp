@@ -31,6 +31,9 @@
 #include "emuone-cereon/Memory.hpp"
 #include "emuone-cereon/RamUnitEditor.hpp"
 #include "emuone-cereon/RomUnitEditor.hpp"
+#include "emuone-cereon/Io.hpp"
 #include "emuone-cereon/Processors.hpp"
+
+#include "emuone-cereon/Cmos1.hpp"
 
 //  End of emuone-cereon/API.hpp

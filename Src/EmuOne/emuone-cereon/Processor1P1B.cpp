@@ -10,7 +10,7 @@ using namespace cereon;
 //////////
 //  Construction/destruction
 Processor1P1B::Processor1P1B()
-    :   Processor(Processor1P1B::Type::instance()->displayName(),
+    :   Processor("Processor",
                   Features::Base,
                   InstructionSetV1::instance(),
                   core::ClockFrequency(core::ClockFrequency::Unit::MHZ, 10),

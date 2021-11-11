@@ -30,15 +30,15 @@ CereonWorkstationArchitecture * CereonWorkstationMiniTemplate::architecture() co
 
 void CereonWorkstationMiniTemplate::populateVirtualAppliance(core::VirtualAppliance * virtualAppliance)
 {
-    RamUnit * ram = new RamUnit("RAM", core::MemorySize(core::MemorySize::Unit::MB, 64), 0);
-    virtualAppliance->addComponent(ram);
+    virtualAppliance->addComponent(new RamUnit("RAM", core::MemorySize(core::MemorySize::Unit::MB, 64), 0));
 
-    RomUnit * rom = new RomUnit("ROM", core::MemorySize(core::MemorySize::Unit::MB, 1), UINT64_C(0xFFFFFFFFFFF00000), "./rom.bin");
-    virtualAppliance->addComponent(rom);
+    virtualAppliance->addComponent(new RomUnit("ROM", core::MemorySize(core::MemorySize::Unit::MB, 1), UINT64_C(0xFFFFFFFFFFF00000), "./rom.bin"));
     //  TODO create "rom bin" from resources ?
 
-    Processor * processor = new Processor1P1B();
-    virtualAppliance->addComponent(processor);
+    virtualAppliance->addComponent(new MemoryBus("Memory bus"));
+    virtualAppliance->addComponent(new IoBus("I/O bus"));
+
+    virtualAppliance->addComponent(new Processor1P1B());
 }
 
 //  End of emuone-cereon/Templates.cpp

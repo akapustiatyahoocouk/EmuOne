@@ -33,7 +33,7 @@ core::ComponentEditor * MemoryBus::createEditor(QWidget * /*parent*/)
 
 QString MemoryBus::shortStatus() const
 {
-    return this->type()->displayName();
+    return "";
 }
 
 core::ComponentUi * MemoryBus::createUi()
