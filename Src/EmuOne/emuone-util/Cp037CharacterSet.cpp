@@ -276,7 +276,7 @@ Cp037CharacterSet::Cp037CharacterSet()
 {
     for (int i = 0; i < 256; i++)
     {
-        _asciiToEbcdic[_ebcdicToAscii[i]] = i;
+        _asciiToEbcdic[_ebcdicToAscii[i]] = static_cast<uint8_t>(i);
     }
 }
 Cp037CharacterSet::~Cp037CharacterSet() {}
@@ -371,7 +371,7 @@ int Cp037CharacterSet::_Decoder::decode(const QByteArray & bytes, int scan, QCha
 {
     if (scan >= 0 && scan < bytes.length())
     {
-        c = (char16_t)_ebcdicToAscii[(uint8_t)bytes[scan]];
+        c = static_cast<char16_t>(_ebcdicToAscii[static_cast<uint8_t>(bytes[scan])]);
         return 1;
     }
     return 0;

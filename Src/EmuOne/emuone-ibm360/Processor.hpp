@@ -20,8 +20,8 @@ namespace ibm360
         //////////
         //  Operations
     public:
-        uint8_t             systemMask() const { return (uint8_t)(_value >> 56); }
-        uint8_t             protectionKey() { return (uint8_t)((_value >> 52) & 0x0F); }
+        uint8_t             systemMask() const { return static_cast<uint8_t>(_value >> 56); }
+        uint8_t             protectionKey() { return static_cast<uint8_t>((_value >> 52) & 0x0F); }
         bool                asciiMode() const { return (_value & UINT64_C(0x0008000000000000)) != 0; }
         bool                ebcdicMode() const { return (_value & UINT64_C(0x0008000000000000)) == 0; }
         bool                machineCheckMode() const { return (_value & UINT64_C(0x0004000000000000)) != 0; }
@@ -29,15 +29,15 @@ namespace ibm360
         bool                runningState() const { return (_value & UINT64_C(0x0002000000000000)) == 0; }
         bool                problemState() const { return (_value & UINT64_C(0x0001000000000000)) != 0; }
         bool                supervisorState() const { return (_value & UINT64_C(0x0001000000000000)) == 0; }
-        uint16_t            interruptionCode() const { return (uint16_t)(_value >> 32); }
-        uint8_t             instructionLengthCode() const { return (uint8_t)((_value >> 30) & 0x03); }
-        uint8_t             conditionCode() const { return (uint8_t)((_value >> 28) & 0x03); }
-        uint8_t             programMask() const { return (uint8_t)((_value >> 24) & 0x03); }
+        uint16_t            interruptionCode() const { return static_cast<uint16_t>(_value >> 32); }
+        uint8_t             instructionLengthCode() const { return static_cast<uint8_t>((_value >> 30) & 0x03); }
+        uint8_t             conditionCode() const { return static_cast<uint8_t>((_value >> 28) & 0x03); }
+        uint8_t             programMask() const { return static_cast<uint8_t>((_value >> 24) & 0x03); }
         bool                fixedPointOverflow() const { return (_value & UINT64_C(0x0000000008000000)) != 0; }
         bool                decimalOverflow() const { return (_value & UINT64_C(0x0000000004000000)) != 0; }
         bool                exponentUnderflow() const { return (_value & UINT64_C(0x0000000002000000)) != 0; }
         bool                significance() const { return (_value & UINT64_C(0x0000000001000000)) != 0; }
-        uint32_t            instructionAddress() const { return (uint32_t)_value & 0x00FFFFFF; }
+        uint32_t            instructionAddress() const { return static_cast<uint32_t>(_value & 0x00FFFFFF); }
         void                setInstructionAddress(uint32_t instructionAddress) { _value = ((_value & UINT64_C(0xFFFFFFFFFF000000)) | (instructionAddress & 0x00FFFFFF)); }
 
         //////////
@@ -120,7 +120,7 @@ namespace ibm360
         //  Implementation
     private:
         State                   _state = State::Constructed;
-        mutable QRecursiveMutex _stateGuard;
+        mutable QRecursiveMutex _stateGuard = {};
 
         //  Component configuration
         Features                _features;
@@ -131,9 +131,9 @@ namespace ibm360
         Monitor *               _monitor = nullptr;
 
         //  Runtime state
-        Psw                     _psw;
-        bool                    _stopped;
-        bool                    _iplInProgress;
+        Psw                     _psw = {};
+        bool                    _stopped = true;
+        bool                    _iplInProgress = false;
     };
 }
 

@@ -8,6 +8,14 @@
 
 //////////
 //  CRT + dependencies
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wsign-promo"
+#pragma GCC diagnostic ignored "-Wswitch-default"
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+
 #include <QtCore/qglobal.h>
 #include <QApplication>
 #include <QCloseEvent>
@@ -31,6 +39,8 @@
 #include <QSettings>
 #include <QTimer>
 #include <QWidget>
+
+#pragma GCC diagnostic pop
 
 //////////
 //  emuone-util components

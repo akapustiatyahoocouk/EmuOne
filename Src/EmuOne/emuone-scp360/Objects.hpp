@@ -268,17 +268,17 @@ namespace scp360
         State                   _state = State::Prepared;
 
         Process *               _parent;    //  nullptr == none
-        ProcessList             _children;
+        ProcessList             _children = {};
 
-        QMap<QString, EnvironmentVariable*> _environment;   //  name -> variable
+        QMap<QString, EnvironmentVariable*> _environment = {};  //  name -> variable
 
         uint16_t                _suspendCount = 0;
-        uint16_t                _staticPriority;
-        int16_t                 _dynamicPriority;
+        uint16_t                _staticPriority = DefaultStaticPriority;
+        int16_t                 _dynamicPriority = 0;
         ErrorCode               _exitCode = ErrorCode::ERR_UNK;
         uint16_t                _holdCount = 0;
 
-        QMap<ResourceHandle, IResource*>    _openHandles;  //  handle -> Resource
+        QMap<ResourceHandle, IResource*>    _openHandles = {};  //  handle -> Resource
     };
 
     EMUONE_SCP360_EXPORT Process::Flags operator & (Process::Flags op1, Process::Flags op2);
@@ -303,8 +303,8 @@ namespace scp360
     public:
         QString                 name() const { return _name; }
         QStringList             values() const { return _values; }
-        int                     valueCount() const { return _values.size(); }
-        QString                 valueAt(int index) const { return _values[index]; }
+        uint32_t                valueCount() const { return static_cast<uint32_t>(_values.size()); }
+        QString                 valueAt(uint32_t index) const { return _values[index]; }
 
         //  Returns the value of this environment variable as a scalar
         QString                 toString() const;

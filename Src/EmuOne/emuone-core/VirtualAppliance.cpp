@@ -351,13 +351,19 @@ void VirtualAppliance::stop() noexcept
 void VirtualAppliance::suspend()
 {
     QMutexLocker locker(&_stateGuard);
-    throw VirtualApplianceException("Not yet implemented");
+    if (this != reinterpret_cast<VirtualAppliance*>(uintptr_t(1)))
+    {   //  TODO implement properly
+        throw VirtualApplianceException("Not yet implemented");
+    }
 }
 
 void VirtualAppliance::resume()
 {
     QMutexLocker locker(&_stateGuard);
-    throw VirtualApplianceException("Not yet implemented");
+    if (this != reinterpret_cast<VirtualAppliance*>(uintptr_t(1)))
+    {   //  TODO implement properly
+        throw VirtualApplianceException("Not yet implemented");
+    }
 }
 
 //////////

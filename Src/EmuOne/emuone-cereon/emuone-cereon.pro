@@ -1,13 +1,7 @@
-QT += core gui widgets xml
-
 TEMPLATE = lib
-CONFIG += c++17
+include(../emuone.pri)
 
-INCLUDEPATH += ..
 DEFINES += EMUONECEREON_LIBRARY
-DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
-QMAKE_CXXFLAGS += -zdefs
-QMAKE_LFLAGS += -zdefs
 
 SOURCES += \
     Architectures.cpp \
@@ -17,11 +11,7 @@ SOURCES += \
     Processor.cpp \
     Processor1P1B.cpp \
     RamUnit.cpp \
-<<<<<<< HEAD
     RamUnitEditor.cpp \
-=======
->>>>>>> 2336cc68696697697436096ab3c8040086b9d800
-    ResidentRomUnit.cpp \
     RomUnit.cpp \
     RomUnitEditor.cpp \
     Templates.cpp
@@ -40,15 +30,6 @@ HEADERS += \
     Templates.hpp
 
 LIBS += -L../../../Bin/Debug -lemuone-core -lemuone-util
-
-CONFIG(debug,debug|release) DESTDIR = ../../../Bin/Debug
-CONFIG(release,debug|release) DESTDIR = ../../../Bin/Release
-
-# Default rules for deployment.
-unix {
-    target.path = /usr/lib
-}
-!isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
     cereon.qrc

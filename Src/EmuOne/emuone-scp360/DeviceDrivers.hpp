@@ -121,7 +121,7 @@ namespace scp360
         //////////
         //  Implementation
     private:
-        QSet<ibm360::Ibm2741*>  _knownHardwareDevices;
+        QSet<ibm360::Ibm2741*>  _knownHardwareDevices = {};
 
         class _Ibm2741IoCompletionListener : public ibm360::Ibm2741::IoCompletionListener
         {
@@ -150,7 +150,7 @@ namespace scp360
             Ibm2741Driver *const    _driver;
             Device *const           _device;
         };
-        QSet<_Ibm2741IoCompletionListener*> _ibm2741IoCompletionListeners;
+        QSet<_Ibm2741IoCompletionListener*> _ibm2741IoCompletionListeners = {};
 
         class _Ibm2741TransferCompletionListener : public ibm360::Ibm2741::TransferCompletionListener
         {
@@ -179,7 +179,7 @@ namespace scp360
             Ibm2741Driver *const    _driver;
             Device *const           _device;
         };
-        QSet<_Ibm2741TransferCompletionListener*>   _ibm2741TransferCompletionListeners;
+        QSet<_Ibm2741TransferCompletionListener*>   _ibm2741TransferCompletionListeners = {};
 
         //  Helpers
         static ibm360::Ibm2741 *_resolveIbm2741(Device * device);

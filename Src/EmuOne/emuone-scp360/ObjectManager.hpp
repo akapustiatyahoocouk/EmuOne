@@ -42,15 +42,15 @@ namespace scp360
         Scp *const          _scp;   //  ...to which this subsystem belongs
 
         //  Primary object cache
-        QMap<Object::Id, Object*>   _objects;
+        QMap<Object::Id, Object*>   _objects = {};
 
         //  Secondary object caches (by object type)
-        QMap<Object::Id, Segment*>          _segments;
-        QMap<Object::Id, SegmentMapping*>   _segmentMappings;
-        QMap<Object::Id, SegmentLock*>      _segmentLocks;
-        QMap<Object::Id, Process*>          _processes;
-        QMap<Object::Id, Device*>           _devices;
-        QMap<QString, Device*>              _devicesByName;
+        QMap<Object::Id, Segment*>          _segments = {};
+        QMap<Object::Id, SegmentMapping*>   _segmentMappings = {};
+        QMap<Object::Id, SegmentLock*>      _segmentLocks = {};
+        QMap<Object::Id, Process*>          _processes = {};
+        QMap<Object::Id, Device*>           _devices = {};
+        QMap<QString, Device*>              _devicesByName = {};
 
         //  Helpers
         ErrorCode           _generateUniqueObjectId(Object::Id & id);

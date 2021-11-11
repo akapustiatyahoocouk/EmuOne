@@ -5,7 +5,12 @@
 //
 //////////
 #include "emuone-cereon/API.hpp"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wswitch-default"
+#pragma GCC diagnostic ignored "-Wsign-promo"
 #include "ui_RomUnitEditor.h"
+#pragma GCC diagnostic pop
 using namespace cereon;
 
 //////////
@@ -38,7 +43,7 @@ void RomUnitEditor::refresh()
 
     _ui->_addressLineEdit->setText(_romUnit->startAddressString());
     _ui->_sizeLineEdit->setText(QString::number(_romUnit->size().numberOfUnits()));
-    _ui->_sizeUnitComboBox->setCurrentIndex((int)_romUnit->size().unit());
+    _ui->_sizeUnitComboBox->setCurrentIndex(static_cast<int>(_romUnit->size().unit()));
     _ui->_contentLineEdit->setText(_romUnit->contentFileName());
 
     _refreshUnderway = false;
@@ -51,7 +56,7 @@ void RomUnitEditor::_addressLineEditTextChanged(const QString &)
     if (!_refreshUnderway)
     {
         bool parsedOk = false;
-        uint64_t address = (uint64_t)_ui->_addressLineEdit->text().toULongLong(&parsedOk, 16);
+        uint64_t address = _ui->_addressLineEdit->text().toULongLong(&parsedOk, 16);
         _romUnit->setStartAddress(address);
         emit componentConfigurationChanged(component());
     }
@@ -61,7 +66,7 @@ void RomUnitEditor::_sizeLineEditTextChanged(const QString &)
 {
     if (!_refreshUnderway)
     {
-        core::MemorySize::Unit unit = (core::MemorySize::Unit)_ui->_sizeUnitComboBox->currentIndex();
+        core::MemorySize::Unit unit = static_cast<core::MemorySize::Unit>(_ui->_sizeUnitComboBox->currentIndex());
         uint64_t numberOfUnits = _ui->_sizeLineEdit->text().toULongLong();
         if (numberOfUnits > 0)
         {   //  Parsed successfully
@@ -76,7 +81,7 @@ void RomUnitEditor::_sizeUnitComboBoxCurrentIndexChanged(int)
 {
     if (!_refreshUnderway)
     {
-        core::MemorySize::Unit unit = (core::MemorySize::Unit)_ui->_sizeUnitComboBox->currentIndex();
+        core::MemorySize::Unit unit = static_cast<core::MemorySize::Unit>(_ui->_sizeUnitComboBox->currentIndex());
         uint64_t numberOfUnits = _ui->_sizeLineEdit->text().toULongLong();
         if (numberOfUnits > 0)
         {   //  Parsed successfully

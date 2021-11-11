@@ -5,7 +5,12 @@
 //
 //////////
 #include "emuone-scp360/API.hpp"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wswitch-default"
+#pragma GCC diagnostic ignored "-Wsign-promo"
 #include "ui_NewSharedFolderDialog.h"
+#pragma GCC diagnostic pop
 using namespace scp360;
 
 //////////

@@ -5,7 +5,12 @@
 //
 //////////
 #include "emuone/API.hpp"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wswitch-default"
+#pragma GCC diagnostic ignored "-Wsign-promo"
 #include "ui_NewVmDialog.h"
+#pragma GCC diagnostic pop
 
 //////////
 //  Construction/destruction
@@ -31,7 +36,9 @@ NewVmDialog::NewVmDialog(QWidget * parent)
     {   //  SOME architectures are defined
         for (core::Architecture * architecture : architectures)
         {
-            _ui->_architectureComboBox->addItem(architecture->smallIcon(), architecture->displayName(), QVariant::fromValue((void*)architecture));
+            _ui->_architectureComboBox->addItem(architecture->smallIcon(),
+                                                architecture->displayName(),
+                                                QVariant::fromValue(static_cast<void*>(architecture)));
         }
         _ui->_architectureComboBox->setCurrentIndex(0);
     }
@@ -101,7 +108,7 @@ void NewVmDialog::_refreshTemplatesList()
         {
             _ui->_templateComboBox->addItem(virtualApplianceTemplate->smallIcon(),
                                             virtualApplianceTemplate->displayName(),
-                                            QVariant::fromValue((void*)virtualApplianceTemplate));
+                                            QVariant::fromValue(static_cast<void*>(virtualApplianceTemplate)));
         }
         _ui->_templateComboBox->setCurrentIndex(0);
     }
@@ -112,7 +119,7 @@ core::Architecture * NewVmDialog::_getSelectedArchitecture()
     int n = _ui->_architectureComboBox->currentIndex();
     if (n >= 0)
     {
-        return (core::Architecture*)(_ui->_architectureComboBox->itemData(n).value<void*>());
+        return static_cast<core::Architecture*>(_ui->_architectureComboBox->itemData(n).value<void*>());
     }
     return nullptr;
 }
@@ -122,7 +129,7 @@ core::VirtualApplianceTemplate * NewVmDialog::_getSelectedTemplate()
     int n = _ui->_templateComboBox->currentIndex();
     if (n >= 0)
     {
-        return (core::VirtualApplianceTemplate*)(_ui->_templateComboBox->itemData(n).value<void*>());
+        return static_cast<core::VirtualApplianceTemplate*>(_ui->_templateComboBox->itemData(n).value<void*>());
     }
     return nullptr;
 }
@@ -169,8 +176,8 @@ void NewVmDialog::_accept()
 {
     _virtualApplianceType =
             _ui->_virtualMachineRadioButton->isChecked() ?
-                (core::VirtualApplianceType*)core::VirtualMachine::Type::instance() :
-                (core::VirtualApplianceType*)core::RemoteTerminal::Type::instance();
+                static_cast<core::VirtualApplianceType*>(core::VirtualMachine::Type::instance()) :
+                static_cast<core::VirtualApplianceType*>(core::RemoteTerminal::Type::instance());
     _virtualApplianceArchitecture = _getSelectedArchitecture();
     _virtualApplianceTemplate = _getSelectedTemplate();
     _virtualApplianceName = _ui->_nameLineEdit->text();

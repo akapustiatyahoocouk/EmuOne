@@ -5,7 +5,12 @@
 //
 //////////
 #include "emuone-scp360/API.hpp"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wsign-promo"
 #include "ui_ScpEditor.h"
+#pragma GCC diagnostic pop
 using namespace scp360;
 
 //////////
@@ -67,7 +72,7 @@ void ScpEditor::_refreshSharedFoldersList()
         QTreeWidgetItem * treeItem = _ui->_sharedFoldersTreeWidget->topLevelItem(i);
         treeItem->setText(0, sharedFolder->volumeName());
         treeItem->setText(1, sharedFolder->hostPath());
-        treeItem->setData(2, 0, QVariant::fromValue((void*)sharedFolder));
+        treeItem->setData(2, 0, QVariant::fromValue(static_cast<void*>(sharedFolder)));
     }
 }
 
@@ -75,7 +80,7 @@ scp360::Scp::SharedFolder * ScpEditor::_selectedSharedFolder()
 {
     if (QTreeWidgetItem * treeItem = _ui->_sharedFoldersTreeWidget->currentItem())
     {
-        return (scp360::Scp::SharedFolder*)treeItem->data(2, 0).value<void*>();
+        return static_cast<scp360::Scp::SharedFolder*>(treeItem->data(2, 0).value<void*>());
     }
     return nullptr;
 }
@@ -85,7 +90,7 @@ void ScpEditor::_setSelectedSharedFolder(scp360::Scp::SharedFolder * sharedFolde
     for (int i = 0; i < _ui->_sharedFoldersTreeWidget->topLevelItemCount(); i++)
     {
         QTreeWidgetItem * treeItem = _ui->_sharedFoldersTreeWidget->topLevelItem(i);
-        if ((scp360::Scp::SharedFolder*)treeItem->data(2, 0).value<void*>() == sharedFolder)
+        if (static_cast<scp360::Scp::SharedFolder*>(treeItem->data(2, 0).value<void*>()) == sharedFolder)
         {   //  This one!
             _ui->_sharedFoldersTreeWidget->setCurrentItem(treeItem);
             break;

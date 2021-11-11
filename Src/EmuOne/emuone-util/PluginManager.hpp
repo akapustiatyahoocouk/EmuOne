@@ -53,6 +53,9 @@ namespace util
 //  Helper macros for plugin export
 #define BEGIN_PLUGIN_TABLE                                  \
     extern "C" Q_DECL_EXPORT                                \
+    void PluginExportProc(util::PluginList & pluginList);   \
+                                                            \
+    extern "C" Q_DECL_EXPORT                                \
     void PluginExportProc(util::PluginList & pluginList)    \
     {                                                       \
         pluginList.clear();

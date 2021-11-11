@@ -37,7 +37,7 @@ private:
     Ui::VirtualApplianceWindow *    _ui;
     core::VirtualAppliance *const   _virtualAppliance;
 
-    QMap<core::Component*,core::ComponentUi*>   _uiMap;
+    QMap<core::Component*,core::ComponentUi*>   _uiMap = {};
 
     //  Helpers
     void                _savePosition();

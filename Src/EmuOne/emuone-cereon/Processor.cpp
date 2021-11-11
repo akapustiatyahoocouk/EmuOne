@@ -41,6 +41,19 @@ void Processor::connect()
         return;
     }
 
+    //  Processor needs a) memory but and b) I/O bus
+    QList<MemoryBus*> memoryBuses = this->virtualAppliance()->findComponentsByRole<MemoryBus>();
+    if (memoryBuses.size() == 0)
+    {
+        throw core::VirtualApplianceException("cereon::Processor cannot find a MemoryBus");
+    }
+    if (memoryBuses.size() > 1)
+    {
+        throw core::VirtualApplianceException("cereon::Processor found multiple MemoryBuses");
+    }
+
+    _memoryBus = memoryBuses[0];
+
     //  Done
     _state = State::Connected;
 }
@@ -106,17 +119,19 @@ void Processor::disconnect() noexcept
         return;
     }
 
+    _memoryBus = nullptr;
+
     //  Done
     _state = State::Constructed;
 }
 
 //////////
 //  core::Component (serialisation)
-void Processor::serialiseConfiguration(QDomElement & configurationElement) const
+void Processor::serialiseConfiguration(QDomElement & /*configurationElement*/) const
 {
 }
 
-void Processor::deserialiseConfiguration(QDomElement & configurationElement)
+void Processor::deserialiseConfiguration(QDomElement & /*configurationElement*/)
 {
 }
 

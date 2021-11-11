@@ -10,7 +10,8 @@ using namespace scp360;
 //////////
 //  Construction/destruction
 EnvironmentVariable::EnvironmentVariable(const QString & name, const QString & scalarValue)
-    :   _name(name)
+    :   _name(name),
+        _values()
 {
     Q_ASSERT(Validator::isValidEnvironmentVariableScalarValue(scalarValue));
     _values.append(scalarValue);

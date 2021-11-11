@@ -87,8 +87,8 @@ namespace util
         //////////
         //  Implementation
     private:
-        mutable QIcon           _smallIcon;
-        mutable QIcon           _largeIcon;
+        mutable QIcon           _smallIcon = QIcon();
+        mutable QIcon           _largeIcon = QIcon();
     };
 
     //////////
@@ -135,14 +135,14 @@ namespace util
         private:
             bool                _finalised = false;
 
-            uint32_t            _H[5];      //  Message digest buffers
-            uint32_t            _lengthLo;  //  Message length in bits
-            uint32_t            _lengthHi;  //  Message length in bits
+            uint32_t            _H[5];          //  Message digest buffers
+            uint32_t            _lengthLo = 0;  //  Message length in bits
+            uint32_t            _lengthHi = 0;  //  Message length in bits
 
-            uint8_t             _messageBlock[64];  //  512-bit message blocks
-            int                 _messageBlockIndex; //  Index into message block array
+            uint8_t             _messageBlock[64];      //  512-bit message blocks
+            int                 _messageBlockIndex = 0; //  Index into message block array
 
-            QByteArray          _result;    //  empty unless finalized
+            QByteArray          _result = {};   //  empty unless finalized
 
             //  Helpers
             void                _processMessageBlock();

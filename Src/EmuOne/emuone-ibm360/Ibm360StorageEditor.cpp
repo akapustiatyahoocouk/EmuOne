@@ -5,7 +5,12 @@
 //
 //////////
 #include "emuone-ibm360/API.hpp"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wswitch-default"
+#pragma GCC diagnostic ignored "-Wsign-promo"
 #include "ui_Ibm360StorageEditor.h"
+#pragma GCC diagnostic pop
 using namespace ibm360;
 
 //////////
@@ -43,6 +48,8 @@ void Ibm360StorageEditor::refresh()
             _ui->_sizeUnitComboBox->setCurrentIndex(1);
             _ui->_sizeLineEdit->setText(QString::number(_storage->_size.numberOfUnits()));
             break;
+        case core::MemorySize::Unit::B:     //  not used
+        case core::MemorySize::Unit::GB:    //  not used
         default:
             _ui->_sizeUnitComboBox->setCurrentIndex(0);  //  KB
             _ui->_sizeLineEdit->setText(QString::number(_storage->_size.toUnits(core::MemorySize::Unit::KB)));

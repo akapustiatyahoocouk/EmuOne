@@ -5,13 +5,22 @@
 //
 //////////
 #include "emuone/API.hpp"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wswitch-default"
+#pragma GCC diagnostic ignored "-Wsign-promo"
 #include "ui_ConfigureVmDialog.h"
+#pragma GCC diagnostic pop
 
+//////////
+//  Construction/destruction
 ConfigureVmDialog::ConfigureVmDialog(core::VirtualAppliance * virtualAppliance, QWidget * parent)
     :   QDialog(parent),
-        _ui(new Ui::ConfigureVmDialog)
+        _ui(new Ui::ConfigureVmDialog),
+        _virtualAppliance(virtualAppliance),
+        _componentEditorsPanelLayout(nullptr)
 {
-    _virtualAppliance = virtualAppliance;
     Q_ASSERT(_virtualAppliance != nullptr);
 
     _ui->setupUi(this);

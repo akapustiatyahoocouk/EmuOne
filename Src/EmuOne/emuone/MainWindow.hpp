@@ -37,9 +37,9 @@ protected:
     //  Implementation
 private:
     bool                    _trackPositionChanges = false;
-    core::VirtualApplianceList  _virtualAppliances; //  ...in view order
+    core::VirtualApplianceList  _virtualAppliances = {};    //  ...in view order
 
-    QMap<core::VirtualAppliance*,VirtualApplianceWindow*> _virtualApplianceWindows;   //  all that currently exist
+    QMap<core::VirtualAppliance*,VirtualApplianceWindow*> _virtualApplianceWindows = {};    //  all that currently exist
 
     //  Helpers
     void                    _loadPosition();

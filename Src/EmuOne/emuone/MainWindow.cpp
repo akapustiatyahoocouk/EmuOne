@@ -5,8 +5,13 @@
 //
 //////////
 #include "emuone/API.hpp"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Weffc++"
 #include "ui_MainWindow.h"
+#pragma GCC diagnostic pop
 
+//////////
+//  Construction/destruction
 MainWindow::MainWindow()
     :   QMainWindow(nullptr),
         _ui(new Ui::MainWindow),
@@ -157,6 +162,9 @@ void MainWindow::_refreshVirtualAppliancesList()
                 break;
             case core::VirtualAppliance::State::Suspended:
                 text += " - suspended";
+                break;
+            default:
+                text += " - ?";
                 break;
         }
         item->setText(text);

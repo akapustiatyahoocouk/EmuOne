@@ -40,7 +40,7 @@ core::ComponentEditor * Ibm2741::createEditor(QWidget * parent)
 
 QString Ibm2741::shortStatus() const
 {
-    return "@" + ("000" + QString::number(address(), 16)).right(3).toUpper();
+    return "@" + ("000" + QString::number(static_cast<unsigned>(address()), 16)).right(3).toUpper();
 }
 
 core::ComponentUi * Ibm2741::createUi()
@@ -297,7 +297,7 @@ void Ibm2741::_newLine()
     if (_cursorY == _content._lines.size() - 1)
     {   //  We are already at the last line, so add 1 more line
         _content._lines.append(_Line());
-        _cursorY = _content._lines.size() - 1;
+        _cursorY = static_cast<int>(_content._lines.size() - 1);
         _cursorX = 0;
     }
 }
@@ -417,13 +417,13 @@ void Ibm2741::_WorkerThread::_handleWriteRequest(const _WriteRequest * request)
 {
     _ibm2741->_deviceState = DeviceState::Writing;
     QChar ch;
-    for (int i = 0; i < request->buffer->size(); i++)
+    for (size_t i = 0; i < request->buffer->size(); i++)
     {   //  Halt ?
         if (_haltIoRequested)
         {   //  Yes
             _haltIoRequested = false;
             _ibm2741->_deviceState = DeviceState::Idle;
-            request->completionListener->transferCompleted(i, ErrorCode::Interrupted);
+            request->completionListener->transferCompleted(static_cast<uint32_t>(i), ErrorCode::Interrupted);
             return;
         }
         //  Translate EBCDIC to ASCII...
@@ -437,20 +437,20 @@ void Ibm2741::_WorkerThread::_handleWriteRequest(const _WriteRequest * request)
         _ibm2741->_printChar(ch);
     }
     _ibm2741->_deviceState = DeviceState::Idle;
-    request->completionListener->transferCompleted(request->buffer->size(), ErrorCode::Success);
+    request->completionListener->transferCompleted(static_cast<uint32_t>(request->buffer->size()), ErrorCode::Success);
 }
 
 void Ibm2741::_WorkerThread::_handleWriteBlockRequest(const _WriteBlockRequest * request)
 {
     _ibm2741->_deviceState = DeviceState::Writing;
     QChar ch;
-    for (int i = 0; i < request->buffer->size(); i++)
+    for (size_t i = 0; i < request->buffer->size(); i++)
     {   //  Halt ?
         if (_haltIoRequested)
         {   //  Yes
             _haltIoRequested = false;
             _ibm2741->_deviceState = DeviceState::Idle;
-            request->completionListener->transferCompleted(i, ErrorCode::Interrupted);
+            request->completionListener->transferCompleted(static_cast<uint32_t>(i), ErrorCode::Interrupted);
             return;
         }
         //  Translate EBCDIC to ASCII...
@@ -465,18 +465,21 @@ void Ibm2741::_WorkerThread::_handleWriteBlockRequest(const _WriteBlockRequest *
     }
     _ibm2741->_printChar('\n');
     _ibm2741->_deviceState = DeviceState::Idle;
-    request->completionListener->transferCompleted(request->buffer->size(), ErrorCode::Success);
+    request->completionListener->transferCompleted(static_cast<uint32_t>(request->buffer->size()), ErrorCode::Success);
 }
 
-void Ibm2741::_WorkerThread::_handleReadRequest(const _ReadRequest * request)
+void Ibm2741::_WorkerThread::_handleReadRequest(const _ReadRequest * /*request*/)
 {
-    Q_ASSERT(false);    //  TODO implement
+    if (this != reinterpret_cast<_WorkerThread*>(uintptr_t(1)))
+    {
+        Q_ASSERT(false);    //  TODO implement
+    }
 }
 
 void Ibm2741::_WorkerThread::_handleReadBlockRequest(const _ReadBlockRequest * request)
 {
     _ibm2741->_deviceState = DeviceState::Reading;
-    int bytesRead = 0;
+    uint32_t bytesRead = 0;
     for (; ; )
     {   //  Halt ?
         if (_haltIoRequested)
@@ -493,7 +496,7 @@ void Ibm2741::_WorkerThread::_handleReadBlockRequest(const _ReadBlockRequest * r
             _ibm2741->_printChar(charToEcho);
         }
         //  A "block" is a "line"
-        int eolnIndex = _ibm2741->_pendingInput.indexOf('\n');
+        qsizetype eolnIndex = _ibm2741->_pendingInput.indexOf('\n');
         if (eolnIndex == -1)
         {   //  Not yet!
             QThread::msleep(50);
@@ -507,7 +510,7 @@ void Ibm2741::_WorkerThread::_handleReadBlockRequest(const _ReadBlockRequest * r
             line = line.left(80);
         }
         //  ...and further by the buffer size
-        if (line.length() > request->buffer->size())
+        if (static_cast<size_t>(line.length()) > request->buffer->size())
         {
             line = line.left(request->buffer->size());
         }
@@ -521,7 +524,7 @@ void Ibm2741::_WorkerThread::_handleReadBlockRequest(const _ReadBlockRequest * r
         {
             request->buffer->setAt(i, _encodeBuffer[i]);
         }
-        bytesRead = _encodeBuffer.size();
+        bytesRead = static_cast<uint32_t>(_encodeBuffer.size());
         break;
     }
     _ibm2741->_deviceState = DeviceState::Idle;

@@ -1,8 +1,5 @@
-QT       += core gui widgets xml
+include(../emuone.pri)
 
-CONFIG += c++17
-
-INCLUDEPATH += ..
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
@@ -26,9 +23,6 @@ FORMS += \
     VirtualApplianceWindow.ui
 
 LIBS += -L../../../Bin/Debug -lemuone-core -lemuone-util
-
-CONFIG(debug,debug|release) DESTDIR = ../../../Bin/Debug
-CONFIG(release,debug|release) DESTDIR = ../../../Bin/Release
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

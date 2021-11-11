@@ -18,6 +18,8 @@ namespace ibm360
     {
         Q_OBJECT
 
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Ibm360ProcessorEditor)
+
         //////////
         //  Construction/destruction
     public:

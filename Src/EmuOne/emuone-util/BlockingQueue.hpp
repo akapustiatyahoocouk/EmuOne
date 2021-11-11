@@ -17,7 +17,7 @@ namespace util
         //////////
         //  Construction/destruction
     public:
-        BlockingQueue() {}
+        BlockingQueue() : _data(), _dataSize(), _dataGuard() {}
         ~BlockingQueue() {}
 
         //////////

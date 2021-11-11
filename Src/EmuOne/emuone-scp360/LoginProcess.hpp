@@ -32,6 +32,7 @@ namespace scp360
         public:
             virtual EmulatedProcess *   createInstance(Scp * scp, uint16_t id, const QString & name, Process::Flags flags, Process * parent) override;
         };
+        friend class Application;
 
         //////////
         //  Construction/destruction - from friends only

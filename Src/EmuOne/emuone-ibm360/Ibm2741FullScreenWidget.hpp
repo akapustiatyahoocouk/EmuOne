@@ -45,11 +45,11 @@ namespace ibm360
         Ui::Ibm2741FullScreenWidget *   _ui;
         Ibm2741 *const      _ibm2741;
 
-        QFont               _font;
+        QFont               _font = QFont();
         int                 _fontHeight = 0;    //  in pixels
         int                 _fontWidth = 0;     //  in pixels
 
-        QTimer              _refreshTimer;
+        QTimer              _refreshTimer = QTimer();
 
         //  Helpers
         QRect               _clientRect();

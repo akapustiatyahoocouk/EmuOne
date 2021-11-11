@@ -16,7 +16,7 @@ namespace scp360
 
         //////////
         //  A SCP/360 INIT Application
-        public:
+    public:
         class EMUONE_SCP360_EXPORT Application : public EmulatedApplication
         {
             DECLARE_SINGLETON(Application)
@@ -32,6 +32,7 @@ namespace scp360
         public:
             virtual EmulatedProcess *   createInstance(Scp * scp, uint16_t id, const QString & name, Process::Flags flags, Process * parent) override;
         };
+        friend class Application;
 
         //////////
         //  Construction/destruction - from friends only
@@ -71,7 +72,7 @@ namespace scp360
             ErrorCode           errorCode = ErrorCode::ERR_UNK;
             bool                completed = false;
         };
-        QList<_InitialiseDeviceCompletionListener*> _initialiseDeviceCompletionListeners;
+        QList<_InitialiseDeviceCompletionListener*> _initialiseDeviceCompletionListeners = {};
 
         //  Helpers
         void                    _initialiseDevices();

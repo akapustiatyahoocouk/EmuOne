@@ -81,7 +81,7 @@ namespace ibm360
         //  Implementation
     private:
         State                   _state = State::Constructed;
-        mutable QRecursiveMutex _stateGuard;
+        mutable QRecursiveMutex _stateGuard = {};
 
         //  Component configuration
         core::MemorySize        _size;

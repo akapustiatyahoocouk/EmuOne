@@ -5,7 +5,12 @@
 //
 //////////
 #include "emuone-ibm360/API.hpp"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wswitch-default"
+#pragma GCC diagnostic ignored "-Wsign-promo"
 #include "ui_Ibm360ProcessorEditor.h"
+#pragma GCC diagnostic pop
 using namespace ibm360;
 
 //////////
@@ -53,6 +58,10 @@ void Ibm360ProcessorEditor::refresh()
             _ui->_clockFrequencyUnitComboBox->setCurrentIndex(3);
             _ui->_clockFrequencyLineEdit->setText(QString::number(_processor->_clockFrequency.numberOfUnits()));
             break;
+        default:
+            _ui->_clockFrequencyUnitComboBox->setCurrentIndex(2);
+            _ui->_clockFrequencyLineEdit->setText("?");
+            break;
     }
 
     _ui->_fetchProtectionCheckBox->setChecked(has(_processor->features(), Features::FetchProtection));
@@ -72,7 +81,7 @@ void Ibm360ProcessorEditor::_clockFrequencyLineEditTextChanged(const QString &)
 {
     if (!_refreshUnderway)
     {
-        core::ClockFrequency::Unit unit = (core::ClockFrequency::Unit)_ui->_clockFrequencyUnitComboBox->currentIndex();
+        core::ClockFrequency::Unit unit = static_cast<core::ClockFrequency::Unit>(_ui->_clockFrequencyUnitComboBox->currentIndex());
         uint64_t numberOfUnits = _ui->_clockFrequencyLineEdit->text().toUInt();
         if (numberOfUnits > 0)
         {   //  Parsed successfully
@@ -90,7 +99,7 @@ void Ibm360ProcessorEditor::_clockFrequencyUnitComboBoxCurrentIndexChanged(int)
 {
     if (!_refreshUnderway)
     {
-        core::ClockFrequency::Unit unit = (core::ClockFrequency::Unit)_ui->_clockFrequencyUnitComboBox->currentIndex();
+        core::ClockFrequency::Unit unit = static_cast<core::ClockFrequency::Unit>(_ui->_clockFrequencyUnitComboBox->currentIndex());
         uint64_t numberOfUnits = _ui->_clockFrequencyLineEdit->text().toUInt();
         if (numberOfUnits > 0)
         {   //  Parsed successfully

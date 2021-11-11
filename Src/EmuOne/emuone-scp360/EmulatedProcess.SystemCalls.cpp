@@ -91,7 +91,7 @@ ErrorCode EmulatedProcess::SystemCalls::writeToFile(uint16_t handle, const void 
 
     //  Issue "SVC"
     util::ByteArrayBuffer buffer;
-    buffer.data.append((const char*)data, bytesToWrite);
+    buffer.data.append(static_cast<const char*>(data), bytesToWrite);
     WriteToFileSystemCall systemCall(_emulatedProcess, handle, &buffer);
     ErrorCode err = makeSystemCall(&systemCall);
     if (err != ErrorCode::ERR_OK)
@@ -110,7 +110,7 @@ ErrorCode EmulatedProcess::SystemCalls::writeToFile(uint16_t handle, const QStri
     static util::CharacterSet::Encoder * encoder = util::Cp037CharacterSet::instance()->createEncoder();    //  Idempotent
     QByteArray bytes;
     encoder->encode(data, bytes);
-    return writeToFile(handle, bytes.data(), bytes.size(), bytesWritten);
+    return writeToFile(handle, bytes.data(), static_cast<uint32_t>(bytes.size()), bytesWritten);
 }
 
 ErrorCode EmulatedProcess::SystemCalls::readFromFile(uint16_t handle, void * data, uint32_t bytesToRead,

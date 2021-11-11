@@ -149,23 +149,23 @@ namespace scp360
         //  Implementation
     private:
         State                   _state = State::Constructed;
-        mutable QRecursiveMutex _stateGuard;
+        mutable QRecursiveMutex _stateGuard = {};
 
-        ScpEditorList           _editors;   //  ...that have been created so far
+        ScpEditorList           _editors = {};  //  ...that have been created so far
 
         //  Configuration
-        QMap<QString, SharedFolder*>    _sharedFolders; //  volume name -> shared folder definition
+        QMap<QString, SharedFolder*>    _sharedFolders = {};    //  volume name -> shared folder definition
 
         //  Runtime state
-        QMap<uint16_t, ibm360::Device*> _hardwareDevices;   //  Keyed by I/O address, populated by "connect()"
-        QMap<Device*, DeviceDriver*>    _deviceDrivers;     //  Drivers to use for Devices, populated by "initialise()"
+        QMap<uint16_t, ibm360::Device*> _hardwareDevices = {};  //  Keyed by I/O address, populated by "connect()"
+        QMap<Device*, DeviceDriver*>    _deviceDrivers = {};    //  Drivers to use for Devices, populated by "initialise()"
         PhysicalDevice *                _operatorsConsole = nullptr;
 
         //  Subsystems
         ObjectManager       _objectManager;
 
-        QMap<Process*,SystemCall*>  _systemCallsInProgress;
-        QMap<Device*,Process*>      _ioInProgress;
+        QMap<Process*,SystemCall*>  _systemCallsInProgress = {};
+        QMap<Device*,Process*>      _ioInProgress = {};
 
         //  Helpers
         void                _registerHardwareDevice(ibm360::Device * hardwareDevice);   //  throws VirtualApplianceException on error
@@ -224,7 +224,7 @@ namespace scp360
             const ErrorCode _errorCode;
         };
 
-        util::BlockingQueue<_Event*>    _events;
+        util::BlockingQueue<_Event*>    _events = {};
 
         void                _handleSystemCallEvent(_SystemCallEvent * event);
         void                _handleWriteToOperatorSystemCall(WriteToOperatorSystemCall * systemCall);

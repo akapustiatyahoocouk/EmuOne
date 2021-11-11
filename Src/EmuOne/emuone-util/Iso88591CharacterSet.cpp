@@ -67,7 +67,7 @@ int Iso88591CharacterSet::_Encoder::encode(QChar c, QByteArray & bytes)
 {
     if (c.unicode() <= 255)
     {
-        bytes.append((uint8_t)c.unicode());
+        bytes.append(static_cast<uint8_t>(c.unicode()));
         return 1;
     }
     return 0;

@@ -100,8 +100,8 @@ namespace scp360
         //////////
         //  Construction/destruction
     public:
-        TransferDataSystemCall(Process * process, ResourceHandle handle, util::Buffer * buffer)
-            :   WaitSystemCall(process), handle(handle), buffer(buffer) { Q_ASSERT(buffer != nullptr); }
+        TransferDataSystemCall(Process * processParam, ResourceHandle handleParam, util::Buffer * bufferParam)
+            :   WaitSystemCall(processParam), handle(handleParam), buffer(bufferParam) { Q_ASSERT(buffer != nullptr); }
         virtual ~TransferDataSystemCall() {}
 
         //////////
@@ -114,7 +114,7 @@ namespace scp360
         util::Buffer *const buffer;
 
         //  The number of bytes actually transferred
-        size_t              bytesTransferred = 0;
+        uint32_t            bytesTransferred = 0;
     };
 
     //////////
@@ -126,8 +126,8 @@ namespace scp360
         //////////
         //  Construction/destruction
     public:
-        WriteToOperatorSystemCall(Process * process, util::Buffer * buffer)
-            :   TransferDataSystemCall(process, 0, buffer) {}
+        WriteToOperatorSystemCall(Process * processParam, util::Buffer * bufferParam)
+            :   TransferDataSystemCall(processParam, 0, bufferParam) {}
         virtual ~WriteToOperatorSystemCall() {}
     };
 
@@ -140,8 +140,8 @@ namespace scp360
         //////////
         //  Construction/destruction
     public:
-        ReadFromOperatorSystemCall(Process * process, util::Buffer * buffer)
-            :   TransferDataSystemCall(process, 0, buffer) {}
+        ReadFromOperatorSystemCall(Process * processParam, util::Buffer * bufferParam)
+            :   TransferDataSystemCall(processParam, 0, bufferParam) {}
         virtual ~ReadFromOperatorSystemCall() {}
     };
 
@@ -154,9 +154,9 @@ namespace scp360
         //////////
         //  Construction/destruction
     public:
-        OpenFileSystemCall(Process * process, const QString & fileName, OpenFileFlags openFlags,
-                           uint32_t recordSize, uint32_t blockSize)
-            :   WaitSystemCall(process), fileName(fileName), openFlags(openFlags), recordSize(recordSize) , blockSize(blockSize) {}
+        OpenFileSystemCall(Process * processParam, const QString & fileNameParam, OpenFileFlags openFlagsParam,
+                           uint32_t recordSizeParam, uint32_t blockSizeParam)
+            :   WaitSystemCall(processParam), fileName(fileNameParam), openFlags(openFlagsParam), recordSize(recordSizeParam) , blockSize(blockSizeParam) {}
         virtual ~OpenFileSystemCall() {}
 
         //////////
@@ -180,8 +180,8 @@ namespace scp360
         //////////
         //  Construction/destruction
     public:
-        WriteToFileSystemCall(Process * process, ResourceHandle handle, util::Buffer * buffer)
-            :   TransferDataSystemCall(process, handle, buffer) {}
+        WriteToFileSystemCall(Process * processParam, ResourceHandle handleParam, util::Buffer * bufferParam)
+            :   TransferDataSystemCall(processParam, handleParam, bufferParam) {}
         virtual ~WriteToFileSystemCall() {}
     };
 
@@ -194,8 +194,8 @@ namespace scp360
         //////////
         //  Construction/destruction
     public:
-        ReadFromFileSystemCall(Process * process, ResourceHandle handle, util::Buffer * buffer)
-            :   TransferDataSystemCall(process, handle, buffer) {}
+        ReadFromFileSystemCall(Process * processParam, ResourceHandle handleParam, util::Buffer * bufferParam)
+            :   TransferDataSystemCall(processParam, handleParam, bufferParam) {}
         virtual ~ReadFromFileSystemCall() {}
     };
 
@@ -208,8 +208,8 @@ namespace scp360
         //////////
         //  Construction/destruction
     public:
-        SetEnvironmentVariableValueSystemCall(Process * process, Process * targetProcess, const QString & name, const QString & value)
-            :   NowaitSystemCall(process), targetProcess(targetProcess), name(name), listValue{value} {}
+        SetEnvironmentVariableValueSystemCall(Process * processParam, Process * targetProcessParam, const QString & nameParam, const QString & valueParam)
+            :   NowaitSystemCall(processParam), targetProcess(targetProcessParam), name(nameParam), listValue{valueParam} {}
         virtual ~SetEnvironmentVariableValueSystemCall() {}
 
         //////////

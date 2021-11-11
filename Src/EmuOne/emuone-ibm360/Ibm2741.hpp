@@ -183,9 +183,9 @@ namespace ibm360
         //  Implementation
     private:
         State                   _state = State::Constructed;
-        mutable QRecursiveMutex _stateGuard;
+        mutable QRecursiveMutex _stateGuard = {};
 
-        Ibm2741EditorList       _editors;   //  ...that have been created so far
+        Ibm2741EditorList       _editors = {};  //  ...that have been created so far
 
         //  Runtime state
         volatile DeviceState    _deviceState = DeviceState::NotOperational;
@@ -196,27 +196,27 @@ namespace ibm360
         public:
             _Cell(QChar ch) { chars.append(ch); }
 
-            QList<QChar>      chars;
+            QList<QChar>      chars = {};
         };
 
         class _Line
         {   //  A single printed line
         public:
-            QList<_Cell>        _cells; //  0 <= length <= 80
+            QList<_Cell>        _cells = {};    //  0 <= length <= 80
         };
 
         class _Content
         {   //  The entire content printed so far
         public:
-            QList<_Line>        _lines;
+            QList<_Line>        _lines = {};
         };
 
-        _Content                _content;       //  ASCII
-        int                     _cursorY;       //  0 <= _cursorY < _content._lines.size()
-        int                     _cursorX;       //  0 <= _cursorX <= 80
-        QString                 _pendingInput;  //  ASCII
+        _Content                _content = {};      //  ASCII
+        int                     _cursorY = 0;       //  0 <= _cursorY < _content._lines.size()
+        int                     _cursorX = 0;       //  0 <= _cursorX <= 80
+        QString                 _pendingInput = {}; //  ASCII
 
-        util::BlockingQueue<QChar>  _charsToEcho;
+        util::BlockingQueue<QChar>  _charsToEcho = {};
 
         //  Helpers
         void            _printChar(QChar ch);
@@ -242,8 +242,8 @@ namespace ibm360
             //////////
             //  Construction/destruction
         public:
-            explicit _ResetRequest(IoCompletionListener * completionListener)
-                :   completionListener(completionListener) {}
+            explicit _ResetRequest(IoCompletionListener * completionListenerParam)
+                :   completionListener(completionListenerParam) {}
             virtual ~_ResetRequest() {}
 
             //////////
@@ -259,8 +259,8 @@ namespace ibm360
             //////////
             //  Construction/destruction
         public:
-            _WriteRequest(const util::Buffer * buffer, TransferCompletionListener * completionListener)
-                :   buffer(buffer), completionListener(completionListener) {}
+            _WriteRequest(const util::Buffer * bufferParam, TransferCompletionListener * completionListenerParam)
+                :   buffer(bufferParam), completionListener(completionListenerParam) {}
             virtual ~_WriteRequest() {}
 
             //////////
@@ -277,8 +277,8 @@ namespace ibm360
             //////////
             //  Construction/destruction
         public:
-            _WriteBlockRequest(const util::Buffer * buffer, TransferCompletionListener * completionListener)
-                :   buffer(buffer), completionListener(completionListener) {}
+            _WriteBlockRequest(const util::Buffer * bufferParam, TransferCompletionListener * completionListenerParam)
+                :   buffer(bufferParam), completionListener(completionListenerParam) {}
             virtual ~_WriteBlockRequest() {}
 
             //////////
@@ -295,8 +295,8 @@ namespace ibm360
             //////////
             //  Construction/destruction
         public:
-            _ReadRequest(util::Buffer * buffer, TransferCompletionListener * completionListener)
-                :   buffer(buffer), completionListener(completionListener) {}
+            _ReadRequest(util::Buffer * bufferParam, TransferCompletionListener * completionListenerParam)
+                :   buffer(bufferParam), completionListener(completionListenerParam) {}
             virtual ~_ReadRequest() {}
 
             //////////
@@ -313,8 +313,8 @@ namespace ibm360
             //////////
             //  Construction/destruction
         public:
-            _ReadBlockRequest(util::Buffer * buffer, TransferCompletionListener * completionListener)
-                :   buffer(buffer), completionListener(completionListener) {}
+            _ReadBlockRequest(util::Buffer * bufferParam, TransferCompletionListener * completionListenerParam)
+                :   buffer(bufferParam), completionListener(completionListenerParam) {}
             virtual ~_ReadBlockRequest() {}
 
             //////////
@@ -348,7 +348,7 @@ namespace ibm360
 
         //////////
         //  Threads
-        util::BlockingQueue<_Request*>  _requestQueue;
+        util::BlockingQueue<_Request*>  _requestQueue = {};
 
         class _WorkerThread : public QThread
         {
@@ -379,9 +379,9 @@ namespace ibm360
             Ibm2741 *const  _ibm2741;
             volatile bool   _stopRequested = false;
             util::CharacterSet::Decoder * _ebcdicDecoder;
-            QByteArray      _decodeBuffer;
+            QByteArray      _decodeBuffer = {};
             util::CharacterSet::Encoder * _ebcdicEncoder;
-            QByteArray      _encodeBuffer;
+            QByteArray      _encodeBuffer = {};
 
             volatile bool   _haltIoRequested = false;
 

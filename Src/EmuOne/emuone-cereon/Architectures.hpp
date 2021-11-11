@@ -29,8 +29,8 @@ namespace cereon
         //////////
         //  Implementation
     private:
-        mutable QIcon       _smallIcon;
-        mutable QIcon       _largeIcon;
+        mutable QIcon       _smallIcon = QIcon();
+        mutable QIcon       _largeIcon = QIcon();
     };
 
     //////////

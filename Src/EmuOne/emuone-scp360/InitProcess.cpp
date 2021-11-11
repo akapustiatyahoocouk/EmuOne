@@ -80,8 +80,8 @@ QString InitProcess::Application::displayName() const
 
 //////////
 //  InitProcess::_InitialiseDeviceCompletionListener
-InitProcess::_InitialiseDeviceCompletionListener::_InitialiseDeviceCompletionListener(Device * device)
-    :   device(device)
+InitProcess::_InitialiseDeviceCompletionListener::_InitialiseDeviceCompletionListener(Device * deviceParam)
+    :   device(deviceParam)
 {
 }
 
@@ -214,7 +214,7 @@ void InitProcess::_createLoginProcesses()
         if (Scp::_isTerminal(physicalDevice->hardwareDevice()))
         {   //  This one! TODO use system calls to create LOGIN process
             QString loginProcessName = LoginProcess::Application::instance()->mnemonic() +
-                                       ("000" + QString::number(physicalDevice->hardwareDevice()->address(), 16)).right(3).toUpper();
+                                       ("000" + QString::number(static_cast<unsigned>(physicalDevice->hardwareDevice()->address()), 16)).right(3).toUpper();
             EmulatedProcess * loginProcess;
             ErrorCode err = scp()->_objectManager.createEmulatedProcess(loginProcessName,
                                                                         Process::Flags::None,
@@ -239,10 +239,10 @@ void InitProcess::_createLoginProcesses()
 
 //////////
 //  InitProcess::_InitialiseDeviceCompletionListener
-void InitProcess::_InitialiseDeviceCompletionListener::ioCompleted(Device * device, ErrorCode errorCode)
+void InitProcess::_InitialiseDeviceCompletionListener::ioCompleted(Device * deviceParam, ErrorCode errorCodeParam)
 {
-    Q_ASSERT(this->device == device);
-    this->errorCode = errorCode;
+    Q_ASSERT(this->device == deviceParam);
+    this->errorCode = errorCodeParam;
     this->completed = true;
 }
 

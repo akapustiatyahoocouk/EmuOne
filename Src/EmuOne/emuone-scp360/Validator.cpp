@@ -115,7 +115,7 @@ bool Validator::isValidPhysicalDeviceName(const QString & name)
            ((name[3] >= '0' && name[3] <= '9') || (name[3] >= 'A' && name[3] <= 'F'));
 }
 
-bool Validator::isValidLogicalDeviceName(const QString & name)
+bool Validator::isValidLogicalDeviceName(const QString & /*name*/)
 {
     return false;   //  TODO implerment properly
 }

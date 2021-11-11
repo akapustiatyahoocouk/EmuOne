@@ -23,9 +23,9 @@ namespace util
         //////////
         //  Operations
     public:
-        virtual int         size() const = 0;
-        virtual uint8_t     at(int index) const = 0;
-        virtual void        setAt(int index, uint8_t value) = 0;
+        virtual size_t      size() const = 0;
+        virtual uint8_t     at(size_t index) const = 0;
+        virtual void        setAt(size_t index, uint8_t value) = 0;
     };
 
     //////////
@@ -37,15 +37,15 @@ namespace util
         //////////
         //  Construction/destruction
     public:
-        ByteArrayBuffer()  {}
+        ByteArrayBuffer() : data() {}
         virtual ~ByteArrayBuffer() {}
 
         //////////
         //  Buffer
     public:
-        virtual int         size() const override { return data.size(); }
-        virtual uint8_t     at(int index) const override { return data[index]; }
-        virtual void        setAt(int index, uint8_t value) override { data[index] = value; }
+        virtual size_t      size() const override { return data.size(); }
+        virtual uint8_t     at(size_t index) const override { return data[index]; }
+        virtual void        setAt(size_t index, uint8_t value) override { data[index] = value; }
 
         //////////
         //  Properties

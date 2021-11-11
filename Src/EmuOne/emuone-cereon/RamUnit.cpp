@@ -30,12 +30,9 @@ core::ComponentType * RamUnit::type() const
 
 core::ComponentEditor * RamUnit::createEditor(QWidget * parent)
 {
-<<<<<<< HEAD
     RamUnitEditor * editor = new RamUnitEditor(this, parent);
     _editors.append(editor);
     return editor;
-=======
->>>>>>> 2336cc68696697697436096ab3c8040086b9d800
 }
 
 QString RamUnit::shortStatus() const
@@ -78,7 +75,7 @@ void RamUnit::initialise()
         return;
     }
 
-    size_t dataSize = (size_t)_size.toBytes();
+    size_t dataSize = static_cast<size_t>(_size.toBytes());
     if (dataSize == 0 || dataSize != _size.toBytes())
     {   //  OOPS! Empty OR overflow
         throw core::VirtualApplianceException("Invalid or unsupported RAM unit size");
@@ -178,14 +175,6 @@ void RamUnit::deserialiseConfiguration(QDomElement & configurationElement)
 
 //////////
 //  MemoryUnit
-<<<<<<< HEAD
-=======
-core::MemorySize RamUnit::size() const
-{
-    return _size;
-}
-
->>>>>>> 2336cc68696697697436096ab3c8040086b9d800
 RamUnit::AccessOutcome RamUnit::loadByte(uint64_t offset, uint8_t & value)
 {
     if (_data == nullptr)
@@ -198,7 +187,7 @@ RamUnit::AccessOutcome RamUnit::loadByte(uint64_t offset, uint8_t & value)
     }
     else
     {   //  Go!
-        value = _data[(size_t)offset];
+        value = _data[static_cast<size_t>(offset)];
         return AccessOutcome::Success;
     }
 }
@@ -219,7 +208,7 @@ RamUnit::AccessOutcome RamUnit::loadHalfWord(uint64_t offset, util::ByteOrder by
     }
     else
     {   //  Go!
-        value = util::Memory::loadUInt16(_data + (size_t)offset, byteOrder);
+        value = util::Memory::loadUInt16(_data + static_cast<size_t>(offset), byteOrder);
         return AccessOutcome::Success;
     }
 }
@@ -240,7 +229,7 @@ RamUnit::AccessOutcome RamUnit::loadWord(uint64_t offset, util::ByteOrder byteOr
     }
     else
     {   //  Go!
-        value = util::Memory::loadUInt32(_data + (size_t)offset, byteOrder);
+        value = util::Memory::loadUInt32(_data + static_cast<size_t>(offset), byteOrder);
         return AccessOutcome::Success;
     }
 }
@@ -261,7 +250,7 @@ RamUnit::AccessOutcome RamUnit::loadLongWord(uint64_t offset, util::ByteOrder by
     }
     else
     {   //  Go!
-        value = util::Memory::loadUInt64(_data + (size_t)offset, byteOrder);
+        value = util::Memory::loadUInt64(_data + static_cast<size_t>(offset), byteOrder);
         return AccessOutcome::Success;
     }
 }
@@ -278,7 +267,7 @@ RamUnit::AccessOutcome RamUnit::storeByte(uint64_t offset, uint8_t value)
     }
     else
     {   //  Go!
-        _data[(size_t)offset] = value;
+        _data[static_cast<size_t>(offset)] = value;
         return AccessOutcome::Success;
     }
 }
@@ -299,7 +288,7 @@ RamUnit::AccessOutcome RamUnit::storeHalfWord(uint64_t offset, util::ByteOrder b
     }
     else
     {   //  Go!
-        util::Memory::storeUInt16(_data + (size_t)offset, value, byteOrder);
+        util::Memory::storeUInt16(_data + static_cast<size_t>(offset), value, byteOrder);
         return AccessOutcome::Success;
     }
 }
@@ -320,7 +309,7 @@ RamUnit::AccessOutcome RamUnit::storeWord(uint64_t offset, util::ByteOrder byteO
     }
     else
     {   //  Go!
-        util::Memory::storeUInt32(_data + (size_t)offset, value, byteOrder);
+        util::Memory::storeUInt32(_data + static_cast<size_t>(offset), value, byteOrder);
         return AccessOutcome::Success;
     }
 }
@@ -341,20 +330,13 @@ RamUnit::AccessOutcome RamUnit::storeLongWord(uint64_t offset, util::ByteOrder b
     }
     else
     {   //  Go!
-        util::Memory::storeUInt64(_data + (size_t)offset, value, byteOrder);
+        util::Memory::storeUInt64(_data + static_cast<size_t>(offset), value, byteOrder);
         return AccessOutcome::Success;
     }
 }
 
 //////////
 //  BoundMemoryUnit
-<<<<<<< HEAD
-=======
-uint64_t RamUnit::startAddress() const
-{
-    return _startAddress;
-}
->>>>>>> 2336cc68696697697436096ab3c8040086b9d800
 
 //////////
 //  IMemoryBusClient
@@ -367,18 +349,6 @@ BoundMemoryUnitList RamUnit::memoryUnits()
 
 //////////
 //  Operations
-<<<<<<< HEAD
-=======
-void RamUnit::setSize(const core::MemorySize & size)
-{
-    _size = size;
-}
-
-void RamUnit::setStartAddress(uint64_t startAddress)
-{
-    _startAddress = startAddress;
-}
->>>>>>> 2336cc68696697697436096ab3c8040086b9d800
 
 //////////
 //  RamUnit::Type
@@ -393,11 +363,7 @@ QString RamUnit::Type::mnemonic() const
 
 QString RamUnit::Type::displayName() const
 {
-<<<<<<< HEAD
     return "Cereon RAM unit";
-=======
-    return "Cereon resident RAM unit";
->>>>>>> 2336cc68696697697436096ab3c8040086b9d800
 }
 
 core::ComponentCategory * RamUnit::Type::category() const

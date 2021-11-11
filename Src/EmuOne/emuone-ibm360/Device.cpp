@@ -23,13 +23,13 @@ Device::~Device()
 //  Component (serialisation)
 void Device::serialiseConfiguration(QDomElement & configurationElement) const
 {
-    configurationElement.setAttribute("Address", ("000" + QString::number(_address, 16)).right(3));
+    configurationElement.setAttribute("Address", ("000" + QString::number(static_cast<unsigned>(_address), 16)).right(3));
 }
 
 void Device::deserialiseConfiguration(QDomElement & configurationElement)
 {
     bool addressOk = false;
-    uint16_t address = (uint16_t)configurationElement.attribute("Address").toInt(&addressOk, 16);
+    uint16_t address = static_cast<uint16_t>(configurationElement.attribute("Address").toUInt(&addressOk, 16));
     if (addressOk && isValidAddress(address))
     {
         _address = address;
@@ -48,7 +48,7 @@ void Device::setAddress(uint16_t address)
     if (!isValidAddress(address))
     {
         throw core::VirtualApplianceException("Invalid device address " +
-                                              ("000" + QString::number(address, 16)).right(3));
+                                              ("000" + QString::number(static_cast<unsigned>(address), 16)).right(3));
     }
     _address = address;
 }

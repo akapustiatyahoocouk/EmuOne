@@ -38,8 +38,8 @@ namespace scp360
     private:
         Ui::NewSharedFolderDialog * _ui;
 
-        QString             _volumeName;
-        QString             _hostPath;
+        QString             _volumeName = {};
+        QString             _hostPath = {};
 
         //  Helpers
         void                _refresh();

@@ -12,9 +12,11 @@ namespace Ui { class NewVmDialog; }
 
 //////////
 //  "New VM" dialog
-class NewVmDialog : public QDialog
+class NewVmDialog final : public QDialog
 {
     Q_OBJECT
+
+    CANNOT_ASSIGN_OR_COPY_CONSTRUCT(NewVmDialog)
 
     //////////
     //  Construction/destruction
@@ -38,8 +40,8 @@ private:
     core::VirtualApplianceType *_virtualApplianceType = nullptr;
     core::Architecture *        _virtualApplianceArchitecture = nullptr;
     core::VirtualApplianceTemplate *    _virtualApplianceTemplate = nullptr;
-    QString                     _virtualApplianceName;
-    QString                     _virtualApplianceLocation;
+    QString                     _virtualApplianceName = {};
+    QString                     _virtualApplianceLocation = {};
 
     //  Helpers
     void                _refresh();

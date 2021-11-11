@@ -144,8 +144,6 @@ void Ibm2741FullScreenWidget::keyPressEvent(QKeyEvent * event)
         else if (event->text().length() == 1 &&
                  event->text()[0].unicode() >= 32 && event->text()[0].unicode() <= 126)
         {   //  Echo
-            static util::CharacterSet::Encoder * encoder = util::Cp037CharacterSet::instance()->createEncoder();
-
             _ibm2741->_pendingInput += event->text();
             _ibm2741->_charsToEcho.enqueue(event->text()[0]);
         }

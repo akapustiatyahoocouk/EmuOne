@@ -27,7 +27,7 @@ PhysicalDevice::~PhysicalDevice()
 //  Implementation helpers
 QString PhysicalDevice::_nameFromAddress(uint16_t address)
 {
-    return "#" + ("000" + QString::number(address, 16)).right(3).toUpper();
+    return "#" + ("000" + QString::number(static_cast<unsigned>(address), 16)).right(3).toUpper();
 }
 
 //  End of emuone-scp360/PhysicalDevice.cpp

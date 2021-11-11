@@ -76,7 +76,7 @@ void RomUnit::initialise()
         return;
     }
 
-    size_t dataSize = (size_t)_size.toBytes();
+    size_t dataSize = static_cast<size_t>(_size.toBytes());
     if (dataSize == 0 || dataSize != _size.toBytes())
     {   //  OOPS! Empty OR overflow
         throw core::VirtualApplianceException("Invalid or unsupported ROM unit size");
@@ -191,7 +191,7 @@ RomUnit::AccessOutcome RomUnit::loadByte(uint64_t offset, uint8_t & value)
     }
     else
     {   //  Go!
-        value = _data[(size_t)offset];
+        value = _data[static_cast<size_t>(offset)];
         return AccessOutcome::Success;
     }
 }
@@ -212,7 +212,7 @@ RomUnit::AccessOutcome RomUnit::loadHalfWord(uint64_t offset, util::ByteOrder by
     }
     else
     {   //  Go!
-        value = util::Memory::loadUInt16(_data + (size_t)offset, byteOrder);
+        value = util::Memory::loadUInt16(_data + static_cast<size_t>(offset), byteOrder);
         return AccessOutcome::Success;
     }
 }
@@ -233,7 +233,7 @@ RomUnit::AccessOutcome RomUnit::loadWord(uint64_t offset, util::ByteOrder byteOr
     }
     else
     {   //  Go!
-        value = util::Memory::loadUInt32(_data + (size_t)offset, byteOrder);
+        value = util::Memory::loadUInt32(_data + static_cast<size_t>(offset), byteOrder);
         return AccessOutcome::Success;
     }
 }
@@ -254,12 +254,12 @@ RomUnit::AccessOutcome RomUnit::loadLongWord(uint64_t offset, util::ByteOrder by
     }
     else
     {   //  Go!
-        value = util::Memory::loadUInt64(_data + (size_t)offset, byteOrder);
+        value = util::Memory::loadUInt64(_data + static_cast<size_t>(offset), byteOrder);
         return AccessOutcome::Success;
     }
 }
 
-RomUnit::AccessOutcome RomUnit::storeByte(uint64_t offset, uint8_t value)
+RomUnit::AccessOutcome RomUnit::storeByte(uint64_t offset, uint8_t /*value*/)
 {
     if (_data == nullptr)
     {   //  OOPS! No runtime state!
@@ -275,7 +275,7 @@ RomUnit::AccessOutcome RomUnit::storeByte(uint64_t offset, uint8_t value)
     }
 }
 
-RomUnit::AccessOutcome RomUnit::storeHalfWord(uint64_t offset, util::ByteOrder byteOrder, uint16_t value)
+RomUnit::AccessOutcome RomUnit::storeHalfWord(uint64_t offset, util::ByteOrder /*byteOrder*/, uint16_t /*value*/)
 {
     if (_data == nullptr)
     {   //  OOPS! No runtime state!
@@ -295,7 +295,7 @@ RomUnit::AccessOutcome RomUnit::storeHalfWord(uint64_t offset, util::ByteOrder b
     }
 }
 
-RomUnit::AccessOutcome RomUnit::storeWord(uint64_t offset, util::ByteOrder byteOrder, uint32_t value)
+RomUnit::AccessOutcome RomUnit::storeWord(uint64_t offset, util::ByteOrder /*byteOrder*/, uint32_t /*value*/)
 {
     if (_data == nullptr)
     {   //  OOPS! No runtime state!
@@ -315,7 +315,7 @@ RomUnit::AccessOutcome RomUnit::storeWord(uint64_t offset, util::ByteOrder byteO
     }
 }
 
-RomUnit::AccessOutcome RomUnit::storeLongWord(uint64_t offset, util::ByteOrder byteOrder, uint64_t value)
+RomUnit::AccessOutcome RomUnit::storeLongWord(uint64_t offset, util::ByteOrder /*byteOrder*/, uint64_t /*value*/)
 {
     if (_data == nullptr)
     {   //  OOPS! No runtime state!

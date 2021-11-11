@@ -36,7 +36,7 @@ void PluginManager::loadPlugins()
         QLibrary * library = new QLibrary(dllPath);
         if (library->load())
         {
-            PluginExportProc pluginExportProc = (PluginExportProc)library->resolve("PluginExportProc");
+            PluginExportProc pluginExportProc = reinterpret_cast<PluginExportProc>(library->resolve("PluginExportProc"));
             if (pluginExportProc == nullptr)
             {   //  No!
                 delete library;

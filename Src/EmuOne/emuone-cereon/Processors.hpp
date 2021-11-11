@@ -49,22 +49,26 @@ namespace cereon
         //////////
         //  Registers
     public:
-        uint64_t                r[32];
-        uint64_t                c[32];
-        uint64_t                flags;
-        uint64_t                d[32];
-        uint64_t                m[32];
+        uint64_t                r[32] = {};
+        uint64_t                c[32] = {};
+        uint64_t                flags = {};
+        uint64_t                d[32] = {};
+        uint64_t                m[32] = {};
 
         //////////
         //  Implementation
     private:
+        State                   _state = State::Constructed;
+        mutable QRecursiveMutex _stateGuard = {};
+
+        //  Configuration
         Features                _features;
         InstructionSet *        _instructionSet;
         core::ClockFrequency    _clockFrequency;
         util::ByteOrder         _byteOrder;
 
-        State                   _state = State::Constructed;
-        mutable QRecursiveMutex _stateGuard;
+        //  Connections to other VA components
+        MemoryBus *             _memoryBus = nullptr;
     };
 
     //////////

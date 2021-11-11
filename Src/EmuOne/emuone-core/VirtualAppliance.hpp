@@ -139,12 +139,12 @@ namespace core
         VirtualApplianceTemplate *const _template;      //  ...from which this VA was created
 
         State                       _state = State::Stopped;
-        mutable QRecursiveMutex     _stateGuard;
+        mutable QRecursiveMutex     _stateGuard = {};
 
-        ComponentList               _components;            //  "add()"'ed to this VA
-        ComponentList               _compatibleComponents;  //  These "_components" which are directly compatible with this VA
-        ComponentList               _adaptedComponents;     //  These "_components" which had to be "adapted" to this this VA
-        AdaptorList                 _adaptors;              //  One for each of "_adaptedComponents"
+        ComponentList               _components = {};           //  "add()"'ed to this VA
+        ComponentList               _compatibleComponents = {}; //  These "_components" which are directly compatible with this VA
+        ComponentList               _adaptedComponents = {};    //  These "_components" which had to be "adapted" to this this VA
+        AdaptorList                 _adaptors = {};             //  One for each of "_adaptedComponents"
 
         //  Helpers
         void                        _connectComponents();
@@ -205,8 +205,8 @@ namespace core
             //////////
             //  Implementation
         private:
-            mutable QIcon       _smallIcon;
-            mutable QIcon       _largeIcon;
+            mutable QIcon       _smallIcon = QIcon();
+            mutable QIcon       _largeIcon = QIcon();
         };
 
         //////////
@@ -251,8 +251,8 @@ namespace core
             //////////
             //  Implementation
         private:
-            mutable QIcon       _smallIcon;
-            mutable QIcon       _largeIcon;
+            mutable QIcon       _smallIcon = QIcon();
+            mutable QIcon       _largeIcon = QIcon();
         };
 
         //////////

@@ -320,7 +320,7 @@ void Scp::_registerHardwareDevice(ibm360::Device * hardwareDevice)
     if (_hardwareDevices.contains(hardwareDevice->address()))
     {   //  OOPS!
         throw core::VirtualApplianceException("Device conflict at address " +
-                                              ("000" + QString::number(hardwareDevice->address(), 16)).right(3).toUpper());
+                                              ("000" + QString::number(static_cast<unsigned>(hardwareDevice->address()), 16)).right(3).toUpper());
     }
     _hardwareDevices.insert(hardwareDevice->address(), hardwareDevice);
 }
@@ -520,6 +520,8 @@ void Scp::_handleWriteToOperatorSystemCall(WriteToOperatorSystemCall * systemCal
         case Device::State::Busy:
             //  Device is busy with another I/O - form an "I/O request" qnd queue it
             Q_ASSERT(false);
+        default:
+            Q_ASSERT(false);
     }
 }
 
@@ -558,7 +560,7 @@ void Scp::_handleReadFromOperatorSystemCall(ReadFromOperatorSystemCall * systemC
                     encoder->encode(' ', spaceBytes);
                     Q_ASSERT(spaceBytes.size() == 1);
                 }
-                for (int i = 0; i < systemCall->buffer->size(); i++)
+                for (size_t i = 0; i < systemCall->buffer->size(); i++)
                 {
                     systemCall->buffer->setAt(i, spaceBytes[0]);
                 }
@@ -582,6 +584,8 @@ void Scp::_handleReadFromOperatorSystemCall(ReadFromOperatorSystemCall * systemC
             //  Fall through - this will enqueue an "I/O request" for later completion
         case Device::State::Busy:
             //  Device is busy with another I/O - form an "I/O request" qnd queue it
+            Q_ASSERT(false);
+        default:
             Q_ASSERT(false);
     }
 }
@@ -717,6 +721,8 @@ void Scp::_handleWriteToFileSystemCall(WriteToFileSystemCall * systemCall)
             case Device::State::Busy:
                 Q_ASSERT(false);
                 //  TODO schedule I/O request package
+            default:
+                Q_ASSERT(false);
         }
     }
     else
@@ -785,6 +791,8 @@ void Scp::_handleReadFromFileSystemCall(ReadFromFileSystemCall * systemCall)
             case Device::State::Busy:
                 Q_ASSERT(false);
                 //  TODO schedule I/O request package
+            default:
+                Q_ASSERT(false);
         }
     }
     else

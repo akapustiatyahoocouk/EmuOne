@@ -11,7 +11,8 @@ using namespace scp360;
 //  Construction/destruction
 EmulatedProcess::EmulatedProcess(Scp * scp, uint16_t id, const QString & name, Flags flags, Process * parent)
     :   Process(scp, id, name, flags, parent),
-        systemCalls(this)
+        systemCalls(this),
+        _systemCallCompletionSemaphore()
 {
 }
 

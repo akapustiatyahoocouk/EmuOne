@@ -5,7 +5,12 @@
 //
 //////////
 #include "emuone-ibm360/API.hpp"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wswitch-default"
+#pragma GCC diagnostic ignored "-Wsign-promo"
 #include "ui_Ibm2741Editor.h"
+#pragma GCC diagnostic pop
 using namespace ibm360;
 
 //////////
@@ -31,7 +36,7 @@ void Ibm2741Editor::refresh()
 {
     _refreshUnderway = true;
 
-    _ui->_addressLineEdit->setText(("000" + QString::number(_ibm2741->address(), 16)).right(3).toUpper());
+    _ui->_addressLineEdit->setText(("000" + QString::number(static_cast<unsigned>(_ibm2741->address()), 16)).right(3).toUpper());
 
     _refreshUnderway = false;
 }
@@ -43,7 +48,7 @@ void Ibm2741Editor::_addressLineEditTextChanged(const QString &)
     if (!_refreshUnderway)
     {
         bool parsedOk = false;
-        uint16_t address = (uint16_t)_ui->_addressLineEdit->text().toUInt(&parsedOk, 16);
+        uint16_t address = static_cast<uint16_t>(_ui->_addressLineEdit->text().toUInt(&parsedOk, 16));
         if (Device::isValidAddress(address))
         {
             _ibm2741->setAddress(address);

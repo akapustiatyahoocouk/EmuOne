@@ -47,9 +47,9 @@ namespace core
         //////////
         //  Implementation
     private:
-        VirtualApplianceTemplateList    _virtualApplianceTemplates;
-        VirtualMachineTemplateList      _virtualMachineTemplates;
-        RemoteTerminalTemplateList      _remoteTerminalTemplates;
+        VirtualApplianceTemplateList    _virtualApplianceTemplates = {};
+        VirtualMachineTemplateList      _virtualMachineTemplates = {};
+        RemoteTerminalTemplateList      _remoteTerminalTemplates = {};
     };
 }
 

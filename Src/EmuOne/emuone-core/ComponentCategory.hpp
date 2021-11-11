@@ -40,13 +40,10 @@ namespace core
 
     //////////
     //  The "standard" (predefined) component categories
-    class EMUONE_CORE_EXPORT StandardComponentCategories
+    namespace StandardComponentCategories
     {
-        UTILITY_CLASS(StandardComponentCategories)
-
         //////////
         //  Types
-    public:
         class EMUONE_CORE_EXPORT Memory : public ComponentCategory
         {
             DECLARE_SINGLETON(Memory)
@@ -62,8 +59,8 @@ namespace core
             //////////
             //  Implementation
         private:
-            mutable QIcon       _smallIcon;
-            mutable QIcon       _largeIcon;
+            mutable QIcon       _smallIcon = QIcon();
+            mutable QIcon       _largeIcon = QIcon();
         };
 
         class EMUONE_CORE_EXPORT Processors : public ComponentCategory
@@ -81,8 +78,8 @@ namespace core
             //////////
             //  Implementation
         private:
-            mutable QIcon       _smallIcon;
-            mutable QIcon       _largeIcon;
+            mutable QIcon       _smallIcon = QIcon();
+            mutable QIcon       _largeIcon = QIcon();
         };
 
         class EMUONE_CORE_EXPORT Motherboard : public ComponentCategory
@@ -100,8 +97,8 @@ namespace core
             //////////
             //  Implementation
         private:
-            mutable QIcon       _smallIcon;
-            mutable QIcon       _largeIcon;
+            mutable QIcon       _smallIcon = QIcon();
+            mutable QIcon       _largeIcon = QIcon();
         };
 
         class EMUONE_CORE_EXPORT Terminals : public ComponentCategory
@@ -119,8 +116,8 @@ namespace core
             //////////
             //  Implementation
         private:
-            mutable QIcon       _smallIcon;
-            mutable QIcon       _largeIcon;
+            mutable QIcon       _smallIcon = QIcon();
+            mutable QIcon       _largeIcon = QIcon();
         };
 
         class EMUONE_CORE_EXPORT Software : public ComponentCategory
@@ -138,8 +135,8 @@ namespace core
             //////////
             //  Implementation
         private:
-            mutable QIcon       _smallIcon;
-            mutable QIcon       _largeIcon;
+            mutable QIcon       _smallIcon = QIcon();
+            mutable QIcon       _largeIcon = QIcon();
         };
     };
 }

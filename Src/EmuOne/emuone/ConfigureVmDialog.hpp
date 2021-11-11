@@ -12,9 +12,11 @@ namespace Ui { class ConfigureVmDialog; }
 
 //////////
 //  The "Configure VM" dialog
-class ConfigureVmDialog : public QDialog
+class ConfigureVmDialog final : public QDialog
 {
     Q_OBJECT
+
+    CANNOT_ASSIGN_OR_COPY_CONSTRUCT(ConfigureVmDialog)
 
     //////////
     //  Construction/destruction
@@ -30,10 +32,12 @@ private:
     bool                    _refreshUnderway = false;
     QGridLayout *           _componentEditorsPanelLayout;
 
-    QMap<core::Component*, core::ComponentEditor*>  _componentEditors;
+    QMap<core::Component*, core::ComponentEditor*>  _componentEditors = {};
 
     class _AddComponentAction : public QAction
     {
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_AddComponentAction)
+
     public:
         _AddComponentAction(ConfigureVmDialog * configureVmDialog, core::ComponentType * componentType)
             :   QAction(componentType->smallIcon(), componentType->displayName()),
