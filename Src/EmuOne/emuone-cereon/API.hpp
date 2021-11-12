@@ -33,6 +33,7 @@
 #include "emuone-cereon/RomUnitEditor.hpp"
 #include "emuone-cereon/Io.hpp"
 #include "emuone-cereon/Processors.hpp"
+#include "emuone-cereon/Processor1P1BEditor.hpp"
 
 #include "emuone-cereon/Cmos1.hpp"
 
