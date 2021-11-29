@@ -8,6 +8,13 @@
 using namespace cereon;
 
 //////////
+//  Constants
+const util::TimeSpan Cmos1::DefaultReadDelay = util::TimeSpan::fromMicroseconds(1); //  1us
+const util::TimeSpan Cmos1::DefaultWriteDelay = util::TimeSpan::fromMicroseconds(10); //  10us
+const core::ClockFrequency Cmos1::DefaultClockFrequency(core::ClockFrequency::Unit::MHZ, 1);
+const QString Cmos1::DefaultContentFilePath = "cmos.bin";
+
+//////////
 //  Construction/destruction
 Cmos1::Cmos1(const QString & name)
     :   core::Component(name),

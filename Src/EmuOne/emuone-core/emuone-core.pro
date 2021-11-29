@@ -26,6 +26,7 @@ HEADERS += \
     Classes.hpp \
     ClockFrequency.hpp \
     Component.hpp \
+    ComponentAspect.hpp \
     ComponentCategory.hpp \
     ComponentEditor.hpp \
     ComponentType.hpp \

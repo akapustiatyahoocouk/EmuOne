@@ -54,6 +54,7 @@
 #include "emuone-util/PluginManager.hpp"
 
 #include "emuone-util/Memory.hpp"
+#include "emuone-util/TimeSpan.hpp"
 
 #include "emuone-util/StockObject.hpp"
 

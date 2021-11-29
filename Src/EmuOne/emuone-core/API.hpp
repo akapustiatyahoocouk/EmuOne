@@ -29,6 +29,7 @@
 #include "emuone-core/ComponentCategory.hpp"
 #include "emuone-core/ComponentType.hpp"
 #include "emuone-core/Component.hpp"
+#include "emuone-core/ComponentAspect.hpp"
 #include "emuone-core/ComponentEditor.hpp"
 #include "emuone-core/FullScreenWidget.hpp"
 #include "emuone-core/ComponentUi.hpp"

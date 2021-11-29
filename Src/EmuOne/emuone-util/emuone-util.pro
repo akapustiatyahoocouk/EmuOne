@@ -10,7 +10,8 @@ SOURCES += \
     MessageDigest.cpp \
     Plugin.cpp \
     PluginManager.cpp \
-    Sha1MessageDigest.cpp
+    Sha1MessageDigest.cpp \
+    TimeSpan.cpp
 
 HEADERS += \
     API.hpp \
@@ -22,7 +23,8 @@ HEADERS += \
     Memory.hpp \
     MessageDigest.hpp \
     PluginManager.hpp \
-    StockObject.hpp
+    StockObject.hpp \
+    TimeSpan.hpp
 
 RESOURCES += \
     util.qrc

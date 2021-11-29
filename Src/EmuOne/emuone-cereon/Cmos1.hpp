@@ -16,6 +16,18 @@ namespace cereon
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Cmos1)
 
         //////////
+        //  Constants
+    public:
+        static const util::TimeSpan             DefaultReadDelay;
+        static const util::TimeSpan             DefaultWriteDelay;
+        static const uint16_t                   DefaultStatePortAddress = 0x0110;
+        static const uint16_t                   DefaultAddressPortAddress = 0x0111;
+        static const uint16_t                   DefaultDataPortAddress = 0x0112;
+        static const uint16_t                   DefaultInterruptMaskPortAddress = 0x0113;
+        static const core::ClockFrequency       DefaultClockFrequency;
+        static const QString                    DefaultContentFilePath;
+
+        //////////
         //  Types
     public:
         //  The type of the CMOS1 component
@@ -80,7 +92,7 @@ namespace cereon
         uint16_t                addressPortAddress() const { return _addressPortAddress; }
         uint16_t                dataPortAddress() const { return _dataPortAddress; }
         uint16_t                interruptMaskPortAddress() const { return _interruptMaskPortAddress; }
-        QString                 savedStateFileName() const { return _savedStateFileName; }
+        QString                 contentFilePath() const { return _contentFilePath; }
 
         //////////
         //  Implementation
@@ -89,11 +101,14 @@ namespace cereon
         mutable QRecursiveMutex _stateGuard = {};
 
         //  Configuration
-        uint16_t                _statePortAddress = 0x0110;
-        uint16_t                _addressPortAddress = 0x0111;
-        uint16_t                _dataPortAddress = 0x0112;
-        uint16_t                _interruptMaskPortAddress = 0x0113;
-        QString                 _savedStateFileName = "cmos.bin";
+        util::TimeSpan          _weadDelay = DefaultReadDelay;
+        util::TimeSpan          _writeDelay = DefaultWriteDelay;
+        uint16_t                _statePortAddress = DefaultStatePortAddress;
+        uint16_t                _addressPortAddress = DefaultAddressPortAddress;
+        uint16_t                _dataPortAddress = DefaultDataPortAddress;
+        uint16_t                _interruptMaskPortAddress = DefaultInterruptMaskPortAddress;
+        core::ClockFrequency    _clockFrequency = DefaultClockFrequency;
+        QString                 _contentFilePath = DefaultContentFilePath;
 
         //  Runtime state
         uint8_t                 _data[256];
