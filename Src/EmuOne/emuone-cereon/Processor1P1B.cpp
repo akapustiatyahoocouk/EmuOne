@@ -29,9 +29,9 @@ core::ComponentType * Processor1P1B::type() const
     return Type::instance();
 }
 
-core::ComponentEditor * Processor1P1B::createEditor(QWidget * /*parent*/)
+core::ComponentEditor * Processor1P1B::createEditor(QWidget * parent)
 {
-    return nullptr;
+    return new Processor1P1BEditor(this, parent);
 }
 
 QString Processor1P1B::shortStatus() const

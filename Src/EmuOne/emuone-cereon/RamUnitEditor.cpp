@@ -23,10 +23,13 @@ RamUnitEditor::RamUnitEditor(RamUnit * ramUnit, QWidget * parent)
     Q_ASSERT(_ramUnit != nullptr);
 
     _ui->setupUi(this);
+
+    _refreshUnderway = true;
     _ui->_sizeUnitComboBox->addItem("B");
     _ui->_sizeUnitComboBox->addItem("KB");
     _ui->_sizeUnitComboBox->addItem("MB");
     _ui->_sizeUnitComboBox->addItem("GB");
+    _refreshUnderway = false;
 }
 
 RamUnitEditor::~RamUnitEditor()

@@ -23,10 +23,13 @@ RomUnitEditor::RomUnitEditor(RomUnit * romUnit, QWidget * parent)
     Q_ASSERT(_romUnit != nullptr);
 
     _ui->setupUi(this);
+
+    _refreshUnderway = true;
     _ui->_sizeUnitComboBox->addItem("B");
     _ui->_sizeUnitComboBox->addItem("KB");
     _ui->_sizeUnitComboBox->addItem("MB");
     _ui->_sizeUnitComboBox->addItem("GB");
+    _refreshUnderway = false;
 }
 
 RomUnitEditor::~RomUnitEditor()

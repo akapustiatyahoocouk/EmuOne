@@ -153,6 +153,41 @@ namespace core
         void                        _stopComponents();
         void                        _deinitialiseComponents();
         void                        _disconnectComponents();
+
+        QMap<IClockedComponentAspect*, int> _calculateClockSchedule(const QList<IClockedComponentAspect*> & clockedComponents);
+
+        //////////
+        //  Threads
+        class _MasterClockThread final : public QThread
+        {
+            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_MasterClockThread)
+
+            //////////
+            //  Construction/destruction
+        public:
+            _MasterClockThread(VirtualAppliance * virtualAppliance, const QMap<IClockedComponentAspect*, int> & clockSchedule);
+            virtual ~_MasterClockThread();
+
+            //////////
+            //  QThread
+        public:
+            virtual void            run() override;
+
+            //////////
+            //  Operations
+        public:
+            void                    requestStop() { _stopRequested = true; }
+
+            //////////
+            //  Implementation
+        private:
+            VirtualAppliance *const _virtualAppliance;
+            volatile bool           _stopRequested = false;
+
+            int                     _numClockTickReceivers = 0;
+            IClockedComponentAspect **  _clockTickReceivers = nullptr;  //  array of _numClockTickReceivers elements
+        };
+        _MasterClockThread *        _masterClockThread = nullptr;
     };
 
     template <class T>

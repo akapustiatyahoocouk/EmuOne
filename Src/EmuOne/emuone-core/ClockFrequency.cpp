@@ -8,6 +8,22 @@
 using namespace core;
 
 //////////
+//  Operators
+ClockFrequency ClockFrequency::operator / (int scale) const
+{
+    Q_ASSERT(scale > 0);
+
+    return ClockFrequency(ClockFrequency::Unit::HZ, this->_numberOfUnits / static_cast<unsigned>(scale));
+}
+
+int ClockFrequency::operator / (const ClockFrequency & subClockFrequency) const
+{
+    Q_ASSERT(subClockFrequency.toHz() > 0);
+
+    return static_cast<int>(this->toHz() / subClockFrequency.toHz());
+}
+
+//////////
 //  Operations
 uint64_t ClockFrequency::toUnits(Unit unit) const
 {

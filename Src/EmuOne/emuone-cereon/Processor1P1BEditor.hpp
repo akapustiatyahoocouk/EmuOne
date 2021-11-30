@@ -24,7 +24,7 @@ namespace cereon {
         //  Construction/destruction
     public:
         explicit Processor1P1BEditor(Processor1P1B * processor, QWidget * parent = nullptr);
-        ~Processor1P1BEditor();
+        virtual ~Processor1P1BEditor();
 
         //////////
         //  core::ComponentEditor
@@ -37,6 +37,13 @@ namespace cereon {
         Ui::Processor1P1BEditor *   _ui;
         Processor1P1B *             _processor;
         bool                        _refreshUnderway = false;
+
+        //////////
+        //  Event handlers
+    private slots:
+        void                        _clockFrequencyValueLineEditTextChanged(const QString &);
+        void                        _clockFrequencyUnitComboBoxCurrentIndexChanged(int);
+        void                        _byteOrderComboBoxCurrentIndexChanged(int);
     };
 }
 

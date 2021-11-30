@@ -327,6 +327,17 @@ void VirtualAppliance::start()
         throw;
     }
 
+    //  If one or more Components of this VA implement the IClockedComponentAspect, they
+    //  need the VA-wide "master clock" thread to drive them
+    QList<IClockedComponentAspect*> clockedComponents = this->findComponentsByRole<IClockedComponentAspect>();
+    if (!clockedComponents.isEmpty())
+    {   //  Yes! A "master clock" thread is needed!
+        QMap<IClockedComponentAspect*, int> clockSchedule = _calculateClockSchedule(clockedComponents);
+        _masterClockThread = new _MasterClockThread(this, clockSchedule);
+        _masterClockThread->start();
+    }
+
+    //  Done
     _state = State::Running;
 }
 
@@ -343,6 +354,12 @@ void VirtualAppliance::stop() noexcept
     _deinitialiseComponents();
     _disconnectComponents();
 
+    if (_masterClockThread != nullptr)
+    {
+        _masterClockThread->requestStop();
+        _masterClockThread->wait();
+        _masterClockThread = nullptr;
+    }
     _state = State::Stopped;
 
     //  TODO is the VA was "suspended", must also delete the saved "runtime state"
@@ -497,6 +514,113 @@ void VirtualAppliance::_disconnectComponents()
             component->disconnect();
             Q_ASSERT(component->state() == Component::State::Constructed);
         }
+    }
+}
+
+QMap<IClockedComponentAspect*, int> VirtualAppliance::_calculateClockSchedule(const QList<IClockedComponentAspect*> & clockedComponents)
+{
+    Q_ASSERT(!clockedComponents.isEmpty());
+
+    //  What's the fastest clocked component ?
+    IClockedComponentAspect * fastestClockedComponent = nullptr;
+    for (IClockedComponentAspect * clockedComponent : clockedComponents)
+    {
+        if (fastestClockedComponent == nullptr ||
+            clockedComponent->clockFrequency() > fastestClockedComponent->clockFrequency())
+        {
+            fastestClockedComponent = clockedComponent;
+        }
+    }
+    Q_ASSERT(fastestClockedComponent->clockFrequency().toHz() > 0);
+
+    //  What's the slowest clocked component ?
+    IClockedComponentAspect * slowestClockedComponent = nullptr;
+    for (IClockedComponentAspect * clockedComponent : clockedComponents)
+    {
+        if (slowestClockedComponent == nullptr ||
+            clockedComponent->clockFrequency() < slowestClockedComponent->clockFrequency())
+        {
+            slowestClockedComponent = clockedComponent;
+        }
+    }
+    Q_ASSERT(slowestClockedComponent->clockFrequency().toHz() > 0);
+
+    //  Calculate the fastest/slowest "clock frequency" for all components.
+    //  We do not want a difference of more than 1000, or else the "clock
+    //  tick schedule" will become too long
+    ClockFrequency fastestClockFrequency = fastestClockedComponent->clockFrequency();
+    ClockFrequency slowestClockFrequency = slowestClockedComponent->clockFrequency();
+    if (slowestClockFrequency < fastestClockFrequency / 1000)
+    {
+        slowestClockFrequency = fastestClockFrequency / 1000;
+        if (slowestClockFrequency.toHz() == 0)
+        {   //  OOPS! Underflow!
+            slowestClockFrequency = ClockFrequency(ClockFrequency::Unit::HZ, 1);    //  that's the smallest we can express
+        }
+    }
+
+    //  Prepare the "clock tick" schedule
+    QMap<IClockedComponentAspect*, int> result;
+    for (IClockedComponentAspect * clockedComponent : clockedComponents)
+    {
+        int numTicks = clockedComponent->clockFrequency() / slowestClockFrequency;
+        result.insert(clockedComponent, numTicks);
+    }
+
+    //  Done
+    return result;
+}
+
+//////////
+//  VirtualAppliance::_MasterClockThread
+VirtualAppliance::_MasterClockThread::_MasterClockThread(VirtualAppliance * virtualAppliance, const QMap<IClockedComponentAspect*, int> & clockSchedule)
+    :   _virtualAppliance(virtualAppliance)
+{
+    //  How many "clock ticks" per one complete cycle ?
+    _numClockTickReceivers = 0;
+    for (IClockedComponentAspect * clockedComponent : clockSchedule.keys())
+    {
+        int oldNumClockTickReceivers = _numClockTickReceivers;
+        _numClockTickReceivers = clockSchedule[clockedComponent];
+        Q_ASSERT(_numClockTickReceivers > oldNumClockTickReceivers);    //  No overflows!!!
+    }
+    _clockTickReceivers = new IClockedComponentAspect*[static_cast<size_t>(_numClockTickReceivers)];
+
+    //  Fill the cycle...
+    _numClockTickReceivers = 0;
+    for (IClockedComponentAspect * clockedComponent : clockSchedule.keys())
+    {
+        for (int i = 0; i < clockSchedule[clockedComponent]; i++)
+        {
+            _clockTickReceivers[_numClockTickReceivers++] = clockedComponent;
+        }
+    }
+
+    //  ...and randomise the order in which "clock ticks" are processed
+    for (int i = 0; i < _numClockTickReceivers; i++)
+    {
+        int j = rand() % _numClockTickReceivers;
+        std::swap(_clockTickReceivers[i], _clockTickReceivers[j]);
+    }
+}
+
+VirtualAppliance::_MasterClockThread::~_MasterClockThread()
+{
+    delete [] _clockTickReceivers;
+}
+
+void VirtualAppliance::_MasterClockThread::run()
+{
+    //  Which clock frequency we're supposed to be running at ?
+    uint64_t clockFrequencyHz = 0;
+    for (int i = 0; i < _numClockTickReceivers; i++)
+    {
+        clockFrequencyHz = std::max(clockFrequencyHz, _clockTickReceivers[i]->clockFrequency().toHz());
+    }
+
+    //  Go!
+    while (!_stopRequested)
+    {
     }
 }
 

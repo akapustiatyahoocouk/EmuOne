@@ -39,6 +39,9 @@ namespace core
         bool                operator >  (const ClockFrequency & op2) const { return this->toHz() >  op2.toHz(); }
         bool                operator >= (const ClockFrequency & op2) const { return this->toHz() >= op2.toHz(); }
 
+        ClockFrequency      operator / (int scale) const;
+        int                 operator / (const ClockFrequency & subClockFrequency) const;
+
         //////////
         //  Operations
     public:

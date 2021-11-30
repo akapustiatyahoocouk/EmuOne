@@ -59,7 +59,8 @@ namespace cereon
 
     //////////
     //  A generic Cereon processor
-    class EMUONE_CEREON_EXPORT Processor : public core::Component
+    class EMUONE_CEREON_EXPORT Processor : public core::Component,
+                                           public virtual core::IClockedComponentAspect
     {
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Processor)
 
@@ -88,12 +89,19 @@ namespace cereon
         virtual void        deserialiseConfiguration(QDomElement & configurationElement) override;
 
         //////////
+        //  core::IClockedComponentAspect
+    public:
+        virtual core::ClockFrequency    clockFrequency() const override;
+        virtual void                    onClockTick() override;
+
+        //////////
         //  Properties
     public:
         Features                features() const { return _features; }
         InstructionSet *        instructionSet() const { return _instructionSet; }
-        core::ClockFrequency    clockFrequency() const { return _clockFrequency; }
+        void                    setClockFrequency(const core::ClockFrequency & clockFrequency) { _clockFrequency = clockFrequency; }
         util::ByteOrder         byteOrder() const { return _byteOrder; }
+        void                    setByteOrder(util::ByteOrder byteOrder) { _byteOrder = byteOrder; }
 
         //////////
         //  Registers
@@ -203,7 +211,7 @@ namespace cereon
         Features                _features;
         InstructionSet *        _instructionSet;
         core::ClockFrequency    _clockFrequency;
-        util::ByteOrder         _byteOrder; //  replicated from $state for faster access
+        util::ByteOrder         _byteOrder; //  Mirrors "byte order" bit of $state for faster access
 
         //  Connections to other VA components
         MemoryBus *             _memoryBus = nullptr;

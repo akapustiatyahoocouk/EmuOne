@@ -140,12 +140,38 @@ void Processor::disconnect() noexcept
 
 //////////
 //  core::Component (serialisation)
-void Processor::serialiseConfiguration(QDomElement & /*configurationElement*/) const
+void Processor::serialiseConfiguration(QDomElement & configurationElement) const
 {
+    configurationElement.setAttribute("ClockFrequency", _clockFrequency.toString());
+    configurationElement.setAttribute("ByteOrder", (_byteOrder == util::ByteOrder::BigEndian) ? "BigEndian" : "LittleEndian");
 }
 
-void Processor::deserialiseConfiguration(QDomElement & /*configurationElement*/)
+void Processor::deserialiseConfiguration(QDomElement & configurationElement)
 {
+    QString clockFrequencyString = configurationElement.attribute("ClockFrequency");
+    _clockFrequency = core::ClockFrequency::fromString(clockFrequencyString, _clockFrequency);
+
+    QString byteOrderString = configurationElement.attribute("ByteOrder");
+    if (byteOrderString == "BigEndian")
+    {
+        _byteOrder = util::ByteOrder::BigEndian;
+    }
+    else if (byteOrderString == "LittleEndian")
+    {
+        _byteOrder = util::ByteOrder::LittleEndian;
+    }
+}
+
+//////////
+//  core::IClockedComponentAspect
+core::ClockFrequency Processor::clockFrequency() const
+{
+    return _clockFrequency;
+}
+
+void Processor::onClockTick()
+{
+    //  TODO implement
 }
 
 //  End of emuone-cereon/Processor.cpp
