@@ -334,11 +334,14 @@ void VirtualAppliance::start()
     {   //  Yes! A "master clock" thread is needed!
         QMap<IClockedComponentAspect*, int> clockSchedule = _calculateClockSchedule(clockedComponents);
         _masterClockThread = new _MasterClockThread(this, clockSchedule);
-        _masterClockThread->start();
     }
 
     //  Done
     _state = State::Running;
+    if (_masterClockThread != nullptr)
+    {
+        _masterClockThread->start();
+    }
 }
 
 void VirtualAppliance::stop() noexcept
@@ -602,6 +605,20 @@ VirtualAppliance::_MasterClockThread::_MasterClockThread(VirtualAppliance * virt
         int j = rand() % _numClockTickReceivers;
         std::swap(_clockTickReceivers[i], _clockTickReceivers[j]);
     }
+
+    //  How long (in nanoseconds) is one iteration over "_clockTickReceivers"
+    //  is supposed to take ?
+    for (int i = 0; i < _numClockTickReceivers; i++)
+    {
+        if (_fastestComponent == nullptr ||
+            _clockTickReceivers[i]->clockFrequency() > _fastestComponent->clockFrequency())
+        {
+            _fastestComponent = _clockTickReceivers[i];
+        }
+    }
+    double fastestComponentTickTimeNs = 1000000000.0 / static_cast<double>(_fastestComponent->clockFrequency().toHz());
+    double allComponentsTickTimeNs = fastestComponentTickTimeNs * _numClockTickReceivers;
+    _oneIterationLengthNs = (allComponentsTickTimeNs >= 1.0) ? static_cast<int64_t>(allComponentsTickTimeNs) : 1;
 }
 
 VirtualAppliance::_MasterClockThread::~_MasterClockThread()
@@ -611,16 +628,49 @@ VirtualAppliance::_MasterClockThread::~_MasterClockThread()
 
 void VirtualAppliance::_MasterClockThread::run()
 {
-    //  Which clock frequency we're supposed to be running at ?
-    uint64_t clockFrequencyHz = 0;
-    for (int i = 0; i < _numClockTickReceivers; i++)
-    {
-        clockFrequencyHz = std::max(clockFrequencyHz, _clockTickReceivers[i]->clockFrequency().toHz());
-    }
+    int64_t nanosExpectedSinceLastAdjustment = 0;
+    util::TimeStamp lastAdjustmentMadeAt = util::TimeStamp::now();
+    int delayFactor = 0;
+    int pendingDelayNs = 0;
+    int cyclesSinceLastAdjustment = 0;
 
-    //  Go!
+    IClockedComponentAspect ** clockTickReceiversEnd = _clockTickReceivers + _numClockTickReceivers;
     while (!_stopRequested)
     {
+        //  Perform delay
+        pendingDelayNs += delayFactor;
+        if (pendingDelayNs > 1000000)   //  1ms
+        {
+            msleep(static_cast<unsigned long>(pendingDelayNs / 1000000));
+            pendingDelayNs %= 1000000;
+        }
+        //  Run one "clocks set" cycle
+        for (IClockedComponentAspect ** p = _clockTickReceivers; p < clockTickReceiversEnd; p++)
+        {
+            (*p)->onClockTick();
+        }
+        nanosExpectedSinceLastAdjustment += _oneIterationLengthNs;
+        cyclesSinceLastAdjustment++;
+        //  Adjust delay ?
+        if (nanosExpectedSinceLastAdjustment > 10000000)    //  Adjust at 10ms intervals
+        {
+            util::TimeStamp now = util::TimeStamp::now();
+            int64_t nanosMeasuredSinceLastAdjustment = (now - lastAdjustmentMadeAt).asNanoseconds();
+            if (nanosMeasuredSinceLastAdjustment < nanosExpectedSinceLastAdjustment)
+            {   //  Too fast!
+                delayFactor++;
+            }
+            else if (nanosMeasuredSinceLastAdjustment < nanosExpectedSinceLastAdjustment && delayFactor > 0)
+            {   //  Too slow!
+                delayFactor--;
+            }
+            qDebug() << "delayFactor = " << delayFactor;
+            qDebug() << "actual clock frequency " << (_fastestComponent->clockFrequency().toHz() * nanosExpectedSinceLastAdjustment / nanosMeasuredSinceLastAdjustment);
+            //  Schedule next adjustment
+            nanosExpectedSinceLastAdjustment = 0;
+            lastAdjustmentMadeAt = now; //  TODO ? util::TimeStamp::now();
+            cyclesSinceLastAdjustment = 0;
+        }
     }
 }
 

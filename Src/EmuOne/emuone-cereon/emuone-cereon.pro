@@ -13,6 +13,7 @@ SOURCES += \
     Processor.cpp \
     Processor1P1B.cpp \
     Processor1P1BEditor.cpp \
+    ProcessorCore.cpp \
     RamUnit.cpp \
     RamUnitEditor.cpp \
     RomUnit.cpp \

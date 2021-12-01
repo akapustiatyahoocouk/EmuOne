@@ -186,6 +186,8 @@ namespace core
 
             int                     _numClockTickReceivers = 0;
             IClockedComponentAspect **  _clockTickReceivers = nullptr;  //  array of _numClockTickReceivers elements
+            IClockedComponentAspect *   _fastestComponent = nullptr;
+            int64_t                 _oneIterationLengthNs = 0;
         };
         _MasterClockThread *        _masterClockThread = nullptr;
     };

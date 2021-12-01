@@ -44,6 +44,9 @@ namespace cereon {
         void                        _clockFrequencyValueLineEditTextChanged(const QString &);
         void                        _clockFrequencyUnitComboBoxCurrentIndexChanged(int);
         void                        _byteOrderComboBoxCurrentIndexChanged(int);
+        void                        _processorIdLineEditTextChanged(const QString &);
+        void                        _primaryCheckBoxStateChanged(int);
+        void                        _bootstrapIpLineEditTextChanged(const QString &);
     };
 }
 

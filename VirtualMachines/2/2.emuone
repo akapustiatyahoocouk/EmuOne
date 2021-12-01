@@ -1,12 +1,12 @@
-<VirtualAppliance Architecture="CereonWorkstation" Type="VirtualMachine" Name="2" Template="CereonWorkstationMini">
+<VirtualAppliance Architecture="CereonWorkstation" Template="CereonWorkstationMini" Type="VirtualMachine" Name="2">
  <Component Type="Cereon-RamUnit" Name="RAM">
   <Configuration Size="64MB" StartAddress="0000000000000000"/>
  </Component>
  <Component Type="Cereon-RomUnit" Name="ROM">
-  <Configuration Size="1MB" ContentFileName="./rom.bin" StartAddress="FFFFFFFFFFF00000"/>
+  <Configuration ContentFileName="./rom.bin" Size="1MB" StartAddress="FFFFFFFFFFF00000"/>
  </Component>
  <Component Type="Cereon-1P1B" Name="Processor">
-  <Configuration ByteOrder="BigEndian" ClockFrequency="20MHZ"/>
+  <Configuration BootstrapIp="FFFFFFFFFFF00000" ProcessorId="0" Primary="Yes" ClockFrequency="20MHZ" ByteOrder="BigEndian"/>
  </Component>
  <Component Type="Cereon-MemoryBus" Name="Memory bus">
   <Configuration/>

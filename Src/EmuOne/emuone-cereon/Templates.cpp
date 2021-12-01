@@ -38,7 +38,7 @@ void CereonWorkstationMiniTemplate::populateVirtualAppliance(core::VirtualApplia
     virtualAppliance->addComponent(new MemoryBus("Memory bus"));
     virtualAppliance->addComponent(new IoBus("I/O bus"));
 
-    virtualAppliance->addComponent(new Processor1P1B());
+    virtualAppliance->addComponent(new Processor1P1B("Processor", 0, true, UINT64_C(0xFFFFFFFFFFF00000)));
 }
 
 //  End of emuone-cereon/Templates.cpp

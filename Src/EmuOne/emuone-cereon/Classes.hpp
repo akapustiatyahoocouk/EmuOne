@@ -8,6 +8,9 @@
 
 namespace cereon
 {
+    class EMUONE_CORE_EXPORT Processor;
+    class EMUONE_CORE_EXPORT ProcessorCore;
+
     class EMUONE_CORE_EXPORT RamUnitEditor;
     class EMUONE_CORE_EXPORT RomUnitEditor;
     class EMUONE_CORE_EXPORT Processor1P1BEditor;

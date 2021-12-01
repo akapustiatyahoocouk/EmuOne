@@ -9,13 +9,18 @@ using namespace cereon;
 
 //////////
 //  Construction/destruction
-Processor1P1B::Processor1P1B()
-    :   Processor("Processor",
+Processor1P1B::Processor1P1B(const QString & name, uint8_t processorId, bool primary, uint64_t bootstrapIp)
+    :   Processor(name,
                   Features::Base,
                   InstructionSetV1::instance(),
                   core::ClockFrequency(core::ClockFrequency::Unit::MHZ, 10),
-                  util::ByteOrder::BigEndian)
+                  util::ByteOrder::BigEndian,
+                  processorId,
+                  primary,
+                  bootstrapIp),
+      _core(this, 0, true)
 {
+    addCore(&_core);
 }
 
 Processor1P1B::~Processor1P1B()
@@ -72,7 +77,7 @@ bool Processor1P1B::Type::isCompatibleWith(core::Architecture * architecture) co
 
 core::Component * Processor1P1B::Type::createComponent()
 {
-    return new Processor1P1B();
+    return new Processor1P1B("Processor", 0, true, UINT64_C(0xFFFFFFFFFFF00000));
 }
 
 //  End of emuone-cereon/Processor1P1B.cpp

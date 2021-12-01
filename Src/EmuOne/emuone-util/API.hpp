@@ -55,6 +55,7 @@
 
 #include "emuone-util/Memory.hpp"
 #include "emuone-util/TimeSpan.hpp"
+#include "emuone-util/TimeStamp.hpp"
 
 #include "emuone-util/StockObject.hpp"
 

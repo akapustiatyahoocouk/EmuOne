@@ -57,6 +57,10 @@ void Processor1P1BEditor::refresh()
     _ui->_virtualMemoryCheckBox->setChecked((_processor->features() & Features::VirtualMemory) != Features::None);
     _ui->_performanceMonitoringCheckBox->setChecked((_processor->features() & Features::PerformanceMonitoring) != Features::None);
 
+    _ui->_processorIdLineEdit->setText(("00" + QString::number(static_cast<unsigned>(_processor->processorId()), 16)).right(2).toUpper());
+    _ui->_primaryCheckBox->setChecked(_processor->primary());
+    _ui->_bootstrapIpLineEdit->setText(("0000000000000000" + QString::number(_processor->bootstrapIp(), 16)).right(16).toUpper());
+
     _refreshUnderway = false;
 }
 
@@ -97,6 +101,43 @@ void Processor1P1BEditor::_byteOrderComboBoxCurrentIndexChanged(int)
         util::ByteOrder byteOrder = static_cast<util::ByteOrder>(_ui->_byteOrderComboBox->currentIndex());
         _processor->setByteOrder(byteOrder);
         emit componentConfigurationChanged(component());
+    }
+}
+
+void Processor1P1BEditor::_processorIdLineEditTextChanged(const QString &)
+{
+    if (!_refreshUnderway)
+    {
+        bool ok = false;
+        unsigned id = _ui->_processorIdLineEdit->text().toUInt(&ok, 16);
+        if (ok && id <= 255)
+        {   //  Use it
+            _processor->setProcessorId(static_cast<uint8_t>(id));
+            emit componentConfigurationChanged(component());
+        }
+    }
+}
+
+void Processor1P1BEditor::_primaryCheckBoxStateChanged(int)
+{
+    if (!_refreshUnderway)
+    {
+        _processor->setPrimary(_ui->_primaryCheckBox->isChecked());
+        emit componentConfigurationChanged(component());
+    }
+}
+
+void Processor1P1BEditor::_bootstrapIpLineEditTextChanged(const QString &)
+{
+    if (!_refreshUnderway)
+    {
+        bool ok = false;
+        uint64_t bootstrapIp = _ui->_bootstrapIpLineEdit->text().toULongLong(&ok, 16);
+        if (ok)
+        {   //  Use it
+            _processor->setBootstrapIp(bootstrapIp);
+            emit componentConfigurationChanged(component());
+        }
     }
 }
 

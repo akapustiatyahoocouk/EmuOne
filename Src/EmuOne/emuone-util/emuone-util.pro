@@ -11,7 +11,8 @@ SOURCES += \
     Plugin.cpp \
     PluginManager.cpp \
     Sha1MessageDigest.cpp \
-    TimeSpan.cpp
+    TimeSpan.cpp \
+    TimeStamp.cpp
 
 HEADERS += \
     API.hpp \
@@ -24,7 +25,8 @@ HEADERS += \
     MessageDigest.hpp \
     PluginManager.hpp \
     StockObject.hpp \
-    TimeSpan.hpp
+    TimeSpan.hpp \
+    TimeStamp.hpp
 
 RESOURCES += \
     util.qrc
