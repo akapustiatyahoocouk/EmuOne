@@ -9,10 +9,10 @@ using namespace cereon;
 
 //////////
 //  Constants
-const util::TimeSpan Cmos1::DefaultReadDelay = util::TimeSpan::fromMicroseconds(1); //  1us
-const util::TimeSpan Cmos1::DefaultWriteDelay = util::TimeSpan::fromMicroseconds(10); //  10us
+const core::Duration Cmos1::DefaultReadDelay = core::Duration(core::Duration::Unit::Microseconds, 1);
+const core::Duration Cmos1::DefaultWriteDelay = core::Duration(core::Duration::Unit::Microseconds, 10);
 const core::ClockFrequency Cmos1::DefaultClockFrequency(core::ClockFrequency::Unit::MHZ, 1);
-const QString Cmos1::DefaultContentFilePath = "cmos.bin";
+const QString Cmos1::DefaultContentFilePath = "./cmos.bin";
 
 //////////
 //  Construction/destruction
@@ -36,9 +36,9 @@ core::ComponentType * Cmos1::type() const
     return Type::instance();
 }
 
-core::ComponentEditor * Cmos1::createEditor(QWidget * /*parent*/)
+core::ComponentEditor * Cmos1::createEditor(QWidget * parent)
 {
-    return nullptr;
+    return new Cmos1Editor(this, parent);
 }
 
 QString Cmos1::shortStatus() const
@@ -147,12 +147,43 @@ void Cmos1::disconnect() noexcept
 
 //////////
 //  core::Component (serialisation)
-void Cmos1::serialiseConfiguration(QDomElement & /*configurationElement*/) const
+void Cmos1::serialiseConfiguration(QDomElement & configurationElement) const
 {
+    configurationElement.setAttribute("StatePortAddress", util::toString(_statePortAddress, "%04X"));
+    configurationElement.setAttribute("AddressPortAddress", util::toString(_addressPortAddress, "%04X"));
+    configurationElement.setAttribute("DataPortAddress", util::toString(_dataPortAddress, "%04X"));
+    configurationElement.setAttribute("InterruptMaskPortAddress", util::toString(_interruptMaskPortAddress, "%04X"));
 }
 
-void Cmos1::deserialiseConfiguration(QDomElement & /*configurationElement*/)
+void Cmos1::deserialiseConfiguration(QDomElement & configurationElement)
 {
+    util::fromString(configurationElement.attribute("StatePortAddress"), "%X", _statePortAddress);
+
+    bool addressOk = false;
+
+    uint16_t statePortAddress = static_cast<uint16_t>(configurationElement.attribute("StatePortAddress").toUInt(&addressOk, 16));
+    if (addressOk)
+    {
+        _statePortAddress = statePortAddress;
+    }
+
+    uint16_t addressPortAddress = static_cast<uint16_t>(configurationElement.attribute("AddressPortAddress").toUInt(&addressOk, 16));
+    if (addressOk)
+    {
+        _addressPortAddress = addressPortAddress;
+    }
+
+    uint16_t dataPortAddress = static_cast<uint16_t>(configurationElement.attribute("DataPortAddress").toUInt(&addressOk, 16));
+    if (addressOk)
+    {
+        _dataPortAddress = dataPortAddress;
+    }
+
+    uint16_t interruptMaskPortAddress = static_cast<uint16_t>(configurationElement.attribute("InterruptMaskPortAddress").toUInt(&addressOk, 16));
+    if (addressOk)
+    {
+        _interruptMaskPortAddress = interruptMaskPortAddress;
+    }
 }
 
 //////////

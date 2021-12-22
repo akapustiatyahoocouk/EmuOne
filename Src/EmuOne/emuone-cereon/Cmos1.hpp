@@ -18,8 +18,8 @@ namespace cereon
         //////////
         //  Constants
     public:
-        static const util::TimeSpan             DefaultReadDelay;
-        static const util::TimeSpan             DefaultWriteDelay;
+        static const core::Duration             DefaultReadDelay;
+        static const core::Duration             DefaultWriteDelay;
         static const uint16_t                   DefaultStatePortAddress = 0x0110;
         static const uint16_t                   DefaultAddressPortAddress = 0x0111;
         static const uint16_t                   DefaultDataPortAddress = 0x0112;
@@ -88,10 +88,25 @@ namespace cereon
         //////////
         //  Operations
     public:
+        core::Duration          readDelay() const { return _readDelay; }
+        void                    setReadDelay(const core::Duration & readDelay) { _readDelay = readDelay; }
+
+        core::Duration          writeDelay() const { return _writeDelay; }
+        void                    setWriteDelay(const core::Duration & writeDelay) { _writeDelay = writeDelay; }
+
         uint16_t                statePortAddress() const { return _statePortAddress; }
+        void                    setStatePortAddress(uint16_t statePortAddress) { _statePortAddress = statePortAddress; }
+
         uint16_t                addressPortAddress() const { return _addressPortAddress; }
+        void                    setAddressPortAddress(uint16_t addressPortAddress) { _addressPortAddress = addressPortAddress; }
+
         uint16_t                dataPortAddress() const { return _dataPortAddress; }
+        void                    setDataPortAddress(uint16_t dataPortAddress) { _dataPortAddress = dataPortAddress; }
+
         uint16_t                interruptMaskPortAddress() const { return _interruptMaskPortAddress; }
+        void                    setInterruptMaskPortAddress(uint16_t interruptMaskPortAddress) { _interruptMaskPortAddress = interruptMaskPortAddress; }
+
+        core::ClockFrequency    clockFrequency() const { return _clockFrequency; }
         QString                 contentFilePath() const { return _contentFilePath; }
 
         //////////
@@ -101,8 +116,8 @@ namespace cereon
         mutable QRecursiveMutex _stateGuard = {};
 
         //  Configuration
-        util::TimeSpan          _weadDelay = DefaultReadDelay;
-        util::TimeSpan          _writeDelay = DefaultWriteDelay;
+        core::Duration          _readDelay = DefaultReadDelay;
+        core::Duration          _writeDelay = DefaultWriteDelay;
         uint16_t                _statePortAddress = DefaultStatePortAddress;
         uint16_t                _addressPortAddress = DefaultAddressPortAddress;
         uint16_t                _dataPortAddress = DefaultDataPortAddress;

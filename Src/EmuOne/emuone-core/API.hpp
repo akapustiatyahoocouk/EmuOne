@@ -23,6 +23,7 @@
 
 #include "emuone-core/MemorySize.hpp"
 #include "emuone-core/ClockFrequency.hpp"
+#include "emuone-core/Duration.hpp"
 
 #include "emuone-core/Architecture.hpp"
 #include "emuone-core/Template.hpp"

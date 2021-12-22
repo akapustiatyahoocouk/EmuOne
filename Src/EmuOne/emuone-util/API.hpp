@@ -53,6 +53,9 @@
 #include "emuone-util/Macros.hpp"
 #include "emuone-util/PluginManager.hpp"
 
+#include "emuone-util/ToString.hpp"
+#include "emuone-util/FromString.hpp"
+
 #include "emuone-util/Memory.hpp"
 #include "emuone-util/TimeSpan.hpp"
 #include "emuone-util/TimeStamp.hpp"

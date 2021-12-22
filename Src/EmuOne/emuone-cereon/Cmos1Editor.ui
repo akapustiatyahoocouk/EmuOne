@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>cereon::Cmos1Editor</class>
+ <widget class="QWidget" name="cereon::Cmos1Editor">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>497</width>
+    <height>256</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>4</number>
+   </property>
+   <item row="6" column="2">
+    <widget class="QComboBox" name="_writeDelayUnitComboBox"/>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLineEdit" name="_interruptMaskPortLineEdit"/>
+   </item>
+   <item row="6" column="1">
+    <widget class="QLineEdit" name="_writeDelayValueLineEdit"/>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="_clockFrequencyLabel">
+     <property name="text">
+      <string>Clock frequency:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="_interruptMaskPortLabel">
+     <property name="text">
+      <string>Interrupt mask port (hex):</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="2">
+    <widget class="QComboBox" name="_readDelayUnitComboBox"/>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="_contentLabel">
+     <property name="text">
+      <string>Content:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="3">
+    <widget class="QPushButton" name="_browsePushButton">
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="_addressPortLabel">
+     <property name="text">
+      <string>Address port (hex):</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QComboBox" name="_clockFrequencyUnitComboBox"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="_dataPortLabel">
+     <property name="text">
+      <string>Data port (hex):</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLineEdit" name="_addressPortLineEdit"/>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="_readDelayFrequencyLabel">
+     <property name="text">
+      <string>Read delay:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QLineEdit" name="_dataPortLineEdit"/>
+   </item>
+   <item row="8" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="4" column="1">
+    <widget class="QLineEdit" name="_clockFrequencyValueLineEdit"/>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="_writeDelayFrequencyLabel">
+     <property name="text">
+      <string>Write delay:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1" colspan="2">
+    <widget class="QLineEdit" name="_contentLineEdit">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="inputMask">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLineEdit" name="_statePortLineEdit"/>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="_statePortLabel">
+     <property name="text">
+      <string>State port (hex):</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QLineEdit" name="_readDelayValueLineEdit"/>
+   </item>
+   <item row="7" column="4">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>_statePortLineEdit</tabstop>
+  <tabstop>_addressPortLineEdit</tabstop>
+  <tabstop>_dataPortLineEdit</tabstop>
+  <tabstop>_interruptMaskPortLineEdit</tabstop>
+  <tabstop>_clockFrequencyValueLineEdit</tabstop>
+  <tabstop>_clockFrequencyUnitComboBox</tabstop>
+  <tabstop>_readDelayValueLineEdit</tabstop>
+  <tabstop>_readDelayUnitComboBox</tabstop>
+  <tabstop>_writeDelayValueLineEdit</tabstop>
+  <tabstop>_writeDelayUnitComboBox</tabstop>
+  <tabstop>_contentLineEdit</tabstop>
+  <tabstop>_browsePushButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>_statePortLineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>cereon::Cmos1Editor</receiver>
+   <slot>_statePortLineEditTextChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>223</x>
+     <y>11</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>248</x>
+     <y>135</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_addressPortLineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>cereon::Cmos1Editor</receiver>
+   <slot>_addressPortLineEditTextChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>223</x>
+     <y>40</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>248</x>
+     <y>135</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_dataPortLineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>cereon::Cmos1Editor</receiver>
+   <slot>_dataPortLineEditTextChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>223</x>
+     <y>69</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>248</x>
+     <y>135</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_interruptMaskPortLineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>cereon::Cmos1Editor</receiver>
+   <slot>_interruptMaskPortLineEditTextChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>223</x>
+     <y>98</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>248</x>
+     <y>135</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>_statePortLineEditTextChanged(QString)</slot>
+  <slot>_addressPortLineEditTextChanged(QString)</slot>
+  <slot>_dataPortLineEditTextChanged(QString)</slot>
+  <slot>_interruptMaskPortLineEditTextChanged(QString)</slot>
+ </slots>
+</ui>

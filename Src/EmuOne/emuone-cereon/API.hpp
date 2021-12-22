@@ -36,5 +36,6 @@
 #include "emuone-cereon/Processor1P1BEditor.hpp"
 
 #include "emuone-cereon/Cmos1.hpp"
+#include "emuone-cereon/Cmos1Editor.hpp"
 
 //  End of emuone-cereon/API.hpp

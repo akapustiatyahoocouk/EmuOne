@@ -6,6 +6,7 @@ DEFINES += EMUONECEREON_LIBRARY
 SOURCES += \
     Architectures.cpp \
     Cmos1.cpp \
+    Cmos1Editor.cpp \
     InstructionSets.cpp \
     IoBus.cpp \
     MemoryBus.cpp \
@@ -25,6 +26,7 @@ HEADERS += \
     Architectures.hpp \
     Classes.hpp \
     Cmos1.hpp \
+    Cmos1Editor.hpp \
     Features.hpp \
     InstructionSets.hpp \
     InstructionTypes.hpp \
@@ -42,6 +44,7 @@ RESOURCES += \
     cereon.qrc
 
 FORMS += \
+    Cmos1Editor.ui \
     Processor1P1BEditor.ui \
     RamUnitEditor.ui \
     RomUnitEditor.ui

@@ -31,6 +31,7 @@ HEADERS += \
     ComponentEditor.hpp \
     ComponentType.hpp \
     ComponentUi.hpp \
+    Duration.hpp \
     Exceptions.hpp \
     FullScreenWidget.hpp \
     MemorySize.hpp \
