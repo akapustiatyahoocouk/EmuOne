@@ -170,7 +170,7 @@ void Processor::serialiseConfiguration(QDomElement & configurationElement) const
     configurationElement.setAttribute("Timer", ((_features & Features::Timer) != Features::None) ? "yes" : "no");
     configurationElement.setAttribute("DirectControl", ((_features & Features::DirectControl) != Features::None) ? "yes" : "no");
 
-    configurationElement.setAttribute("ClockFrequency", _clockFrequency.toString());
+    configurationElement.setAttribute("ClockFrequency", util::toString(_clockFrequency));
 
     //  TODO instruction timing model
 }
@@ -193,8 +193,8 @@ void Processor::deserialiseConfiguration(QDomElement & configurationElement)
     APPLY_FEATURE(DirectControl)
 #undef APPLY_FEATURE
 
-    QString clockFrequencyString = configurationElement.attribute("ClockFrequency", _clockFrequency.toString());
-    _clockFrequency = core::ClockFrequency::fromString(clockFrequencyString, _clockFrequency);
+    util::fromString(configurationElement.attribute("ClockFrequency"), _clockFrequency);
+
     //  TODO instruction timing model
 }
 

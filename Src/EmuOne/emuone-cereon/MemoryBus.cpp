@@ -70,11 +70,11 @@ void MemoryBus::connect()
     {
         if (memoryUnit->size().toBytes() == 0)
         {   //  OOPS! Empty!
-            throw core::VirtualApplianceException("Memory unit at " + memoryUnit->startAddressString() + " is empty");
+            throw core::VirtualApplianceException("Memory unit at " + util::toString(memoryUnit->startAddress(), "%016llX") + " is empty");
         }
         if (memoryUnit->startAddress() + (memoryUnit->size().toBytes() - 1) < memoryUnit->startAddress())
         {   //  OOPS! Empty!
-            throw core::VirtualApplianceException("Memory unit at " + memoryUnit->startAddressString() + " overflows");
+            throw core::VirtualApplianceException("Memory unit at " + util::toString(memoryUnit->startAddress(), "%016llX") + " overflows");
         }
     }
     for (IBoundMemoryUnit * memoryUnit1 : memoryUnits)
@@ -87,7 +87,8 @@ void MemoryBus::connect()
                 uint64_t intersectionEnd = qMin(memoryUnit1->startAddress() + (memoryUnit1->size().toBytes() - 1), memoryUnit2->startAddress() + (memoryUnit2->size().toBytes() - 1));
                 if (intersectionStart <= intersectionEnd)
                 {   //  OOPS!
-                    throw core::VirtualApplianceException("Memory units at " + memoryUnit1->startAddressString() + " and " + memoryUnit2->startAddressString() + " overlap");
+                    throw core::VirtualApplianceException("Memory units at " + util::toString(memoryUnit1->startAddress(), "%016llX") +
+                                                          " and " + util::toString(memoryUnit2->startAddress(), "%016llX") + " overlap");
                 }
             }
         }

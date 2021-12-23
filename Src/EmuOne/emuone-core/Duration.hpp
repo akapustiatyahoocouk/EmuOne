@@ -51,8 +51,7 @@ namespace core
         //  Returns this duration expressed in Nanoseconds.
         uint64_t                toNs() const;
 
-        QString                 toString() const;
-        static Duration         fromString(const QString & s, const Duration & defaultValue);
+        //  Returns a user-readable string representing this Duration.
         QString                 toDisplayString() const;
 
         //////////
@@ -65,6 +64,15 @@ namespace core
     //////////
     //  Helper functions
     EMUONE_CORE_EXPORT uint64_t getUnitValue(Duration::Unit unit);
+}
+
+//////////
+//  Formatting/parsing
+namespace util
+{
+    EMUONE_CORE_EXPORT QString toString(const core::Duration & value);
+    EMUONE_CORE_EXPORT bool fromString(const QString & s, qsizetype & scan, core::Duration & value);
+    EMUONE_CORE_EXPORT bool fromString(const QString & s, core::Duration & value);
 }
 
 //  End of emuone-core/Duration.hpp

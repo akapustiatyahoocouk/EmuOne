@@ -54,8 +54,7 @@ namespace core
         //  Returns this clock frequency expressed in HZ.
         uint64_t                toHz() const;
 
-        QString                 toString() const;
-        static ClockFrequency   fromString(const QString & s, const ClockFrequency & defaultValue);
+        //  Returns a user-readable string representing this ClockFrequency.
         QString                 toDisplayString() const;
 
         //////////
@@ -68,6 +67,15 @@ namespace core
     //////////
     //  Helper functions
     EMUONE_CORE_EXPORT uint64_t getUnitValue(ClockFrequency::Unit unit);
+}
+
+//////////
+//  Formatting/parsing
+namespace util
+{
+    EMUONE_CORE_EXPORT QString toString(const core::ClockFrequency & value);
+    EMUONE_CORE_EXPORT bool fromString(const QString & s, qsizetype & scan, core::ClockFrequency & value);
+    EMUONE_CORE_EXPORT bool fromString(const QString & s, core::ClockFrequency & value);
 }
 
 //  End of emuone-core/ClockFrequency.hpp

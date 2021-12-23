@@ -64,10 +64,6 @@ namespace cereon
         //  The "start address" of this memory unit in the address space.
         //  The memory unit covers the address range [<start address> ... <start address>+<size>)
         virtual uint64_t            startAddress() const = 0;
-
-        //  The 16-digit hex representation of this unit's start address
-        QString                     startAddressString() const { return ("0000000000000000" + QString::number(startAddress(), 16)).right(16).toUpper(); }
-
     };
     using BoundMemoryUnitList = QList<IBoundMemoryUnit*>;
 

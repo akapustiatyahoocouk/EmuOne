@@ -19,23 +19,6 @@ uint64_t MemorySize::toBytes() const
     return getUnitValue(_unit) * _numberOfUnits;
 }
 
-QString MemorySize::toString() const
-{
-    switch (_unit)
-    {
-        case MemorySize::Unit::B:
-            return QString::number(_numberOfUnits) + "B";
-        case MemorySize::Unit::KB:
-            return QString::number(_numberOfUnits) + "KB";
-        case MemorySize::Unit::MB:
-            return QString::number(_numberOfUnits) + "MB";
-        case MemorySize::Unit::GB:
-            return QString::number(_numberOfUnits) + "GB";
-        default:
-            return "?";
-    }
-}
-
 QString MemorySize::toDisplayString() const
 {
     switch (_unit)
@@ -51,39 +34,6 @@ QString MemorySize::toDisplayString() const
         default:
             return "?";
     }
-}
-
-MemorySize MemorySize::fromString(const QString & s, const MemorySize & defaultValue)
-{
-    QString numberOfUnitsString = s;
-    Unit unit = Unit::B;
-    if (s.endsWith("GB"))
-    {
-        unit = Unit::GB;
-        numberOfUnitsString = numberOfUnitsString.left(numberOfUnitsString.length() - 2);
-    }
-    else if (s.endsWith("MB"))
-    {
-        unit = Unit::MB;
-        numberOfUnitsString = numberOfUnitsString.left(numberOfUnitsString.length() - 2);
-    }
-    else if (s.endsWith("KB"))
-    {
-        unit = Unit::KB;
-        numberOfUnitsString = numberOfUnitsString.left(numberOfUnitsString.length() - 2);
-    }
-    else if (s.endsWith("B"))
-    {
-        unit = Unit::B;
-        numberOfUnitsString = numberOfUnitsString.left(numberOfUnitsString.length() - 1);
-    }
-
-    uint64_t numberOfUnits = numberOfUnitsString.toUInt();
-    if (numberOfUnits > 0)
-    {
-        return MemorySize(unit, numberOfUnits);
-    }
-    return defaultValue;
 }
 
 //////////
@@ -103,6 +53,76 @@ uint64_t core::getUnitValue(MemorySize::Unit unit)
         default:
             return 1;
     }
+}
+
+//////////
+//  Formatting/parsing
+EMUONE_CORE_EXPORT QString util::toString(const core::MemorySize & value)
+{
+    switch (value.unit())
+    {
+        case MemorySize::Unit::B:
+            return QString::number(value.numberOfUnits()) + "B";
+        case MemorySize::Unit::KB:
+            return QString::number(value.numberOfUnits()) + "KB";
+        case MemorySize::Unit::MB:
+            return QString::number(value.numberOfUnits()) + "MB";
+        case MemorySize::Unit::GB:
+            return QString::number(value.numberOfUnits()) + "GB";
+        default:
+            return "?";
+    }
+}
+
+bool EMUONE_CORE_EXPORT util::fromString(const QString & s, qsizetype & scan, core::MemorySize & value)
+{
+    qsizetype oldScan = scan;
+    MemorySize oldValue = value;
+
+    uint64_t numberOfUnits = 0;
+    if (fromString(s, scan, numberOfUnits))
+    {   //  ...now for the unit
+        if (scan + 1 <= s.length() && s[scan].toLower() == 'b')
+        {
+            value = MemorySize(MemorySize::Unit::B, numberOfUnits);
+            scan++;
+            return true;
+        }
+        if (scan + 2 <= s.length() && s[scan].toLower() == 'k' && s[scan + 1].toLower() == 'b')
+        {
+            value = MemorySize(MemorySize::Unit::KB, numberOfUnits);
+            scan += 2;
+            return true;
+        }
+        if (scan + 2 <= s.length() && s[scan].toLower() == 'm' && s[scan + 1].toLower() == 'b')
+        {
+            value = MemorySize(MemorySize::Unit::MB, numberOfUnits);
+            scan += 2;
+            return true;
+        }
+        if (scan + 2 <= s.length() && s[scan].toLower() == 'g' && s[scan + 1].toLower() == 'b')
+        {
+            value = MemorySize(MemorySize::Unit::GB, numberOfUnits);
+            scan += 2;
+            return true;
+        }
+    }
+    scan = oldScan;
+    value = oldValue;
+    return false;
+}
+
+EMUONE_CORE_EXPORT bool util::fromString(const QString & s, core::MemorySize & value)
+{
+    MemorySize oldValue = value;
+    qsizetype scan = 0;
+    if (fromString(s, scan, value) && scan == s.length())
+    {
+        return true;
+    }
+    //  OOPS! Restore "value" before returning
+    value = oldValue;
+    return false;
 }
 
 //  End of emuone-core/MemorySize.cpp

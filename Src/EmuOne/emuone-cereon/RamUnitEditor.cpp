@@ -44,11 +44,35 @@ void RamUnitEditor::refresh()
 {
     _refreshUnderway = true;
 
-    _ui->_addressLineEdit->setText(_ramUnit->startAddressString());
-    _ui->_sizeLineEdit->setText(QString::number(_ramUnit->size().numberOfUnits()));
+    _ui->_addressLineEdit->setText(util::toString(_ramUnit->startAddress(), "%016X"));
+    _ui->_sizeLineEdit->setText(util::toString(_ramUnit->size().numberOfUnits()));
     _ui->_sizeUnitComboBox->setCurrentIndex(static_cast<int>(_ramUnit->size().unit()));
 
     _refreshUnderway = false;
+}
+
+//////////
+//  Implementation helpers
+void RamUnitEditor::_applyStartAddressChanges()
+{
+    uint64_t address = 0;
+    if (util::fromString(_ui->_addressLineEdit->text(), "%llX", address))
+    {   //  Use it
+        _ramUnit->setStartAddress(address);
+        emit componentConfigurationChanged(component());
+    }
+}
+
+void RamUnitEditor::_applySizeChanges()
+{
+    core::MemorySize::Unit unit = static_cast<core::MemorySize::Unit>(_ui->_sizeUnitComboBox->currentIndex());
+    uint64_t numberOfUnits = 0;
+    if (util::fromString(_ui->_sizeLineEdit->text(), numberOfUnits) &&
+        numberOfUnits * core::getUnitValue(unit) / core::getUnitValue(unit) == numberOfUnits)
+    {   //  Parsed successfully AND no overflow
+        _ramUnit->setSize(core::MemorySize(unit, numberOfUnits));
+        emit componentConfigurationChanged(component());
+    }
 }
 
 //////////
@@ -57,10 +81,7 @@ void RamUnitEditor::_addressLineEditTextChanged(const QString &)
 {
     if (!_refreshUnderway)
     {
-        bool parsedOk = false;
-        uint64_t address = _ui->_addressLineEdit->text().toULongLong(&parsedOk, 16);
-        _ramUnit->setStartAddress(address);
-        emit componentConfigurationChanged(component());
+        _applyStartAddressChanges();
     }
 }
 
@@ -68,14 +89,7 @@ void RamUnitEditor::_sizeLineEditTextChanged(const QString &)
 {
     if (!_refreshUnderway)
     {
-        core::MemorySize::Unit unit = static_cast<core::MemorySize::Unit>(_ui->_sizeUnitComboBox->currentIndex());
-        uint64_t numberOfUnits = _ui->_sizeLineEdit->text().toULongLong();
-        if (numberOfUnits > 0)
-        {   //  Parsed successfully
-            core::MemorySize newSize(unit, numberOfUnits);
-            _ramUnit->setSize(newSize);
-            emit componentConfigurationChanged(component());
-        }
+        _applySizeChanges();
     }
 }
 
@@ -83,14 +97,7 @@ void RamUnitEditor::_sizeUnitComboBoxCurrentIndexChanged(int)
 {
     if (!_refreshUnderway)
     {
-        core::MemorySize::Unit unit = static_cast<core::MemorySize::Unit>(_ui->_sizeUnitComboBox->currentIndex());
-        uint64_t numberOfUnits = _ui->_sizeLineEdit->text().toULongLong();
-        if (numberOfUnits > 0)
-        {   //  Parsed successfully
-            core::MemorySize newSize(unit, numberOfUnits);
-            _ramUnit->setSize(newSize);
-            emit componentConfigurationChanged(component());
-        }
+        _applySizeChanges();
     }
 }
 

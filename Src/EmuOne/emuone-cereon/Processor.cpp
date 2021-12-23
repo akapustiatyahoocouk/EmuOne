@@ -228,52 +228,20 @@ void Processor::disconnect() noexcept
 //  core::Component (serialisation)
 void Processor::serialiseConfiguration(QDomElement & configurationElement) const
 {
-    configurationElement.setAttribute("ClockFrequency", _clockFrequency.toString());
-    configurationElement.setAttribute("ByteOrder", (_byteOrder == util::ByteOrder::BigEndian) ? "BigEndian" : "LittleEndian");
-    configurationElement.setAttribute("ProcessorId", QString::number(static_cast<unsigned>(_processorId)));
-    configurationElement.setAttribute("Primary", _primary ? "Yes" : "No");
-    configurationElement.setAttribute("BootstrapIp", ("0000000000000000" + QString::number(_bootstrapIp, 16)).right(16).toUpper());
+    configurationElement.setAttribute("ClockFrequency", util::toString(_clockFrequency));
+    configurationElement.setAttribute("ByteOrder", util::toString(_byteOrder));
+    configurationElement.setAttribute("ProcessorId", util::toString(_processorId));
+    configurationElement.setAttribute("Primary", util::toString(_primary));
+    configurationElement.setAttribute("BootstrapIp", util::toString(_bootstrapIp, "%016X"));
 }
 
 void Processor::deserialiseConfiguration(QDomElement & configurationElement)
 {
-    QString clockFrequencyString = configurationElement.attribute("ClockFrequency");
-    _clockFrequency = core::ClockFrequency::fromString(clockFrequencyString, _clockFrequency);
-
-    QString byteOrderString = configurationElement.attribute("ByteOrder");
-    if (byteOrderString == "BigEndian")
-    {
-        _byteOrder = util::ByteOrder::BigEndian;
-    }
-    else if (byteOrderString == "LittleEndian")
-    {
-        _byteOrder = util::ByteOrder::LittleEndian;
-    }
-
-    QString processorIdString = configurationElement.attribute("ProcessorId");
-    bool ok = false;
-    unsigned processorId = processorIdString.toUInt(&ok);
-    if (ok && processorId <= 255)
-    {
-        _processorId = static_cast<uint8_t>(processorId);
-    }
-
-    QString primaryString = configurationElement.attribute("Primary");
-    if (primaryString == "Yes")
-    {
-        _primary = true;
-    }
-    else if (primaryString == "No")
-    {
-        _primary = false;
-    }
-
-    QString bootstrapIpString = configurationElement.attribute("BootstrapIp");
-    uint64_t bootstrapIp = bootstrapIpString.toULongLong(&ok, 16);
-    if (ok)
-    {
-        _bootstrapIp = bootstrapIp;
-    }
+    util::fromString(configurationElement.attribute("ClockFrequency"), _clockFrequency);
+    util::fromString(configurationElement.attribute("ByteOrder"), _byteOrder);
+    util::fromString(configurationElement.attribute("ProcessorId"), _processorId);
+    util::fromString(configurationElement.attribute("Primary"), _primary);
+    util::fromString(configurationElement.attribute("BootstrapIp"), "%X", _bootstrapIp);
 }
 
 //////////

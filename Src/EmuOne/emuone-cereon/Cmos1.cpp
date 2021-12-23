@@ -149,41 +149,26 @@ void Cmos1::disconnect() noexcept
 //  core::Component (serialisation)
 void Cmos1::serialiseConfiguration(QDomElement & configurationElement) const
 {
+    configurationElement.setAttribute("ReadDelay", util::toString(_readDelay));
+    configurationElement.setAttribute("WriteDelay", util::toString(_writeDelay));
     configurationElement.setAttribute("StatePortAddress", util::toString(_statePortAddress, "%04X"));
     configurationElement.setAttribute("AddressPortAddress", util::toString(_addressPortAddress, "%04X"));
     configurationElement.setAttribute("DataPortAddress", util::toString(_dataPortAddress, "%04X"));
     configurationElement.setAttribute("InterruptMaskPortAddress", util::toString(_interruptMaskPortAddress, "%04X"));
+    configurationElement.setAttribute("ClockFrequency", util::toString(_clockFrequency));
+    configurationElement.setAttribute("ContentFilePath", util::toString(_contentFilePath));
 }
 
 void Cmos1::deserialiseConfiguration(QDomElement & configurationElement)
 {
+    util::fromString(configurationElement.attribute("ReadDelay"), _readDelay);
+    util::fromString(configurationElement.attribute("WriteDelay"), _writeDelay);
     util::fromString(configurationElement.attribute("StatePortAddress"), "%X", _statePortAddress);
-
-    bool addressOk = false;
-
-    uint16_t statePortAddress = static_cast<uint16_t>(configurationElement.attribute("StatePortAddress").toUInt(&addressOk, 16));
-    if (addressOk)
-    {
-        _statePortAddress = statePortAddress;
-    }
-
-    uint16_t addressPortAddress = static_cast<uint16_t>(configurationElement.attribute("AddressPortAddress").toUInt(&addressOk, 16));
-    if (addressOk)
-    {
-        _addressPortAddress = addressPortAddress;
-    }
-
-    uint16_t dataPortAddress = static_cast<uint16_t>(configurationElement.attribute("DataPortAddress").toUInt(&addressOk, 16));
-    if (addressOk)
-    {
-        _dataPortAddress = dataPortAddress;
-    }
-
-    uint16_t interruptMaskPortAddress = static_cast<uint16_t>(configurationElement.attribute("InterruptMaskPortAddress").toUInt(&addressOk, 16));
-    if (addressOk)
-    {
-        _interruptMaskPortAddress = interruptMaskPortAddress;
-    }
+    util::fromString(configurationElement.attribute("AddressPortAddress"), "%X", _addressPortAddress);
+    util::fromString(configurationElement.attribute("DataPortAddress"), "%X", _dataPortAddress);
+    util::fromString(configurationElement.attribute("InterruptMaskPortAddress"), "%X", _interruptMaskPortAddress);
+    util::fromString(configurationElement.attribute("ClockFrequency"), _clockFrequency);
+    util::fromString(configurationElement.attribute("ContentFilePath"), _contentFilePath);
 }
 
 //////////

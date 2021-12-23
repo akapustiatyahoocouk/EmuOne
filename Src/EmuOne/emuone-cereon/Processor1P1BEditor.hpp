@@ -38,6 +38,13 @@ namespace cereon {
         Processor1P1B *             _processor;
         bool                        _refreshUnderway = false;
 
+        //  Helpers
+        void                        _applyClockCurrencyChanges();
+        void                        _applyByteOrderChanges();
+        void                        _applyProcessorIdChanges();
+        void                        _applyIsPrimaryChanges();
+        void                        _applyBootstrapIpChanges();
+
         //////////
         //  Event handlers
     private slots:

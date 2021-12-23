@@ -38,6 +38,11 @@ namespace cereon {
         RomUnit *               _romUnit;
         bool                    _refreshUnderway = false;
 
+        //  Helpers
+        void                    _applyStartAddressShanges();
+        void                    _applySizeChanges();
+        void                    _applyContentFileNameChanges();
+
         //////////
         //  Event handlers
     private slots:
@@ -45,6 +50,7 @@ namespace cereon {
         void                    _sizeLineEditTextChanged(const QString &);
         void                    _sizeUnitComboBoxCurrentIndexChanged(int);
         void                    _browsePushButtonClicked();
+        void                    _contentLineEditTextChanged(const QString &);
     };
 }
 

@@ -11,6 +11,7 @@ SOURCES += \
     ComponentCategory.cpp \
     ComponentEditor.cpp \
     ComponentType.cpp \
+    Duration.cpp \
     FullScreenWidget.cpp \
     MemorySize.cpp \
     Plugin.cpp \

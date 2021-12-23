@@ -107,7 +107,10 @@ namespace cereon
         void                    setInterruptMaskPortAddress(uint16_t interruptMaskPortAddress) { _interruptMaskPortAddress = interruptMaskPortAddress; }
 
         core::ClockFrequency    clockFrequency() const { return _clockFrequency; }
+        void                    setClockFrequency(const core::ClockFrequency & clockFrequency) { _clockFrequency = clockFrequency; }
+
         QString                 contentFilePath() const { return _contentFilePath; }
+        void                    setContentFilePath(const QString & contentFilePath) { _contentFilePath = contentFilePath; }
 
         //////////
         //  Implementation

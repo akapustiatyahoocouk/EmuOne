@@ -37,7 +37,7 @@ core::ComponentEditor * RamUnit::createEditor(QWidget * parent)
 
 QString RamUnit::shortStatus() const
 {
-    return _size.toString() + " RAM @ " + ("0000000000000000" + QString::number(_startAddress, 16)).right(16).toUpper();
+    return util::toString(_size) + " RAM @ " + util::toString(_startAddress, "%016X");
 }
 
 core::ComponentUi * RamUnit::createUi()
@@ -155,22 +155,14 @@ void RamUnit::disconnect() noexcept
 //  core::Component (serialisation)
 void RamUnit::serialiseConfiguration(QDomElement & configurationElement) const
 {
-    configurationElement.setAttribute("StartAddress", ("0000000000000000" + QString::number(_startAddress, 16)).right(16).toUpper());
-    configurationElement.setAttribute("Size", _size.toString());
+    configurationElement.setAttribute("StartAddress", util::toString(_startAddress, "%016X"));
+    configurationElement.setAttribute("Size", util::toString(_size));
 }
 
 void RamUnit::deserialiseConfiguration(QDomElement & configurationElement)
 {
-    QString startAddressString = configurationElement.attribute("StartAddress");
-    bool startAddressOk = false;
-    uint64_t startAddress = startAddressString.toULongLong(&startAddressOk, 16);
-    if (startAddressOk)
-    {
-        _startAddress = startAddress;
-    }
-
-    QString sizeString = configurationElement.attribute("Size");
-    _size = core::MemorySize::fromString(sizeString, _size);
+    util::fromString(configurationElement.attribute("StartAddress"), "%X", _startAddress);
+    util::fromString(configurationElement.attribute("Size"), _size);
 }
 
 //////////

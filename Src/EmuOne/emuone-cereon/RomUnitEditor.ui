@@ -193,11 +193,28 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>_contentLineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>cereon::RomUnitEditor</receiver>
+   <slot>_contentLineEditTextChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>153</x>
+     <y>65</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>171</x>
+     <y>60</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>_addressLineEditTextChanged(QString)</slot>
   <slot>_sizeLineEditTextChanged(QString)</slot>
   <slot>_sizeUnitComboBoxCurrentIndexChanged(int)</slot>
   <slot>_browsePushButtonClicked()</slot>
+  <slot>_contentLineEditTextChanged(QString)</slot>
  </slots>
 </ui>

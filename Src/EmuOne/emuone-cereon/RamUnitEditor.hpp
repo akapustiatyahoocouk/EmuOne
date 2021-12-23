@@ -38,6 +38,10 @@ namespace cereon
         RamUnit *               _ramUnit;
         bool                    _refreshUnderway = false;
 
+        //  Helpers
+        void                    _applyStartAddressChanges();
+        void                    _applySizeChanges();
+
         //////////
         //  Event handlers
     private slots:

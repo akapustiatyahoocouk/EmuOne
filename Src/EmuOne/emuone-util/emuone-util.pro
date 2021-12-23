@@ -8,6 +8,7 @@ SOURCES += \
     Cp037CharacterSet.cpp \
     FromString.cpp \
     Iso88591CharacterSet.cpp \
+    Memory.cpp \
     MessageDigest.cpp \
     Plugin.cpp \
     PluginManager.cpp \

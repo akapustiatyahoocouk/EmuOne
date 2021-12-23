@@ -35,23 +35,6 @@ uint64_t ClockFrequency::toHz() const
     return getUnitValue(_unit) * _numberOfUnits;
 }
 
-QString ClockFrequency::toString() const
-{
-    switch (_unit)
-    {
-        case ClockFrequency::Unit::HZ:
-            return QString::number(_numberOfUnits) + "HZ";
-        case ClockFrequency::Unit::KHZ:
-            return QString::number(_numberOfUnits) + "KHZ";
-        case ClockFrequency::Unit::MHZ:
-            return QString::number(_numberOfUnits) + "MHZ";
-        case ClockFrequency::Unit::GHZ:
-            return QString::number(_numberOfUnits) + "GHZ";
-        default:
-            return "?";
-    }
-}
-
 QString ClockFrequency::toDisplayString() const
 {
     switch (_unit)
@@ -67,39 +50,6 @@ QString ClockFrequency::toDisplayString() const
         default:
             return "?";
     }
-}
-
-ClockFrequency ClockFrequency::fromString(const QString & s, const ClockFrequency & defaultValue)
-{
-    QString numberOfUnitsString = s;
-    Unit unit = Unit::HZ;
-    if (s.endsWith("GHZ"))
-    {
-        unit = Unit::GHZ;
-        numberOfUnitsString = numberOfUnitsString.left(numberOfUnitsString.length() - 3);
-    }
-    else if (s.endsWith("MHZ"))
-    {
-        unit = Unit::MHZ;
-        numberOfUnitsString = numberOfUnitsString.left(numberOfUnitsString.length() - 3);
-    }
-    else if (s.endsWith("KHZ"))
-    {
-        unit = Unit::KHZ;
-        numberOfUnitsString = numberOfUnitsString.left(numberOfUnitsString.length() - 3);
-    }
-    else if (s.endsWith("HZ"))
-    {
-        unit = Unit::HZ;
-        numberOfUnitsString = numberOfUnitsString.left(numberOfUnitsString.length() - 2);
-    }
-
-    uint64_t numberOfUnits = numberOfUnitsString.toUInt();
-    if (numberOfUnits > 0)
-    {
-        return ClockFrequency(unit, numberOfUnits);
-    }
-    return defaultValue;
 }
 
 //////////
@@ -119,6 +69,77 @@ uint64_t core::getUnitValue(ClockFrequency::Unit unit)
         default:
             return 1;
     }
+}
+
+//////////
+//  Formatting/parsing
+QString EMUONE_CORE_EXPORT util::toString(const core::ClockFrequency & value)
+{
+    switch (value.unit())
+    {
+        case ClockFrequency::Unit::HZ:
+            return toString(value.numberOfUnits()) + "HZ";
+        case ClockFrequency::Unit::KHZ:
+            return toString(value.numberOfUnits()) + "KHZ";
+        case ClockFrequency::Unit::MHZ:
+            return toString(value.numberOfUnits()) + "MHZ";
+        case ClockFrequency::Unit::GHZ:
+            return toString(value.numberOfUnits()) + "GHZ";
+        default:
+            Q_ASSERT(false);
+            return "?";
+    }
+}
+
+bool EMUONE_CORE_EXPORT util::fromString(const QString & s, qsizetype & scan, core::ClockFrequency & value)
+{
+    qsizetype oldScan = scan;
+    ClockFrequency oldValue = value;
+
+    uint64_t numberOfUnits = 0;
+    if (fromString(s, scan, numberOfUnits))
+    {   //  ...now for the unit
+        if (scan + 2 <= s.length() && s[scan].toLower() == 'h' && s[scan + 1].toLower() == 'z')
+        {
+            value = ClockFrequency(ClockFrequency::Unit::HZ, numberOfUnits);
+            scan += 2;
+            return true;
+        }
+        if (scan + 3 <= s.length() && s[scan].toLower() == 'k' && s[scan + 1].toLower() == 'h' && s[scan + 2].toLower() == 'z')
+        {
+            value = ClockFrequency(ClockFrequency::Unit::KHZ, numberOfUnits);
+            scan += 3;
+            return true;
+        }
+        if (scan + 3 <= s.length() && s[scan].toLower() == 'm' && s[scan + 1].toLower() == 'h' && s[scan + 2].toLower() == 'z')
+        {
+            value = ClockFrequency(ClockFrequency::Unit::MHZ, numberOfUnits);
+            scan += 3;
+            return true;
+        }
+        if (scan + 3 <= s.length() && s[scan].toLower() == 'g' && s[scan + 1].toLower() == 'h' && s[scan + 2].toLower() == 'z')
+        {
+            value = ClockFrequency(ClockFrequency::Unit::GHZ, numberOfUnits);
+            scan += 3;
+            return true;
+        }
+    }
+    scan = oldScan;
+    value = oldValue;
+    return false;
+}
+
+bool EMUONE_CORE_EXPORT util::fromString(const QString & s, core::ClockFrequency & value)
+{
+    ClockFrequency oldValue = value;
+    qsizetype scan = 0;
+    if (fromString(s, scan, value) && scan == s.length())
+    {
+        return true;
+    }
+    //  OOPS! Restore "value" before returning
+    value = oldValue;
+    return false;
 }
 
 //  End of emuone-core/ClockFrequency.cpp

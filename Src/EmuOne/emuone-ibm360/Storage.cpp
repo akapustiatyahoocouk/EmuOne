@@ -143,13 +143,12 @@ void Storage::disconnect() noexcept
 //  Component (serialisation)
 void Storage::serialiseConfiguration(QDomElement & configurationElement) const
 {
-    configurationElement.setAttribute("Size", _size.toString());
+    configurationElement.setAttribute("Size", util::toString(_size));
 }
 
 void Storage::deserialiseConfiguration(QDomElement & configurationElement)
 {
-    QString sizeString = configurationElement.attribute("Size", _size.toString());
-    _size = core::MemorySize::fromString(sizeString, _size);
+    util::fromString(configurationElement.attribute("Size"), _size);
 }
 
 //////////

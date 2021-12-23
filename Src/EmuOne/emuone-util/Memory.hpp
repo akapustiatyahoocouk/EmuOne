@@ -153,6 +153,12 @@ namespace util
         static void         storeUnalignedInt32(void * p, int32_t value, ByteOrder byteOrder);
         static void         storeUnalignedInt64(void * p, int64_t value, ByteOrder byteOrder);
     };
+
+    //////////
+    //  Formatting/parsing
+    EMUONE_UTIL_EXPORT QString toString(ByteOrder value);
+    EMUONE_UTIL_EXPORT bool fromString(const QString & s, qsizetype & scan, ByteOrder & value);
+    EMUONE_UTIL_EXPORT bool fromString(const QString & s, ByteOrder & value);
 }
 
 //  End of emuone-util/Memory.hpp

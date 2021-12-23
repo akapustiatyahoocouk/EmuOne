@@ -33,13 +33,13 @@ Cmos1Editor::Cmos1Editor(Cmos1 * cmos1, QWidget * parent)
     _ui->_readDelayUnitComboBox->addItem("s");
     _ui->_readDelayUnitComboBox->addItem("ms");
     _ui->_readDelayUnitComboBox->addItem("us");
-    _ui->_readDelayUnitComboBox->addItem("nx");
+    _ui->_readDelayUnitComboBox->addItem("ns");
 
     //  Populate the "write delay unit" drop-down list
     _ui->_writeDelayUnitComboBox->addItem("s");
     _ui->_writeDelayUnitComboBox->addItem("ms");
     _ui->_writeDelayUnitComboBox->addItem("us");
-    _ui->_writeDelayUnitComboBox->addItem("nx");
+    _ui->_writeDelayUnitComboBox->addItem("ns");
 }
 
 Cmos1Editor::~Cmos1Editor()
@@ -69,15 +69,106 @@ void Cmos1Editor::refresh()
 }
 
 //////////
+//  Implementation helpers
+void Cmos1Editor::_applyStatePortAddressChanges()
+{
+    uint16_t address;
+    if (util::fromString(_ui->_statePortLineEdit->text(), "%x", address))
+    {
+        _cmos1->setStatePortAddress(address);
+    }
+    emit componentConfigurationChanged(component());
+}
+
+void Cmos1Editor::_applyAddressPortAddressChanges()
+{
+    uint16_t address;
+    if (util::fromString(_ui->_addressPortLineEdit->text(), "%x", address))
+    {
+        _cmos1->setAddressPortAddress(address);
+    }
+    emit componentConfigurationChanged(component());
+}
+
+void Cmos1Editor::_applyDataPortAddressChanges()
+{
+    uint16_t address;
+    if (util::fromString(_ui->_dataPortLineEdit->text(), "%x", address))
+    {
+        _cmos1->setDataPortAddress(address);
+    }
+    emit componentConfigurationChanged(component());
+}
+
+void Cmos1Editor::_applyInterruptMaskPortAddressChanges()
+{
+    uint16_t address;
+    if (util::fromString(_ui->_interruptMaskPortLineEdit->text(), "%x", address))
+    {
+        _cmos1->setInterruptMaskPortAddress(address);
+    }
+    emit componentConfigurationChanged(component());
+}
+
+void Cmos1Editor::_applyReadDelayChanges()
+{
+    uint64_t numberOfUnits = _ui->_writeDelayValueLineEdit->text().toULongLong();
+    core::Duration::Unit unit = static_cast<core::Duration::Unit>(_ui->_writeDelayUnitComboBox->currentIndex());
+    if (numberOfUnits > 0 &&
+        numberOfUnits * core::getUnitValue(unit) / core::getUnitValue(unit) == numberOfUnits)
+    {   //  Parsing successfuol AND no overflow
+        _cmos1->setWriteDelay(core::Duration(unit, numberOfUnits));
+    }
+    emit componentConfigurationChanged(component());
+}
+
+void Cmos1Editor::_applyWriteDelayChanges()
+{
+    uint64_t numberOfUnits = _ui->_readDelayValueLineEdit->text().toULongLong();
+    core::Duration::Unit unit = static_cast<core::Duration::Unit>(_ui->_readDelayUnitComboBox->currentIndex());
+    if (numberOfUnits > 0 &&
+        numberOfUnits * core::getUnitValue(unit) / core::getUnitValue(unit) == numberOfUnits)
+    {   //  Parsing successfuol AND no overflow
+        _cmos1->setReadDelay(core::Duration(unit, numberOfUnits));
+    }
+    emit componentConfigurationChanged(component());
+}
+
+void Cmos1Editor::_applyClockFrequencyChanges()
+{
+    uint64_t numberOfUnits = _ui->_clockFrequencyValueLineEdit->text().toULongLong();
+    core::ClockFrequency::Unit unit = static_cast<core::ClockFrequency::Unit>(_ui->_clockFrequencyUnitComboBox->currentIndex());
+    if (numberOfUnits > 0 &&
+        numberOfUnits * core::getUnitValue(unit) / core::getUnitValue(unit) == numberOfUnits)
+    {   //  Parsing successful AND no overflow
+        _cmos1->setClockFrequency(core::ClockFrequency(unit, numberOfUnits));
+    }
+    emit componentConfigurationChanged(component());
+}
+
+void Cmos1Editor::_browseForContentFileName()
+{
+    QString contentFileName = QFileDialog::getOpenFileName(this, "CMOS content", "", "CMOS content file (*.bin)");
+    if (contentFileName.isEmpty())
+    {   //  User has cancelled the dialog
+        return;
+    }
+    _cmos1->setContentFilePath(_cmos1->virtualAppliance()->toRelativePath(contentFileName));
+    _ui->_contentLineEdit->setText(_cmos1->contentFilePath());
+}
+
+void Cmos1Editor::_applyContentFilePathChanges()
+{
+    _cmos1->setContentFilePath(_ui->_contentLineEdit->text().trimmed());
+}
+
+//////////
 //  Event listeners
 void Cmos1Editor::_statePortLineEditTextChanged(const QString &)
 {
     if (!_refreshUnderway)
     {
-        bool parsedOk = false;
-        uint16_t address = static_cast<uint16_t>(_ui->_statePortLineEdit->text().toUInt(&parsedOk, 16));
-        _cmos1->setStatePortAddress(address);
-        emit componentConfigurationChanged(component());
+        _applyStatePortAddressChanges();
     }
 }
 
@@ -85,10 +176,7 @@ void Cmos1Editor::_addressPortLineEditTextChanged(const QString &)
 {
     if (!_refreshUnderway)
     {
-        bool parsedOk = false;
-        uint16_t address = static_cast<uint16_t>(_ui->_addressPortLineEdit->text().toUInt(&parsedOk, 16));
-        _cmos1->setAddressPortAddress(address);
-        emit componentConfigurationChanged(component());
+        _applyAddressPortAddressChanges();
     }
 }
 
@@ -96,10 +184,7 @@ void Cmos1Editor::_dataPortLineEditTextChanged(const QString &)
 {
     if (!_refreshUnderway)
     {
-        bool parsedOk = false;
-        uint16_t address = static_cast<uint16_t>(_ui->_dataPortLineEdit->text().toUInt(&parsedOk, 16));
-        _cmos1->setDataPortAddress(address);
-        emit componentConfigurationChanged(component());
+        _applyDataPortAddressChanges();
     }
 }
 
@@ -107,10 +192,68 @@ void Cmos1Editor::_interruptMaskPortLineEditTextChanged(const QString &)
 {
     if (!_refreshUnderway)
     {
-        bool parsedOk = false;
-        uint16_t address = static_cast<uint16_t>(_ui->_interruptMaskPortLineEdit->text().toUInt(&parsedOk, 16));
-        _cmos1->setInterruptMaskPortAddress(address);
-        emit componentConfigurationChanged(component());
+        _applyInterruptMaskPortAddressChanges();
+    }
+}
+
+void Cmos1Editor::_readDelayValueLineEditTextChanged(const QString &)
+{
+    if (!_refreshUnderway)
+    {
+        _applyReadDelayChanges();
+    }
+}
+
+void Cmos1Editor::_writeDelayValueLineEditTextChanged(const QString &)
+{
+    if (!_refreshUnderway)
+    {
+        _applyWriteDelayChanges();
+    }
+}
+
+void Cmos1Editor::_readDelayUnitComboBoxCurrentIndexChanged(int)
+{
+    if (!_refreshUnderway)
+    {
+        _applyReadDelayChanges();
+    }
+}
+
+void Cmos1Editor::_writeDelayUnitComboBoxCurrentIndexChanged(int)
+{
+    if (!_refreshUnderway)
+    {
+        _applyWriteDelayChanges();
+    }
+}
+
+void Cmos1Editor::_clockFrequencyValueLineEditTextChanged(const QString &)
+{
+    if (!_refreshUnderway)
+    {
+        _applyClockFrequencyChanges();
+    }
+}
+
+void Cmos1Editor::_clockFrequencyUnitComboBoxCurrentIndexChanged(int)
+{
+    if (!_refreshUnderway)
+    {
+        _applyClockFrequencyChanges();
+    }
+}
+
+void Cmos1Editor::_browsePushButtonClicked()
+{
+    _browseForContentFileName();
+}
+
+void Cmos1Editor::_contentLineEditLineEditTextChanged(const QString &)
+{
+    if (!_refreshUnderway)
+    {
+        _applyContentFilePathChanges();
     }
 }
 

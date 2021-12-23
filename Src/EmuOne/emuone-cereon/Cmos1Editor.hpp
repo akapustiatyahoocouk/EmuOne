@@ -39,6 +39,17 @@ namespace cereon
         Cmos1 *const            _cmos1;
         bool                    _refreshUnderway = false;
 
+        //  Helpers
+        void                    _applyStatePortAddressChanges();
+        void                    _applyAddressPortAddressChanges();
+        void                    _applyDataPortAddressChanges();
+        void                    _applyInterruptMaskPortAddressChanges();
+        void                    _applyReadDelayChanges();
+        void                    _applyWriteDelayChanges();
+        void                    _applyClockFrequencyChanges();
+        void                    _browseForContentFileName();
+        void                    _applyContentFilePathChanges();
+
         //////////
         //  Event listeners
     private slots:
@@ -46,6 +57,14 @@ namespace cereon
         void                    _addressPortLineEditTextChanged(const QString &);
         void                    _dataPortLineEditTextChanged(const QString &);
         void                    _interruptMaskPortLineEditTextChanged(const QString &);
+        void                    _readDelayValueLineEditTextChanged(const QString &);
+        void                    _writeDelayValueLineEditTextChanged(const QString &);
+        void                    _readDelayUnitComboBoxCurrentIndexChanged(int);
+        void                    _writeDelayUnitComboBoxCurrentIndexChanged(int);
+        void                    _clockFrequencyValueLineEditTextChanged(const QString &);
+        void                    _clockFrequencyUnitComboBoxCurrentIndexChanged(int);
+        void                    _browsePushButtonClicked();
+        void                    _contentLineEditLineEditTextChanged(const QString &);
     };
 }
 

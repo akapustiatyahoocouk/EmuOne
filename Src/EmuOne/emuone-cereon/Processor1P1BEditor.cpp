@@ -45,7 +45,7 @@ void Processor1P1BEditor::refresh()
 {
     _refreshUnderway = true;
 
-    _ui->_clockFrequencyValueLineEdit->setText(QString::number(_processor->clockFrequency().numberOfUnits()));
+    _ui->_clockFrequencyValueLineEdit->setText(util::toString(_processor->clockFrequency().numberOfUnits()));
     _ui->_clockFrequencyUnitComboBox->setCurrentIndex(static_cast<int>(_processor->clockFrequency().unit()));
     _ui->_byteOrderComboBox->setCurrentIndex(static_cast<int>(_processor->byteOrder()));
 
@@ -57,11 +57,58 @@ void Processor1P1BEditor::refresh()
     _ui->_virtualMemoryCheckBox->setChecked((_processor->features() & Features::VirtualMemory) != Features::None);
     _ui->_performanceMonitoringCheckBox->setChecked((_processor->features() & Features::PerformanceMonitoring) != Features::None);
 
-    _ui->_processorIdLineEdit->setText(("00" + QString::number(static_cast<unsigned>(_processor->processorId()), 16)).right(2).toUpper());
+    _ui->_processorIdLineEdit->setText(util::toString(_processor->processorId(), "%02X"));
     _ui->_primaryCheckBox->setChecked(_processor->primary());
-    _ui->_bootstrapIpLineEdit->setText(("0000000000000000" + QString::number(_processor->bootstrapIp(), 16)).right(16).toUpper());
+    _ui->_bootstrapIpLineEdit->setText(util::toString(_processor->bootstrapIp(), "%016X"));
 
     _refreshUnderway = false;
+}
+
+//////////
+//  Implementation  elpers
+void Processor1P1BEditor::_applyClockCurrencyChanges()
+{
+    uint64_t numberOfUnits = _ui->_clockFrequencyValueLineEdit->text().toULongLong();
+    core::ClockFrequency::Unit unit = static_cast<core::ClockFrequency::Unit>(_ui->_clockFrequencyUnitComboBox->currentIndex());
+    if (numberOfUnits > 0 &&
+        numberOfUnits * core::getUnitValue(unit) / core::getUnitValue(unit) == numberOfUnits)
+    {   //  Parsed successfully AND no overflow
+        _processor->setClockFrequency(core::ClockFrequency(unit, numberOfUnits));
+    }
+    emit componentConfigurationChanged(component());
+}
+
+void Processor1P1BEditor::_applyByteOrderChanges()
+{
+    util::ByteOrder byteOrder = static_cast<util::ByteOrder>(_ui->_byteOrderComboBox->currentIndex());
+    _processor->setByteOrder(byteOrder);
+    emit componentConfigurationChanged(component());
+}
+
+void Processor1P1BEditor::_applyProcessorIdChanges()
+{
+    uint8_t processorId = 0;
+    if (util::fromString(_ui->_processorIdLineEdit->text(), "%x", processorId))
+    {   // Use it
+        _processor->setProcessorId(processorId);
+        emit componentConfigurationChanged(component());
+    }
+}
+
+void Processor1P1BEditor::_applyIsPrimaryChanges()
+{
+    _processor->setPrimary(_ui->_primaryCheckBox->isChecked());
+    emit componentConfigurationChanged(component());
+}
+
+void Processor1P1BEditor::_applyBootstrapIpChanges()
+{
+    uint64_t bootstrapIp = 0;
+    if (util::fromString(_ui->_bootstrapIpLineEdit->text(), "%llx", bootstrapIp))
+    {   //  Use it
+        _processor->setBootstrapIp(bootstrapIp);
+        emit componentConfigurationChanged(component());
+    }
 }
 
 //////////
@@ -70,13 +117,7 @@ void Processor1P1BEditor::_clockFrequencyValueLineEditTextChanged(const QString 
 {
     if (!_refreshUnderway)
     {
-        uint64_t numberOfUnits = _ui->_clockFrequencyValueLineEdit->text().toULongLong();
-        core::ClockFrequency::Unit unit = static_cast<core::ClockFrequency::Unit>(_ui->_clockFrequencyUnitComboBox->currentIndex());
-        if (numberOfUnits > 0)
-        {
-            _processor->setClockFrequency(core::ClockFrequency(unit, numberOfUnits));
-        }
-        emit componentConfigurationChanged(component());
+        _applyClockCurrencyChanges();
     }
 }
 
@@ -84,13 +125,7 @@ void Processor1P1BEditor::_clockFrequencyUnitComboBoxCurrentIndexChanged(int)
 {
     if (!_refreshUnderway)
     {
-        uint64_t numberOfUnits = _ui->_clockFrequencyValueLineEdit->text().toULongLong();
-        core::ClockFrequency::Unit unit = static_cast<core::ClockFrequency::Unit>(_ui->_clockFrequencyUnitComboBox->currentIndex());
-        if (numberOfUnits > 0)
-        {
-            _processor->setClockFrequency(core::ClockFrequency(unit, numberOfUnits));
-        }
-        emit componentConfigurationChanged(component());
+        _applyClockCurrencyChanges();
     }
 }
 
@@ -98,9 +133,7 @@ void Processor1P1BEditor::_byteOrderComboBoxCurrentIndexChanged(int)
 {
     if (!_refreshUnderway)
     {
-        util::ByteOrder byteOrder = static_cast<util::ByteOrder>(_ui->_byteOrderComboBox->currentIndex());
-        _processor->setByteOrder(byteOrder);
-        emit componentConfigurationChanged(component());
+        _applyByteOrderChanges();
     }
 }
 
@@ -108,13 +141,7 @@ void Processor1P1BEditor::_processorIdLineEditTextChanged(const QString &)
 {
     if (!_refreshUnderway)
     {
-        bool ok = false;
-        unsigned id = _ui->_processorIdLineEdit->text().toUInt(&ok, 16);
-        if (ok && id <= 255)
-        {   //  Use it
-            _processor->setProcessorId(static_cast<uint8_t>(id));
-            emit componentConfigurationChanged(component());
-        }
+        _applyProcessorIdChanges();
     }
 }
 
@@ -122,8 +149,7 @@ void Processor1P1BEditor::_primaryCheckBoxStateChanged(int)
 {
     if (!_refreshUnderway)
     {
-        _processor->setPrimary(_ui->_primaryCheckBox->isChecked());
-        emit componentConfigurationChanged(component());
+        _applyIsPrimaryChanges();
     }
 }
 
@@ -131,13 +157,7 @@ void Processor1P1BEditor::_bootstrapIpLineEditTextChanged(const QString &)
 {
     if (!_refreshUnderway)
     {
-        bool ok = false;
-        uint64_t bootstrapIp = _ui->_bootstrapIpLineEdit->text().toULongLong(&ok, 16);
-        if (ok)
-        {   //  Use it
-            _processor->setBootstrapIp(bootstrapIp);
-            emit componentConfigurationChanged(component());
-        }
+        _applyBootstrapIpChanges();
     }
 }
 

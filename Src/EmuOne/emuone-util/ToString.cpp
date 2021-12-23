@@ -213,13 +213,16 @@ QString EMUONE_UTIL_EXPORT util::toString(unsigned long value, const char * crtF
     Q_ASSERT(crtFormat != nullptr);
 
     Q_ASSERT(stringStartsWith(crtFormat, "%"));
-    Q_ASSERT((stringEndsWith(crtFormat, "lu") && !stringEndsWith(crtFormat, "llu")) ||
-             (stringEndsWith(crtFormat, "lx") && !stringEndsWith(crtFormat, "llx")) ||
-             (stringEndsWith(crtFormat, "lX") && !stringEndsWith(crtFormat, "llX")) ||
-             (stringEndsWith(crtFormat, "lo") && !stringEndsWith(crtFormat, "llo")));
+    Q_ASSERT((stringEndsWith(crtFormat, "u") && !stringEndsWith(crtFormat, "lu")) ||
+             (stringEndsWith(crtFormat, "x") && !stringEndsWith(crtFormat, "lx")) ||
+             (stringEndsWith(crtFormat, "X") && !stringEndsWith(crtFormat, "lX")) ||
+             (stringEndsWith(crtFormat, "o") && !stringEndsWith(crtFormat, "lo")));
+
+    QString baseFormat = crtFormat;
+    QString tempFormat = baseFormat.left(baseFormat.length() - 1) + "l" + baseFormat[baseFormat.length() - 1];
 
     char s[32];
-    sprintf(s, crtFormat, value);
+    sprintf(s, tempFormat.toLatin1().data(), value);
     return s;
 }
 
@@ -228,10 +231,13 @@ QString EMUONE_UTIL_EXPORT util::toString(signed long value, const char * crtFor
     Q_ASSERT(crtFormat != nullptr);
 
     Q_ASSERT(stringStartsWith(crtFormat, "%"));
-    Q_ASSERT(stringEndsWith(crtFormat, "ld") && !stringEndsWith(crtFormat, "lld"));
+    Q_ASSERT(stringEndsWith(crtFormat, "d") && !stringEndsWith(crtFormat, "ld"));
+
+    QString baseFormat = crtFormat;
+    QString tempFormat = baseFormat.left(baseFormat.length() - 1) + "l" + baseFormat[baseFormat.length() - 1];
 
     char s[32];
-    sprintf(s, crtFormat, value);
+    sprintf(s, tempFormat.toLatin1().data(), value);
     return s;
 }
 
@@ -240,13 +246,16 @@ QString EMUONE_UTIL_EXPORT util::toString(unsigned long long value, const char *
     Q_ASSERT(crtFormat != nullptr);
 
     Q_ASSERT(stringStartsWith(crtFormat, "%"));
-    Q_ASSERT(stringEndsWith(crtFormat, "llu") ||
-             stringEndsWith(crtFormat, "llx") ||
-             stringEndsWith(crtFormat, "llX") ||
-             stringEndsWith(crtFormat, "llo"));
+    Q_ASSERT((stringEndsWith(crtFormat, "u") && !stringEndsWith(crtFormat, "lu")) ||
+             (stringEndsWith(crtFormat, "x") && !stringEndsWith(crtFormat, "lx")) ||
+             (stringEndsWith(crtFormat, "X") && !stringEndsWith(crtFormat, "lX")) ||
+             (stringEndsWith(crtFormat, "o") && !stringEndsWith(crtFormat, "lo")));
+
+    QString baseFormat = crtFormat;
+    QString tempFormat = baseFormat.left(baseFormat.length() - 1) + "ll" + baseFormat[baseFormat.length() - 1];
 
     char s[32];
-    sprintf(s, crtFormat, value);
+    sprintf(s, tempFormat.toLatin1().data(), value);
     return s;
 }
 
@@ -255,10 +264,13 @@ QString EMUONE_UTIL_EXPORT util::toString(signed long long value, const char * c
     Q_ASSERT(crtFormat != nullptr);
 
     Q_ASSERT(stringStartsWith(crtFormat, "%"));
-    Q_ASSERT(stringEndsWith(crtFormat, "lld"));
+    Q_ASSERT((stringEndsWith(crtFormat, "d") && !stringEndsWith(crtFormat, "ld")));
+
+    QString baseFormat = crtFormat;
+    QString tempFormat = baseFormat.left(baseFormat.length() - 1) + "l" + baseFormat[baseFormat.length() - 1];
 
     char s[32];
-    sprintf(s, crtFormat, value);
+    sprintf(s, tempFormat.toLatin1().data(), value);
     return s;
 }
 

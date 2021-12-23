@@ -243,11 +243,147 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>_readDelayValueLineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>cereon::Cmos1Editor</receiver>
+   <slot>_readDelayValueLineEditTextChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>223</x>
+     <y>146</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>248</x>
+     <y>127</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_readDelayUnitComboBox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>cereon::Cmos1Editor</receiver>
+   <slot>_readDelayUnitComboBoxCurrentIndexChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>329</x>
+     <y>146</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>248</x>
+     <y>127</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_writeDelayValueLineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>cereon::Cmos1Editor</receiver>
+   <slot>_writeDelayValueLineEditTextChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>223</x>
+     <y>173</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>248</x>
+     <y>127</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_writeDelayUnitComboBox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>cereon::Cmos1Editor</receiver>
+   <slot>_writeDelayUnitComboBoxCurrentIndexChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>329</x>
+     <y>173</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>248</x>
+     <y>127</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_clockFrequencyValueLineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>cereon::Cmos1Editor</receiver>
+   <slot>_clockFrequencyValueLineEditTextChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>223</x>
+     <y>119</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>248</x>
+     <y>127</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_clockFrequencyUnitComboBox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>cereon::Cmos1Editor</receiver>
+   <slot>_clockFrequencyUnitComboBoxCurrentIndexChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>329</x>
+     <y>119</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>248</x>
+     <y>127</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_browsePushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>cereon::Cmos1Editor</receiver>
+   <slot>_browsePushButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>412</x>
+     <y>200</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>248</x>
+     <y>127</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_contentLineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>cereon::Cmos1Editor</receiver>
+   <slot>_contentLineEditLineEditTextChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>264</x>
+     <y>200</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>248</x>
+     <y>127</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>_statePortLineEditTextChanged(QString)</slot>
   <slot>_addressPortLineEditTextChanged(QString)</slot>
   <slot>_dataPortLineEditTextChanged(QString)</slot>
   <slot>_interruptMaskPortLineEditTextChanged(QString)</slot>
+  <slot>_readDelayValueLineEditTextChanged(QString)</slot>
+  <slot>_writeDelayValueLineEditTextChanged(QString)</slot>
+  <slot>_readDelayUnitComboBoxCurrentIndexChanged(int)</slot>
+  <slot>_writeDelayUnitComboBoxCurrentIndexChanged(int)</slot>
+  <slot>_clockFrequencyValueLineEditTextChanged(QString)</slot>
+  <slot>_clockFrequencyUnitComboBoxCurrentIndexChanged(int)</slot>
+  <slot>_browsePushButtonClicked()</slot>
+  <slot>_contentLineEditLineEditTextChanged(QString)</slot>
  </slots>
 </ui>

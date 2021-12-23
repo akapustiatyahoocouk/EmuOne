@@ -38,7 +38,7 @@ core::ComponentEditor * RomUnit::createEditor(QWidget * parent)
 
 QString RomUnit::shortStatus() const
 {
-    return _size.toString() + " ROM @ " + ("0000000000000000" + QString::number(_startAddress, 16)).right(16).toUpper();
+    return util::toString(_size) + " ROM @ " + util::toString(_startAddress, "%016X");
 }
 
 core::ComponentUi * RomUnit::createUi()
@@ -156,25 +156,16 @@ void RomUnit::disconnect() noexcept
 //  core::Component (serialisation)
 void RomUnit::serialiseConfiguration(QDomElement & configurationElement) const
 {
-    configurationElement.setAttribute("StartAddress", ("0000000000000000" + QString::number(_startAddress, 16)).right(16).toUpper());
-    configurationElement.setAttribute("Size", _size.toString());
-    configurationElement.setAttribute("ContentFileName", _contentFileName);
+    configurationElement.setAttribute("StartAddress", util::toString(_startAddress, "%016X"));
+    configurationElement.setAttribute("Size", util::toString(_size));
+    configurationElement.setAttribute("ContentFileName", util::toString(_contentFileName));
 }
 
 void RomUnit::deserialiseConfiguration(QDomElement & configurationElement)
 {
-    QString startAddressString = configurationElement.attribute("StartAddress");
-    bool startAddressOk = false;
-    uint64_t startAddress = startAddressString.toULongLong(&startAddressOk, 16);
-    if (startAddressOk)
-    {
-        _startAddress = startAddress;
-    }
-
-    QString sizeString = configurationElement.attribute("Size");
-    _size = core::MemorySize::fromString(sizeString, _size);
-
-    _contentFileName = configurationElement.attribute("ContentFileName", _contentFileName);
+    util::fromString(configurationElement.attribute("StartAddress"), "%X", _startAddress);
+    util::fromString(configurationElement.attribute("Size"), _size);
+    util::fromString(configurationElement.attribute("ContentFileName"), _contentFileName);
 }
 
 //////////

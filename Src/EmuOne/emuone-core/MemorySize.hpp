@@ -51,8 +51,7 @@ namespace core
         //  Returns this memory size expressed in bytes.
         uint64_t            toBytes() const;
 
-        QString             toString() const;
-        static MemorySize   fromString(const QString & s, const MemorySize & defaultValue);
+        //  Returns a user-readable string representing this MemorySize.
         QString             toDisplayString() const;
 
         //////////
@@ -65,6 +64,15 @@ namespace core
     //////////
     //  Helper functions
     EMUONE_CORE_EXPORT uint64_t getUnitValue(MemorySize::Unit unit);
+}
+
+//////////
+//  Formatting/parsing
+namespace util
+{
+    EMUONE_CORE_EXPORT QString toString(const core::MemorySize & value);
+    EMUONE_CORE_EXPORT bool fromString(const QString & s, qsizetype & scan, core::MemorySize & value);
+    EMUONE_CORE_EXPORT bool fromString(const QString & s, core::MemorySize & value);
 }
 
 //  End of emuone-core/MemorySize.hpp
