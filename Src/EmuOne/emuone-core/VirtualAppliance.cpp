@@ -257,21 +257,6 @@ ComponentList VirtualAppliance::components(ComponentCategory * componentCategory
     return result;
 }
 
-AdaptorList VirtualAppliance::adaptors(ComponentCategory * componentCategory)
-{
-    Q_ASSERT(componentCategory != nullptr);
-
-    AdaptorList result;
-    for (auto adaptor : _adaptors)
-    {
-        if (adaptor->type()->category() == componentCategory)
-        {
-            result.append(adaptor);
-        }
-    }
-    return result;
-}
-
 QString VirtualAppliance::toRelativePath(const QString & path) const
 {
     QDir vaDir(QFileInfo(_location).absoluteDir());
@@ -400,9 +385,9 @@ void VirtualAppliance::_connectComponents()
         }
         for (Adaptor * adaptor : _adaptors)
         {
-            Q_ASSERT(adaptor->state() == Component::State::Constructed);
+            Q_ASSERT(adaptor->state() == Adaptor::State::Constructed);
             adaptor->connect();
-            Q_ASSERT(adaptor->state() == Component::State::Connected);
+            Q_ASSERT(adaptor->state() == Adaptor::State::Connected);
         }
     }
     catch (...)
@@ -424,9 +409,9 @@ void VirtualAppliance::_initialiseComponents()
         }
         for (Adaptor * adaptor : _adaptors)
         {
-            Q_ASSERT(adaptor->state() == Component::State::Connected);
+            Q_ASSERT(adaptor->state() == Adaptor::State::Connected);
             adaptor->initialise();
-            Q_ASSERT(adaptor->state() == Component::State::Initialised);
+            Q_ASSERT(adaptor->state() == Adaptor::State::Initialised);
         }
     }
     catch (...)
@@ -448,9 +433,9 @@ void VirtualAppliance::_startComponents()
         }
         for (Adaptor * adaptor : _adaptors)
         {
-            Q_ASSERT(adaptor->state() == Component::State::Initialised);
+            Q_ASSERT(adaptor->state() == Adaptor::State::Initialised);
             adaptor->start();
-            Q_ASSERT(adaptor->state() == Component::State::Running);
+            Q_ASSERT(adaptor->state() == Adaptor::State::Running);
         }
     }
     catch (...)
@@ -464,10 +449,10 @@ void VirtualAppliance::_stopComponents()
 {
     for (Adaptor * adaptor : _adaptors)
     {
-        if (adaptor->state() == Component::State::Running)
+        if (adaptor->state() == Adaptor::State::Running)
         {
             adaptor->stop();
-            Q_ASSERT(adaptor->state() == Component::State::Initialised);
+            Q_ASSERT(adaptor->state() == Adaptor::State::Initialised);
         }
     }
     for (Component * component : _components)
@@ -484,10 +469,10 @@ void VirtualAppliance::_deinitialiseComponents()
 {
     for (Adaptor * adaptor : _adaptors)
     {
-        if (adaptor->state() == Component::State::Initialised)
+        if (adaptor->state() == Adaptor::State::Initialised)
         {
             adaptor->deinitialise();
-            Q_ASSERT(adaptor->state() == Component::State::Connected);
+            Q_ASSERT(adaptor->state() == Adaptor::State::Connected);
         }
     }
     for (Component * component : _components)
@@ -504,10 +489,10 @@ void VirtualAppliance::_disconnectComponents()
 {
     for (Adaptor * adaptor : _adaptors)
     {
-        if (adaptor->state() == Component::State::Connected)
+        if (adaptor->state() == Adaptor::State::Connected)
         {
             adaptor->disconnect();
-            Q_ASSERT(adaptor->state() == Component::State::Constructed);
+            Q_ASSERT(adaptor->state() == Adaptor::State::Constructed);
         }
     }
     for (Component * component : _components)

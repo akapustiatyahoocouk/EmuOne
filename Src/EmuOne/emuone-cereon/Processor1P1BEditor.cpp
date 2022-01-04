@@ -49,13 +49,15 @@ void Processor1P1BEditor::refresh()
     _ui->_clockFrequencyUnitComboBox->setCurrentIndex(static_cast<int>(_processor->clockFrequency().unit()));
     _ui->_byteOrderComboBox->setCurrentIndex(static_cast<int>(_processor->byteOrder()));
 
-    _ui->_baseCheckBox->setChecked((_processor->features() & Features::Base) != Features::None);
-    _ui->_floatingPointCheckBox->setChecked((_processor->features() & Features::FloatingPoint) != Features::None);
-    _ui->_debugCheckBox->setChecked((_processor->features() & Features::Debug) != Features::None);
-    _ui->_unalignedOperandsCheckBox->setChecked((_processor->features() & Features::UnalignedOperands) != Features::None);
-    _ui->_protectedMemoryCheckBox->setChecked((_processor->features() & Features::ProtectedMemory) != Features::None);
-    _ui->_virtualMemoryCheckBox->setChecked((_processor->features() & Features::VirtualMemory) != Features::None);
-    _ui->_performanceMonitoringCheckBox->setChecked((_processor->features() & Features::PerformanceMonitoring) != Features::None);
+    Features features = _processor->cores()[0]->features();
+
+    _ui->_baseCheckBox->setChecked((features & Features::Base) != Features::None);
+    _ui->_floatingPointCheckBox->setChecked((features & Features::FloatingPoint) != Features::None);
+    _ui->_debugCheckBox->setChecked((features & Features::Debug) != Features::None);
+    _ui->_unalignedOperandsCheckBox->setChecked((features & Features::UnalignedOperands) != Features::None);
+    _ui->_protectedMemoryCheckBox->setChecked((features & Features::ProtectedMemory) != Features::None);
+    _ui->_virtualMemoryCheckBox->setChecked((features & Features::VirtualMemory) != Features::None);
+    _ui->_performanceMonitoringCheckBox->setChecked((features & Features::PerformanceMonitoring) != Features::None);
 
     _ui->_processorIdLineEdit->setText(util::toString(_processor->processorId(), "%02X"));
     _ui->_primaryCheckBox->setChecked(_processor->primary());

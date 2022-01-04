@@ -9,9 +9,10 @@ using namespace cereon;
 
 //////////
 //  Construction/destruction
-ProcessorCore::ProcessorCore(Processor * processor, uint8_t coreId, bool primary)
+ProcessorCore::ProcessorCore(Processor * processor, Features features, uint8_t coreId, bool primary)
     :   registers(),
         _processor(processor),
+        _features(features),
         _coreId(coreId),
         _primary(primary)
 {

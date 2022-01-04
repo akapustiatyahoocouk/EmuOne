@@ -24,10 +24,6 @@
 #include "emuone-cereon/Architectures.hpp"
 #include "emuone-cereon/Templates.hpp"
 
-#include "emuone-cereon/Features.hpp"
-#include "emuone-cereon/InstructionTypes.hpp"
-#include "emuone-cereon/InstructionSets.hpp"
-
 #include "emuone-cereon/Memory.hpp"
 #include "emuone-cereon/RamUnitEditor.hpp"
 #include "emuone-cereon/RomUnitEditor.hpp"
@@ -37,5 +33,7 @@
 
 #include "emuone-cereon/Cmos1.hpp"
 #include "emuone-cereon/Cmos1Editor.hpp"
+
+#include "emuone-cereon/Monitor.hpp"
 
 //  End of emuone-cereon/API.hpp

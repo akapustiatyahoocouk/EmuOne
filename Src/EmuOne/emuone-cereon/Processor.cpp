@@ -9,19 +9,16 @@ using namespace cereon;
 
 //////////
 //  Construction/destruction - from derived singleton classes only
-Processor::Processor(const QString & name, Features features, InstructionSet * instructionSet,
+Processor::Processor(const QString & name,
                      core::ClockFrequency clockFrequency, util::ByteOrder byteOrder,
                      uint8_t processorId, bool primary, uint64_t bootstrapIp)
     :   core::Component(name),
-        _features(features),
-        _instructionSet(instructionSet),
         _clockFrequency(clockFrequency),
         _byteOrder(byteOrder),
         _processorId(processorId),
         _primary(primary),
         _bootstrapIp(bootstrapIp)
 {
-    Q_ASSERT(_instructionSet != nullptr);
 }
 
 Processor::~Processor()
@@ -97,8 +94,18 @@ void Processor::connect()
         throw core::VirtualApplianceException("cereon::Processor found multiple IoBuses");
     }
 
+    //  At most 1 "monitor" can be defined
+    QList<Monitor*> monitors = this->virtualAppliance()->findComponentsByRole<Monitor>();
+    if (monitors.size() > 1)
+    {
+        throw core::VirtualApplianceException("cereon::Processor found multiple Monitors");
+    }
+
+    //  Make the assigments
     _memoryBus = memoryBuses[0];
     _ioBus = ioBuses[0];
+    _monitor = (monitors.size() == 0) ? nullptr : monitors[0];
+
 
     //  Done
     _state = State::Connected;
@@ -219,6 +226,7 @@ void Processor::disconnect() noexcept
 
     _memoryBus = nullptr;
     _ioBus = nullptr;
+    _monitor = nullptr;
 
     //  Done
     _state = State::Constructed;
@@ -257,6 +265,13 @@ void Processor::onClockTick()
     {
         _cores[i]->onClockTick();
     }
+}
+
+//////////
+//  Operations
+ProcessorCoreList Processor::cores() const
+{
+    return _mapIdsToCores.values();
 }
 
 //  End of emuone-cereon/Processor.cpp

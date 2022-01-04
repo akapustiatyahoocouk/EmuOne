@@ -11,14 +11,12 @@ using namespace cereon;
 //  Construction/destruction
 Processor1P1B::Processor1P1B(const QString & name, uint8_t processorId, bool primary, uint64_t bootstrapIp)
     :   Processor(name,
-                  Features::Base,
-                  InstructionSetV1::instance(),
                   core::ClockFrequency(core::ClockFrequency::Unit::MHZ, 10),
                   util::ByteOrder::BigEndian,
                   processorId,
                   primary,
                   bootstrapIp),
-      _core(this, 0, true)
+      _core(this, Features::Base, 0, true)
 {
     addCore(&_core);
 }

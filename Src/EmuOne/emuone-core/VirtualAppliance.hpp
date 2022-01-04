@@ -105,7 +105,6 @@ namespace core
         ComponentList               components() const;
         ComponentList               components(ComponentCategory * componentCategory);
         AdaptorList                 adaptors() const { return _adaptors; }
-        AdaptorList                 adaptors(ComponentCategory * componentCategory);
 
         //  Returns an unordered list of all a) compatible components and
         //  b) adaptors which implement the specified interface T

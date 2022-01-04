@@ -21,19 +21,18 @@
 #include "emuone-core/Classes.hpp"
 #include "emuone-core/Exceptions.hpp"
 
-#include "emuone-core/MemorySize.hpp"
-#include "emuone-core/ClockFrequency.hpp"
-#include "emuone-core/Duration.hpp"
+#include "emuone-core/DataTypes.hpp"
 
 #include "emuone-core/Architecture.hpp"
 #include "emuone-core/Template.hpp"
-#include "emuone-core/ComponentCategory.hpp"
-#include "emuone-core/ComponentType.hpp"
+
 #include "emuone-core/Component.hpp"
-#include "emuone-core/ComponentAspect.hpp"
 #include "emuone-core/ComponentEditor.hpp"
 #include "emuone-core/FullScreenWidget.hpp"
 #include "emuone-core/ComponentUi.hpp"
+
+#include "emuone-core/Adaptor.hpp"
+#include "emuone-core/AdaptorEditor.hpp"
 
 #include "emuone-core/VirtualAppliance.hpp"
 

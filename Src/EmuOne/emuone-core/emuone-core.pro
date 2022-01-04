@@ -5,6 +5,7 @@ DEFINES += EMUONECORE_LIBRARY
 
 SOURCES += \
     Adaptor.cpp \
+    AdaptorEditor.cpp \
     Architecture.cpp \
     ClockFrequency.cpp \
     Component.cpp \
@@ -23,19 +24,16 @@ SOURCES += \
 
 HEADERS += \
     API.hpp \
+    Adaptor.hpp \
+    AdaptorEditor.hpp \
     Architecture.hpp \
     Classes.hpp \
-    ClockFrequency.hpp \
     Component.hpp \
-    ComponentAspect.hpp \
-    ComponentCategory.hpp \
     ComponentEditor.hpp \
-    ComponentType.hpp \
     ComponentUi.hpp \
-    Duration.hpp \
+    DataTypes.hpp \
     Exceptions.hpp \
     FullScreenWidget.hpp \
-    MemorySize.hpp \
     Template.hpp \
     VirtualAppliance.hpp
 

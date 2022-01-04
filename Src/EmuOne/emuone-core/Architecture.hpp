@@ -9,7 +9,9 @@
 namespace core
 {
     //////////
-    //  Represents a VM architecture.
+    //  Represents a "VM architecture" - a set of rules and conventions about how
+    //  a specific kind of VM can be organised (e.g. "IBM PC", "DEC VAX-11",
+    //  "Cereon Workstation", etc.
     class EMUONE_CORE_EXPORT Architecture : public util::StockObject
     {
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Architecture)

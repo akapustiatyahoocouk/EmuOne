@@ -15,6 +15,10 @@ namespace cereon
     class EMUONE_CORE_EXPORT RomUnitEditor;
     class EMUONE_CORE_EXPORT Processor1P1BEditor;
 
+    class EMUONE_CORE_EXPORT Monitor;
+
+
+    using ProcessorCoreList = QList<ProcessorCore*>;
 
     using RamUnitEditorList = QList<RamUnitEditor*>;
     using RomUnitEditorList = QList<RomUnitEditor*>;

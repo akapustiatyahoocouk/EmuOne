@@ -7,7 +7,6 @@ SOURCES += \
     Architectures.cpp \
     Cmos1.cpp \
     Cmos1Editor.cpp \
-    InstructionSets.cpp \
     IoBus.cpp \
     MemoryBus.cpp \
     Plugin.cpp \
@@ -27,11 +26,9 @@ HEADERS += \
     Classes.hpp \
     Cmos1.hpp \
     Cmos1Editor.hpp \
-    Features.hpp \
-    InstructionSets.hpp \
-    InstructionTypes.hpp \
     Io.hpp \
     Memory.hpp \
+    Monitor.hpp \
     Processor1P1BEditor.hpp \
     Processors.hpp \
     RamUnitEditor.hpp \

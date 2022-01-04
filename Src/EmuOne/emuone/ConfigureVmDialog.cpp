@@ -47,12 +47,12 @@ ConfigureVmDialog::ConfigureVmDialog(core::VirtualAppliance * virtualAppliance, 
     }
     for (core::Adaptor * adaptor : virtualAppliance->adaptors())
     {
-        if (core::ComponentEditor * componentEditor = adaptor->createEditor(_ui->_componentEditorsPanel))
+        if (core::AdaptorEditor * adaptorEditor = adaptor->createEditor(_ui->_componentEditorsPanel))
         {
-            componentEditor->setVisible(false);
-            _componentEditors.insert(adaptor, componentEditor);
-            connect(componentEditor, &core::ComponentEditor::componentConfigurationChanged, this, &ConfigureVmDialog::_componentConfigurationChanged);
-            _componentEditorsPanelLayout->addWidget(componentEditor, 0, 0);
+            adaptorEditor->setVisible(false);
+            _adaptorEditors.insert(adaptor, adaptorEditor);
+            connect(adaptorEditor, &core::AdaptorEditor::adaptorConfigurationChanged, this, &ConfigureVmDialog::_adaptorConfigurationChanged);
+            _componentEditorsPanelLayout->addWidget(adaptorEditor, 0, 0);
         }
     }
 
@@ -326,7 +326,13 @@ void ConfigureVmDialog::_componentNameLineEditTextChanged(const QString &)
 void ConfigureVmDialog::_componentConfigurationChanged(core::Component * component)
 {
     _refreshComponentsTree();
-    _setSelectedComponent(component);   //  because component "name "short status" may have changed!
+    _setSelectedComponent(component);   //  because component "name" may have changed!
+}
+
+void ConfigureVmDialog::_adaptorConfigurationChanged(core::Adaptor * adaptor)
+{
+    _refreshComponentsTree();
+    _setSelectedComponent(adaptor->adaptedComponent());   //  because component "name " may have changed!
 }
 
 void ConfigureVmDialog::_accept()

@@ -9,7 +9,47 @@
 namespace cereon
 {
     //////////
-    //  The "$state" register (accessor helpers)
+    //  Optional Cereon Processor [Core] features (+manipulation helpers)
+    enum class Features : uint16_t
+    {
+        //  Individual features
+        Base                    = 0x0001,
+        FloatingPoint           = 0x0002,
+        Debug                   = 0x0004,
+        UnalignedOperands       = 0x0008,
+        ProtectedMemory         = 0x0010,
+        VirtualMemory           = 0x0020,
+        PerformanceMonitoring   = 0x0040,
+        //  Feature combinations
+        None                    = 0x0000,
+        All                     = 0x007F
+    };
+
+    inline Features operator | (Features op1, Features op2)
+    {
+        return Features(uint16_t(op1) | uint16_t(op2));
+    }
+
+    inline Features operator & (Features op1, Features op2)
+    {
+        return Features(uint16_t(op1) & uint16_t(op2));
+    }
+
+    inline Features & operator |= (Features & op1, Features op2)
+    {
+        op1 = Features(uint16_t(op1) | uint16_t(op2));
+        return op1;
+    }
+
+    inline Features & operator &= (Features & op1, Features op2)
+    {
+        op1 = Features(uint16_t(op1) & uint16_t(op2));
+        return op1;
+    }
+
+    //////////
+    //  The helper class that allows re-interpreting a 64-bit unsigned integer
+    //  variable as a "$state" register
     class EMUONE_CEREON_EXPORT StateRegister final
     {
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(StateRegister)
@@ -79,7 +119,8 @@ namespace cereon
     };
 
     //////////
-    //  The "$flags" register
+    //  The helper class that allows re-interpreting a 64-bit unsigned integer
+    //  variable as a "$flags" register
     class EMUONE_CEREON_EXPORT FlagsRegister final
     {
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(FlagsRegister)
@@ -87,13 +128,14 @@ namespace cereon
         //////////
         //  Construction/destruction
     public:
-        explicit FlagsRegister(uint64_t value) : _value(value) {}
+        explicit FlagsRegister(uint64_t & value) : _value(value) {}
         ~FlagsRegister() {}
 
         //////////
         //  Operators
     public:
         FlagsRegister &     operator = (uint64_t value) { _value = value; return *this; }
+                            operator uint64_t() const { return _value; }
 
         //////////
         //  Operations
@@ -106,17 +148,116 @@ namespace cereon
         void                setIntegerDivisionByZeroFlag() { _value |= 0x0010; }
         void                setIntegerOverflowFlag() { _value |= 0x0010; }
 
-        uint64_t            value() const { return _value; }
-        void                setValue(uint64_t value) { _value = value; }
-
         //////////
         //  Implementation
     private:
-        uint64_t            _value = 0; //  raw
+        uint64_t &          _value; //  raw
     };
 
     //////////
-    //  A generic Cereon processor
+    //  All registers of a Cereojn ISA V1 processor core
+    struct EMUONE_CEREON_EXPORT Registers final
+    {
+        CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Registers)
+
+    public:
+        Registers()
+            //  Raw register values
+            :   r(),
+                c(),
+                d(),
+                m(),
+                f(0),
+                //  Registers by role
+                flags(f),
+                ip(r[31]),
+                state(c[0]),
+                pth(c[1]),
+                itc(c[2]),
+                cc(c[3]),
+                isaveipTm(c[4]),
+                isavestateTm(c[5]),
+                ihstateTm(c[6]),
+                ihaTm(c[7]),
+                isaveipIo(c[8]),
+                isavestateIo(c[9]),
+                ihstateIo(c[10]),
+                ihaIo(c[11]),
+                iscIo(c[12]),
+                isaveipSvc(c[13]),
+                isavestateSvc(c[14]),
+                ihstateSvc(c[15]),
+                ihaSvc(c[16]),
+                isaveipPrg(c[17]),
+                isavestatePrg(c[18]),
+                ihstatePrg(c[19]),
+                ihaPrg(c[20]),
+                iscPrg(c[21]),
+                isaveipExt(c[22]),
+                isavestateExt(c[23]),
+                ihstateExt(c[24]),
+                ihaExt(c[25]),
+                iscExt(c[26]),
+                isaveipHw(c[27]),
+                isavestateHw(c[28]),
+                ihstateHw(c[29]),
+                ihaHw(c[30]),
+                iscHw(c[31])
+        {
+        }
+
+        ~Registers()
+        {
+        }
+
+        //  Raw register values
+        uint64_t            r[32];
+        uint64_t            c[32];
+        uint64_t            d[32];
+        uint64_t            m[32];
+        uint64_t            f;  //  "$flags" raw
+
+        //  Registers by role
+        FlagsRegister       flags;
+        uint64_t &          ip;
+
+        StateRegister       state;
+        uint64_t &          pth;
+        uint64_t &          itc;
+        uint64_t &          cc;
+        uint64_t &          isaveipTm;
+        uint64_t &          isavestateTm;
+        StateRegister       ihstateTm;
+        uint64_t &          ihaTm;
+        uint64_t &          isaveipIo;
+        StateRegister       isavestateIo;
+        StateRegister       ihstateIo;
+        uint64_t &          ihaIo;
+        uint64_t &          iscIo;
+        uint64_t &          isaveipSvc;
+        StateRegister       isavestateSvc;
+        StateRegister       ihstateSvc;
+        uint64_t &          ihaSvc;
+        uint64_t &          isaveipPrg;
+        StateRegister       isavestatePrg;
+        StateRegister       ihstatePrg;
+        uint64_t &          ihaPrg;
+        uint64_t &          iscPrg;
+        uint64_t &          isaveipExt;
+        StateRegister       isavestateExt;
+        StateRegister       ihstateExt;
+        uint64_t &          ihaExt;
+        uint64_t &          iscExt;
+        uint64_t &          isaveipHw;
+        StateRegister       isavestateHw;
+        StateRegister       ihstateHw;
+        uint64_t &          ihaHw;
+        uint64_t &          iscHw;
+    };
+
+    //////////
+    //  A generic Cereon processor that implements the Cereon ISA V1.
+    //  We assume that all core(s) of such a processor implement Cereon ISA V1.
     class EMUONE_CEREON_EXPORT Processor : public core::Component,
                                            public virtual core::IClockedComponentAspect
     {
@@ -125,7 +266,7 @@ namespace cereon
         //////////
         //  Construction/destruction - from derived singleton classes only
     protected:
-        Processor(const QString & name, Features features, InstructionSet * instructionSet,
+        Processor(const QString & name,
                   core::ClockFrequency clockFrequency, util::ByteOrder byteOrder,
                   uint8_t processorId, bool primary, uint64_t bootstrapIp);
         virtual ~Processor();
@@ -162,8 +303,6 @@ namespace cereon
         //////////
         //  Properties
     public:
-        Features                features() const { return _features; }
-        InstructionSet *        instructionSet() const { return _instructionSet; }
         void                    setClockFrequency(const core::ClockFrequency & clockFrequency) { _clockFrequency = clockFrequency; }
         util::ByteOrder         byteOrder() const { return _byteOrder; }
         void                    setByteOrder(util::ByteOrder byteOrder) { _byteOrder = byteOrder; }
@@ -174,17 +313,17 @@ namespace cereon
         uint64_t                bootstrapIp() const { return _bootstrapIp; }
         void                    setBootstrapIp(uint64_t bootstrapIp) { _bootstrapIp = bootstrapIp; }
 
+        ProcessorCoreList       cores() const;
+
         //////////
         //  Implementation
     private:
         State                   _state = State::Constructed;
         mutable QRecursiveMutex _stateGuard = {};
 
-        QMap<uint8_t, ProcessorCore*>   _mapIdsToCores = {};
+        QMap<uint8_t, ProcessorCore*>  _mapIdsToCores = {};
 
         //  Configuration
-        Features                _features;
-        InstructionSet *        _instructionSet;
         core::ClockFrequency    _clockFrequency;
         util::ByteOrder         _byteOrder; //  Mirrors "byte order" bit of $state for faster access
         uint8_t                 _processorId;
@@ -194,6 +333,7 @@ namespace cereon
         //  Connections to other VA components
         MemoryBus *             _memoryBus = nullptr;
         IoBus *                 _ioBus = nullptr;
+        Monitor *               _monitor = nullptr;
 
         //  Runtime state
         int                     _numCores = 0;
@@ -201,7 +341,7 @@ namespace cereon
     };
 
     //////////
-    //  A generic Cereon processor core.
+    //  A generic Cereon processor core that implements the Cereon ISA V1.
     //  Note that a "processor core" is not a component by itself - it only exists
     //  in the scope of containing Processor
     class EMUONE_CORE_EXPORT ProcessorCore
@@ -211,15 +351,20 @@ namespace cereon
         //////////
         //  Construction/destruction
     public:
-        ProcessorCore(Processor * processor, uint8_t coreId, bool primary);
+        ProcessorCore(Processor * processor, Features features, uint8_t coreId, bool primary);
         virtual ~ProcessorCore();
+
+        //////////
+        //  Properties
+    public:
+        Processor *             processor() const { return _processor; }
+        Features                features() const { return _features; }
+        uint8_t                 coreId() const { return _coreId; }
+        bool                    primary() const { return _primary; }
 
         //////////
         //  Operations
     public:
-        Processor *             processor() const { return _processor; }
-        uint8_t                 coreId() const { return _coreId; }
-        bool                    primary() const { return _primary; }
 
         void                    initialise();   //  throws VirtualApplianceException;
         void                    start();        //  throws VirtualApplianceException
@@ -232,108 +377,13 @@ namespace cereon
         //////////
         //  Registers
     public:
-        struct EMUONE_CEREON_EXPORT Registers final
-        {
-            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Registers)
-
-        public:
-            Registers()
-                //  Raw register values
-                :   r(),
-                    c(),
-                    flags(0),
-                    d(),
-                    m(),
-                    //  Registers by role
-                    ip(r[0]),
-                    state(c[0]),
-                    pth(c[1]),
-                    itc(c[2]),
-                    cc(c[3]),
-                    isaveipTm(c[4]),
-                    isavestateTm(c[5]),
-                    ihstateTm(c[6]),
-                    ihaTm(c[7]),
-                    isaveipIo(c[8]),
-                    isavestateIo(c[9]),
-                    ihstateIo(c[10]),
-                    ihaIo(c[11]),
-                    iscIo(c[12]),
-                    isaveipSvc(c[13]),
-                    isavestateSvc(c[14]),
-                    ihstateSvc(c[15]),
-                    ihaSvc(c[16]),
-                    isaveipPrg(c[17]),
-                    isavestatePrg(c[18]),
-                    ihstatePrg(c[19]),
-                    ihaPrg(c[20]),
-                    iscPrg(c[21]),
-                    isaveipExt(c[22]),
-                    isavestateExt(c[23]),
-                    ihstateExt(c[24]),
-                    ihaExt(c[25]),
-                    iscExt(c[26]),
-                    isaveipHw(c[27]),
-                    isavestateHw(c[28]),
-                    ihstateHw(c[29]),
-                    ihaHw(c[30]),
-                    iscHw(c[31])
-            {
-            }
-
-            ~Registers()
-            {
-            }
-
-            //  Raw register values
-            uint64_t            r[32];
-            uint64_t            c[32];
-            FlagsRegister       flags;
-            uint64_t            d[32];
-            uint64_t            m[32];
-
-            //  Registers by role
-            uint64_t &          ip;
-
-            StateRegister       state;
-            uint64_t &          pth;
-            uint64_t &          itc;
-            uint64_t &          cc;
-            uint64_t &          isaveipTm;
-            uint64_t &          isavestateTm;
-            StateRegister       ihstateTm;
-            uint64_t &          ihaTm;
-            uint64_t &          isaveipIo;
-            StateRegister       isavestateIo;
-            StateRegister       ihstateIo;
-            uint64_t &          ihaIo;
-            uint64_t &          iscIo;
-            uint64_t &          isaveipSvc;
-            StateRegister       isavestateSvc;
-            StateRegister       ihstateSvc;
-            uint64_t &          ihaSvc;
-            uint64_t &          isaveipPrg;
-            StateRegister       isavestatePrg;
-            StateRegister       ihstatePrg;
-            uint64_t &          ihaPrg;
-            uint64_t &          iscPrg;
-            uint64_t &          isaveipExt;
-            StateRegister       isavestateExt;
-            StateRegister       ihstateExt;
-            uint64_t &          ihaExt;
-            uint64_t &          iscExt;
-            uint64_t &          isaveipHw;
-            StateRegister       isavestateHw;
-            StateRegister       ihstateHw;
-            uint64_t &          ihaHw;
-            uint64_t &          iscHw;
-        };
         Registers               registers;
 
         //////////
         //  Implementation
     private:
         Processor *const        _processor; //  ...to which this core belongs
+        Features                _features;
         const uint8_t           _coreId;    //  unique ID of the core within the Processor
         const bool              _primary;
     };

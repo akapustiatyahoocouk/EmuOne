@@ -26,20 +26,20 @@ VirtualApplianceWindow::VirtualApplianceWindow(core::VirtualAppliance * virtualA
     {
         if (core::ComponentUi * componentUi = component->createUi())
         {
-            _uiMap.insert(component, componentUi);
+            _componentUiMap.insert(component, componentUi);
         }
     }
     for (core::Adaptor * adaptor : virtualAppliance->adaptors())
     {
-        if (core::ComponentUi * componentUi = adaptor->createUi())
+        if (core::AdaptorUi * adaptorUi = adaptor->createUi())
         {
-            _uiMap.insert(adaptor, componentUi);
+            _adaptorUiMap.insert(adaptor, adaptorUi);
         }
     }
 
-    //  Create full-screen widgets
+    //  Create full-screen widgets (TODO for adaptors too?)
     core::FullScreenWidgetList allFullScreenWidgets;
-    for (core::ComponentUi * componentUi : _uiMap)
+    for (core::ComponentUi * componentUi : _componentUiMap)
     {
         core::FullScreenWidgetList fullScreenWidgets = componentUi->fullScreenWidgets();
         allFullScreenWidgets.append(fullScreenWidgets);

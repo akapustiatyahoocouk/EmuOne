@@ -9,8 +9,8 @@ using namespace core;
 
 //////////
 //  Construction/destruction
-Adaptor::Adaptor(Component * adaptedComponent)
-    :   Component(adaptedComponent->name() + "/" + "TODO" + " adaptor"),
+Adaptor::Adaptor(const QString & name, Component * adaptedComponent)
+    :   _name(name),
         _adaptedComponent(adaptedComponent)
 {
     Q_ASSERT(_adaptedComponent != nullptr);

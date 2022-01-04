@@ -33,6 +33,7 @@ private:
     QGridLayout *           _componentEditorsPanelLayout;
 
     QMap<core::Component*, core::ComponentEditor*>  _componentEditors = {};
+    QMap<core::Adaptor*, core::AdaptorEditor*>      _adaptorEditors = {};
 
     class _AddComponentAction : public QAction
     {
@@ -74,6 +75,7 @@ private slots:
     void                    _removeComponentPushButtonClicked();
     void                    _componentNameLineEditTextChanged(const QString &);
     void                    _componentConfigurationChanged(core::Component * component);
+    void                    _adaptorConfigurationChanged(core::Adaptor * adaptor);
     void                    _accept();
     void                    _reject();
 };
