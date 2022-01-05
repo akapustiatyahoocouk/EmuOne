@@ -6,6 +6,7 @@ DEFINES += EMUONECORE_LIBRARY
 SOURCES += \
     Adaptor.cpp \
     AdaptorEditor.cpp \
+    AdaptorType.cpp \
     Architecture.cpp \
     ClockFrequency.cpp \
     Component.cpp \

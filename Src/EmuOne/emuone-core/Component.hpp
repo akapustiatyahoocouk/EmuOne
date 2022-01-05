@@ -269,10 +269,10 @@ namespace core
     };
 
     //////////
-    //  A "component aspect" is a feature interface that a Component can implement
-    //  if it is capable of a specific set of services.
-    //  A concrete Component-derived class may choose to also "public virtual"ly
-    //  derive from any number of "IComponentAspect"s.
+    //  A "component aspect" is a feature interface that a Component (or an Adaptor)
+    //  can implement if it is capable of a specific set of services.
+    //  A concrete Component-derived (or Adaptor-derived) class may choose to also
+    //  "public virtual"ly derive from any number of "IComponentAspect"s.
     class EMUONE_CORE_EXPORT IComponentAspect
     {
         //////////

@@ -14,5 +14,7 @@
         <file>Images/SoftwareSmall.png</file>
         <file>Images/MotherboardLarge.png</file>
         <file>Images/MotherboardSmall.png</file>
+        <file>Images/AdaptorLarge.png</file>
+        <file>Images/AdaptorSmall.png</file>
     </qresource>
 </RCC>

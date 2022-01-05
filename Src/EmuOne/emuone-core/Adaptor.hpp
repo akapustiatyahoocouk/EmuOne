@@ -31,17 +31,17 @@ namespace core
     public:
         //  Checks if adaptors of this type are "compatible with" (i.e. can be
         //  used directly by) virtual appliances of the specified "architecture"
-        virtual bool                isCompatibleWith(Architecture * architecture) const = 0;
+        virtual bool        isCompatibleWith(Architecture * architecture) const = 0;
 
         //  Checks if adaptors of this type are "compatible with" (i.e. can
         //  "adapt") components of a specified type to the tartet Architecture.
-        virtual bool                isCompatibleWith(ComponentType * componentType) const = 0;
+        virtual bool        isCompatibleWith(ComponentType * componentType) const = 0;
 
         //  Creates a new Adaptor of this type that "adapts" (wraps) the specified
         //  Component.
         //  Throws "VirtualApplianceException" if an error occurs (e.g. if the
         //  "component" is not compatible with this AdaptorType, etc.)
-        virtual Adaptor *           createAdaptor(Component * adaptedComponent) = 0;
+        virtual Adaptor *   createAdaptor(Component * adaptedComponent) = 0;
 
         //////////
         //  Registry
@@ -49,6 +49,11 @@ namespace core
         static AdaptorTypeList      all();
         static AdaptorType *        findByMnemonic(const QString & mnemonic);
         static bool                 registerAdaptorType(AdaptorType * adaptorType);
+
+        //  Finds an adaptor that can "adapt" components of the specified type to
+        //  the specified "architecture"; returns nullptr if not found
+        static AdaptorType *        find(Architecture * architecture, ComponentType * componentType);
+
     private:
         static AdaptorTypeList      _registry;
     };
@@ -134,6 +139,7 @@ namespace core
         //////////
         //  Operations
     public:
+        //  The component wrapped by ("adaptd by") this Adaptor.
         Component *         adaptedComponent() const { return _adaptedComponent; }
 
         //////////
