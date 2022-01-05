@@ -363,9 +363,9 @@ core::ComponentCategory * RamUnit::Type::category() const
     return core::StandardComponentCategories::Memory::instance();
 }
 
-bool RamUnit::Type::isCompatibleWith(core::Architecture * architecture) const
+bool RamUnit::Type::isCompatibleWith(const core::Architecture * architecture) const
 {
-    return dynamic_cast<CereonArchitecture*>(architecture) != nullptr;
+    return dynamic_cast<const CereonArchitecture*>(architecture) != nullptr;
 }
 
 core::Component * RamUnit::Type::createComponent()

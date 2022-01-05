@@ -25,14 +25,14 @@ QString Adaptor::Type::displayName() const
     return "HADES OS / Cereon adaptor";
 }
 
-bool Adaptor::Type::isCompatibleWith(core::Architecture * architecture) const
+bool Adaptor::Type::isCompatibleWith(const core::Architecture * architecture) const
 {
-    return dynamic_cast<::cereon::CereonArchitecture*>(architecture) != nullptr;
+    return dynamic_cast<const ::cereon::CereonArchitecture*>(architecture) != nullptr;
 }
 
-bool Adaptor::Type::isCompatibleWith(core::ComponentType * componentType) const
+bool Adaptor::Type::isCompatibleWith(const core::ComponentType * componentType) const
 {
-    return dynamic_cast<hadesos::HadesOs::Type*>(componentType) != nullptr;
+    return dynamic_cast<const hadesos::HadesOs::Type*>(componentType) != nullptr;
 }
 
 Adaptor * Adaptor::Type::createAdaptor(core::Component * adaptedComponent)

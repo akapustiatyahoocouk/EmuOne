@@ -201,7 +201,20 @@ void VirtualAppliance::addComponent(Component * component)
     }
 
     //  Is the "component" adaptable to this architecture ?
-    //  TODO
+    if (component->type()->isAdaptableTo(_architecture))
+    {   //  Yes!
+        AdaptorType * adaptorType = AdaptorType::find(_architecture, component->type());
+        if (adaptorType != nullptr)
+        {
+            Adaptor * adaptor = adaptorType->createAdaptor(component);
+            _components.append(component);
+            _adaptedComponents.append(component);
+            _adaptors.append(adaptor);
+            component->_virtualAppliance = this;
+            adaptor->_virtualAppliance = this;
+            return;
+        }
+    }
 
     //  Give uo
     throw VirtualApplianceException(component->type()->displayName() + " is not compatible with " + _architecture->displayName());
@@ -232,7 +245,10 @@ void VirtualAppliance::removeComponent(Component * component)
     }
 
     //  Is the "component" adaptable to this architecture ?
-    //  TODO
+    if (_adaptedComponents.contains(component))
+    {   //  TODO
+        Q_ASSERT(false);    //  Implement properly
+    }
 
     //  Give up
 }
@@ -603,7 +619,7 @@ VirtualAppliance::_MasterClockThread::_MasterClockThread(VirtualAppliance * virt
     }
     double fastestComponentTickTimeNs = 1000000000.0 / static_cast<double>(_fastestComponent->clockFrequency().toHz());
     double allComponentsTickTimeNs = fastestComponentTickTimeNs * _numClockTickReceivers;
-    _oneIterationLengthNs = (allComponentsTickTimeNs >= 1.0) ? static_cast<int64_t>(allComponentsTickTimeNs) : 1;
+    _oneIterationLengthNs = (allComponentsTickTimeNs >= 1.0) ? static_cast<uint64_t>(allComponentsTickTimeNs) : 1;
 }
 
 VirtualAppliance::_MasterClockThread::~_MasterClockThread()
@@ -613,7 +629,7 @@ VirtualAppliance::_MasterClockThread::~_MasterClockThread()
 
 void VirtualAppliance::_MasterClockThread::run()
 {
-    int64_t nanosExpectedSinceLastAdjustment = 0;
+    uint64_t nanosExpectedSinceLastAdjustment = 0;
     util::TimeStamp lastAdjustmentMadeAt = util::TimeStamp::now();
     int delayFactor = 0;
     int pendingDelayNs = 0;
@@ -640,7 +656,7 @@ void VirtualAppliance::_MasterClockThread::run()
         if (nanosExpectedSinceLastAdjustment > 10000000)    //  Adjust at 10ms intervals
         {
             util::TimeStamp now = util::TimeStamp::now();
-            int64_t nanosMeasuredSinceLastAdjustment = (now - lastAdjustmentMadeAt).asNanoseconds();
+            uint64_t nanosMeasuredSinceLastAdjustment = static_cast<uint64_t>((now - lastAdjustmentMadeAt).asNanoseconds());
             if (nanosMeasuredSinceLastAdjustment < nanosExpectedSinceLastAdjustment)
             {   //  Too fast!
                 delayFactor++;

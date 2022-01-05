@@ -30,7 +30,7 @@ core::ComponentCategory * HadesOs::Type::category() const
     return core::StandardComponentCategories::Software::instance();
 }
 
-bool HadesOs::Type::isCompatibleWith(core::Architecture * /*architecture*/) const
+bool HadesOs::Type::isCompatibleWith(const core::Architecture * /*architecture*/) const
 {
     return false;   //  rely on adapters!
 }

@@ -32,8 +32,8 @@ namespace hadesos
                 //////////
                 //  core::AdaptorType
             public:
-                virtual bool        isCompatibleWith(core::Architecture * architecture) const override;
-                virtual bool        isCompatibleWith(core::ComponentType * componentType) const override;
+                virtual bool        isCompatibleWith(const core::Architecture * architecture) const override;
+                virtual bool        isCompatibleWith(const core::ComponentType * componentType) const override;
                 virtual Adaptor *   createAdaptor(core::Component * adaptedComponent) override;
             };
 
@@ -67,6 +67,12 @@ namespace hadesos
         public:
             virtual void            serialiseConfiguration(QDomElement & configurationElement) const override;
             virtual void            deserialiseConfiguration(QDomElement & configurationElement) override;
+
+            //////////
+            //  Implementation
+        private:
+            State                   _state = State::Constructed;
+            mutable QRecursiveMutex _stateGuard = {};
         };
     }
 }

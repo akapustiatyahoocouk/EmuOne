@@ -29,6 +29,7 @@ namespace core
         //////////
         //  Registry
     public:
+        //  Finds a VA type by its mnemonic; returns nullptr if not found.
         static VirtualApplianceType *   findByMnemonic(const QString & mnemonic);
     };
 
@@ -67,16 +68,17 @@ namespace core
         //////////
         //  Operations
     public:
+        //  Checks if the specified string is valid as a Virtual Appliance name.
         static bool                 isValidName(const QString & name);
 
         //  Returns the type of this Virtual Appliance
         virtual VirtualApplianceType *  type() const = 0;
 
-        //  Returns/sets the type of this Virtual Appliance
+        //  Returns/sets the name of this Virtual Appliance
         QString                     name() const { return _name; }
         void                        setName(const QString & name);
 
-        //  Returns the "type "location" of this Virtual Appliance (this is the full
+        //  Returns the "location" of this Virtual Appliance (this is the full
         //  path of the VA's configuration file)
         QString                     location() { return _location; }
 
@@ -135,7 +137,7 @@ namespace core
         QString                     _name;
         const QString               _location;      //  always the full path to a .VA file
         Architecture *const         _architecture;  //  ...of this VA
-        VirtualApplianceTemplate *const _template;      //  ...from which this VA was created
+        VirtualApplianceTemplate *const _template;  //  ...from which this VA was created
 
         State                       _state = State::Stopped;
         mutable QRecursiveMutex     _stateGuard = {};
@@ -186,7 +188,7 @@ namespace core
             int                     _numClockTickReceivers = 0;
             IClockedComponentAspect **  _clockTickReceivers = nullptr;  //  array of _numClockTickReceivers elements
             IClockedComponentAspect *   _fastestComponent = nullptr;
-            int64_t                 _oneIterationLengthNs = 0;
+            uint64_t                _oneIterationLengthNs = 0;
         };
         _MasterClockThread *        _masterClockThread = nullptr;
     };

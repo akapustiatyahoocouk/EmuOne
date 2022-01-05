@@ -197,9 +197,9 @@ core::ComponentCategory * IoBus::Type::category() const
     return core::StandardComponentCategories::Motherboard::instance();
 }
 
-bool IoBus::Type::isCompatibleWith(core::Architecture * architecture) const
+bool IoBus::Type::isCompatibleWith(const core::Architecture * architecture) const
 {
-    return dynamic_cast<CereonArchitecture*>(architecture) != nullptr;
+    return dynamic_cast<const CereonArchitecture*>(architecture) != nullptr;
 }
 
 

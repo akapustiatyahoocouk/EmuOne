@@ -10,6 +10,26 @@ using namespace core;
 ComponentTypeList ComponentType::_registry;
 
 //////////
+//  Operations
+bool ComponentType::isAdaptableTo(const Architecture * architecture) const
+{
+    Q_ASSERT(architecture != nullptr);
+
+    if (this->isCompatibleWith(architecture))
+    {   //  OOPS! No need to "adapt"!
+        return false;
+    }
+    for (AdaptorType * adaptorType : AdaptorType::all())
+    {
+        if (adaptorType->isCompatibleWith(architecture) && adaptorType->isCompatibleWith(this))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+//////////
 //  Registry
 ComponentTypeList ComponentType::all()
 {

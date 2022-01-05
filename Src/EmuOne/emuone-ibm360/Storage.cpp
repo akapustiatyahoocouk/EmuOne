@@ -194,7 +194,7 @@ core::ComponentCategory * Storage::Type::category() const
     return core::StandardComponentCategories::Memory::instance();
 }
 
-bool Storage::Type::isCompatibleWith(core::Architecture * architecture) const
+bool Storage::Type::isCompatibleWith(const core::Architecture * architecture) const
 {
     return architecture == Architecture::instance();
 }

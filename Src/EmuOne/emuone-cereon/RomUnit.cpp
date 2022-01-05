@@ -362,9 +362,9 @@ core::ComponentCategory * RomUnit::Type::category() const
     return core::StandardComponentCategories::Memory::instance();
 }
 
-bool RomUnit::Type::isCompatibleWith(core::Architecture * architecture) const
+bool RomUnit::Type::isCompatibleWith(const core::Architecture * architecture) const
 {
-    return dynamic_cast<CereonArchitecture*>(architecture) != nullptr;
+    return dynamic_cast<const CereonArchitecture*>(architecture) != nullptr;
 }
 
 core::Component * RomUnit::Type::createComponent()

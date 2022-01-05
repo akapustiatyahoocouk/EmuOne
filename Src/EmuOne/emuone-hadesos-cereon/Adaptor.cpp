@@ -1,54 +1,54 @@
 //
-//  emuone-hadesos/HadesOs.cpp
+//  emuone-hadesos-cereon/Adaptor.cpp
 //
-//  The hadesos::HadesOs class implementation
+//  The emuone::hadesos::Adaptor class implementation
 //
 //////////
-#include "emuone-hadesos/API.hpp"
-using namespace hadesos;
+#include "emuone-hadesos-cereon/API.hpp"
+using namespace hadesos::cereon;
 
 //////////
 //  Construction/destruction
-HadesOs::HadesOs(const QString & name)
-    :   core::Component(name)
+Adaptor::Adaptor(HadesOs * hadesOs)
+    :   core::Adaptor(hadesOs->type()->displayName() + " adaptor", hadesOs)
 {
 }
 
-HadesOs::~HadesOs()
+Adaptor::~Adaptor()
 {
 }
 
 //////////
-//  Component
-HadesOs::Type * HadesOs::type() const
+//  core::Adaptor
+core::AdaptorType * Adaptor::type() const
 {
-    return HadesOs::Type::instance();
+    return Adaptor::Type::instance();
 }
 
-core::ComponentEditor * HadesOs::createEditor(QWidget * /*parent*/)
+core::AdaptorEditor * Adaptor::createEditor(QWidget * /*parent*/)
 {
     return nullptr;
 }
 
-QString HadesOs::shortStatus() const
+QString Adaptor::shortStatus() const
 {
-    return "operational";
+    return "The HADES OS / Cereon adaptor is operational";
 }
 
-core::ComponentUi * HadesOs::createUi()
+core::AdaptorUi * Adaptor::createUi()
 {
     return nullptr;
 }
 
 //////////
-//  Component (state control) - all thread-safe
-HadesOs::State HadesOs::state() const
+//  core::Adaptor (state control) - all thread-safe
+Adaptor::State Adaptor::state() const
 {
     QMutexLocker lock(&_stateGuard);
     return _state;
 }
 
-void HadesOs::connect()
+void Adaptor::connect()
 {
     QMutexLocker lock(&_stateGuard);
 
@@ -61,7 +61,7 @@ void HadesOs::connect()
     _state = State::Connected;
 }
 
-void HadesOs::initialise()
+void Adaptor::initialise()
 {
     QMutexLocker lock(&_stateGuard);
 
@@ -74,7 +74,7 @@ void HadesOs::initialise()
     _state = State::Initialised;
 }
 
-void HadesOs::start()
+void Adaptor::start()
 {
     QMutexLocker lock(&_stateGuard);
 
@@ -87,7 +87,7 @@ void HadesOs::start()
     _state = State::Running;
 }
 
-void HadesOs::stop() noexcept
+void Adaptor::stop() noexcept
 {
     QMutexLocker lock(&_stateGuard);
 
@@ -100,7 +100,7 @@ void HadesOs::stop() noexcept
     _state = State::Initialised;
 }
 
-void HadesOs::deinitialise() noexcept
+void Adaptor::deinitialise() noexcept
 {
     QMutexLocker lock(&_stateGuard);
 
@@ -113,7 +113,7 @@ void HadesOs::deinitialise() noexcept
     _state = State::Connected;
 }
 
-void HadesOs::disconnect() noexcept
+void Adaptor::disconnect() noexcept
 {
     QMutexLocker lock(&_stateGuard);
 
@@ -127,13 +127,15 @@ void HadesOs::disconnect() noexcept
 }
 
 //////////
-//  Component (serialisation)
-void HadesOs::serialiseConfiguration(QDomElement & /*configurationElement*/) const
+//  core::Adaptor (serialisation)
+void Adaptor::serialiseConfiguration(QDomElement & /*configurationElement*/) const
 {
+    // TODO
 }
 
-void HadesOs::deserialiseConfiguration(QDomElement & /*configurationElement*/)
+void Adaptor::deserialiseConfiguration(QDomElement & /*configurationElement*/)
 {
+    // TODO
 }
 
-//  End of emuone-hadesos/HadesOs.cpp
+//  End of emuone-hadesos-cereon/Adaptor.cpp

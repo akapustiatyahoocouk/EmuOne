@@ -5,6 +5,7 @@ DEFINES += EMUONEHADESOSCEREON_LIBRARY
 
 SOURCES += \
     Adaptor.Type.cpp \
+    Adaptor.cpp \
     Plugin.cpp
 
 HEADERS += \

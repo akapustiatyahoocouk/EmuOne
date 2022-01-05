@@ -213,9 +213,9 @@ core::ComponentCategory * MemoryBus::Type::category() const
     return core::StandardComponentCategories::Motherboard::instance();
 }
 
-bool MemoryBus::Type::isCompatibleWith(core::Architecture * architecture) const
+bool MemoryBus::Type::isCompatibleWith(const core::Architecture * architecture) const
 {
-    return dynamic_cast<CereonArchitecture*>(architecture) != nullptr;
+    return dynamic_cast<const CereonArchitecture*>(architecture) != nullptr;
 }
 
 

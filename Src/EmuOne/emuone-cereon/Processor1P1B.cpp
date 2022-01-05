@@ -68,9 +68,9 @@ core::ComponentCategory * Processor1P1B::Type::category() const
     return core::StandardComponentCategories::Processors::instance();
 }
 
-bool Processor1P1B::Type::isCompatibleWith(core::Architecture * architecture) const
+bool Processor1P1B::Type::isCompatibleWith(const core::Architecture * architecture) const
 {
-    return dynamic_cast<CereonArchitecture*>(architecture) != nullptr;
+    return dynamic_cast<const CereonArchitecture*>(architecture) != nullptr;
 }
 
 core::Component * Processor1P1B::Type::createComponent()

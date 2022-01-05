@@ -37,7 +37,7 @@ namespace scp360
             //  ComponentType
         public:
             virtual core::ComponentCategory *   category() const override;
-            virtual bool        isCompatibleWith(core::Architecture * architecture) const override;
+            virtual bool        isCompatibleWith(const core::Architecture * architecture) const override;
             virtual Scp *       createComponent() override;
         };
 

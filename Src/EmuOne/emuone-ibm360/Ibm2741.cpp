@@ -323,7 +323,7 @@ core::ComponentCategory * Ibm2741::Type::category() const
     return core::StandardComponentCategories::Terminals::instance();
 }
 
-bool Ibm2741::Type::isCompatibleWith(core::Architecture * architecture) const
+bool Ibm2741::Type::isCompatibleWith(const core::Architecture * architecture) const
 {
     return architecture == Architecture::instance();
 }

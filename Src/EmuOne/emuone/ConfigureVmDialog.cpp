@@ -212,7 +212,8 @@ QMenu * ConfigureVmDialog::_createAddAnyComponentPopupMenu()
                       [](auto a, auto b) -> bool { return a->displayName() < b->displayName(); });
             for (core::ComponentType * componentType : componentTypes)
             {
-                if (componentType->isCompatibleWith(_virtualAppliance->architecture()))  //  TODO or adaptable to it
+                if (componentType->isCompatibleWith(_virtualAppliance->architecture()) ||
+                    componentType->isAdaptableTo(_virtualAppliance->architecture()))
                 {
                     _AddComponentAction * action = new _AddComponentAction(this, componentType);
                     connect(action, &QAction::triggered, action, &_AddComponentAction::_triggered);

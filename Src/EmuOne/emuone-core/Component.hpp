@@ -166,7 +166,11 @@ namespace core
 
         //  Checks if components of this type are "compatible with" (i.e. can be
         //  used directly by) virtual appliances of the specified "architecture"
-        virtual bool                isCompatibleWith(Architecture * architecture) const = 0;
+        virtual bool                isCompatibleWith(const Architecture * architecture) const = 0;
+
+        //  Checks if components of this type are "adaptable to" (i.e. can be used
+        //  indirectly via "adaptors") by virtual appliances of the specified "architecture"
+        bool                        isAdaptableTo(const Architecture * architecture) const;
 
         //  Creates and returns a new Component of this type with default configuration.
         //  Throws VirtualApplianceException if the component creation fails.

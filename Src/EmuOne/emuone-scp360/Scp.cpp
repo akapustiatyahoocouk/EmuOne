@@ -303,7 +303,7 @@ core::ComponentCategory * Scp::Type::category() const
     return core::StandardComponentCategories::Software::instance();
 }
 
-bool Scp::Type::isCompatibleWith(core::Architecture * architecture) const
+bool Scp::Type::isCompatibleWith(const core::Architecture * architecture) const
 {
     return architecture == ibm360::Architecture::instance();
 }

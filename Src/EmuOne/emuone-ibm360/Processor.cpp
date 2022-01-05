@@ -247,7 +247,7 @@ core::ComponentCategory * Processor::Type::category() const
     return core::StandardComponentCategories::Processors::instance();
 }
 
-bool Processor::Type::isCompatibleWith(core::Architecture * architecture) const
+bool Processor::Type::isCompatibleWith(const core::Architecture * architecture) const
 {
     return architecture == Architecture::instance();
 }

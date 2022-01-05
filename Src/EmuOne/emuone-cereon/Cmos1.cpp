@@ -200,9 +200,9 @@ core::ComponentCategory * Cmos1::Type::category() const
     return core::StandardComponentCategories::Motherboard::instance();
 }
 
-bool Cmos1::Type::isCompatibleWith(core::Architecture * architecture) const
+bool Cmos1::Type::isCompatibleWith(const core::Architecture * architecture) const
 {
-    return dynamic_cast<CereonArchitecture*>(architecture) != nullptr;
+    return dynamic_cast<const CereonArchitecture*>(architecture) != nullptr;
 }
 
 

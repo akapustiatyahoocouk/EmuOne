@@ -31,11 +31,11 @@ namespace core
     public:
         //  Checks if adaptors of this type are "compatible with" (i.e. can be
         //  used directly by) virtual appliances of the specified "architecture"
-        virtual bool        isCompatibleWith(Architecture * architecture) const = 0;
+        virtual bool        isCompatibleWith(const Architecture * architecture) const = 0;
 
         //  Checks if adaptors of this type are "compatible with" (i.e. can
         //  "adapt") components of a specified type to the tartet Architecture.
-        virtual bool        isCompatibleWith(ComponentType * componentType) const = 0;
+        virtual bool        isCompatibleWith(const ComponentType * componentType) const = 0;
 
         //  Creates a new Adaptor of this type that "adapts" (wraps) the specified
         //  Component.
@@ -63,6 +63,8 @@ namespace core
     class EMUONE_CORE_EXPORT Adaptor
     {
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Adaptor)
+
+        friend class VirtualAppliance;
 
         //////////
         //  Types
