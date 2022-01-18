@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>hadesos::AddSharedHostFolderDialog</class>
+ <widget class="QDialog" name="hadesos::AddSharedHostFolderDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>576</width>
+    <height>114</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="0">
+    <widget class="QLabel" name="_hostPathLabel">
+     <property name="text">
+      <string>Host path:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="_volumeNameLabel">
+     <property name="text">
+      <string>Volume name:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLineEdit" name="_volumeNameLineEdit"/>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLineEdit" name="_hostPathLineEdit"/>
+   </item>
+   <item row="3" column="0" colspan="3">
+    <widget class="QDialogButtonBox" name="_buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QPushButton" name="_browsePushButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>8</width>
+       <height>8</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>_buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>hadesos::AddSharedHostFolderDialog</receiver>
+   <slot>_accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>hadesos::AddSharedHostFolderDialog</receiver>
+   <slot>_reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_volumeNameLineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>hadesos::AddSharedHostFolderDialog</receiver>
+   <slot>_volumeNameLineEditTextChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>291</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>287</x>
+     <y>56</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_hostPathLineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>hadesos::AddSharedHostFolderDialog</receiver>
+   <slot>_hostPathLineEditTextChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>291</x>
+     <y>49</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>287</x>
+     <y>56</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_browsePushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>hadesos::AddSharedHostFolderDialog</receiver>
+   <slot>_browsePushButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>526</x>
+     <y>49</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>287</x>
+     <y>56</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>_volumeNameLineEditTextChanged(QString)</slot>
+  <slot>_hostPathLineEditTextChanged(QString)</slot>
+  <slot>_browsePushButtonClicked()</slot>
+  <slot>_accept()</slot>
+  <slot>_reject()</slot>
+ </slots>
+</ui>

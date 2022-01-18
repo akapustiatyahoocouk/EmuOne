@@ -1,23 +1,23 @@
-<VirtualAppliance Type="VirtualMachine" Architecture="CereonWorkstation" Template="CereonWorkstationMini" Name="2">
- <Component Type="Cereon-RamUnit" Name="RAM">
+<VirtualAppliance Name="2" Architecture="CereonWorkstation" Template="CereonWorkstationMini" Type="VirtualMachine">
+ <Component Name="RAM" Type="Cereon-RamUnit">
   <Configuration Size="64MB" StartAddress="0000000000000000"/>
  </Component>
- <Component Type="Cereon-RomUnit" Name="ROM">
-  <Configuration Size="1MB" StartAddress="FFFFFFFFFFF00000" ContentFileName="./rom.bin"/>
+ <Component Name="ROM" Type="Cereon-RomUnit">
+  <Configuration Size="1MB" ContentFileName="./rom.bin" StartAddress="FFFFFFFFFFF00000"/>
  </Component>
- <Component Type="Cereon-1P1B" Name="Processor">
-  <Configuration ByteOrder="BigEndian" ClockFrequency="20MHZ" ProcessorId="0" Primary="y" BootstrapIp="FFFFFFFFFFF00000"/>
+ <Component Name="Processor" Type="Cereon-1P1B">
+  <Configuration ByteOrder="BigEndian" ProcessorId="0" Primary="y" ClockFrequency="20MHZ" BootstrapIp="FFFFFFFFFFF00000"/>
  </Component>
- <Component Type="Cereon-MemoryBus" Name="Memory bus">
+ <Component Name="Memory bus" Type="Cereon-MemoryBus">
   <Configuration/>
  </Component>
- <Component Type="Cereon-IoBus" Name="I/O bus">
+ <Component Name="I/O bus" Type="Cereon-IoBus">
   <Configuration/>
  </Component>
- <Component Type="Cereon-CMOS1" Name="CMOS">
-  <Configuration AddressPortAddress="0111" InterruptMaskPortAddress="0113" DataPortAddress="0112" WriteDelay="10us" ClockFrequency="1MHZ" StatePortAddress="0110" ContentFilePath="./cmos.bin" ReadDelay="1us"/>
+ <Component Name="CMOS" Type="Cereon-CMOS1">
+  <Configuration InterruptMaskPortAddress="0113" WriteDelay="10us" ContentFilePath="./cmos.bin" AddressPortAddress="0111" StatePortAddress="0110" ReadDelay="1us" DataPortAddress="0112" ClockFrequency="1MHZ"/>
  </Component>
- <Component Type="HADES-OS" Name="HADES OS">
+ <Component Name="HADES OS" Type="HADES-OS">
   <Configuration/>
  </Component>
 </VirtualAppliance>

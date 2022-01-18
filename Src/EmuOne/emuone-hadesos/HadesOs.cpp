@@ -25,9 +25,9 @@ HadesOs::Type * HadesOs::type() const
     return HadesOs::Type::instance();
 }
 
-core::ComponentEditor * HadesOs::createEditor(QWidget * /*parent*/)
+core::ComponentEditor * HadesOs::createEditor(QWidget * parent)
 {
-    return nullptr;
+    return new HadesOsEditor(this, parent);
 }
 
 QString HadesOs::shortStatus() const

@@ -36,6 +36,36 @@ namespace hadesos
             virtual HadesOs *   createComponent() override;
         };
 
+        //  A "shared host folder" that appears as a "volume" in HADES
+        class EMUONE_HADESOS_EXPORT SharedHostFolder
+        {
+            //////////
+            //  Construction/destruction/assignment
+        public:
+            SharedHostFolder() : _volumeName(), _hostPath() {}  //  "invalid" one
+            SharedHostFolder(const QString & volumeName, const QString & hostPath)
+                :   _volumeName(volumeName), _hostPath(hostPath) {}
+
+            //////////
+            //  Operations
+        public:
+            //  Checks if this "shared host folder" is valid, i.e. its "volume name"
+            //  and "host path" are both non-empty
+            bool                isValid() const { return _volumeName.trimmed().length() > 0 && _hostPath.trimmed().length() > 0; }
+
+            QString             volumeName() const { return _volumeName; }
+            QString             hostPath() const { return _hostPath; }
+
+            QString             toString() const { return _volumeName + " => " + _hostPath; }
+
+            //////////
+            //  Implementation
+        private:
+            QString             _volumeName;//  Vilume name for HADES
+            QString             _hostPath;  //  full path in the host OS file system
+        };
+        using SharedHostFolderList = QList<SharedHostFolder>;
+
         //////////
         //  Construction/destruction
     public:
@@ -68,12 +98,20 @@ namespace hadesos
         virtual void        deserialiseConfiguration(QDomElement & configurationElement) override;
 
         //////////
+        //  Operations (configuration)
+    public:
+        SharedHostFolderList    sharedHostFolders() const { return _sharedHostFolders; }
+
+        //////////
         //  Implementation
     private:
         State                   _state = State::Constructed;
         mutable QRecursiveMutex _stateGuard = {};
 
         //ScpEditorList           _editors = {};  //  ...that have been created so far
+
+        //  Configuration
+        SharedHostFolderList    _sharedHostFolders = {};
     };
 }
 

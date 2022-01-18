@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>hadesos::HadesOsEditor</class>
+ <widget class="QWidget" name="hadesos::HadesOsEditor">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>266</width>
+    <height>295</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QFormLayout" name="formLayout">
+   <property name="horizontalSpacing">
+    <number>4</number>
+   </property>
+   <property name="verticalSpacing">
+    <number>4</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item row="0" column="0" colspan="2">
+    <widget class="QGroupBox" name="_sharedHostFoldersGroupBox">
+     <property name="title">
+      <string>Shared host folders</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <property name="leftMargin">
+       <number>2</number>
+      </property>
+      <property name="topMargin">
+       <number>2</number>
+      </property>
+      <property name="rightMargin">
+       <number>2</number>
+      </property>
+      <property name="bottomMargin">
+       <number>2</number>
+      </property>
+      <property name="spacing">
+       <number>4</number>
+      </property>
+      <item row="0" column="0" colspan="3">
+       <widget class="QListWidget" name="_sharedHostFoldersListWidget">
+        <property name="batchSize">
+         <number>64</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QPushButton" name="_addSharedHostFolderPushButton">
+        <property name="text">
+         <string>Add</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../emuone-scp360/scp360.qrc">
+          <normaloff>:/emuone/scp360/Images/Actions/Add.png</normaloff>:/emuone/scp360/Images/Actions/Add.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="_modifySharedHostFolderPushButton">
+        <property name="text">
+         <string>Modify</string>
+        </property>
+        <property name="icon">
+         <iconset resource="hadesos.qrc">
+          <normaloff>:/emuone/hadesos/Images/Actions/Modify.png</normaloff>:/emuone/hadesos/Images/Actions/Modify.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="_removeSharedHostFolderPushButton">
+        <property name="text">
+         <string>Remove</string>
+        </property>
+        <property name="icon">
+         <iconset resource="hadesos.qrc">
+          <normaloff>:/emuone/hadesos/Images/Actions/Remove.png</normaloff>:/emuone/hadesos/Images/Actions/Remove.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>259</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="hadesos.qrc"/>
+  <include location="../emuone-scp360/scp360.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>_addSharedHostFolderPushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>hadesos::HadesOsEditor</receiver>
+   <slot>_addSharedHostFolderPushButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>46</x>
+     <y>230</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>132</x>
+     <y>147</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_modifySharedHostFolderPushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>hadesos::HadesOsEditor</receiver>
+   <slot>_modifySharedHostFolderPushButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>132</x>
+     <y>230</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>132</x>
+     <y>147</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_removeSharedHostFolderPushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>hadesos::HadesOsEditor</receiver>
+   <slot>_removeSharedHostFolderPushButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>219</x>
+     <y>230</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>132</x>
+     <y>147</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>_sharedHostFoldersListWidget</sender>
+   <signal>currentRowChanged(int)</signal>
+   <receiver>hadesos::HadesOsEditor</receiver>
+   <slot>_sharedHostFoldersListWidgetCurrentRowChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>132</x>
+     <y>118</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>132</x>
+     <y>147</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>_addSharedHostFolderPushButtonClicked()</slot>
+  <slot>_modifySharedHostFolderPushButtonClicked()</slot>
+  <slot>_removeSharedHostFolderPushButtonClicked()</slot>
+  <slot>_sharedHostFoldersListWidgetCurrentRowChanged(int)</slot>
+ </slots>
+</ui>

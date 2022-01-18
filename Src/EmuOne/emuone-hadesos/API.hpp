@@ -21,6 +21,9 @@
 
 //#include "emuone-hadesos/Classes.hpp"
 
+#include "emuone-hadesos/Validation.hpp"
 #include "emuone-hadesos/HadesOs.hpp"
+#include "emuone-hadesos/HadesOsEditor.hpp"
+#include "emuone-hadesos/AddSharedHostFolderDialog.hpp"
 
 //  End of emuone-hadesos/API.hpp
