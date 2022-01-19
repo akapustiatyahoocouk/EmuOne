@@ -8,6 +8,7 @@ SOURCES += \
     HadesOs.Type.cpp \
     HadesOs.cpp \
     HadesOsEditor.cpp \
+    ModifySharedHostFolderDialog.cpp \
     Plugin.cpp \
     Validation.cpp
 
@@ -16,6 +17,7 @@ HEADERS += \
     AddSharedHostFolderDialog.hpp \
     HadesOs.hpp \
     HadesOsEditor.hpp \
+    ModifySharedHostFolderDialog.hpp \
     Validation.hpp
 
 LIBS += -L../../../Bin/Debug -lemuone-core -lemuone-util
@@ -25,4 +27,5 @@ RESOURCES += \
 
 FORMS += \
     AddSharedHostFolderDialog.ui \
-    HadesOsEditor.ui
+    HadesOsEditor.ui \
+    ModifySharedHostFolderDialog.ui

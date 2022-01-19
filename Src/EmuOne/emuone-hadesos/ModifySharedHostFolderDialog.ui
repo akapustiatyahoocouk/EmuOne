@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>hadesos::AddSharedHostFolderDialog</class>
- <widget class="QDialog" name="hadesos::AddSharedHostFolderDialog">
+ <class>hadesos::ModifySharedHostFolderDialog</class>
+ <widget class="QDialog" name="hadesos::ModifySharedHostFolderDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Add shared host folder</string>
+   <string>Modify shared host folder</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="leftMargin">
@@ -29,13 +29,6 @@
    <property name="spacing">
     <number>4</number>
    </property>
-   <item row="1" column="0">
-    <widget class="QLabel" name="_hostPathLabel">
-     <property name="text">
-      <string>Host path:</string>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="_volumeNameLabel">
      <property name="text">
@@ -46,18 +39,15 @@
    <item row="0" column="1">
     <widget class="QLineEdit" name="_volumeNameLineEdit"/>
    </item>
-   <item row="1" column="1">
-    <widget class="QLineEdit" name="_hostPathLineEdit"/>
-   </item>
-   <item row="3" column="0" colspan="3">
-    <widget class="QDialogButtonBox" name="_buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   <item row="1" column="0">
+    <widget class="QLabel" name="_hostPathLabel">
+     <property name="text">
+      <string>Host path:</string>
      </property>
     </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLineEdit" name="_hostPathLineEdit"/>
    </item>
    <item row="1" column="2">
     <widget class="QPushButton" name="_browsePushButton">
@@ -85,6 +75,16 @@
      </property>
     </spacer>
    </item>
+   <item row="3" column="0" colspan="3">
+    <widget class="QDialogButtonBox" name="_buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>
@@ -92,7 +92,7 @@
   <connection>
    <sender>_buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>hadesos::AddSharedHostFolderDialog</receiver>
+   <receiver>hadesos::ModifySharedHostFolderDialog</receiver>
    <slot>_accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -108,7 +108,7 @@
   <connection>
    <sender>_buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>hadesos::AddSharedHostFolderDialog</receiver>
+   <receiver>hadesos::ModifySharedHostFolderDialog</receiver>
    <slot>_reject()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -124,57 +124,57 @@
   <connection>
    <sender>_volumeNameLineEdit</sender>
    <signal>textChanged(QString)</signal>
-   <receiver>hadesos::AddSharedHostFolderDialog</receiver>
+   <receiver>hadesos::ModifySharedHostFolderDialog</receiver>
    <slot>_volumeNameLineEditTextChanged(QString)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>291</x>
-     <y>20</y>
+     <y>19</y>
     </hint>
     <hint type="destinationlabel">
      <x>287</x>
-     <y>56</y>
+     <y>52</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>_hostPathLineEdit</sender>
    <signal>textChanged(QString)</signal>
-   <receiver>hadesos::AddSharedHostFolderDialog</receiver>
+   <receiver>hadesos::ModifySharedHostFolderDialog</receiver>
    <slot>_hostPathLineEditTextChanged(QString)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>291</x>
-     <y>49</y>
+     <y>46</y>
     </hint>
     <hint type="destinationlabel">
      <x>287</x>
-     <y>56</y>
+     <y>52</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>_browsePushButton</sender>
    <signal>clicked()</signal>
-   <receiver>hadesos::AddSharedHostFolderDialog</receiver>
+   <receiver>hadesos::ModifySharedHostFolderDialog</receiver>
    <slot>_browsePushButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>526</x>
-     <y>49</y>
+     <x>527</x>
+     <y>46</y>
     </hint>
     <hint type="destinationlabel">
      <x>287</x>
-     <y>56</y>
+     <y>52</y>
     </hint>
    </hints>
   </connection>
  </connections>
  <slots>
+  <slot>_accept()</slot>
+  <slot>_reject()</slot>
   <slot>_volumeNameLineEditTextChanged(QString)</slot>
   <slot>_hostPathLineEditTextChanged(QString)</slot>
   <slot>_browsePushButtonClicked()</slot>
-  <slot>_accept()</slot>
-  <slot>_reject()</slot>
  </slots>
 </ui>

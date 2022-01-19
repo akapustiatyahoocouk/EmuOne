@@ -25,5 +25,6 @@
 #include "emuone-hadesos/HadesOs.hpp"
 #include "emuone-hadesos/HadesOsEditor.hpp"
 #include "emuone-hadesos/AddSharedHostFolderDialog.hpp"
+#include "emuone-hadesos/ModifySharedHostFolderDialog.hpp"
 
 //  End of emuone-hadesos/API.hpp

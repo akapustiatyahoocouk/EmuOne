@@ -128,12 +128,72 @@ void HadesOs::disconnect() noexcept
 
 //////////
 //  Component (serialisation)
-void HadesOs::serialiseConfiguration(QDomElement & /*configurationElement*/) const
+void HadesOs::serialiseConfiguration(QDomElement & configurationElement) const
 {
+    QString sharedHostFoldersString;
+    for (SharedHostFolder sharedHostFolder : _sharedHostFolders)
+    {
+        if (!sharedHostFoldersString.isEmpty())
+        {
+            sharedHostFoldersString += "\n";
+        }
+        sharedHostFoldersString += sharedHostFolder.volumeName();
+        sharedHostFoldersString += "=>";
+        sharedHostFoldersString += sharedHostFolder.hostPath();
+    }
+    configurationElement.setAttribute("SharedHostFolders", sharedHostFoldersString);
 }
 
-void HadesOs::deserialiseConfiguration(QDomElement & /*configurationElement*/)
+void HadesOs::deserialiseConfiguration(QDomElement & configurationElement)
 {
+    QStringList sharedHostFolderChunks = configurationElement.attribute("SharedHostFolders").split("\n");
+    for (const QString & sharedHostFolderChunk : sharedHostFolderChunks)
+    {
+        qsizetype separatorIndex = sharedHostFolderChunk.indexOf("=>");
+        if (separatorIndex != -1)
+        {
+            QString volumeName = sharedHostFolderChunk.left(separatorIndex);
+            QString hostPath = sharedHostFolderChunk.mid(separatorIndex + 2);
+            addSharedHostFolder(volumeName, hostPath);
+        }
+    }
+}
+
+//////////
+//  Operations (configuration)
+HadesOs::SharedHostFolder HadesOs::addSharedHostFolder(const QString & volumeName, const QString & hostPath)
+{
+    Q_ASSERT(Validation::isValidVolumeName(volumeName));    //  TODO "hostPath" too
+
+    //  Already exists ?
+    for (SharedHostFolder sharedHostFolder : _sharedHostFolders)
+    {
+        if (sharedHostFolder.volumeName() == volumeName)
+        {   //  Remove the old mapping
+            _sharedHostFolders.removeAll(sharedHostFolder);
+            break;
+        }
+    }
+    //  Add a new mapping
+    SharedHostFolder sharedHostFolder(volumeName, hostPath);
+    _sharedHostFolders.append(sharedHostFolder);
+    return sharedHostFolder;
+}
+
+void HadesOs::removeSharedHostFolder(const SharedHostFolder & sharedHostFolder)
+{
+    _sharedHostFolders.removeAll(sharedHostFolder);
+}
+
+void HadesOs::removeSharedHostFolder(const QString & volumeName)
+{
+    for (qsizetype i = _sharedHostFolders.size() - 1; i > 0; i--)
+    {
+        if (_sharedHostFolders[i].volumeName() == volumeName)
+        {
+            _sharedHostFolders.removeAt(i);
+        }
+    }
 }
 
 //  End of emuone-hadesos/HadesOs.cpp

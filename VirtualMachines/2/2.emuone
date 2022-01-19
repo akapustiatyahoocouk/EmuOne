@@ -1,23 +1,23 @@
-<VirtualAppliance Name="2" Architecture="CereonWorkstation" Template="CereonWorkstationMini" Type="VirtualMachine">
- <Component Name="RAM" Type="Cereon-RamUnit">
+<VirtualAppliance Architecture="CereonWorkstation" Template="CereonWorkstationMini" Type="VirtualMachine" Name="2">
+ <Component Type="Cereon-RamUnit" Name="RAM">
   <Configuration Size="64MB" StartAddress="0000000000000000"/>
  </Component>
- <Component Name="ROM" Type="Cereon-RomUnit">
-  <Configuration Size="1MB" ContentFileName="./rom.bin" StartAddress="FFFFFFFFFFF00000"/>
+ <Component Type="Cereon-RomUnit" Name="ROM">
+  <Configuration Size="1MB" StartAddress="FFFFFFFFFFF00000" ContentFileName="./rom.bin"/>
  </Component>
- <Component Name="Processor" Type="Cereon-1P1B">
-  <Configuration ByteOrder="BigEndian" ProcessorId="0" Primary="y" ClockFrequency="20MHZ" BootstrapIp="FFFFFFFFFFF00000"/>
+ <Component Type="Cereon-1P1B" Name="Processor">
+  <Configuration BootstrapIp="FFFFFFFFFFF00000" ClockFrequency="20MHZ" ProcessorId="0" Primary="y" ByteOrder="BigEndian"/>
  </Component>
- <Component Name="Memory bus" Type="Cereon-MemoryBus">
+ <Component Type="Cereon-MemoryBus" Name="Memory bus">
   <Configuration/>
  </Component>
- <Component Name="I/O bus" Type="Cereon-IoBus">
+ <Component Type="Cereon-IoBus" Name="I/O bus">
   <Configuration/>
  </Component>
- <Component Name="CMOS" Type="Cereon-CMOS1">
-  <Configuration InterruptMaskPortAddress="0113" WriteDelay="10us" ContentFilePath="./cmos.bin" AddressPortAddress="0111" StatePortAddress="0110" ReadDelay="1us" DataPortAddress="0112" ClockFrequency="1MHZ"/>
+ <Component Type="Cereon-CMOS1" Name="CMOS">
+  <Configuration WriteDelay="10us" AddressPortAddress="0111" InterruptMaskPortAddress="0113" StatePortAddress="0110" ClockFrequency="1MHZ" ContentFilePath="./cmos.bin" DataPortAddress="0112" ReadDelay="1us"/>
  </Component>
- <Component Name="HADES OS" Type="HADES-OS">
-  <Configuration/>
+ <Component Type="HADES-OS" Name="HADES OS">
+  <Configuration SharedHostFolders="SYSTEM=>./SYSTEM&#xa;USER=>./USER"/>
  </Component>
 </VirtualAppliance>

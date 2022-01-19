@@ -50,7 +50,7 @@ void HadesOsEditor::_refreshSharedHostFoldersList()
     //  Make sure the "shared host folders" list has a proper number of items...
     while (_ui->_sharedHostFoldersListWidget->count() > sharedHostFolders.size())
     {   //  OOPS! Too many items in the UI list
-        delete _ui->_sharedHostFoldersListWidget->takeItem(_ui->_sharedHostFoldersListWidget->count());
+        delete _ui->_sharedHostFoldersListWidget->takeItem(_ui->_sharedHostFoldersListWidget->count() - 1);
     }
     while (_ui->_sharedHostFoldersListWidget->count() < sharedHostFolders.size())
     {   //  OOPS! Too few items in the UI list
@@ -91,20 +91,82 @@ HadesOs::SharedHostFolder HadesOsEditor::_selectedSharedHostFolder()
     return HadesOs::SharedHostFolder();
 }
 
+void HadesOsEditor::_setSelectedSharedHostFolder(const HadesOs::SharedHostFolder & sharedHostFolder)
+{
+    for (int i = 0; i < _ui->_sharedHostFoldersListWidget->count(); i++)
+    {
+        if (_ui->_sharedHostFoldersListWidget->item(i)->text() == sharedHostFolder.toString())
+        {   //  This one!
+            _ui->_sharedHostFoldersListWidget->setCurrentRow(i);
+            break;
+        }
+    }
+}
+
 void HadesOsEditor::_addSharedHostFolder()
 {
     AddSharedHostFolderDialog dlg(this->topLevelWidget());
     if (dlg.exec() == QDialog::DialogCode::Accepted)
     {   //  Add
+        QString volumeName = dlg.sharedHostFolderVolumeName();
+        QString hostPath = dlg.sharedHostFolderHostPath();
+        if (_hadesOs->virtualAppliance() != nullptr)
+        {
+            hostPath = _hadesOs->virtualAppliance()->toRelativePath(hostPath);
+        }
+        HadesOs::SharedHostFolder sharedHostFolder = _hadesOs->addSharedHostFolder(volumeName, hostPath);
+        _refreshSharedHostFoldersList();
+        _setSelectedSharedHostFolder(sharedHostFolder);
     }
 }
 
 void HadesOsEditor::_modifySharedHostFolder()
 {
+    HadesOs::SharedHostFolder sharedHostFolder = _selectedSharedHostFolder();
+    if (sharedHostFolder.isValid())
+    {
+        QString oldVolumeName = sharedHostFolder.volumeName();
+        QString oldHostPath = sharedHostFolder.hostPath();
+        if (_hadesOs->virtualAppliance() != nullptr)
+        {
+            sharedHostFolder = HadesOs::SharedHostFolder(oldVolumeName, _hadesOs->virtualAppliance()->toAbsolutePath(sharedHostFolder.hostPath()));
+            if (sharedHostFolder.hostPath().isEmpty())
+            {
+                sharedHostFolder = HadesOs::SharedHostFolder(oldVolumeName, oldHostPath);
+            }
+        }
+        ModifySharedHostFolderDialog dlg(sharedHostFolder, this->topLevelWidget());
+        if (dlg.exec() == QDialog::DialogCode::Accepted)
+        {   //  Modify
+            QString newVolumeName = dlg.sharedHostFolderVolumeName();
+            QString newHostPath = dlg.sharedHostFolderHostPath();
+            if (_hadesOs->virtualAppliance() != nullptr)
+            {
+                newHostPath = _hadesOs->virtualAppliance()->toRelativePath(newHostPath);
+            }
+            _hadesOs->removeSharedHostFolder(oldVolumeName);
+            sharedHostFolder = _hadesOs->addSharedHostFolder(newVolumeName, newHostPath);
+            _refreshSharedHostFoldersList();
+            _setSelectedSharedHostFolder(sharedHostFolder);
+            _refreshActionButtons();
+        }
+    }
 }
 
 void HadesOsEditor::_removeSharedHostFolder()
 {
+    HadesOs::SharedHostFolder sharedHostFolder = _selectedSharedHostFolder();
+    if (sharedHostFolder.isValid())
+    {
+        if (QMessageBox::question(this->topLevelWidget(),
+                                  "Remove shared folder",
+                                  "Really remove the shared host folder " + sharedHostFolder.toString() + "?") == QMessageBox::StandardButton::Yes)
+        {   //  Do it!
+            _hadesOs->removeSharedHostFolder(sharedHostFolder);
+            _refreshSharedHostFoldersList();
+            _refreshActionButtons();
+        }
+    }
 }
 
 //////////
@@ -126,6 +188,7 @@ void HadesOsEditor::_removeSharedHostFolderPushButtonClicked()
 
 void HadesOsEditor::_sharedHostFoldersListWidgetCurrentRowChanged(int)
 {
+    _refreshActionButtons();
 }
 
 //  End of emuone-hadesos/HadesOsEditor.cpp

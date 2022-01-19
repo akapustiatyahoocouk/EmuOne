@@ -43,6 +43,7 @@ namespace hadesos
         void                    _refreshActionButtons();
 
         HadesOs::SharedHostFolder   _selectedSharedHostFolder();    //  "invalid" if none
+        void                    _setSelectedSharedHostFolder(const HadesOs::SharedHostFolder & sharedHostFolder);
 
         void                    _addSharedHostFolder();
         void                    _modifySharedHostFolder();
@@ -58,5 +59,5 @@ namespace hadesos
     };
 }
 
-//  End of emuone-hadedos/HadesOsEditor.hpp
+//  End of emuone-hadesos/HadesOsEditor.hpp
 

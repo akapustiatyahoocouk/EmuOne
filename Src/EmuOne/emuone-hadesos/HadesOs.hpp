@@ -47,6 +47,12 @@ namespace hadesos
                 :   _volumeName(volumeName), _hostPath(hostPath) {}
 
             //////////
+            //  Operators
+        public:
+            bool                operator == (const SharedHostFolder & op2) const { return _volumeName == op2._volumeName && _hostPath == op2._hostPath; }
+            bool                operator != (const SharedHostFolder & op2) const { return _volumeName != op2._volumeName || _hostPath != op2._hostPath; }
+
+            //////////
             //  Operations
         public:
             //  Checks if this "shared host folder" is valid, i.e. its "volume name"
@@ -100,7 +106,15 @@ namespace hadesos
         //////////
         //  Operations (configuration)
     public:
+        //  The unordered list of all configured "shared host folders"
         SharedHostFolderList    sharedHostFolders() const { return _sharedHostFolders; }
+
+        //  Adda a "shared host folder" this component's configuration. If another
+        //  "shared host folder" with the same "volumeName" is already configured, it is replaced.
+        SharedHostFolder        addSharedHostFolder(const QString & volumeName, const QString & hostPath);
+
+        void                    removeSharedHostFolder(const SharedHostFolder & sharedHostFolder);
+        void                    removeSharedHostFolder(const QString & volumeName);
 
         //////////
         //  Implementation
