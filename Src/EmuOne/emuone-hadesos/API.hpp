@@ -19,12 +19,15 @@
     #define EMUONE_HADESOS_EXPORT   Q_DECL_IMPORT
 #endif
 
-//#include "emuone-hadesos/Classes.hpp"
+#include "emuone-hadesos/Classes.hpp"
 
 #include "emuone-hadesos/Validation.hpp"
 #include "emuone-hadesos/HadesOs.hpp"
 #include "emuone-hadesos/HadesOsEditor.hpp"
 #include "emuone-hadesos/AddSharedHostFolderDialog.hpp"
 #include "emuone-hadesos/ModifySharedHostFolderDialog.hpp"
+
+#include "emuone-hadesos/Atom.hpp"
+#include "emuone-hadesos/Kernel.hpp"
 
 //  End of emuone-hadesos/API.hpp

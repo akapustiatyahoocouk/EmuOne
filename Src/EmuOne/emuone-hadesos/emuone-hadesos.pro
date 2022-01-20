@@ -15,8 +15,11 @@ SOURCES += \
 HEADERS += \
     API.hpp \
     AddSharedHostFolderDialog.hpp \
+    Atom.hpp \
+    Classes.hpp \
     HadesOs.hpp \
     HadesOsEditor.hpp \
+    Kernel.hpp \
     ModifySharedHostFolderDialog.hpp \
     Validation.hpp
 
