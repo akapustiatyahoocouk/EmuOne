@@ -8,6 +8,9 @@ SOURCES += \
     HadesOs.Type.cpp \
     HadesOs.cpp \
     HadesOsEditor.cpp \
+    Kernel/Identity.cpp \
+    Kernel/Kernel.cpp \
+    Kernel/SystemIdentity.cpp \
     ModifySharedHostFolderDialog.cpp \
     Plugin.cpp \
     Validation.cpp
@@ -15,11 +18,14 @@ SOURCES += \
 HEADERS += \
     API.hpp \
     AddSharedHostFolderDialog.hpp \
-    Atom.hpp \
     Classes.hpp \
     HadesOs.hpp \
     HadesOsEditor.hpp \
-    Kernel.hpp \
+    Kernel/Atom.hpp \
+    Kernel/Identity.hpp \
+    Kernel/Kernel.hpp \
+    Kernel/Object.hpp \
+    Kernel/Process.hpp \
     ModifySharedHostFolderDialog.hpp \
     Validation.hpp
 

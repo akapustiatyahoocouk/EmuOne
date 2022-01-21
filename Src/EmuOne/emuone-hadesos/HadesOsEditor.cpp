@@ -25,6 +25,7 @@ HadesOsEditor::HadesOsEditor(HadesOs * hadesOs, QWidget * parent)
 
 HadesOsEditor::~HadesOsEditor()
 {
+    _hadesOs->_editors.removeOne(this);
     delete _ui;
 }
 

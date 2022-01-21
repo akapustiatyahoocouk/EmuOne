@@ -1,5 +1,5 @@
 //
-//  emuone-hadesos/Atom.hpp
+//  emuone-hadesos/Kernel/Atom.hpp
 //
 //  The HADES OS "component"atom" ADT
 //
@@ -12,34 +12,25 @@ namespace hadesos
     {
         //////////
         //  A HADES OS "Atom" is a system-wide mapping of a fixed-size "ID" to a String
-        class EMUONE_HADESOS_EXPORT Atom final
+        class EMUONE_HADESOS_EXPORT Atom final : public Object
         {
             CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Atom)
 
             //////////
-            //  Types
-        public:
-            using Id = uint32_t;    //  A system-wide unique atom ID
-
-            //////////
             //  Construction/destruction
         public:
-            Atom();
-            ~Atom();
+            Atom(Kernel * kernel, ObjectId id, const QString & string);
+            virtual ~Atom();
 
             //////////
             //  Operations
         public:
-            //  Returns the ID of this atom
-            Id                  id() const { return _id; }
-
             //  Returns the string of this atom
             QString             string() const { return _string; }
 
             //////////
             //  Implementation
         private:
-            const Id            _id;
             const QString       _string;
 
             AtomLockList        _locks; //  all "AtomLock"s that refer to this Atom
@@ -48,6 +39,8 @@ namespace hadesos
         //////////
         //  An "atom lock" represents an interest of some process in some atom.
         //  The "lock count" says how many times that process has expressed such interest.
+        //  "Atom locks" are owned by their associated "Processes" and are destroyed when
+        //  the "Process" in question is destroyed.
         class EMUONE_HADESOS_EXPORT AtomLock final
         {
             CANNOT_ASSIGN_OR_COPY_CONSTRUCT(AtomLock)
@@ -68,4 +61,4 @@ namespace hadesos
     }
 }
 
-//  End of emuone-hadesos/Atom.hpp
+//  End of emuone-hadesos/Kernel/Atom.hpp

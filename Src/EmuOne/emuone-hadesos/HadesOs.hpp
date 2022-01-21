@@ -14,6 +14,8 @@ namespace hadesos
     {
         CANNOT_ASSIGN_OR_COPY_CONSTRUCT(HadesOs)
 
+        friend class HadesOsEditor;
+
         //////////
         //  Types
     public:
@@ -122,10 +124,13 @@ namespace hadesos
         State                   _state = State::Constructed;
         mutable QRecursiveMutex _stateGuard = {};
 
-        //ScpEditorList           _editors = {};  //  ...that have been created so far
+        HadesOsEditorList       _editors = {};  //  ...that have been created so far
 
         //  Configuration
         SharedHostFolderList    _sharedHostFolders = {};
+
+        //  Runtime state
+        kernel::Kernel *        _kernel = nullptr;
     };
 }
 

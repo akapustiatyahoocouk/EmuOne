@@ -16,6 +16,11 @@ HadesOs::HadesOs(const QString & name)
 
 HadesOs::~HadesOs()
 {
+    //  Destroy live Editors
+    for (HadesOsEditor * editor : _editors)
+    {
+        delete editor;
+    }
 }
 
 //////////
@@ -27,7 +32,9 @@ HadesOs::Type * HadesOs::type() const
 
 core::ComponentEditor * HadesOs::createEditor(QWidget * parent)
 {
-    return new HadesOsEditor(this, parent);
+    HadesOsEditor * editor = new HadesOsEditor(this, parent);;
+    _editors.append(editor);
+    return editor;
 }
 
 QString HadesOs::shortStatus() const
@@ -70,6 +77,9 @@ void HadesOs::initialise()
         return;
     }
 
+    //  Set up runtime state
+    _kernel = new kernel::Kernel();
+
     //  Done
     _state = State::Initialised;
 }
@@ -108,6 +118,10 @@ void HadesOs::deinitialise() noexcept
     {   //  OOPS! Can't make this state transiton!
         return;
     }
+
+    //  Clean up runtime state
+    delete _kernel;
+    _kernel = nullptr;
 
     //  Done
     _state = State::Connected;

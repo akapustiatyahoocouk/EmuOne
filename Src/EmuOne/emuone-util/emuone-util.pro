@@ -10,6 +10,7 @@ SOURCES += \
     Iso88591CharacterSet.cpp \
     Memory.cpp \
     MessageDigest.cpp \
+    Mutex.cpp \
     Plugin.cpp \
     PluginManager.cpp \
     Sha1MessageDigest.cpp \
@@ -29,6 +30,7 @@ HEADERS += \
     MessageDigest.hpp \
     PluginManager.hpp \
     StockObject.hpp \
+    Sync.hpp \
     TimeSpan.hpp \
     TimeStamp.hpp \
     ToString.hpp
