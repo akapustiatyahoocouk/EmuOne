@@ -32,6 +32,8 @@
 #include "emuone-hadesos/Kernel/Atom.hpp"
 #include "emuone-hadesos/Kernel/Process.hpp"
 
+#include "emuone-hadesos/Kernel/MemoryManager.hpp"
+
 #include "emuone-hadesos/Kernel/Kernel.hpp"
 
 //  End of emuone-hadesos/API.hpp

@@ -9,8 +9,9 @@ using namespace hadesos::kernel;
 
 //////////
 //  Construction/destruction
-Identity::Identity(Kernel * kernel, ObjectId id, const QString & name, bool active)
-    :   Object(kernel, id),
+Identity::Identity(Kernel * kernel, ObjectId id, Identity * owner,
+                   const QString & name, bool active)
+    :   Object(kernel, id, owner),
         _name(name),
         _active(active)
 {

@@ -10,7 +10,7 @@ using namespace hadesos::kernel;
 //////////
 //  Construction/destruction
 SystemIdentity::SystemIdentity(Kernel * kernel, ObjectId id)
-    :   Identity(kernel, id, "SYSTEM", true)
+    :   Identity(kernel, id, this, "SYSTEM", true)
 {
 }
 

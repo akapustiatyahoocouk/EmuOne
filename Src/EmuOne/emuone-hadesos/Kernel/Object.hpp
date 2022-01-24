@@ -24,7 +24,7 @@ namespace hadesos
             //////////
             //  Construction/destruction
         public:
-            Object(Kernel * kernel, ObjectId id);
+            Object(Kernel * kernel, ObjectId id, Identity * owner);
             virtual ~Object();
 
             //////////
@@ -38,6 +38,8 @@ namespace hadesos
         private:
             Kernel *const       _kernel;    //  ...managing this object
             const ObjectId      _id;
+
+            Identity *          _owner;
         };
     }
 }

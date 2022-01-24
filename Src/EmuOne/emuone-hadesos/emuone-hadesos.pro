@@ -10,6 +10,7 @@ SOURCES += \
     HadesOsEditor.cpp \
     Kernel/Identity.cpp \
     Kernel/Kernel.cpp \
+    Kernel/Object.cpp \
     Kernel/SystemIdentity.cpp \
     ModifySharedHostFolderDialog.cpp \
     Plugin.cpp \
@@ -24,6 +25,7 @@ HEADERS += \
     Kernel/Atom.hpp \
     Kernel/Identity.hpp \
     Kernel/Kernel.hpp \
+    Kernel/MemoryManager.hpp \
     Kernel/Object.hpp \
     Kernel/Process.hpp \
     ModifySharedHostFolderDialog.hpp \

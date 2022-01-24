@@ -11,6 +11,8 @@ using namespace hadesos::kernel;
 //  Construction/destruction
 Kernel::Kernel()
 {
+    util::Lock lock(_stateGuard);
+
     _createSystemIdentity();
 }
 

@@ -19,7 +19,8 @@ namespace hadesos
             //////////
             //  Construction/destruction
         public:
-            Identity(Kernel * kernel, ObjectId id, const QString & name, bool active);
+            Identity(Kernel * kernel, ObjectId id, Identity * owner,
+                     const QString & name, bool active);
             virtual ~Identity();
 
             //////////
