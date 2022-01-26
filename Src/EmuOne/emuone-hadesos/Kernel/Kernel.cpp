@@ -9,8 +9,11 @@ using namespace hadesos::kernel;
 
 //////////
 //  Construction/destruction
-Kernel::Kernel()
+Kernel::Kernel(IMemoryManager * memoryManager)
+    :   _memoryManager(memoryManager)
 {
+    Q_ASSERT(_memoryManager != nullptr);
+
     util::Lock lock(_stateGuard);
 
     _createSystemIdentity();

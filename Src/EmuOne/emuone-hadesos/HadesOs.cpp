@@ -78,7 +78,19 @@ void HadesOs::initialise()
     }
 
     //  Set up runtime state
-    _kernel = new kernel::Kernel();
+    QList<kernel::IMemoryManager*> memoryManagers =
+            this->virtualAppliance()->findComponentsByRole<hadesos::kernel::IMemoryManager>();
+    if (memoryManagers.size() == 0)
+    {
+        throw core::VirtualApplianceException("No HADES-compatible memory manager is defined");
+    }
+    else if (memoryManagers.size() > 1)
+    {
+        throw core::VirtualApplianceException("Multiple HADES-compatible memory managers are defined");
+    }
+    kernel::IMemoryManager * memoryManager = memoryManagers[0];
+
+    _kernel = new kernel::Kernel(memoryManager);
 
     //  Done
     _state = State::Initialised;

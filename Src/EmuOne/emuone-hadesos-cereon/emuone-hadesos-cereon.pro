@@ -10,7 +10,8 @@ SOURCES += \
 
 HEADERS += \
     API.hpp \
-    Adaptor.hpp
+    Adaptor.hpp \
+    MemoryManager.hpp
 
 LIBS += -L../../../Bin/Debug -lemuone-hadesos -lemuone-cereon -lemuone-core -lemuone-util
 

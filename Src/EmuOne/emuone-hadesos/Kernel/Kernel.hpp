@@ -29,7 +29,7 @@ namespace hadesos
             //////////
             //  Construction/destruction
         public:
-            Kernel();
+            Kernel(IMemoryManager * memoryManager);
             ~Kernel();
 
             //////////
@@ -46,6 +46,9 @@ namespace hadesos
             //////////
             //  Object tables
         private:
+            //  Mandatory kernel subsystems
+            IMemoryManager *        _memoryManager;
+
             //  The primary object table
             QMap<ObjectId, Object*> _objects = {};              //  all kernel objects that are currently live
             QQueue<ObjectId>        _recycledObjectIds = {};    //  IDs of destroyed kernel objects, ready for quick recycling

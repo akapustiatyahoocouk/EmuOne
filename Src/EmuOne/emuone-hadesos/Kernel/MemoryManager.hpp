@@ -12,13 +12,15 @@ namespace hadesos
     {
         //////////
         //  A generic "identity" that identifies a client
-        class EMUONE_HADESOS_EXPORT MemoryManager
+        class EMUONE_HADESOS_EXPORT IMemoryManager
         {
-            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(MemoryManager)
+            CANNOT_ASSIGN_OR_COPY_CONSTRUCT(IMemoryManager)
 
             //////////
-            //  Construction/destruction
+            //  This is an interface
         public:
+            IMemoryManager() {}
+            virtual ~IMemoryManager() {}
         };
     }
 }

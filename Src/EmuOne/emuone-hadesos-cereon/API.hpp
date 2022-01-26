@@ -23,6 +23,7 @@
 
 //#include "emuone-hadesos-cereon/Classes.hpp"
 
+#include "emuone-hadesos-cereon/MemoryManager.hpp"
 #include "emuone-hadesos-cereon/Adaptor.hpp"
 
 //  End of emuone-hadesos-cereon/API.hpp

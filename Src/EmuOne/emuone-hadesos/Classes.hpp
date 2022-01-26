@@ -20,6 +20,10 @@ namespace hadesos
         class EMUONE_HADESOS_EXPORT Atom;
         class EMUONE_HADESOS_EXPORT AtomLock;
 
+        class EMUONE_HADESOS_EXPORT IMemoryManager; //  to be implemented by HADES / architecture adaptor
+        class EMUONE_HADESOS_EXPORT IAddressSpace;  //  to be implemented by HADES / architecture adaptor
+        class EMUONE_HADESOS_EXPORT ISegment;       //  to be implemented by HADES / architecture adaptor
+
         class EMUONE_HADESOS_EXPORT Process;
 
         class EMUONE_HADESOS_EXPORT Kernel;

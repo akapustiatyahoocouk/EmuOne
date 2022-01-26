@@ -130,6 +130,7 @@ namespace hadesos
         SharedHostFolderList    _sharedHostFolders = {};
 
         //  Runtime state
+        kernel::IMemoryManager *_memoryManager = nullptr;
         kernel::Kernel *        _kernel = nullptr;
     };
 }
