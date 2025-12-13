@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/emuone-util">
+        <file>Resources/Images/Misc/ComponentLarge.png</file>
+        <file>Resources/Images/Misc/ComponentSmall.png</file>
+    </qresource>
+</RCC>
