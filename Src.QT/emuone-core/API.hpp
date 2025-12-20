@@ -25,12 +25,15 @@
 #include "emuone-core/Linkage.hpp"
 #include "emuone-core/Classes.hpp"
 #include "emuone-core/Dynaload.hpp"
+#include "emuone-core/Exceptions.hpp"
 
 #include "emuone-core/Architecture.hpp"
-#include "emuone-core/ApplianceType.hpp"
+#include "emuone-core/Stereotype.hpp"
 #include "emuone-core/Template.hpp"
 
 #include "emuone-core/ComponentCategory.hpp"
 #include "emuone-core/ComponentType.hpp"
+#include "emuone-core/Component.hpp"
+#include "emuone-core/VirtualMachine.hpp"
 
 //  End of emuone-core/API.hpp

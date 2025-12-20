@@ -19,9 +19,7 @@ using namespace emuone::util;
 
 //////////
 //  Singleton
-EMUONE_IMPLEMENT_SINGLETON(Component)
-Component::Component() {}
-Component::~Component() {}
+EMUONE_IMPLEMENT_COMPONENT(Component)
 
 //////////
 //  StockObject
@@ -47,14 +45,22 @@ auto Component::version() const -> QVersionNumber
     return fromString<QVersionNumber>(EMUONE_VERSION);
 }
 
-auto Component::settings() -> Settings &
+auto Component::settings() -> Settings *
 {
-    return *Settings::instance();   //  idempotent
+    return Settings::instance();
 }
 
-auto Component::settings() const -> const Settings &
+auto Component::settings() const -> const Settings *
 {
-    return *Settings::instance();   //  idempotent
+    return Settings::instance();
+}
+
+void Component:: iniialize()
+{
+}
+
+void Component::deiniialize()
+{
 }
 
 //////////

@@ -1,5 +1,5 @@
 //
-//  emuone-util/ArchitectureManager.cpp - emuone::util::ArchitectureManager class implementation
+//  emuone-core/ArchitectureManager.cpp - emuone::util::ArchitectureManager class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -67,8 +67,8 @@ bool ArchitectureManager::unregisterArchitecture(IArchitecture * architecture)
         if (architecture == registered)
         {   //  We're not trying to un-register an impersonator
             impl->registry.remove(key);
+            return true;
         }
-        return false;
     }
     return false;
 }
@@ -91,4 +91,4 @@ auto ArchitectureManager::_impl() -> _Impl *
     return &impl;
 }
 
-//  End of emuone-util/ArchitectureManager.cpp
+//  End of emuone-core/ArchitectureManager.cpp

@@ -45,63 +45,22 @@
 #include <QtCore/qglobal.h>
 
 #include <QApplication>
+#include <QCloseEvent>
 #include <QDateTime>
-#include <QException>
-#include <QRegularExpression>
-#include <QTimeZone>
-#include <QVersionNumber>
-/*  TODO kill off or use
-#include <QAction>
-#include <QBoxLayout>
-#include <QChart>
-#include <QChartView>
-#include <QClipboard>
-#include <QDebug>
-#include <QDesktopServices>
 #include <QDialog>
 #include <QDir>
-#include <QDomDocument>
-#include <QDomElement>
-#include <QFileDialog>
-#include <QGraphicsLayout>
-#include <QGridLayout>
-#include <QIcon>
-#include <QLabel>
+#include <QException>
 #include <QLibrary>
-#include <QListWidget>
 #include <QMainWindow>
-#include <QMenu>
-#include <QMenuBar>
-#include <QMessageBox>
-#include <QMessageLogger>
-#include <QMoveEvent>
-*/
 #include <QMutex>
 #include <QMutexLocker>
-/*  TODO ?
-#include <QPieLegendMarker>
-#include <QPieSeries>
-#include <QPixmap>
-#include <QProcess>
-#include <QPushButton>
-#include <QQueue>
-#include <QSemaphore>
-#include <QSharedPointer>
-#include <QStack>
-#include <QStackedLayout>
-#include <QStandardPaths>
-#include <QStatusBar>
+#include <QRegularExpression>
 #include <QStyleFactory>
-#include <QTemporaryFile>
-#include <QTextDocumentFragment>
-#include <QThread>
 #include <QTimer>
-#include <QTreeWidgetItem>
-#include <QUrl>
-#include <QUuid>
-#include <QVariant>
-#include <QWidget>
-*/
+#include <QTimeZone>
+#include <QVersionNumber>
+#include <QSemaphore>
+#include <QThread>
 
 #if defined(__GNUC__)
     #pragma GCC diagnostic pop
@@ -127,7 +86,7 @@
 #include "emuone-util/Macros.hpp"
 
 //  Platform API
-//  TODO ? #include "tt3-util/Sync.hpp"
+#include "emuone-util/Sync.hpp"
 //  TODO ? #include "tt3-util/Locale.hpp"
 
 //  Data types

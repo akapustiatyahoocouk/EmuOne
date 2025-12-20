@@ -1,0 +1,33 @@
+//
+//  emuone-core/Exceptions.cpp - VM exceptions
+//
+//  EmuOne
+//  Copyright (C) 2026, Andrey Kapustin
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//////////
+#include "emuone-core/API.hpp"
+using namespace emuone::core;
+
+//////////
+//  CustomVirtualMachineException
+CustomVirtualMachineException::CustomVirtualMachineException(
+        const QString & errorMessage
+    ) : _errorMessage(errorMessage)
+{
+}
+
+QString CustomVirtualMachineException::errorMessage() const
+{
+    return _errorMessage;
+}
+
+//  End of emuone-core/Exceptions.cpp

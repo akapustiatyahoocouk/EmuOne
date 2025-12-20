@@ -1,5 +1,5 @@
 //
-//  emuone-util/TemplateManager.cpp - emuone::util::TemplateManager class implementation
+//  emuone-core/TemplateManager.cpp - emuone::util::TemplateManager class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -67,8 +67,8 @@ bool TemplateManager::unregisterTemplate(ITemplate * vaTemplate)
         if (vaTemplate == registered)
         {   //  We're not trying to un-register an impersonator
             impl->registry.remove(key);
+            return true;
         }
-        return false;
     }
     return false;
 }
@@ -91,4 +91,4 @@ auto TemplateManager::_impl() -> _Impl *
     return &impl;
 }
 
-//  End of emuone-util/TemplateManager.cpp
+//  End of emuone-core/TemplateManager.cpp

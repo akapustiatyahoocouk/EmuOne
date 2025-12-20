@@ -1,0 +1,43 @@
+<RCC>
+    <qresource prefix="/emuone">
+        <file>Resources/Images/Misc/EmuOneHuge.png</file>
+        <file>Resources/Images/Misc/EmuOneLarge.png</file>
+        <file>Resources/Images/Misc/EmuOneSmall.png</file>
+        <file>Resources/Images/Actions/CancelLarge.png</file>
+        <file>Resources/Images/Actions/CancelSmall.png</file>
+        <file>Resources/Images/Actions/CloseLarge.png</file>
+        <file>Resources/Images/Actions/CloseSmall.png</file>
+        <file>Resources/Images/Actions/ConfigureLarge.png</file>
+        <file>Resources/Images/Actions/ConfigureSmall.png</file>
+        <file>Resources/Images/Actions/ExitLarge.png</file>
+        <file>Resources/Images/Actions/ExitSmall.png</file>
+        <file>Resources/Images/Actions/MakeFullScreenLarge.png</file>
+        <file>Resources/Images/Actions/MakeFullScreenSmall.png</file>
+        <file>Resources/Images/Actions/MakeWindowedLarge.png</file>
+        <file>Resources/Images/Actions/MakeWindowedSmall.png</file>
+        <file>Resources/Images/Actions/NewLarge.png</file>
+        <file>Resources/Images/Actions/NewSmall.png</file>
+        <file>Resources/Images/Actions/OkLarge.png</file>
+        <file>Resources/Images/Actions/OkSmall.png</file>
+        <file>Resources/Images/Actions/OpenLarge.png</file>
+        <file>Resources/Images/Actions/OpenSmall.png</file>
+        <file>Resources/Images/Actions/PreferencesLarge.png</file>
+        <file>Resources/Images/Actions/PreferencesSmall.png</file>
+        <file>Resources/Images/Actions/ResetLarge.png</file>
+        <file>Resources/Images/Actions/ResetSmall.png</file>
+        <file>Resources/Images/Actions/ResumeLarge.png</file>
+        <file>Resources/Images/Actions/ResumeSmall.png</file>
+        <file>Resources/Images/Actions/StartLarge.png</file>
+        <file>Resources/Images/Actions/StartSmall.png</file>
+        <file>Resources/Images/Actions/StopLarge.png</file>
+        <file>Resources/Images/Actions/StopSmall.png</file>
+        <file>Resources/Images/Actions/SuspendLalre.png</file>
+        <file>Resources/Images/Actions/SuspendSmall.png</file>
+        <file>Resources/Images/Misc/HomeLarge.png</file>
+        <file>Resources/Images/Misc/HomeSmall.png</file>
+        <file>Resources/Images/Actions/AboutLarge.png</file>
+        <file>Resources/Images/Actions/AboutSmall.png</file>
+        <file>Resources/Images/Actions/BrowseLarge.png</file>
+        <file>Resources/Images/Actions/BrowseSmall.png</file>
+    </qresource>
+</RCC>

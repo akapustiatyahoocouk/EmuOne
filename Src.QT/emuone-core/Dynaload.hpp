@@ -45,8 +45,10 @@ namespace emuone::core
         //  emuone::util::IComponent
     public:
         virtual auto    version() const -> QVersionNumber override;
-        virtual auto    settings() -> Settings & override;
-        virtual auto    settings() const -> const Settings & override;
+        virtual auto    settings() -> Settings * override;
+        virtual auto    settings() const -> const Settings * override;
+        virtual void    iniialize() override;
+        virtual void    deiniialize() override;
     };
 }
 

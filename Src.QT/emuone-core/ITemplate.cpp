@@ -1,5 +1,5 @@
 //
-//  emuone-util/Template.cpp - emuone::util::Template class implementation
+//  emuone-core/ITemplate.cpp - emuone::util::ITemplate class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -29,4 +29,4 @@ QImage ITemplate::largeImage() const
     return architecture()->largeImage();
 }
 
-//  End of emuone-util/Template.cpp
+//  End of emuone-core/ITemplate.cpp

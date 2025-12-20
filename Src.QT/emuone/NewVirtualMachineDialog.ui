@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>emuone::NewVirtualMachineDialog</class>
+ <widget class="QDialog" name="emuone::NewVirtualMachineDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>407</width>
+    <height>236</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>New virtual machine</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="emuone.qrc">
+    <normaloff>:/emuone/Resources/Images/Actions/NewLarge.png</normaloff>:/emuone/Resources/Images/Actions/NewLarge.png</iconset>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="nameLabel">
+     <property name="text">
+      <string>Name:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="2">
+    <widget class="QLineEdit" name="nameLineEdit"/>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="architectureLabel">
+     <property name="text">
+      <string>Architecture:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1" colspan="2">
+    <widget class="QComboBox" name="architectureComboBox"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="stereotypeLabel">
+     <property name="text">
+      <string>Stereotype:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" colspan="2">
+    <widget class="QComboBox" name="stereotypeComboBox"/>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="templateLabel">
+     <property name="text">
+      <string>Template:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1" colspan="2">
+    <widget class="QComboBox" name="templateComboBox"/>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="locationLabel">
+     <property name="text">
+      <string>Location:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QLineEdit" name="locationLineEdit">
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QPushButton" name="browsePushButton">
+     <property name="text">
+      <string>Browse</string>
+     </property>
+     <property name="icon">
+      <iconset resource="emuone.qrc">
+       <normaloff>:/emuone/Resources/Images/Actions/BrowseSmall.png</normaloff>:/emuone/Resources/Images/Actions/BrowseSmall.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="3">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0" colspan="3">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="emuone.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>emuone::NewVirtualMachineDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>emuone::NewVirtualMachineDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

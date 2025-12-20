@@ -1,0 +1,75 @@
+//
+//  emuone/Application.hpp - EmuOne application
+//
+//  EmuOne
+//  Copyright (C) 2026, Andrey Kapustin
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//////////
+
+namespace emuone
+{
+    /// \class Application API.hpp
+    /// \brief The EmuOne application.
+    class Application final
+        :   public QApplication
+    {
+        EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Application)
+
+        //////////
+        //  Construction/destruction
+    public:
+        /// \brief
+        ///     Constructs the Appliction instance.
+        /// \param argc
+        ///     The command line argument count (as passed to main()).
+        /// \param argv
+        ///     The command line arguments (as passed to main()).
+        Application(int & argc, char ** argv);
+
+        /// \brief
+        ///     The class destructor.
+        virtual ~Application();
+
+        //////////
+        //  QApplication
+    public:
+        /// \brief
+        ///     Runs the application's event loop.
+        /// \return
+        ///     The application exit code.
+        int             exec();
+
+        //////////
+        //  QGuiApplication
+    public:
+        /// \brief
+        ///     Handles an event.
+        /// \param receiver
+        ///     The intended receiver for the event.
+        /// \param event
+        ///     The event yo deliver to the receiver.
+        /// \return
+        ///     True if the receiver was interested in this event, else false.
+        //  TODO uncomment virtual bool    notify(QObject * receiver, QEvent * event) override;
+
+        //////////
+        //  Implementation
+    private:
+        MainFrame *     _mainFrame = nullptr;
+
+        //  Helpers
+        void            _initialize();
+        void            _cleanup();
+    };
+}
+
+//  End of emuone/Application.hpp

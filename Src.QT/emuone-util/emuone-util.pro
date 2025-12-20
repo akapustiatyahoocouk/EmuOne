@@ -4,10 +4,12 @@ TEMPLATE = lib
 DEFINES += EMUONE_UTIL_LIBRARY
 
 SOURCES += \
+    ComponentManager.cpp \
     Dynaload.cpp \
     Exceptions.cpp \
     FromString.cpp \
     IComponent.cpp \
+    Mutex.cpp \
     Settings.cpp \
     ToString.cpp
 
@@ -21,6 +23,7 @@ HEADERS += \
     Macros.hpp \
     Settings.hpp \
     StockObject.hpp \
+    Sync.hpp \
     ToString.hpp
 
 PRECOMPILED_HEADER = API.hpp

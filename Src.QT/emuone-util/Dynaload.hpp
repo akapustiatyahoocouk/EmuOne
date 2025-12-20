@@ -49,13 +49,25 @@ namespace emuone::util
         ///     Returns this Component's Settings.
         /// \return
         ///     This Component's Settings.
-        virtual auto    settings() -> Settings & = 0;
+        virtual auto    settings() -> Settings * = 0;
 
         /// \brief
         ///     Returns this Component's Settings.
         /// \return
         ///     This Component's Settings.
-        virtual auto    settings() const -> const Settings & = 0;
+        virtual auto    settings() const -> const Settings * = 0;
+
+        /// \brief
+        ///     Initializes this component; has no effect if
+        ///     the component has already been initialized.
+        /// \exception Exception
+        ///     If the component initialization fails.
+        virtual void    iniialize() = 0;
+
+        /// \brief
+        ///     Deinitializes this component; has no effect if
+        ///     the component has not been initialized.
+        virtual void    deiniialize() = 0;
     };
 
     /// \class ComponentManager emuone-util/API.hpp
@@ -91,6 +103,20 @@ namespace emuone::util
         /// \return
         ///     True on success, false on failure.
         static bool     unregisterComponent(IComponent * component);
+
+        /// \brief
+        ///     Finds a registered component by mnemonic and version.
+        /// \param mnemonic
+        ///     The component mnemonic to look for.
+        /// \param version
+        ///     The component version to look for.
+        /// \return
+        ///     The registered component with the required mnemonic
+        ///     and version or nullptr if not found.
+        static auto     findComponent(
+                                const QString & mnemonic,
+                                const QVersionNumber & version
+                            ) -> IComponent *;
 
         /// \brief
         ///     Finds a registered component by mnemonic.
@@ -221,8 +247,10 @@ namespace emuone::util
         //  IComponent
     public:
         virtual auto    version() const -> QVersionNumber override;
-        virtual auto    settings() -> Settings & override;
-        virtual auto    settings() const -> const Settings & override;
+        virtual auto    settings() -> Settings * override;
+        virtual auto    settings() const -> const Settings * override;
+        virtual void    iniialize() override;
+        virtual void    deiniialize() override;
     };
 }
 

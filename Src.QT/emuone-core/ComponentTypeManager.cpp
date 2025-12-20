@@ -1,5 +1,5 @@
 //
-//  emuone-util/ComponentTypeManager.cpp - emuone::util::ComponentTypeManager class implementation
+//  emuone-core/ComponentTypeManager.cpp - emuone::util::ComponentTypeManager class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -67,8 +67,8 @@ bool ComponentTypeManager::unregisterComponentType(IComponentType * componentTyp
         if (componentType == registered)
         {   //  We're not trying to un-register an impersonator
             impl->registry.remove(key);
+            return true;
         }
-        return false;
     }
     return false;
 }
@@ -91,4 +91,4 @@ auto ComponentTypeManager::_impl() -> _Impl *
     return &impl;
 }
 
-//  End of emuone-util/ComponentTypeManager.cpp
+//  End of emuone-core/ComponentTypeManager.cpp

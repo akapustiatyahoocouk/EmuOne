@@ -1,5 +1,5 @@
 //
-//  emuone-core/ComponentType.cpp - VA component type
+//  emuone-core/ComponentType.cpp - VM component type
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -18,7 +18,7 @@
 namespace emuone::core
 {
     /// \class IComponentType emuone-core/API.hpp
-    /// \brief The VA component type.
+    /// \brief The VM component type.
     /// \details Concrete subclasses will be singletons registered by Components.
     class EMUONE_CORE_PUBLIC IComponentType
         :   public virtual emuone::util::IStockObject
@@ -34,8 +34,8 @@ namespace emuone::core
         //////////
         //  emuone::util::IStockObject
     public:
-        virtual QImage  smallImage() const = 0;
-        virtual QImage  largeImage() const = 0;
+        virtual QImage  smallImage() const;
+        virtual QImage  largeImage() const;
 
         //////////
         //  Operations
@@ -44,15 +44,46 @@ namespace emuone::core
         ///     Returns the ComponentCategory to which this ComponentType belongs.
         /// \return
         ///     The ComponentCategory to which this ComponentType belongs.
-        virtual auto    category() const -> IComponentCategory = 0;
+        virtual auto    category() const -> IComponentCategory * = 0;
 
         /// \brief
         ///     Checks whether components of this type are compatible with
         ///     (i.e. can work in) virtual appliances of the specified Architecture.
+        /// \param architecture
+        ///     The VM architecture to check for compatibility with.
         /// \return
         ///     True if components of this type are compatible with (i.e. can work
         ///     in) virtual appliances of the specified Architecture, false if not.
         virtual bool    isCompatibleWith(IArchitecture * architecture) const = 0;
+
+        /// \brief
+        ///     Checks whether components of this type are compatible with
+        ///     (i.e. can work in) virtual appliances of the specified type.
+        /// \param stereotype
+        ///     The VM type to check for compatibility with.
+        /// \return
+        ///     True if components of this type are compatible with (i.e. can work
+        ///     in) virtual appliances of the specified type, false if not.
+        virtual bool    isCompatibleWith(IStereotype * stereotype) const = 0;
+
+        /// \brief
+        ///     Checks whether Components of this type can
+        ///     save their runtime state and reload it later on.
+        /// \return
+        ///     True if Components of this type can
+        ///     save their runtime state and reload it later on,
+        ///     false if not.
+        virtual bool    isPersistable() const = 0;
+
+        /// \brief
+        ///     Creates a new unbound Component of this type.
+        /// \details
+        ///     The Component is created with default configuration.
+        ///     It is the caller's responsibility to either destroy the
+        ///     Component or to pass ownership of the Component to a VM.
+        /// \return
+        ///     The newly created Component.
+        virtual auto    createComponent() -> IComponent * = 0;
     };
 
     /// \class ComponentTypeManager emuone-core/API.hpp
@@ -65,9 +96,9 @@ namespace emuone::core
         //  Operations
     public:
         /// \brief
-        ///     Returns the set of all registered VA Component Types.
+        ///     Returns the set of all registered VM Component Types.
         /// \return
-        ///     Returns the set of all registered VA Component Types.
+        ///     Returns the set of all registered VM Component Types.
         static auto     allComponentTypes() -> ComponentTypes;
 
         /// \brief
@@ -76,15 +107,15 @@ namespace emuone::core
         ///     Registering an already-registered Component Type
         ///     does nothing and returns true (success).
         /// \param componentType
-        ///     The VA Component Type to register.
+        ///     The VM Component Type to register.
         /// \return
         ///     True on success, false on failure.
         static bool     registerComponentType(IComponentType * componentType);
 
         /// \brief
-        ///     Un-registers the specified VA Component Type.
+        ///     Un-registers the specified VM Component Type.
         /// \param componentType
-        ///     The VA Component Type to un-register.
+        ///     The VM Component Type to un-register.
         /// \return
         ///     True on success, false on failure.
         static bool     unregisterComponentType(IComponentType * componentType);
@@ -94,7 +125,7 @@ namespace emuone::core
         /// \param mnemonic
         ///     The mnemonic to look for.
         /// \return
-        ///     The registered VA Component Type with the
+        ///     The registered VM Component Type with the
         ///     required mnemonic or nullptr if none found.
         static auto     findComponentType(const QString & mnemonic) -> IComponentType *;
 

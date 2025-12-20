@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>emuone::MainFrame</class>
+ <widget class="QMainWindow" name="emuone::MainFrame">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>355</width>
+    <height>234</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>EmuOne</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="homeTab">
+       <attribute name="icon">
+        <iconset resource="emuone.qrc">
+         <normaloff>:/emuone/Resources/Images/Misc/HomeSmall.png</normaloff>:/emuone/Resources/Images/Misc/HomeSmall.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string>Home</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>355</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actionNewVirtualMachine"/>
+    <addaction name="actionOpenVirtualMachine"/>
+    <addaction name="separator"/>
+    <addaction name="actionCloseVirtualMachine"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuVm">
+    <property name="title">
+     <string>&amp;VM</string>
+    </property>
+    <addaction name="actionStart"/>
+    <addaction name="actionStop"/>
+    <addaction name="separator"/>
+    <addaction name="actionSuspend"/>
+    <addaction name="actionResume"/>
+    <addaction name="separator"/>
+    <addaction name="actionReset"/>
+    <addaction name="separator"/>
+    <addaction name="actionConfigure"/>
+    <addaction name="separator"/>
+    <addaction name="actionFullScreen"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>&amp;Tools</string>
+    </property>
+    <addaction name="actionPreferences"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuVm"/>
+   <addaction name="menuTools"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset resource="emuone.qrc">
+     <normaloff>:/emuone/Resources/Images/Actions/ExitSmall.png</normaloff>:/emuone/Resources/Images/Actions/ExitSmall.png</iconset>
+   </property>
+   <property name="text">
+    <string>E&amp;xit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="actionNewVirtualMachine">
+   <property name="icon">
+    <iconset resource="emuone.qrc">
+     <normaloff>:/emuone/Resources/Images/Actions/NewSmall.png</normaloff>:/emuone/Resources/Images/Actions/NewSmall.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;New virtual machine</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionOpenVirtualMachine">
+   <property name="icon">
+    <iconset resource="emuone.qrc">
+     <normaloff>:/emuone/Resources/Images/Actions/OpenSmall.png</normaloff>:/emuone/Resources/Images/Actions/OpenSmall.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Open virtual machine</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionCloseVirtualMachine">
+   <property name="icon">
+    <iconset resource="emuone.qrc">
+     <normaloff>:/emuone/Resources/Images/Actions/CloseSmall.png</normaloff>:/emuone/Resources/Images/Actions/CloseSmall.png</iconset>
+   </property>
+   <property name="text">
+    <string>C&amp;lose virtual machine</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F4</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="emuone.qrc">
+     <normaloff>:/emuone/Resources/Images/Actions/AboutSmall.png</normaloff>:/emuone/Resources/Images/Actions/AboutSmall.png</iconset>
+   </property>
+   <property name="text">
+    <string>A&amp;bout</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F1</string>
+   </property>
+  </action>
+  <action name="actionPreferences">
+   <property name="icon">
+    <iconset resource="emuone.qrc">
+     <normaloff>:/emuone/Resources/Images/Actions/PreferencesSmall.png</normaloff>:/emuone/Resources/Images/Actions/PreferencesSmall.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Preferences</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionStart">
+   <property name="icon">
+    <iconset resource="emuone.qrc">
+     <normaloff>:/emuone/Resources/Images/Actions/StartSmall.png</normaloff>:/emuone/Resources/Images/Actions/StartSmall.png</iconset>
+   </property>
+   <property name="text">
+    <string>S&amp;tart</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="icon">
+    <iconset resource="emuone.qrc">
+     <normaloff>:/emuone/Resources/Images/Actions/StopSmall.png</normaloff>:/emuone/Resources/Images/Actions/StopSmall.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Stop</string>
+   </property>
+   <property name="shortcut">
+    <string>Esc, Esc</string>
+   </property>
+  </action>
+  <action name="actionSuspend">
+   <property name="icon">
+    <iconset resource="emuone.qrc">
+     <normaloff>:/emuone/Resources/Images/Actions/SuspendSmall.png</normaloff>:/emuone/Resources/Images/Actions/SuspendSmall.png</iconset>
+   </property>
+   <property name="text">
+    <string>S&amp;uspend</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionResume">
+   <property name="icon">
+    <iconset resource="emuone.qrc">
+     <normaloff>:/emuone/Resources/Images/Actions/ResumeSmall.png</normaloff>:/emuone/Resources/Images/Actions/ResumeSmall.png</iconset>
+   </property>
+   <property name="text">
+    <string>R&amp;esume</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionReset">
+   <property name="icon">
+    <iconset resource="emuone.qrc">
+     <normaloff>:/emuone/Resources/Images/Actions/ResetSmall.png</normaloff>:/emuone/Resources/Images/Actions/ResetSmall.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Reset</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+R</string>
+   </property>
+  </action>
+  <action name="actionConfigure">
+   <property name="icon">
+    <iconset resource="emuone.qrc">
+     <normaloff>:/emuone/Resources/Images/Actions/ConfigureSmall.png</normaloff>:/emuone/Resources/Images/Actions/ConfigureSmall.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Configure</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionFullScreen">
+   <property name="icon">
+    <iconset resource="emuone.qrc">
+     <normaloff>:/emuone/Resources/Images/Actions/MakeFullScreenSmall.png</normaloff>:/emuone/Resources/Images/Actions/MakeFullScreenSmall.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Full screen</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Return</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="emuone.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>emuone::MainFrame</receiver>
+   <slot>_onActionExit()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>177</x>
+     <y>116</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionNewVirtualMachine</sender>
+   <signal>triggered()</signal>
+   <receiver>emuone::MainFrame</receiver>
+   <slot>_onActionNewVirtualMachine()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>177</x>
+     <y>116</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>_onActionExit()</slot>
+  <slot>_onActionNewVirtualMachine()</slot>
+ </slots>
+</ui>

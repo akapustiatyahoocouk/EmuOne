@@ -1,5 +1,5 @@
 //
-//  emuone-core/Architecture.cpp - VA Architecture
+//  emuone-core/Architecture.cpp - VM Architecture
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -18,7 +18,7 @@
 namespace emuone::core
 {
     /// \class IArchitecture emuone-core/API.hpp
-    /// \brief The VA architecture.
+    /// \brief The VM architecture.
     /// \details Concrete subclasses will be singletons registered by Components.
     class EMUONE_CORE_PUBLIC IArchitecture
         :   public virtual emuone::util::IStockObject
@@ -41,16 +41,16 @@ namespace emuone::core
         //  Operations
     public:
         /// \brief
-        ///     Returns the set of all registered VA Templates
-        ///     for this VA Architecture.
+        ///     Returns the set of all registered VM Templates
+        ///     for this VM Architecture.
         /// \return
-        ///     The set of all registered VA Templates
-        ///     for this VA Architecture. CAN BE EMPTY!
+        ///     The set of all registered VM Templates
+        ///     for this VM Architecture. CAN BE EMPTY!
         static auto     templates() -> Templates;
     };
 
     /// \class ArchitectureManager emuone-core/API.hpp
-    /// \brief The manager of known VA architectures.
+    /// \brief The manager of known VM architectures.
     class EMUONE_CORE_PUBLIC ArchitectureManager final
     {
         EMUONE_UTILITY_CLASS(ArchitectureManager)
@@ -59,9 +59,9 @@ namespace emuone::core
         //  Operations
     public:
         /// \brief
-        ///     Returns the set of all registered VA architectures.
+        ///     Returns the set of all registered VM architectures.
         /// \return
-        ///     Returns the set of all registered VA architectures.
+        ///     Returns the set of all registered VM architectures.
         static auto     allArchitectures() -> Architectures;
 
         /// \brief
@@ -70,15 +70,15 @@ namespace emuone::core
         ///     Registering an already-registered Architecture
         ///     does nothing and returns true (success).
         /// \param architecture
-        ///     The VA architecture to register.
+        ///     The VM architecture to register.
         /// \return
         ///     True on success, false on failure.
         static bool     registerArchitecture(IArchitecture * architecture);
 
         /// \brief
-        ///     Un-registers the specified VA architecture.
+        ///     Un-registers the specified VM architecture.
         /// \param architecture
-        ///     The VA architecture to un-register.
+        ///     The VM architecture to un-register.
         /// \return
         ///     True on success, false on failure.
         static bool     unregisterArchitecture(IArchitecture * architecture);
@@ -88,7 +88,7 @@ namespace emuone::core
         /// \param mnemonic
         ///     The mnemonic to look for.
         /// \return
-        ///     The registered VA architecture with the
+        ///     The registered VM architecture with the
         ///     required mnemonic or nullptr if none found.
         static auto     findArchitecture(const QString & mnemonic) -> IArchitecture *;
 

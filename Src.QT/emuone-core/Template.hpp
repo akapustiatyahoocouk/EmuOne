@@ -1,5 +1,5 @@
 //
-//  emuone-core/Template.cpp - VA template
+//  emuone-core/Template.cpp - VM template
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -18,7 +18,7 @@
 namespace emuone::core
 {
     /// \class ITemplate emuone-core/API.hpp
-    /// \brief The VA Template.
+    /// \brief The VM Template.
     /// \details Concrete subclasses will be singletons registered by Components.
     class EMUONE_CORE_PUBLIC ITemplate
         :   public virtual emuone::util::IStockObject
@@ -50,7 +50,7 @@ namespace emuone::core
     };
 
     /// \class TemplateManager emuone-core/API.hpp
-    /// \brief The manager of known VA Templates.
+    /// \brief The manager of known VM Templates.
     class EMUONE_CORE_PUBLIC TemplateManager final
     {
         EMUONE_UTILITY_CLASS(TemplateManager);
@@ -59,36 +59,36 @@ namespace emuone::core
         //  Operations
     public:
         /// \brief
-        ///     Returns the set of all registered VA templates.
+        ///     Returns the set of all registered VM templates.
         /// \return
-        ///     The set of all registered VA templates.
+        ///     The set of all registered VM templates.
         static auto     allTemplates() -> Templates;
 
         /// \brief
-        ///     Registers the specified VA template.
+        ///     Registers the specified VM template.
         /// \details
-        ///     Registering an already-registered VA template
+        ///     Registering an already-registered VM template
         ///     does nothing and returns true (success).
         /// \param vaTemplate
-        ///     The VA template to register.
+        ///     The VM template to register.
         /// \return
         ///     True on success, false on failure.
         static bool     registerTemplate(ITemplate * vaTemplate);
 
         /// \brief
-        ///     Un-registers the specified VA template.
+        ///     Un-registers the specified VM template.
         /// \param vaTemplate
-        ///     The VA template to un-register.
+        ///     The VM template to un-register.
         /// \return
         ///     True on success, false on failure.
         static bool     unregisterTemplate(ITemplate * vaTemplate);
 
         /// \brief
-        ///     Finds a registered VA template by mnemonic.
+        ///     Finds a registered VM template by mnemonic.
         /// \param mnemonic
         ///     The mnemonic to look for.
         /// \return
-        ///     The registered VA template with the
+        ///     The registered VM template with the
         ///     required mnemonic or nullptr if none found.
         static auto     findTemplate(const QString & mnemonic) -> ITemplate *;
 

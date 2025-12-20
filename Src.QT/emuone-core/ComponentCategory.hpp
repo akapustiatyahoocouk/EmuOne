@@ -1,5 +1,5 @@
 //
-//  emuone-core/ComponentType.cpp - VA component type
+//  emuone-core/ComponentType.cpp - VM component type
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -18,7 +18,7 @@
 namespace emuone::core
 {
     /// \class IComponentCategory emuone-core/API.hpp
-    /// \brief The VA component Category.
+    /// \brief The VM component Category.
     /// \details Concrete subclasses will be singletons registered by Components.
     class EMUONE_CORE_PUBLIC IComponentCategory
         :   public virtual emuone::util::IStockObject
@@ -52,9 +52,9 @@ namespace emuone::core
         //  Operations
     public:
         /// \brief
-        ///     Returns the set of all registered VA Component Categories.
+        ///     Returns the set of all registered VM Component Categories.
         /// \return
-        ///     Returns the set of all registered VA Component Categories.
+        ///     Returns the set of all registered VM Component Categories.
         static auto     allComponentCategories() -> ComponentCategories;
 
         /// \brief
@@ -63,15 +63,15 @@ namespace emuone::core
         ///     Registering an already-registered Component Category
         ///     does nothing and returns true (success).
         /// \param componentCategory
-        ///     The VA Component Category to register.
+        ///     The VM Component Category to register.
         /// \return
         ///     True on success, false on failure.
         static bool     registerComponentCategory(IComponentCategory * componentCategory);
 
         /// \brief
-        ///     Un-registers the specified VA Component Category.
+        ///     Un-registers the specified VM Component Category.
         /// \param componentCategory
-        ///     The VA Component Category to un-register.
+        ///     The VM Component Category to un-register.
         /// \return
         ///     True on success, false on failure.
         static bool     unregisterComponentCategory(IComponentCategory * componentCategory);
@@ -81,7 +81,7 @@ namespace emuone::core
         /// \param mnemonic
         ///     The mnemonic to look for.
         /// \return
-        ///     The registered VA Component Category with the
+        ///     The registered VM Component Category with the
         ///     required mnemonic or nullptr if none found.
         static auto     findComponentCategory(const QString & mnemonic) -> IComponentCategory *;
 
