@@ -1,0 +1,63 @@
+# Sources
+*.c     text diff=cpp
+*.cc    text diff=cpp
+*.cxx   text diff=cpp
+*.cpp   text diff=cpp
+*.cpi   text diff=cpp
+*.c++   text diff=cpp
+*.hpp   text diff=cpp
+*.h     text diff=cpp
+*.h++   text diff=cpp
+*.hh    text diff=cpp
+*.hxx   text diff=cpp
+
+*.cs   text diff=cpp
+*.resx text diff=cpp
+*.config text diff=cpp
+*.settings text diff=cpp
+
+*.pro  text diff=cpp
+*.pri  text diff=cpp
+*.qrc  text diff=cpp
+*.ui   text diff=cpp
+*.txt  text diff=cpp
+*.htm  text diff=cpp
+*.html text diff=cpp
+*.css  text diff=cpp
+*.bat  text diff=cpp
+*.csv  text diff=cpp
+Doxyfile  text diff=cpp
+
+# Compiled Object files
+*.slo   binary
+*.lo    binary
+*.o     binary
+*.obj   binary
+
+# Precompiled Headers
+*.gch   binary
+*.pch   binary
+
+# Compiled Dynamic libraries
+*.so    binary
+*.dylib binary
+*.dll   binary
+
+# Compiled Static libraries
+*.lai   binary
+*.la    binary
+*.a     binary
+*.lib   binary
+
+# Executables
+*.exe   binary
+*.out   binary
+*.app   binary
+
+# Git
+.gitattributes  text diff=cpp
+.gitignore      text diff=cpp
+
+# TT3
+*.tt3-xml     text diff=cpp
+*.tt3-backup  text diff=cpp
