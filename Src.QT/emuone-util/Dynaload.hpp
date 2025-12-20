@@ -230,7 +230,7 @@ namespace emuone::util
         //  Types
     public:
         /// \class Settings emuone-util/API.hpp
-        /// \bfief The component's settings.
+        /// \brief The component's settings.
         class Settings : public emuone::util::Settings
         {
             EMUONE_DECLARE_SINGLETON(Settings)

@@ -183,6 +183,12 @@ void MainFrame::_refreshTimerTimeout()
 
 void MainFrame::_onActionNewVirtualMachine()
 {
+    NewVirtualMachineDialog dlg(this);
+    if (dlg.doModal() == NewVirtualMachineDialog::Result::Ok)
+    {   //  VM created
+        //  TODO ?
+    }
+
 }
 
 void MainFrame::_onActionExit()

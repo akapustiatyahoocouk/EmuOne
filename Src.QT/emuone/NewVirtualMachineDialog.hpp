@@ -30,7 +30,18 @@ namespace emuone
         EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(NewVirtualMachineDialog)
 
         //////////
-        //  Construxction/destruction
+        //  Types
+    public:
+        /// \brief
+        ///     The dialog result after a modal invocation.
+        enum class Result
+        {
+            Ok,     ///< User's choice confirmed, VM created.
+            Cancel  ///< User has cancelled the VM creation.
+        };
+
+        //////////
+        //  Construction/destruction
     public:
         /// \brief
         ///     Constructs the dialog.
@@ -44,9 +55,24 @@ namespace emuone
         virtual ~NewVirtualMachineDialog();
 
         //////////
+        //  Operations
+    public:
+        /// \brief
+        ///     Invoks the dialog modally.
+        /// \return
+        ///     The dialog result.
+        Result          doModal();
+
+        //////////
         //  Controls
     private:
         Ui::NewVirtualMachineDialog *const  _ui;
+
+        //////////
+        //  Signal handlers
+    private slots:
+        virtual void    accept() override;
+        virtual void    reject() override;
     };
 }
 

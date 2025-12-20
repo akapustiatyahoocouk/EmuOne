@@ -2,7 +2,7 @@
 //  emuone-util/API.hpp - emuone-util master header
 //
 //  EmuOne
-//  Copyright (C) `2026, Andrey Kapustin
+//  Copyright (C) 2026, Andrey Kapustin
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -50,10 +50,13 @@
 #include <QDialog>
 #include <QDir>
 #include <QException>
+#include <QIcon>
+#include <QImage>
 #include <QLibrary>
 #include <QMainWindow>
 #include <QMutex>
 #include <QMutexLocker>
+#include <QPixmap>
 #include <QRegularExpression>
 #include <QStyleFactory>
 #include <QTimer>

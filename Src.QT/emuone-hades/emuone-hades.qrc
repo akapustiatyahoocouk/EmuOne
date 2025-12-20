@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/emuone-hades">
+        <file>Resources/Images/Objects/HadesLarge.png</file>
+        <file>Resources/Images/Objects/HadesSmall.png</file>
+    </qresource>
+</RCC>

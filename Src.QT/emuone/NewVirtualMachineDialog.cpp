@@ -26,11 +26,57 @@ NewVirtualMachineDialog::NewVirtualMachineDialog(
         _ui(new Ui::NewVirtualMachineDialog)
 {
     _ui->setupUi(this);
+
+    //  Populate the "architecture" combp box
+    auto architectures = emuone::core::ArchitectureManager::allArchitectures();
+    QList<emuone::core::IArchitecture*> architecturesList(
+        architectures.cbegin(),
+        architectures.cend());
+    std::sort(
+        architecturesList.begin(),
+        architecturesList.end(),
+        [](auto a, auto b)
+        {
+            return a->displayName() < b->displayName();
+        });
+    for (auto architecture : architecturesList)
+    {
+        _ui->architectureComboBox->addItem(
+            QIcon(QPixmap::fromImage(architecture->smallImage())),
+            architecture->displayName(),
+            QVariant::fromValue(architecture));
+    }
+
+    //  Set static control values
+    _ui->buttonBox->button(QDialogButtonBox::StandardButton::Ok)->
+        setIcon(QIcon(":/emuone/Resources/Images/Actions/OkSmall.png"));
+    _ui->buttonBox->button(QDialogButtonBox::StandardButton::Cancel)->
+        setIcon(QIcon(":/emuone/Resources/Images/Actions/CancelSmall.png"));
 }
 
 NewVirtualMachineDialog::~NewVirtualMachineDialog()
 {
     delete _ui;
+}
+
+//////////
+//  Operations
+auto NewVirtualMachineDialog::doModal(
+    ) -> Result
+{
+    return Result(this->exec());
+}
+
+//////////
+//  Signal handlers
+void NewVirtualMachineDialog::accept()
+{
+    done(int(Result::Ok));
+}
+
+void NewVirtualMachineDialog::reject()
+{
+    done(int(Result::Cancel));
 }
 
 //  End of emuone/NewVirtualMachineDialog.cpp

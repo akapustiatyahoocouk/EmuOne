@@ -1,5 +1,5 @@
 //
-//  emuone/Dynaload.hpp - Dynamic loading support
+//  emuone-hades/Dynaload.hpp - Dynamic loading support
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -15,11 +15,11 @@
 //  GNU General Public License for more details.
 //////////
 
-namespace emuone
+namespace emuone::hades
 {
-    /// \class Component emuon/API.hpp
-    /// \brief the emuone component.
-    class Component final
+    /// \class Component emuone-hades/API.hpp
+    /// \brief the emuone-hades component.
+    class EMUONE_HADES_PUBLIC Component final
         :   public virtual emuone::util::IComponent
     {
         EMUONE_DECLARE_COMPONENT(Component)
@@ -32,18 +32,6 @@ namespace emuone
         class Settings : public emuone::util::Settings
         {
             EMUONE_DECLARE_SINGLETON(Settings)
-
-            //////////
-            //  Properties
-        public:
-            /// \brief
-            ///     The "normal" bounds of the main UI frame
-            ///     (that is, when it is noe minimized or maximized).
-            emuone::util::Setting<QRect>   mainFrameBounds;
-
-            /// \brief
-            ///     True if the main UI frame is maximized, false if not.
-            emuone::util::Setting<bool>    mainFrameMaximized;
         };
 
         //////////
@@ -64,4 +52,4 @@ namespace emuone
     };
 }
 
-//  End of emuone/Dynaload.hpp
+//  End of emuone-hades/Dynaload.hpp

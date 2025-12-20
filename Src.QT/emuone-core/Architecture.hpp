@@ -46,7 +46,7 @@ namespace emuone::core
         /// \return
         ///     The set of all registered VM Templates
         ///     for this VM Architecture. CAN BE EMPTY!
-        static auto     templates() -> Templates;
+        auto            templates() -> Templates;
     };
 
     /// \class ArchitectureManager emuone-core/API.hpp

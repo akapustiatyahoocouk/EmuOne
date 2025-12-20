@@ -1,5 +1,5 @@
 //
-//  emuone-core/Dynaload.cpp - Dynamic loading support
+//  emuone-hades/Dynaload.cpp - Dynamic loading support
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -14,8 +14,8 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 //////////
-#include "emuone-core/API.hpp"
-using namespace emuone::core;
+#include "emuone-hades/API.hpp"
+using namespace emuone::hades;
 
 //////////
 //  Registration
@@ -25,12 +25,12 @@ EMUONE_IMPLEMENT_COMPONENT(Component)
 //  emuone::util::IStockObject
 QString Component::mnemonic() const
 {
-    return "emuone::core";
+    return "emuone::hades";
 }
 
 QString Component::displayName() const
 {
-    return "EmuOne core";
+    return "EmuOne HADES support";
 }
 
 QString Component::copyright() const
@@ -58,13 +58,13 @@ auto Component::settings() const -> const Settings *
 void Component::iniialize()
 {
     //  Register standard stock objects
-    //  TODO
+    emuone::core::ArchitectureManager::registerArchitecture(Architecture::instance());
 }
 
 void Component::deiniialize()
 {
     //  Unregister standard stock objects
-    //  TODO
+    emuone::core::ArchitectureManager::unregisterArchitecture(Architecture::instance());
 }
 
 //////////
@@ -73,4 +73,4 @@ EMUONE_IMPLEMENT_SINGLETON(Component::Settings)
 Component::Settings::Settings() {}
 Component::Settings::~Settings() {}
 
-//  End of emuone-core/Dynaload.cpp
+//  End of emuone-hades/Dynaload.cpp

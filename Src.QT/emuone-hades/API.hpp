@@ -1,5 +1,5 @@
 //
-//  emuone-core/API.hpp - emuone-core master header
+//  emuone-hades/API.hpp - emuone-hades master header
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -18,22 +18,15 @@
 
 //////////
 //  Dependencies
+#include "emuone-core/API.hpp"
 #include "emuone-util/API.hpp"
 
 //////////
-//  emuone-core components
-#include "emuone-core/Linkage.hpp"
-#include "emuone-core/Classes.hpp"
-#include "emuone-core/Dynaload.hpp"
-#include "emuone-core/Exceptions.hpp"
+//  emuone-hades components
+#include "emuone-hades/Linkage.hpp"
+#include "emuone-hades/Classes.hpp"
+#include "emuone-hades/Dynaload.hpp"
 
-#include "emuone-core/Architecture.hpp"
-#include "emuone-core/Stereotype.hpp"
-#include "emuone-core/Template.hpp"
+#include "emuone-hades/Architecture.hpp"
 
-#include "emuone-core/ComponentCategory.hpp"
-#include "emuone-core/ComponentType.hpp"
-#include "emuone-core/Component.hpp"
-#include "emuone-core/VirtualMachine.hpp"
-
-//  End of emuone-core/API.hpp
+//  End of emuone-hades/API.hpp

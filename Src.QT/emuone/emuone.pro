@@ -3,7 +3,7 @@ include(../emuone.pri)
 SOURCES += \
     Application.cpp \
     Dynaload.cpp \
-    Main1.cpp \
+    Main.cpp \
     MainFrame.cpp \
     NewVirtualMachineDialog.cpp
 
@@ -20,9 +20,9 @@ FORMS += \
     MainFrame.ui \
     NewVirtualMachineDialog.ui
 
+RESOURCES += \
+    emuone.qrc
+
 LIBS += \
     -lemuone-core$$TARGET_SUFFIX    \
     -lemuone-util$$TARGET_SUFFIX
-
-RESOURCES += \
-    emuone.qrc
