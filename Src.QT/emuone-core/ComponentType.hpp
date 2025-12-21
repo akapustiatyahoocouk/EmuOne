@@ -48,23 +48,23 @@ namespace emuone::core
 
         /// \brief
         ///     Checks whether components of this type are compatible with
-        ///     (i.e. can work in) virtual appliances of the specified Architecture.
+        ///     (i.e. can work in) virtual machines of the specified Architecture.
         /// \param architecture
         ///     The VM architecture to check for compatibility with.
         /// \return
         ///     True if components of this type are compatible with (i.e. can work
-        ///     in) virtual appliances of the specified Architecture, false if not.
+        ///     in) virtual machines of the specified Architecture, false if not.
         virtual bool    isCompatibleWith(IArchitecture * architecture) const = 0;
 
         /// \brief
         ///     Checks whether components of this type are compatible with
-        ///     (i.e. can work in) virtual appliances of the specified type.
-        /// \param stereotype
+        ///     (i.e. can work in) virtual machines of the specified type.
+        /// \param virtualMachineType
         ///     The VM type to check for compatibility with.
         /// \return
         ///     True if components of this type are compatible with (i.e. can work
-        ///     in) virtual appliances of the specified type, false if not.
-        virtual bool    isCompatibleWith(IStereotype * stereotype) const = 0;
+        ///     in) virtual machines of the specified type, false if not.
+        virtual bool    isCompatibleWith(IVirtualMachineType * virtualMachineType) const = 0;
 
         /// \brief
         ///     Checks whether Components of this type can

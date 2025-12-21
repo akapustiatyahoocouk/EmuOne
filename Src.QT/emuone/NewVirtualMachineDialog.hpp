@@ -64,6 +64,19 @@ namespace emuone
         Result          doModal();
 
         //////////
+        //  Implementation
+    private:
+        //  Helpers
+        auto            _selectedArchitecture() -> emuone::core::IArchitecture *;
+        void            _setSelectedArchitecture(emuone::core::IArchitecture * architecture);
+        auto            _selectedVirtualMachineType() -> emuone::core::IVirtualMachineType *;
+        void            _setSelectedVirtualMachineType(emuone::core::IVirtualMachineType * virtualMachineType);
+        auto            _selectedTemplate() -> emuone::core::ITemplate *;
+        void            _setSelectedTemplate(emuone::core::ITemplate * template_);
+        void            _refresh();
+        void            _refillTemplatesComboBox();
+
+        //////////
         //  Controls
     private:
         Ui::NewVirtualMachineDialog *const  _ui;
@@ -71,6 +84,12 @@ namespace emuone
         //////////
         //  Signal handlers
     private slots:
+        void            _nameLineEditTextChanged(QString);
+        void            _architectureComboBoxCurrentIndexChanged(int);
+        void            _virtualMachineTypeComboBoxCurrentIndexChanged(int);
+        void            _templateComboBoxCurrentIndexChanged(int);
+        void            _locationLineEditTextChanged(QString);
+        void            _browsePushButtonClicked();
         virtual void    accept() override;
         virtual void    reject() override;
     };

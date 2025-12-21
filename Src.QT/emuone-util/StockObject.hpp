@@ -45,12 +45,6 @@ namespace emuone::util
         virtual QString displayName() const = 0;
 
         /// \brief
-        ///     Returns the user-readable copyright message of this stock object.
-        /// \return
-        ///     The user-readable copyright message of this stock object.
-        virtual QString copyright() const = 0;
-
-        /// \brief
         ///     Returns the small (16x16) image reprsewnting this stock object.
         /// \return
         ///     The small (16x16) image reprsewnting this stock object.

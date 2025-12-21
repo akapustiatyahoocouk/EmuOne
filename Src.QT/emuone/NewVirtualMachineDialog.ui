@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>407</width>
-    <height>236</height>
+    <width>449</width>
+    <height>237</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -39,14 +39,14 @@
     <widget class="QComboBox" name="architectureComboBox"/>
    </item>
    <item row="2" column="0">
-    <widget class="QLabel" name="stereotypeLabel">
+    <widget class="QLabel" name="virtualMachineTypeLabel">
      <property name="text">
-      <string>Stereotype:</string>
+      <string>Type:</string>
      </property>
     </widget>
    </item>
    <item row="2" column="1" colspan="2">
-    <widget class="QComboBox" name="stereotypeComboBox"/>
+    <widget class="QComboBox" name="virtualMachineTypeComboBox"/>
    </item>
    <item row="3" column="0">
     <widget class="QLabel" name="templateLabel">
@@ -144,5 +144,109 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>nameLineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>emuone::NewVirtualMachineDialog</receiver>
+   <slot>_nameLineEditTextChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>24</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>203</x>
+     <y>118</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>architectureComboBox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>emuone::NewVirtualMachineDialog</receiver>
+   <slot>_architectureComboBoxCurrentIndexChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>59</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>203</x>
+     <y>118</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>virtualMachineTypeComboBox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>emuone::NewVirtualMachineDialog</receiver>
+   <slot>_virtualMachineTypeComboBoxCurrentIndexChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>94</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>203</x>
+     <y>118</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>templateComboBox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>emuone::NewVirtualMachineDialog</receiver>
+   <slot>_templateComboBoxCurrentIndexChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>129</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>203</x>
+     <y>118</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>locationLineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>emuone::NewVirtualMachineDialog</receiver>
+   <slot>_locationLineEditTextChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>200</x>
+     <y>164</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>203</x>
+     <y>118</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>browsePushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>emuone::NewVirtualMachineDialog</receiver>
+   <slot>_browsePushButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>351</x>
+     <y>164</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>203</x>
+     <y>118</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>_nameLineEditTextChanged(QString)</slot>
+  <slot>_architectureComboBoxCurrentIndexChanged(int)</slot>
+  <slot>_virtualMachineTypeComboBoxCurrentIndexChanged(int)</slot>
+  <slot>_templateComboBoxCurrentIndexChanged(int)</slot>
+  <slot>_locationLineEditTextChanged(QString)</slot>
+  <slot>_browsePushButtonClicked()</slot>
+ </slots>
 </ui>

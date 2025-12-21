@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/emuone-core">
+        <file>Resources/Images/Objects/RemoteTerminalLarge.png</file>
+        <file>Resources/Images/Objects/RemoteTerminalSmall.png</file>
+        <file>Resources/Images/Objects/VirtualMachineLarge.png</file>
+        <file>Resources/Images/Objects/VirtualMachineSmall.png</file>
+    </qresource>
+</RCC>

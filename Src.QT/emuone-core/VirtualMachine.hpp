@@ -30,6 +30,10 @@ namespace emuone::core
         ///     The preferred extension for EmuOne VM configuration files.
         inline static const QString PreferredExtension = ".emuone";
 
+        /// \brief
+        ///     The preferred extension for EmuOne VM saved state files.
+        inline static const QString SavedStateExtension = ".sst";
+
         //////////
         //  Types
     public:
@@ -60,7 +64,7 @@ namespace emuone::core
                 const QString & name,
                 const QString & location,
                 IArchitecture * architecture,
-                IStereotype * stereotype,
+                IVirtualMachineType * virtualMachineType,
                 ITemplate * vmTemplate = nullptr
             );
         ~VirtualMachine();
@@ -74,7 +78,7 @@ namespace emuone::core
         ///     Can be safely called from any thread.
         /// \return
         ///     The name of this VM.
-        QString         name() const { return _name; }
+        QString         name() const;
 
         /// \brief
         ///     Sets the name of this VM.
@@ -85,12 +89,20 @@ namespace emuone::core
         void            setName(const QString & name);
 
         /// \brief
+        ///     Checks if the specified name is a valid VM name.
+        /// \param name
+        ///     The name to check.
+        /// \return
+        ///     True if the specified name is a valid VM name, else false.
+        static bool     isValidName(const QString & name);
+
+        /// \brief
         ///     Returns the location of this VM.
         /// \details
         ///     Can be safely called from any thread.
         /// \return
         ///     The full path to the configuration file of this VM.
-        QString         location() const { return _location; }
+        QString         location() const;
 
         /// \brief
         ///     Returns the full path to the "saved state" file
@@ -109,15 +121,15 @@ namespace emuone::core
         ///     Can be safely called from any thread.
         /// \return
         ///     The Architecture of this VM.
-        IArchitecture * architecture() const { return _architecture; }
+        IArchitecture * architecture() const;
 
         /// \brief
-        ///     Returns the stereotype of this VM.
+        ///     Returns the virtualMachineType of this VM.
         /// \details
         ///     Can be safely called from any thread.
         /// \return
-        ///     The stereotype of this VM.
-        IStereotype *   stereotype() const { return _stereotype; }
+        ///     The virtualMachineType of this VM.
+        IVirtualMachineType *   virtualMachineType() const;
 
         /// \brief
         ///     Returns the Template from which this VM was created.
@@ -125,7 +137,7 @@ namespace emuone::core
         ///     Can be safely called from any thread.
         /// \return
         ///     The Template from which this VM was created, nullptr == none.
-        ITemplate *     createdFrom() const { return _template; }
+        ITemplate *     createdFrom() const;
 
         /// \brief
         ///     Checks whether this VM can save its runtime
@@ -235,13 +247,13 @@ namespace emuone::core
         //  Implementation
     private:
         State           _state = State::Stopped;
-        QRecursiveMutex _guard; //  for all state changes
+        mutable emuone::util::Mutex _guard; //  for all state changes
 
         QString         _name;
         const QString   _location;  //  always full path
-        IArchitecture *const    _architecture;  //  never nullptr
-        IStereotype *const      _stereotype;    //  never nullptr
-        ITemplate *const        _template;      //  may be nullptr
+        IArchitecture *         _architecture;  //  never nullptr
+        IVirtualMachineType *   _type;    //  never nullptr
+        ITemplate *             _template;      //  may be nullptr
     };
 }
 

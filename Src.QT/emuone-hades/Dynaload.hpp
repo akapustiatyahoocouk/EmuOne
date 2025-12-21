@@ -39,12 +39,12 @@ namespace emuone::hades
     public:
         virtual QString mnemonic() const override;
         virtual QString displayName() const override;
-        virtual QString copyright() const override;
 
         //////////
         //  emuone::util::IComponent
     public:
         virtual auto    version() const -> QVersionNumber override;
+        virtual QString copyright() const override;
         virtual auto    settings() -> Settings * override;
         virtual auto    settings() const -> const Settings * override;
         virtual void    iniialize() override;

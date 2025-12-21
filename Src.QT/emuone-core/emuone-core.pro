@@ -11,8 +11,10 @@ SOURCES += \
     IComponent.cpp \
     IComponentType.cpp \
     ITemplate.cpp \
-    StereotypeManager.cpp \
-    TemplateManager.cpp
+    StandardVirtualMachineTypes.cpp \
+    VirtualMachineTypeManager.cpp \
+    TemplateManager.cpp \
+    VirtualMachine.cpp
 
 HEADERS += \
     API.hpp \
@@ -24,11 +26,14 @@ HEADERS += \
     Dynaload.hpp \
     Exceptions.hpp \
     Linkage.hpp \
-    Stereotype.hpp \
     Template.hpp \
-    VirtualMachine.hpp
+    VirtualMachine.hpp \
+    VirtualMachineType.hpp
 
 PRECOMPILED_HEADER = API.hpp
 
 LIBS += \
     -lemuone-util$$TARGET_SUFFIX
+
+RESOURCES += \
+    emuone-core.qrc

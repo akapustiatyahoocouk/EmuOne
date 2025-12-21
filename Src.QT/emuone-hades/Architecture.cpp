@@ -35,11 +35,6 @@ QString Architecture::displayName() const
     return "HADES VM";
 }
 
-QString Architecture::copyright() const
-{
-    return "(C) TODO";
-}
-
 QImage Architecture::smallImage() const
 {
     static const QImage image(":/emuone-hades/Resources/Images/Objects/HadesSmall.png");

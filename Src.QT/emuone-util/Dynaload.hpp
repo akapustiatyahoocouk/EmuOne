@@ -46,6 +46,12 @@ namespace emuone::util
         virtual auto    version() const -> QVersionNumber = 0;
 
         /// \brief
+        ///     Returns the user-readable copyright message of this component.
+        /// \return
+        ///     The user-readable copyright message of this component.
+        virtual QString copyright() const = 0;
+
+        /// \brief
         ///     Returns this Component's Settings.
         /// \return
         ///     This Component's Settings.
@@ -241,12 +247,12 @@ namespace emuone::util
     public:
         virtual QString mnemonic() const override;
         virtual QString displayName() const override;
-        virtual QString copyright() const override;
 
         //////////
         //  IComponent
     public:
         virtual auto    version() const -> QVersionNumber override;
+        virtual QString copyright() const override;
         virtual auto    settings() -> Settings * override;
         virtual auto    settings() const -> const Settings * override;
         virtual void    iniialize() override;

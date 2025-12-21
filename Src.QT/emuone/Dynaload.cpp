@@ -33,16 +33,16 @@ QString Component::displayName() const
     return "EmuOne";
 }
 
-QString Component::copyright() const
-{
-    return "(C) TODO";
-}
-
 //////////
 //  emuone::util::IComponent
 auto Component::version() const -> QVersionNumber
 {
     return emuone::util::fromString<QVersionNumber>(EMUONE_VERSION);
+}
+
+QString Component::copyright() const
+{
+    return "(C) TODO";
 }
 
 auto Component::settings() -> Settings *

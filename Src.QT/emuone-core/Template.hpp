@@ -42,11 +42,19 @@ namespace emuone::core
     public:
         /// \brief
         ///     Returns the Architecture for which this Template
-        ///     creates Virtual Appliances.
+        ///     creates virtual machines.
         /// \return
         ///     Returns the Architecture for which this Template
-        ///     creates Virtual Appliances.
+        ///     creates virtual machiness.
         virtual auto    architecture() const -> IArchitecture * = 0;
+
+        /// \brief
+        ///     Returns the VirtualMachineType for which this Template
+        ///     creates virtual machiness.
+        /// \return
+        ///     Returns the VirtualMachineType for which this Template
+        ///     creates virtual machiness.
+        virtual auto    virtualMachineType() const -> IVirtualMachineType * = 0;
     };
 
     /// \class TemplateManager emuone-core/API.hpp

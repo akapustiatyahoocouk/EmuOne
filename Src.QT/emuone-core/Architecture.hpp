@@ -32,12 +32,6 @@ namespace emuone::core
         virtual ~IArchitecture() = default;
 
         //////////
-        //  emuone::util::IStockObject
-    public:
-        virtual QImage  smallImage() const = 0;
-        virtual QImage  largeImage() const = 0;
-
-        //////////
         //  Operations
     public:
         /// \brief

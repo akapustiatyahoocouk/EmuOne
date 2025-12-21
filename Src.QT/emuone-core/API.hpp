@@ -28,7 +28,7 @@
 #include "emuone-core/Exceptions.hpp"
 
 #include "emuone-core/Architecture.hpp"
-#include "emuone-core/Stereotype.hpp"
+#include "emuone-core/VirtualMachineType.hpp"
 #include "emuone-core/Template.hpp"
 
 #include "emuone-core/ComponentCategory.hpp"

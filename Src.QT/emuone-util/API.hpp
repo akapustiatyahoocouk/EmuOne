@@ -50,6 +50,7 @@
 #include <QDialog>
 #include <QDir>
 #include <QException>
+#include <QFileDialog>
 #include <QIcon>
 #include <QImage>
 #include <QLibrary>

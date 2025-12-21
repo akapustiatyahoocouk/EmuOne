@@ -1,5 +1,5 @@
 //
-//  emuone-core/StereotypeManager.cpp - emuone::core::StereotypeManager class implementation
+//  emuone-core/VirtualMachineTypeManager.cpp - emuone::core::VirtualMachineTypeManager class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -17,9 +17,19 @@
 #include "emuone-core/API.hpp"
 using namespace emuone::core;
 
-struct StereotypeManager::_Impl
+struct VirtualMachineTypeManager::_Impl
 {
-    using Registry = QMap<QString, IStereotype*>;
+    using Registry = QMap<QString, IVirtualMachineType*>;
+
+    _Impl()
+    {
+        for (auto virtualMachineType : StandardVirtualMachineTypes::all())
+        {
+            QString key = virtualMachineType->mnemonic();
+            Q_ASSERT(!registry.contains(key));
+            registry[key] = virtualMachineType;
+        }
+    }
 
     QMutex      guard;
     Registry    registry;   //  mnemonic -> VAT
@@ -27,44 +37,44 @@ struct StereotypeManager::_Impl
 
 //////////
 //  Operations
-auto StereotypeManager::allStereotypes() -> Stereotypes
+auto VirtualMachineTypeManager::allVirtualMachineTypes() -> VirtualMachineTypes
 {
     _Impl * impl = _impl();
     QMutexLocker _(&impl->guard);
 
     auto result = impl->registry.values();
-    return Stereotypes(result.cbegin(), result.cend());
+    return VirtualMachineTypes(result.cbegin(), result.cend());
 }
 
-bool StereotypeManager::registerStereotype(IStereotype * stereotype)
+bool VirtualMachineTypeManager::registerVirtualMachineType(IVirtualMachineType * virtualMachineType)
 {
-    Q_ASSERT(stereotype != nullptr);
+    Q_ASSERT(virtualMachineType != nullptr);
 
     _Impl * impl = _impl();
     QMutexLocker _(&impl->guard);
 
-    auto key = stereotype->mnemonic();
+    auto key = virtualMachineType->mnemonic();
     if (impl->registry.contains(key))
     {   //  Repeated registration is a kind of "success"
         auto registered = impl->registry[key];
-        return stereotype == registered;
+        return virtualMachineType == registered;
     }
-    impl->registry[key] = stereotype;
+    impl->registry[key] = virtualMachineType;
     return true;
 }
 
-bool StereotypeManager::unregisterStereotype(IStereotype * stereotype)
+bool VirtualMachineTypeManager::unregisterVirtualMachineType(IVirtualMachineType * virtualMachineType)
 {
-    Q_ASSERT(stereotype != nullptr);
+    Q_ASSERT(virtualMachineType != nullptr);
 
     _Impl * impl = _impl();
     QMutexLocker _(&impl->guard);
 
-    auto key = stereotype->mnemonic();
+    auto key = virtualMachineType->mnemonic();
     if (impl->registry.contains(key))
     {
         auto registered = impl->registry[key];
-        if (stereotype == registered)
+        if (virtualMachineType == registered)
         {   //  We're not trying to un-register an impersonator
             impl->registry.remove(key);
             return true;
@@ -73,7 +83,7 @@ bool StereotypeManager::unregisterStereotype(IStereotype * stereotype)
     return false;
 }
 
-auto StereotypeManager::findStereotype(const QString & mnemonic) -> IStereotype *
+auto VirtualMachineTypeManager::findVirtualMachineType(const QString & mnemonic) -> IVirtualMachineType *
 {
     _Impl * impl = _impl();
     QMutexLocker _(&impl->guard);
@@ -85,10 +95,10 @@ auto StereotypeManager::findStereotype(const QString & mnemonic) -> IStereotype 
 
 //////////
 //  Implementation
-auto StereotypeManager::_impl() -> _Impl *
+auto VirtualMachineTypeManager::_impl() -> _Impl *
 {
     static _Impl impl;
     return &impl;
 }
 
-//  End of emuone-core/StereotypeManager.cpp
+//  End of emuone-core/VirtualMachineTypeManager.cpp
