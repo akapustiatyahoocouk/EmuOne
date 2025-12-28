@@ -63,16 +63,25 @@ namespace emuone
         ///     The dialog result.
         Result          doModal();
 
+        /// \brief
+        ///     Returns the location of the newly created VM.
+        /// \return
+        ///     The full path to the configuration file newly
+        ///     created VM, e"" if the dialog was cancelled.
+        QString         virtualMachineLocation() const;
+
         //////////
         //  Implementation
     private:
+        QString         _virtualMachineLocation;
+
         //  Helpers
         auto            _selectedArchitecture() -> emuone::core::IArchitecture *;
         void            _setSelectedArchitecture(emuone::core::IArchitecture * architecture);
-        auto            _selectedVirtualMachineType() -> emuone::core::IVirtualMachineType *;
-        void            _setSelectedVirtualMachineType(emuone::core::IVirtualMachineType * virtualMachineType);
-        auto            _selectedTemplate() -> emuone::core::ITemplate *;
-        void            _setSelectedTemplate(emuone::core::ITemplate * template_);
+        auto            _selectedType() -> emuone::core::IVirtualMachineType *;
+        void            _setSelectedType(emuone::core::IVirtualMachineType * virtualMachineType);
+        auto            _selectedTemplate() -> emuone::core::IVirtualMachineTemplate *;
+        void            _setSelectedTemplate(emuone::core::IVirtualMachineTemplate * virtualMachineTemplate);
         void            _refresh();
         void            _refillTemplatesComboBox();
 

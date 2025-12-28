@@ -65,6 +65,7 @@ namespace emuone::util
     template <> EMUONE_UTIL_PUBLIC QColor fromString<QColor>(const QString & s, qsizetype & scan);
     template <> EMUONE_UTIL_PUBLIC QDateTime fromString<QDateTime>(const QString & s, qsizetype & scan);
     template <> EMUONE_UTIL_PUBLIC QDate fromString<QDate>(const QString & s, qsizetype & scan);
+    template <> EMUONE_UTIL_PUBLIC QByteArray fromString<QByteArray>(const QString & s, qsizetype & scan);
 
     //////////
     //  Parsing helpers

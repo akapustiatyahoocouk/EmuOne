@@ -1,5 +1,5 @@
 //
-//  emuone-core/TemplateManager.cpp - emuone::util::TemplateManager class implementation
+//  emuone-core/VirtualMachineTemplateManager.cpp - emuone::util::VirtualMachineTemplateManager class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -17,9 +17,9 @@
 #include "emuone-core/API.hpp"
 using namespace emuone::core;
 
-struct TemplateManager::_Impl
+struct VirtualMachineTemplateManager::_Impl
 {
-    using Registry = QMap<QString, ITemplate*>;
+    using Registry = QMap<QString, IVirtualMachineTemplate*>;
 
     QMutex      guard;
     Registry    registry;   //  mnemonic -> VAT
@@ -27,44 +27,44 @@ struct TemplateManager::_Impl
 
 //////////
 //  Operations
-auto TemplateManager::allTemplates() -> Templates
+auto VirtualMachineTemplateManager::all() -> VirtualMachineTemplates
 {
     _Impl * impl = _impl();
     QMutexLocker _(&impl->guard);
 
     auto result = impl->registry.values();
-    return Templates(result.cbegin(), result.cend());
+    return VirtualMachineTemplates(result.cbegin(), result.cend());
 }
 
-bool TemplateManager::registerTemplate(ITemplate * vaTemplate)
+bool VirtualMachineTemplateManager::register(IVirtualMachineTemplate * virtualMachineTemplate)
 {
-    Q_ASSERT(vaTemplate != nullptr);
+    Q_ASSERT(virtualMachineTemplate != nullptr);
 
     _Impl * impl = _impl();
     QMutexLocker _(&impl->guard);
 
-    auto key = vaTemplate->mnemonic();
+    auto key = virtualMachineTemplate->mnemonic();
     if (impl->registry.contains(key))
     {   //  Repeated registration is a kind of "success"
         auto registered = impl->registry[key];
-        return vaTemplate == registered;
+        return virtualMachineTemplate == registered;
     }
-    impl->registry[key] = vaTemplate;
+    impl->registry[key] = virtualMachineTemplate;
     return true;
 }
 
-bool TemplateManager::unregisterTemplate(ITemplate * vaTemplate)
+bool VirtualMachineTemplateManager::unregister(IVirtualMachineTemplate * virtualMachineTemplate)
 {
-    Q_ASSERT(vaTemplate != nullptr);
+    Q_ASSERT(virtualMachineTemplate != nullptr);
 
     _Impl * impl = _impl();
     QMutexLocker _(&impl->guard);
 
-    auto key = vaTemplate->mnemonic();
+    auto key = virtualMachineTemplate->mnemonic();
     if (impl->registry.contains(key))
     {
         auto registered = impl->registry[key];
-        if (vaTemplate == registered)
+        if (virtualMachineTemplate == registered)
         {   //  We're not trying to un-register an impersonator
             impl->registry.remove(key);
             return true;
@@ -73,7 +73,7 @@ bool TemplateManager::unregisterTemplate(ITemplate * vaTemplate)
     return false;
 }
 
-auto TemplateManager::findTemplate(const QString & mnemonic) -> ITemplate *
+auto VirtualMachineTemplateManager::find(const QString & mnemonic) -> IVirtualMachineTemplate *
 {
     _Impl * impl = _impl();
     QMutexLocker _(&impl->guard);
@@ -85,10 +85,10 @@ auto TemplateManager::findTemplate(const QString & mnemonic) -> ITemplate *
 
 //////////
 //  Implementation
-auto TemplateManager::_impl() -> _Impl *
+auto VirtualMachineTemplateManager::_impl() -> _Impl *
 {
     static _Impl impl;
     return &impl;
 }
 
-//  End of emuone-core/TemplateManager.cpp
+//  End of emuone-core/VirtualMachineTemplateManager.cpp

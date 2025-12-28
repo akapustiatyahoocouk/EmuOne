@@ -17,81 +17,96 @@
 #include "emuone-util/API.hpp"
 
 //  C++ types
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<nullptr_t>(const nullptr_t & /*value*/)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<nullptr_t>(const nullptr_t & /*value*/)
 {
     return "(null)";
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<bool>(const bool & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<bool>(const bool & value)
 {
     return value ? "true" : "false";
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<char>(const char & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<char>(const char & value)
 {
     return QString(QChar(value));
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<signed char>(const signed char & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<signed char>(const signed char & value)
 {
     return toString<signed long long>(value);
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<unsigned char>(const unsigned char & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<unsigned char>(const unsigned char & value)
 {
     return toString<unsigned long long>(value);
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<signed short>(const signed short & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<signed short>(const signed short & value)
 {
     return toString<signed long long>(value);
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<unsigned short>(const unsigned short & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<unsigned short>(const unsigned short & value)
 {
     return toString<unsigned long long>(value);
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<signed int>(const signed int & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<signed int>(const signed int & value)
 {
     return toString<signed long long>(value);
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<unsigned int>(const unsigned int & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<unsigned int>(const unsigned int & value)
 {
     return toString<unsigned long long>(value);
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<signed long>(const signed long & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<signed long>(const signed long & value)
 {
     return toString<signed long long>(value);
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<unsigned long>(const unsigned long & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<unsigned long>(const unsigned long & value)
 {
     return toString<unsigned long long>(value);
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<signed long long>(const signed long long & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<signed long long>(const signed long long & value)
 {
     char s[64];
     sprintf(s, "%lld", value);
     return s;
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<unsigned long long>(const unsigned long long & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<unsigned long long>(const unsigned long long & value)
 {
     char s[64];
     sprintf(s, "%llu", value);
     return s;
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<float>(const float & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<float>(const float & value)
 {
     return toString<double>(value);
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<double>(const double & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<double>(const double & value)
 {
     switch (std::fpclassify(value))
     {
@@ -110,17 +125,20 @@ template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<double>(const doub
 }
 
 //  QT types
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<QChar>(const QChar & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<QChar>(const QChar & value)
 {
     return QString(value);
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<QString>(const QString & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<QString>(const QString & value)
 {
     return value;
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<QRect>(const QRect & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<QRect>(const QRect & value)
 {
     char s[128];
 
@@ -130,19 +148,22 @@ template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<QRect>(const QRect
     return s;
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<QVersionNumber>(const QVersionNumber & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<QVersionNumber>(const QVersionNumber & value)
 {
     return toString(value.majorVersion()) + "." +
            toString(value.minorVersion()) + "." +
            toString(value.microVersion());
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<QLocale>(const QLocale & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<QLocale>(const QLocale & value)
 {
     return (value == QLocale::c()) ? "C" : value.name();
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<QColor>(const QColor & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<QColor>(const QColor & value)
 {
     if (value.isValid())
     {
@@ -165,7 +186,8 @@ template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<QColor>(const QCol
     }
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<QDateTime>(const QDateTime & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<QDateTime>(const QDateTime & value)
 {
     if (value.isValid())
     {
@@ -183,7 +205,8 @@ template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<QDateTime>(const Q
     return "-";
 }
 
-template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<QDate>(const QDate & value)
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<QDate>(const QDate & value)
 {
     if (value.isValid())
     {
@@ -197,5 +220,10 @@ template <> EMUONE_UTIL_PUBLIC QString emuone::util::toString<QDate>(const QDate
     return "-";
 }
 
+template <> EMUONE_UTIL_PUBLIC
+QString emuone::util::toString<QByteArray>(const QByteArray & value)
+{
+    return value.toHex();
+}
 
 //  End of emuone-util/ToString.cpp

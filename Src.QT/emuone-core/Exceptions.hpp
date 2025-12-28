@@ -37,6 +37,68 @@ namespace emuone::core
         Self *          clone() const override = 0;
     };
 
+    /// \class VirtualMachineCorruptException emuone-core/API.hpp
+    /// \brief Thrown when a VM is invalid or corrupt,
+    class EMUONE_CORE_PUBLIC VirtualMachineCorruptException
+        :   public VirtualMachineException
+    {
+        using Self = VirtualMachineCorruptException;
+
+        //////////
+        //  Construction/destruction
+    public:
+        explicit VirtualMachineCorruptException(
+                const QString & location
+            );
+
+        //////////
+        //  QException
+    public:
+        Q_NORETURN
+        void            raise() const override { throw *this; }
+        Self *          clone() const override { return new Self(*this); }
+
+        //////////
+        //  emuone::util::Exception
+    public:
+        virtual QString errorMessage() const override;
+
+        //////////
+        //  Operations
+    public:
+        QString         location() const { return _location; }
+
+        //////////
+        //  Implementation
+    private:
+        QString         _location;
+    };
+
+    /// \class InvalidVirtualMachineStateException emuone-core/API.hpp
+    /// \brief Thrown when a VM service fails because VM is in an invalid state,
+    class EMUONE_CORE_PUBLIC InvalidVirtualMachineStateException
+        :   public VirtualMachineException
+    {
+        using Self = InvalidVirtualMachineStateException;
+
+        //////////
+        //  Construction/destruction
+    public:
+        InvalidVirtualMachineStateException();
+
+        //////////
+        //  QException
+    public:
+        Q_NORETURN
+        void            raise() const override { throw *this; }
+        Self *          clone() const override { return new Self(*this); }
+
+        //////////
+        //  emuone::util::Exception
+    public:
+        virtual QString errorMessage() const override;
+    };
+
     /// \class CustomVirtualMachineException emuone-core/API.hpp
     /// \brief A VM exception with a custom error message.
     class EMUONE_CORE_PUBLIC CustomVirtualMachineException

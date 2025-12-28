@@ -43,7 +43,7 @@ namespace emuone::core
         {
             /// \brief
             ///     The VM has no runtime state and is not running.
-            ///     A saved VM runtime state may or may not exist.
+            ///     A saved VM runtime state does not exist.
             Stopped,
 
             /// \brief
@@ -59,14 +59,52 @@ namespace emuone::core
 
         //////////
         //  Construction/destruction
+    private:
+        VirtualMachine( //  used by deserialization
+                const QString & name,
+                const QString & location,
+                IArchitecture * architecture,
+                IVirtualMachineType * type,
+                IVirtualMachineTemplate * createdFrom
+            );
     public:
+        /// \brief
+        ///     Constructs an empty VM (with no components).
+        /// \param name
+        ///     The VM name.
+        /// \param location
+        ///     The VM location (a full path to the VM configuration file).
+        /// \param architecture
+        ///     The VM architecture; cannot be nullpyr.
+        /// \param type
+        ///     The VM type; cannot be nullpyr.
         VirtualMachine(
                 const QString & name,
                 const QString & location,
                 IArchitecture * architecture,
-                IVirtualMachineType * virtualMachineType,
-                ITemplate * vmTemplate = nullptr
+                IVirtualMachineType * type
             );
+
+        /// \brief
+        ///     Constructs the VM from VM template.
+        /// \param name
+        ///     The VM name.
+        /// \param location
+        ///     The VM location (a full path to the VM configuration file).
+        /// \param createdFrom
+        ///     The template frpom which the VM was created; can be nullptr.
+        VirtualMachine(
+                const QString & name,
+                const QString & location,
+                IVirtualMachineTemplate * createdFrom
+            );
+
+        /// \brief
+        ///     The class destructor.
+        /// \details
+        ///     If the VM is currently Running, it is
+        ///     Suspended (if possible) or Stopped (if not).
+        ///     Any Suspend exceptions are logged but ignored.
         ~VirtualMachine();
 
         //////////
@@ -129,7 +167,7 @@ namespace emuone::core
         ///     Can be safely called from any thread.
         /// \return
         ///     The virtualMachineType of this VM.
-        IVirtualMachineType *   virtualMachineType() const;
+        auto            type() const -> IVirtualMachineType *;
 
         /// \brief
         ///     Returns the Template from which this VM was created.
@@ -137,7 +175,7 @@ namespace emuone::core
         ///     Can be safely called from any thread.
         /// \return
         ///     The Template from which this VM was created, nullptr == none.
-        ITemplate *     createdFrom() const;
+        auto            createdFrom() const -> IVirtualMachineTemplate *;
 
         /// \brief
         ///     Checks whether this VM can save its runtime
@@ -244,6 +282,25 @@ namespace emuone::core
         void            resume();
 
         //////////
+        //  Operations (persistency)
+    public:
+        /// \brief
+        ///     Saves the VM definition to its "location".
+        /// \exception VirtualMachineException
+        ///     If an error occurs.
+        void            save();
+
+        /// \brief
+        ///     Loads a VM at the specified location.
+        /// \param location
+        ///     The path to the VM configuration file.
+        /// \return
+        ///     The loaded VM (in Stopped or Suspended state).
+        /// \exception VirtualMachineException
+        ///     If an error occurs.
+        static auto     load(const QString & location) -> VirtualMachine *;
+
+        //////////
         //  Implementation
     private:
         State           _state = State::Stopped;
@@ -252,8 +309,8 @@ namespace emuone::core
         QString         _name;
         const QString   _location;  //  always full path
         IArchitecture *         _architecture;  //  never nullptr
-        IVirtualMachineType *   _type;    //  never nullptr
-        ITemplate *             _template;      //  may be nullptr
+        IVirtualMachineType *   _type;          //  never nullptr
+        IVirtualMachineTemplate*_createdFrom;   //  may be nullptr
     };
 }
 

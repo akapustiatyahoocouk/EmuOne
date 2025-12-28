@@ -37,7 +37,7 @@ struct VirtualMachineTypeManager::_Impl
 
 //////////
 //  Operations
-auto VirtualMachineTypeManager::allVirtualMachineTypes() -> VirtualMachineTypes
+auto VirtualMachineTypeManager::all() -> VirtualMachineTypes
 {
     _Impl * impl = _impl();
     QMutexLocker _(&impl->guard);
@@ -46,7 +46,7 @@ auto VirtualMachineTypeManager::allVirtualMachineTypes() -> VirtualMachineTypes
     return VirtualMachineTypes(result.cbegin(), result.cend());
 }
 
-bool VirtualMachineTypeManager::registerVirtualMachineType(IVirtualMachineType * virtualMachineType)
+bool VirtualMachineTypeManager::register(IVirtualMachineType * virtualMachineType)
 {
     Q_ASSERT(virtualMachineType != nullptr);
 
@@ -63,7 +63,7 @@ bool VirtualMachineTypeManager::registerVirtualMachineType(IVirtualMachineType *
     return true;
 }
 
-bool VirtualMachineTypeManager::unregisterVirtualMachineType(IVirtualMachineType * virtualMachineType)
+bool VirtualMachineTypeManager::unregister(IVirtualMachineType * virtualMachineType)
 {
     Q_ASSERT(virtualMachineType != nullptr);
 
@@ -83,7 +83,7 @@ bool VirtualMachineTypeManager::unregisterVirtualMachineType(IVirtualMachineType
     return false;
 }
 
-auto VirtualMachineTypeManager::findVirtualMachineType(const QString & mnemonic) -> IVirtualMachineType *
+auto VirtualMachineTypeManager::find(const QString & mnemonic) -> IVirtualMachineType *
 {
     _Impl * impl = _impl();
     QMutexLocker _(&impl->guard);

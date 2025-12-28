@@ -12,8 +12,8 @@ SOURCES += \
     IComponentType.cpp \
     ITemplate.cpp \
     StandardVirtualMachineTypes.cpp \
+    VirtualMachineTemplateManager.cpp \
     VirtualMachineTypeManager.cpp \
-    TemplateManager.cpp \
     VirtualMachine.cpp
 
 HEADERS += \
@@ -26,8 +26,8 @@ HEADERS += \
     Dynaload.hpp \
     Exceptions.hpp \
     Linkage.hpp \
-    Template.hpp \
     VirtualMachine.hpp \
+    VirtualMachineTemplate.hpp \
     VirtualMachineType.hpp
 
 PRECOMPILED_HEADER = API.hpp

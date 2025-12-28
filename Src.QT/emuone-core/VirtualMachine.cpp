@@ -23,25 +23,52 @@ VirtualMachine::VirtualMachine(
         const QString & name,
         const QString & location,
         IArchitecture * architecture,
-        IVirtualMachineType * virtualMachineType,
-        ITemplate * vmTemplate
+        IVirtualMachineType * type,
+        IVirtualMachineTemplate * createdFrom
     ) : _name(name.trimmed()),  //  be defensive!
         _location(QFileInfo(location).absoluteFilePath()),  //  be defensive!
         _architecture(architecture),
-        _type(virtualMachineType),
-        _template(vmTemplate)
+        _type(type),
+        _createdFrom(createdFrom)
 {
     Q_ASSERT(isValidName(_name)),
     Q_ASSERT(_architecture != nullptr);
     Q_ASSERT(_type != nullptr);
-    Q_ASSERT( _template == nullptr ||
-             (_template->architecture() == _architecture &&
-              _template->virtualMachineType() == _type));
+    Q_ASSERT( _createdFrom == nullptr ||
+             (_createdFrom->architecture() == _architecture &&
+              _createdFrom->virtualMachineType() == _type));
+}
+
+VirtualMachine::VirtualMachine(
+        const QString & name,
+        const QString & location,
+        IArchitecture * architecture,
+        IVirtualMachineType * type
+    ) : VirtualMachine(
+            name,
+            location,
+            architecture,
+            type,
+            nullptr)
+{
+}
+
+VirtualMachine::VirtualMachine(
+        const QString & name,
+        const QString & location,
+        IVirtualMachineTemplate * createdFrom
+    ) : VirtualMachine(
+              name,
+              location,
+              createdFrom->architecture(),
+              createdFrom->virtualMachineType(),
+              createdFrom)
+{
 }
 
 VirtualMachine::~VirtualMachine()
 {
-    //  TODO stop!
+    //  TODO suspend/stop!
 }
 
 //////////
@@ -96,16 +123,123 @@ IArchitecture * VirtualMachine::architecture() const
     return _architecture;
 }
 
-IVirtualMachineType * VirtualMachine::virtualMachineType() const
+auto VirtualMachine::type() const -> IVirtualMachineType *
 {
     emuone::util::Lock _(_guard);
     return _type;
 }
 
-ITemplate * VirtualMachine::createdFrom() const
+auto VirtualMachine::createdFrom() const -> IVirtualMachineTemplate *
 {
     emuone::util::Lock _(_guard);
-    return _template;
+    return _createdFrom;
+}
+
+//////////
+//  Operations (persistency)
+void VirtualMachine::save()
+{
+    emuone::util::Lock _(_guard);
+
+    //  Only Stopped VMs can be saved
+    if (_state != State::Stopped)
+    {   //  OOPS!
+        throw InvalidVirtualMachineStateException();
+    }
+
+    //  Create DOM document and root node
+    QDomDocument document;
+    QDomProcessingInstruction xmlDeclaration = document.createProcessingInstruction("xml", "version='1.0' encoding='UTF-8' standalone='yes'");
+    document.appendChild(xmlDeclaration);
+
+    QDomElement rootElement = document.createElement("VirtualMachine");
+    rootElement.setAttribute("Virtualization", "EmuOne");
+    rootElement.setAttribute("FormatVersion", "1");
+    rootElement.setAttribute("Name", _name);
+    rootElement.setAttribute("Architecture", _architecture->mnemonic());
+    rootElement.setAttribute("Type", _type->mnemonic());
+    if (_createdFrom != nullptr)
+    {
+        rootElement.setAttribute("Template", _createdFrom->mnemonic());
+    }
+    document.appendChild(rootElement);
+
+    //  Do the components
+    //  TODO
+
+    //  Save DOM & we're done
+    QFile file(_location);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {   //  OOPS!
+        throw CustomVirtualMachineException(_location + ": " +  file.errorString());
+    }
+    QTextStream stream(&file);
+    document.save(stream, 4);
+    file.close();
+}
+
+auto VirtualMachine::load(const QString & location) -> VirtualMachine *
+{
+    //  Load XML DOM
+    QDomDocument document;
+    QFile file(location);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {   //  OOPS!
+        throw CustomVirtualMachineException(
+            location + ": " + file.errorString());
+    }
+    if (!document.setContent(&file))
+    {   //  OOPS!
+        throw VirtualMachineCorruptException(location);
+    }
+
+    //  Validate root element
+    QDomElement rootElement = document.documentElement();
+    if (rootElement.isNull() ||
+        rootElement.tagName() != "VirtualMachine" ||
+        rootElement.attribute("Virtualization") != "EmuOne" ||
+        rootElement.attribute("FormatVersion") != "1" ||
+        !rootElement.hasAttribute("Name") ||
+        !rootElement.hasAttribute("Architecture") ||
+        !rootElement.hasAttribute("Type"))
+    {   //  OOPS!
+        throw VirtualMachineCorruptException(location);
+    }
+    QString name = rootElement.attribute("Name");;
+    auto architecture =
+        ArchitectureManager::find(
+            rootElement.attribute("Architecture"));
+    //  TODO a separate "unsupported VM architecture" exception
+    auto type =
+        VirtualMachineTypeManager::find(
+            rootElement.attribute("Type"));
+    //  TODO a separate "unsupported VM type" exception
+    auto createdFrom =
+        VirtualMachineTemplateManager::find(
+            rootElement.attribute("Template"));
+    if (!isValidName(name) ||
+        architecture == nullptr ||
+        type == nullptr ||
+        (createdFrom != nullptr &&
+         (createdFrom->architecture() != architecture ||
+          createdFrom->virtualMachineType() != type)))
+    {   //  OOPS!
+        throw VirtualMachineCorruptException(location);
+    }
+
+    //  Create new, empty VM (delete on load exception)
+    std::unique_ptr<VirtualMachine> vm
+    { new VirtualMachine(
+        name,
+        location,
+        architecture,
+        type,
+        createdFrom) };
+
+    //  TODO components
+
+    //  All done
+    return vm.release();
 }
 
 //  End of emuone-core/VirtualMachine.cpp

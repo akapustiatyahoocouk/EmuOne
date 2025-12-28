@@ -1,5 +1,8 @@
 QT += core gui widgets xml
 
+greaterThan(QT_VERSION, 6.10.0):message("Qt version is compatible: $$QT_VERSION")
+else:error("This project requires Qt version 6.10.1 or higher. Found version: $$QT_VERSION")
+
 EMUONE_VERSION=1.0.0
 
 CONFIG += c++20 strict_c++

@@ -1,5 +1,5 @@
 //
-//  emuone-core/Template.cpp - VM template
+//  emuone-core/VirtualMachineTemplate.cpp - VM template
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -17,19 +17,19 @@
 
 namespace emuone::core
 {
-    /// \class ITemplate emuone-core/API.hpp
+    /// \class IVirtualMachineTemplate emuone-core/API.hpp
     /// \brief The VM Template.
     /// \details Concrete subclasses will be singletons registered by Components.
-    class EMUONE_CORE_PUBLIC ITemplate
+    class EMUONE_CORE_PUBLIC IVirtualMachineTemplate
         :   public virtual emuone::util::IStockObject
     {
-        EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(ITemplate)
+        EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(IVirtualMachineTemplate)
 
         //////////
         //  Construction/destruction
     protected:
-        ITemplate() = default;
-        virtual ~ITemplate() = default;
+        IVirtualMachineTemplate() = default;
+        virtual ~IVirtualMachineTemplate() = default;
 
         //////////
         //  emuone::util::IStockObject
@@ -59,9 +59,9 @@ namespace emuone::core
 
     /// \class TemplateManager emuone-core/API.hpp
     /// \brief The manager of known VM Templates.
-    class EMUONE_CORE_PUBLIC TemplateManager final
+    class EMUONE_CORE_PUBLIC VirtualMachineTemplateManager final
     {
-        EMUONE_UTILITY_CLASS(TemplateManager);
+        EMUONE_UTILITY_CLASS(VirtualMachineTemplateManager);
 
         //////////
         //  Operations
@@ -70,26 +70,26 @@ namespace emuone::core
         ///     Returns the set of all registered VM templates.
         /// \return
         ///     The set of all registered VM templates.
-        static auto     allTemplates() -> Templates;
+        static auto     all() -> VirtualMachineTemplates;
 
         /// \brief
         ///     Registers the specified VM template.
         /// \details
         ///     Registering an already-registered VM template
         ///     does nothing and returns true (success).
-        /// \param vaTemplate
+        /// \param virtualMachineTemplate
         ///     The VM template to register.
         /// \return
         ///     True on success, false on failure.
-        static bool     registerTemplate(ITemplate * vaTemplate);
+        static bool     register(IVirtualMachineTemplate * virtualMachineTemplate);
 
         /// \brief
         ///     Un-registers the specified VM template.
-        /// \param vaTemplate
+        /// \param virtualMachineTemplate
         ///     The VM template to un-register.
         /// \return
         ///     True on success, false on failure.
-        static bool     unregisterTemplate(ITemplate * vaTemplate);
+        static bool     unregister(IVirtualMachineTemplate * virtualMachineTemplate);
 
         /// \brief
         ///     Finds a registered VM template by mnemonic.
@@ -98,7 +98,7 @@ namespace emuone::core
         /// \return
         ///     The registered VM template with the
         ///     required mnemonic or nullptr if none found.
-        static auto     findTemplate(const QString & mnemonic) -> ITemplate *;
+        static auto     find(const QString & mnemonic) -> IVirtualMachineTemplate *;
 
         //////////
         //  Implementation
@@ -108,4 +108,4 @@ namespace emuone::core
     };
 }
 
-//  End of emuone-core/Template.cpp
+//  End of emuone-core/VirtualMachineTemplate.cpp

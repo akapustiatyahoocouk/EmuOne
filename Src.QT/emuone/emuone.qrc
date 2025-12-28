@@ -39,5 +39,7 @@
         <file>Resources/Images/Actions/AboutSmall.png</file>
         <file>Resources/Images/Actions/BrowseLarge.png</file>
         <file>Resources/Images/Actions/BrowseSmall.png</file>
+        <file>Resources/Images/Actions/NewHuge.png</file>
+        <file>Resources/Images/Actions/OpenHuge.png</file>
     </qresource>
 </RCC>

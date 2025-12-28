@@ -20,7 +20,7 @@ namespace emuone::core
     //  Classes
     class EMUONE_CORE_PUBLIC IArchitecture;
     class EMUONE_CORE_PUBLIC IVirtualMachineType;
-    class EMUONE_CORE_PUBLIC ITemplate;
+    class EMUONE_CORE_PUBLIC IVirtualMachineTemplate;
     class EMUONE_CORE_PUBLIC IComponentCategory;
     class EMUONE_CORE_PUBLIC IComponentType;
     class EMUONE_CORE_PUBLIC IComponent;
@@ -29,11 +29,11 @@ namespace emuone::core
     //  Collections
     using Architectures = QSet<IArchitecture*>;
     using VirtualMachineTypes = QSet<IVirtualMachineType*>;
-    using Templates = QSet<ITemplate*>;
+    using VirtualMachineTemplates = QSet<IVirtualMachineTemplate*>;
     using ComponentCategories = QSet<IComponentCategory*>;
     using ComponentTypes = QSet<IComponentType*>;
     using Components = QSet<IComponent*>;
-    using VirtualMachines = QSet<VirtualMachine*>;
+    using VirtualMachines = QList<VirtualMachine*>;
 }
 
 //  End of emuone-core/Classes.cpp

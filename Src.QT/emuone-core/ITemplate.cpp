@@ -19,12 +19,12 @@ using namespace emuone::core;
 
 //////////
 //  emuone::util::IStockObject
-QImage ITemplate::smallImage() const
+QImage IVirtualMachineTemplate::smallImage() const
 {
     return architecture()->smallImage();
 }
 
-QImage ITemplate::largeImage() const
+QImage IVirtualMachineTemplate::largeImage() const
 {
     return architecture()->largeImage();
 }

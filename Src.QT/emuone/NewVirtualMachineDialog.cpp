@@ -28,18 +28,15 @@ NewVirtualMachineDialog::NewVirtualMachineDialog(
     _ui->setupUi(this);
 
     //  Populate the "architecture" combo box
-    auto architectures = emuone::core::ArchitectureManager::allArchitectures();
-    QList<emuone::core::IArchitecture*> architecturesList(
-        architectures.cbegin(),
-        architectures.cend());
+    auto architectures = emuone::core::ArchitectureManager::all().values();
     std::sort(
-        architecturesList.begin(),
-        architecturesList.end(),
+        architectures.begin(),
+        architectures.end(),
         [](auto a, auto b)
         {
             return a->displayName() < b->displayName();
         });
-    for (auto architecture : architecturesList)
+    for (auto architecture : architectures)
     {
         _ui->architectureComboBox->addItem(
             QIcon(QPixmap::fromImage(architecture->smallImage())),
@@ -48,18 +45,15 @@ NewVirtualMachineDialog::NewVirtualMachineDialog(
     }
 
     //  Populate the "virtualMachineType" combo box
-    auto virtualMachineTypes = emuone::core::VirtualMachineTypeManager::allVirtualMachineTypes();
-    QList<emuone::core::IVirtualMachineType*> virtualMachineTypesList(
-        virtualMachineTypes.cbegin(),
-        virtualMachineTypes.cend());
+    auto virtualMachineTypes = emuone::core::VirtualMachineTypeManager::all().values();
     std::sort(
-        virtualMachineTypesList.begin(),
-        virtualMachineTypesList.end(),
+        virtualMachineTypes.begin(),
+        virtualMachineTypes.end(),
         [](auto a, auto b)
         {
             return a->displayName() < b->displayName();
         });
-    for (auto virtualMachineType : virtualMachineTypesList)
+    for (auto virtualMachineType : virtualMachineTypes)
     {
         _ui->virtualMachineTypeComboBox->addItem(
             QIcon(QPixmap::fromImage(virtualMachineType->smallImage())),
@@ -97,6 +91,11 @@ auto NewVirtualMachineDialog::doModal(
     return Result(this->exec());
 }
 
+QString NewVirtualMachineDialog::virtualMachineLocation() const
+{
+    return _virtualMachineLocation;
+}
+
 //////////
 //  Implementation
 auto NewVirtualMachineDialog::_selectedArchitecture() -> emuone::core::IArchitecture *
@@ -118,14 +117,14 @@ void NewVirtualMachineDialog::_setSelectedArchitecture(emuone::core::IArchitectu
     }
 }
 
-auto NewVirtualMachineDialog::_selectedVirtualMachineType() -> emuone::core::IVirtualMachineType *
+auto NewVirtualMachineDialog::_selectedType() -> emuone::core::IVirtualMachineType *
 {
     return (_ui->virtualMachineTypeComboBox->currentIndex() != -1) ?
                _ui->virtualMachineTypeComboBox->currentData().value<emuone::core::IVirtualMachineType*>() :
                nullptr;
 }
 
-void NewVirtualMachineDialog::_setSelectedVirtualMachineType(emuone::core::IVirtualMachineType * virtualMachineType)
+void NewVirtualMachineDialog::_setSelectedType(emuone::core::IVirtualMachineType * virtualMachineType)
 {
     for (int i = 0; i < _ui->virtualMachineTypeComboBox->count(); i++)
     {
@@ -137,18 +136,21 @@ void NewVirtualMachineDialog::_setSelectedVirtualMachineType(emuone::core::IVirt
     }
 }
 
-auto NewVirtualMachineDialog::_selectedTemplate() -> emuone::core::ITemplate *
+auto NewVirtualMachineDialog::_selectedTemplate(
+    ) -> emuone::core::IVirtualMachineTemplate *
 {
     return (_ui->templateComboBox->currentIndex() != -1) ?
-               _ui->templateComboBox->currentData().value<emuone::core::ITemplate*>() :
+               _ui->templateComboBox->currentData().value<emuone::core::IVirtualMachineTemplate*>() :
                nullptr;
 }
 
-void NewVirtualMachineDialog::_setSelectedTemplate(emuone::core::ITemplate * template_)
+void NewVirtualMachineDialog::_setSelectedTemplate(
+        emuone::core::IVirtualMachineTemplate * virtualMachineTemplate
+    )
 {
     for (int i = 0; i < _ui->templateComboBox->count(); i++)
     {
-        if (_ui->templateComboBox->itemData(i).value<emuone::core::ITemplate*>() == template_)
+        if (_ui->templateComboBox->itemData(i).value<emuone::core::IVirtualMachineTemplate*>() == virtualMachineTemplate)
         {
             _ui->templateComboBox->setCurrentIndex(i);
             break;
@@ -167,28 +169,25 @@ void NewVirtualMachineDialog::_refresh()
 
 void NewVirtualMachineDialog::_refillTemplatesComboBox()
 {
-    static const emuone::core::ITemplate * NoTemplate = nullptr;
+    static const emuone::core::IVirtualMachineTemplate * NoTemplate = nullptr;
 
     _ui->templateComboBox->clear();
     _ui->templateComboBox->addItem(
         "-",
         QVariant::fromValue(NoTemplate));
 
-    auto templates = emuone::core::TemplateManager::allTemplates();
-    QList<emuone::core::ITemplate*> templatesList(
-        templates.cbegin(),
-        templates.cend());
+    auto templates = emuone::core::VirtualMachineTemplateManager::all().values();
     std::sort(
-        templatesList.begin(),
-        templatesList.end(),
+        templates.begin(),
+        templates.end(),
         [](auto a, auto b)
         {
             return a->displayName() < b->displayName();
         });
-    for (auto template_ : templatesList)
+    for (auto template_ : templates)
     {
         if (template_->architecture() == _selectedArchitecture() &&
-            template_->virtualMachineType() == _selectedVirtualMachineType())
+            template_->virtualMachineType() == _selectedType())
         {
             _ui->templateComboBox->addItem(
                 QIcon(QPixmap::fromImage(template_->smallImage())),
@@ -237,7 +236,6 @@ void NewVirtualMachineDialog::_browsePushButtonClicked()
             "EmuOne files (*" +
             emuone::core::VirtualMachine::PreferredExtension +
             ");;All files (*.*)");
-
     if (!path.isEmpty())
     {
         if (QFileInfo(path).suffix().isEmpty())
@@ -251,7 +249,22 @@ void NewVirtualMachineDialog::_browsePushButtonClicked()
 
 void NewVirtualMachineDialog::accept()
 {
-    done(int(Result::Ok));
+    if (_selectedTemplate() == nullptr)
+    {   //  No template - create empty VM
+        auto vm =   //  auto-deleted when block exits
+            std::make_unique<emuone::core::VirtualMachine>(
+                _ui->nameLineEdit->text().trimmed(),
+                _ui->locationLineEdit->text(),
+            _selectedArchitecture(),
+            _selectedType());
+        vm->save(); //  TODO may throw
+        _virtualMachineLocation = vm->location();
+        done(int(Result::Ok));
+    }
+    else
+    {   //  TODO implement
+        Q_ASSERT(false);
+    }
 }
 
 void NewVirtualMachineDialog::reject()

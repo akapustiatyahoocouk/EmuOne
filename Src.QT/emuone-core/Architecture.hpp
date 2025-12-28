@@ -34,13 +34,6 @@ namespace emuone::core
         //////////
         //  Operations
     public:
-        /// \brief
-        ///     Returns the set of all registered VM Templates
-        ///     for this VM Architecture.
-        /// \return
-        ///     The set of all registered VM Templates
-        ///     for this VM Architecture. CAN BE EMPTY!
-        auto            templates() -> Templates;
     };
 
     /// \class ArchitectureManager emuone-core/API.hpp
@@ -56,7 +49,7 @@ namespace emuone::core
         ///     Returns the set of all registered VM architectures.
         /// \return
         ///     Returns the set of all registered VM architectures.
-        static auto     allArchitectures() -> Architectures;
+        static auto     all() -> Architectures;
 
         /// \brief
         ///     Registers the specified Architecture.
@@ -67,7 +60,7 @@ namespace emuone::core
         ///     The VM architecture to register.
         /// \return
         ///     True on success, false on failure.
-        static bool     registerArchitecture(IArchitecture * architecture);
+        static bool     register(IArchitecture * architecture);
 
         /// \brief
         ///     Un-registers the specified VM architecture.
@@ -75,7 +68,7 @@ namespace emuone::core
         ///     The VM architecture to un-register.
         /// \return
         ///     True on success, false on failure.
-        static bool     unregisterArchitecture(IArchitecture * architecture);
+        static bool     unregister(IArchitecture * architecture);
 
         /// \brief
         ///     Finds a registered component by mnemonic.
@@ -84,7 +77,7 @@ namespace emuone::core
         /// \return
         ///     The registered VM architecture with the
         ///     required mnemonic or nullptr if none found.
-        static auto     findArchitecture(const QString & mnemonic) -> IArchitecture *;
+        static auto     find(const QString & mnemonic) -> IArchitecture *;
 
         //////////
         //  Implementation

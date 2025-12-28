@@ -47,6 +47,7 @@ namespace emuone::util
     template <> EMUONE_UTIL_PUBLIC QString toString<QColor>(const QColor & value);
     template <> EMUONE_UTIL_PUBLIC QString toString<QDateTime>(const QDateTime & value);
     template <> EMUONE_UTIL_PUBLIC QString toString<QDate>(const QDate & value);
+    template <> EMUONE_UTIL_PUBLIC QString toString<QByteArray>(const QByteArray & value);
 }
 
 //  End of emuone-util/ToString.hpp

@@ -68,7 +68,7 @@ void Component::deiniialize()
 EMUONE_IMPLEMENT_SINGLETON(Component::Settings)
 
 Component::Settings::Settings()
-    :   mainFrameBounds(this, "MainFrameBounds", QRect(32, 32, 480, 320)),
+    :   mainFrameGeometry(this, "MainFrameGeometry", QByteArray()),
         mainFrameMaximized(this, "MainFrameMaximized", false)
 {
 }

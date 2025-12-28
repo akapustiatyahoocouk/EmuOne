@@ -43,4 +43,7 @@ Clazz * Clazz::instance()                           \
         return theInstance;                         \
 }
 
+//  We need some dark magic with C++ keywords
+#define register register_  /*  it's a verb, not a description! */
+
 //  End of emuone-util/Macros.cpp

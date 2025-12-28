@@ -49,7 +49,7 @@ namespace emuone::core
         ///     Returns the set of all registered VM virtualMachineTypes.
         /// \return
         ///     Returns the set of all registered VM virtualMachineTypes.
-        static auto     allVirtualMachineTypes() -> VirtualMachineTypes;
+        static auto     all() -> VirtualMachineTypes;
 
         /// \brief
         ///     Registers the specified VM virtualMachineType.
@@ -60,7 +60,7 @@ namespace emuone::core
         ///     The VM virtualMachineType to register.
         /// \return
         ///     True on success, false on failure.
-        static bool     registerVirtualMachineType(IVirtualMachineType * virtualMachineType);
+        static bool     register(IVirtualMachineType * virtualMachineType);
 
         /// \brief
         ///     Un-registers the specified VM virtualMachineType.
@@ -68,7 +68,7 @@ namespace emuone::core
         ///     The VM virtualMachineType to un-register.
         /// \return
         ///     True on success, false on failure.
-        static bool     unregisterVirtualMachineType(IVirtualMachineType * virtualMachineType);
+        static bool     unregister(IVirtualMachineType * virtualMachineType);
 
         /// \brief
         ///     Finds a registered VM virtualMachineType by mnemonic.
@@ -77,7 +77,7 @@ namespace emuone::core
         /// \return
         ///     The registered VM virtualMachineType with the
         ///     required mnemonic or nullptr if none found.
-        static auto     findVirtualMachineType(const QString & mnemonic) -> IVirtualMachineType *;
+        static auto     find(const QString & mnemonic) -> IVirtualMachineType *;
 
         //////////
         //  Implementation

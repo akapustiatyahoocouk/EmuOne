@@ -18,6 +18,30 @@
 using namespace emuone::core;
 
 //////////
+//  VirtualMachineCorruptException
+VirtualMachineCorruptException::VirtualMachineCorruptException(
+        const QString & location
+    ) : _location(location)
+{
+}
+
+QString VirtualMachineCorruptException::errorMessage() const
+{
+    return "Virtual machine " + _location + " is invalid or corrupt";
+}
+
+//////////
+//  InvalidVirtualMachineStateException
+InvalidVirtualMachineStateException::InvalidVirtualMachineStateException()
+{
+}
+
+QString InvalidVirtualMachineStateException::errorMessage() const
+{
+    return "The virtual machine state is invalid";
+}
+
+//////////
 //  CustomVirtualMachineException
 CustomVirtualMachineException::CustomVirtualMachineException(
         const QString & errorMessage

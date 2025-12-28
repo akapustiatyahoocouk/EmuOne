@@ -86,13 +86,17 @@ namespace emuone
         //////////
         //  Implementation
     private:
+        using VirtualMachines = emuone::core::VirtualMachines;
+
         bool            _trackPosition = false;
+
+        VirtualMachines _virtualMachines;   //  currently open
 
         //  Helpers
         void            _loadPosition();
         void            _savePosition();
-        void            _ensureWithinScreenBounds();
-        void            _setFrameGeometry(const QRect & bounds);
+
+        void            _openVirtualMachine(const QString & location);  //  may throw
 
         //////////
         //  Controls
@@ -110,6 +114,7 @@ namespace emuone
         void            _refreshTimerTimeout();
 
         void            _onActionNewVirtualMachine();
+        void            _onActionOpenVirtualMachine();
         void            _onActionExit();
     };
 }

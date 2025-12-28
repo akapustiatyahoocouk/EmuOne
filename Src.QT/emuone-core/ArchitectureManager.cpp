@@ -27,7 +27,7 @@ struct ArchitectureManager::_Impl
 
 //////////
 //  Operations
-auto ArchitectureManager::allArchitectures() -> Architectures
+auto ArchitectureManager::all() -> Architectures
 {
     _Impl * impl = _impl();
     QMutexLocker _(&impl->guard);
@@ -36,7 +36,7 @@ auto ArchitectureManager::allArchitectures() -> Architectures
     return Architectures(result.cbegin(), result.cend());
 }
 
-bool ArchitectureManager::registerArchitecture(IArchitecture * architecture)
+bool ArchitectureManager::register(IArchitecture * architecture)
 {
     Q_ASSERT(architecture != nullptr);
 
@@ -53,7 +53,7 @@ bool ArchitectureManager::registerArchitecture(IArchitecture * architecture)
     return true;
 }
 
-bool ArchitectureManager::unregisterArchitecture(IArchitecture * architecture)
+bool ArchitectureManager::unregister(IArchitecture * architecture)
 {
     Q_ASSERT(architecture != nullptr);
 
@@ -73,7 +73,7 @@ bool ArchitectureManager::unregisterArchitecture(IArchitecture * architecture)
     return false;
 }
 
-auto ArchitectureManager::findArchitecture(const QString & mnemonic) -> IArchitecture *
+auto ArchitectureManager::find(const QString & mnemonic) -> IArchitecture *
 {
     _Impl * impl = _impl();
     QMutexLocker _(&impl->guard);

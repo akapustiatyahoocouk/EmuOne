@@ -29,7 +29,7 @@
 
 #include "emuone-core/Architecture.hpp"
 #include "emuone-core/VirtualMachineType.hpp"
-#include "emuone-core/Template.hpp"
+#include "emuone-core/VirtualMachineTemplate.hpp"
 
 #include "emuone-core/ComponentCategory.hpp"
 #include "emuone-core/ComponentType.hpp"

@@ -58,13 +58,13 @@ auto Component::settings() const -> const Settings *
 void Component::iniialize()
 {
     //  Register standard stock objects
-    emuone::core::ArchitectureManager::registerArchitecture(Architecture::instance());
+    emuone::core::ArchitectureManager::register(Architecture::instance());
 }
 
 void Component::deiniialize()
 {
     //  Unregister standard stock objects
-    emuone::core::ArchitectureManager::unregisterArchitecture(Architecture::instance());
+    emuone::core::ArchitectureManager::unregister(Architecture::instance());
 }
 
 //////////

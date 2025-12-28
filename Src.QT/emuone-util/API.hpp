@@ -49,12 +49,14 @@
 #include <QDateTime>
 #include <QDialog>
 #include <QDir>
+#include <QDomDocument>
 #include <QException>
 #include <QFileDialog>
 #include <QIcon>
 #include <QImage>
 #include <QLibrary>
 #include <QMainWindow>
+#include <QMessageBox>
 #include <QMutex>
 #include <QMutexLocker>
 #include <QPixmap>

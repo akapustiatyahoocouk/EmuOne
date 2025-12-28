@@ -29,6 +29,26 @@ namespace
             throw emuone::util::ParseException(s, scan);
         }
     }
+
+    int xdigit(const QChar & c)
+    {
+        if (c >= '0' && c <= '9')
+        {
+            return c.unicode() - '0';
+        }
+        else if (c >= 'a' && c <= 'f')
+        {
+            return c.unicode() - 'a' + 10;
+        }
+        else if (c >= 'A' && c <= 'F')
+        {
+            return c.unicode() - 'A' + 10;
+        }
+        else
+        {
+            return -1;
+        }
+    }
 }
 
 //  C++ types
@@ -645,6 +665,28 @@ template <> EMUONE_UTIL_PUBLIC QDate emuone::util::fromString<QDate>(const QStri
         return result;
     }
     throw ParseException(s, scan);
+}
+
+template <> EMUONE_UTIL_PUBLIC
+QByteArray emuone::util::fromString<QByteArray>(const QString & s, qsizetype & scan)
+{
+    if (scan < 0 || scan >= s.length())
+    {
+        throw ParseException(s, scan);
+    }
+    QByteArray result;
+    while (scan + 1 < s.length())
+    {
+        int hi = xdigit(s[scan + 0]);
+        int lo = xdigit(s[scan + 1]);
+        if (hi == -1 || lo == -1)
+        {
+            break;
+        }
+        result.append(uint8_t(hi * 16 + lo));
+        scan += 2;
+    }
+    return result;
 }
 
 //  End of emuone-util/FromString.cpp

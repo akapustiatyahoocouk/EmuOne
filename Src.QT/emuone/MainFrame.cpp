@@ -32,6 +32,8 @@ MainFrame::MainFrame()
 
     _loadPosition();
 
+    //  Reopen known VMs
+
     //  Set up signal handlers
     _trackPositionTimer.setSingleShot(true);
     _savePositionTimer.setSingleShot(true);
@@ -57,6 +59,12 @@ MainFrame::MainFrame()
 
 MainFrame::~MainFrame()
 {
+    //  Stop & destroy all VMs
+    for (auto vm : _virtualMachines)
+    {
+        delete vm;
+    }
+    //  Cleanuo & done
     delete _ui;
 }
 
@@ -110,8 +118,7 @@ void MainFrame::refresh()
 //  Implementation
 void MainFrame::_loadPosition()
 {
-    _setFrameGeometry(Component::Settings::instance()->mainFrameBounds);
-    _ensureWithinScreenBounds();
+    restoreGeometry(Component::Settings::instance()->mainFrameGeometry);
     //  Make sure the frame is not off-screen
     if (Component::Settings::instance()->mainFrameMaximized)
     {
@@ -129,39 +136,26 @@ void MainFrame::_savePosition()
         }
         else if (!this->isMinimized())
         {
-            Component::Settings::instance()->mainFrameBounds = this->frameGeometry();
+            Component::Settings::instance()->mainFrameGeometry = this->saveGeometry();
             Component::Settings::instance()->mainFrameMaximized = false;
         }
     }
 }
 
-void MainFrame::_ensureWithinScreenBounds()
+void MainFrame::_openVirtualMachine(const QString & location)
 {
-    QRect bounds = this->frameGeometry();
-    QRect workspaceRect =
-        QGuiApplication::primaryScreen()->availableGeometry();
-    bounds.setWidth(std::min(bounds.width(), workspaceRect.width()));
-    bounds.setHeight(std::min(bounds.height(), workspaceRect.height()));
-    bounds.setWidth(std::max(bounds.width(), MinimumSize.width()));
-    bounds.setHeight(std::max(bounds.height(), MinimumSize.height()));
-
-    bounds.setX(std::min(bounds.x(), workspaceRect.width() - bounds.width()));
-    bounds.setY(std::min(bounds.y(), workspaceRect.height() - bounds.height()));
-    bounds.setX(std::max(bounds.x(), workspaceRect.x()));
-    bounds.setY(std::max(bounds.y(), workspaceRect.y()));
-    _setFrameGeometry(bounds);
-}
-
-void MainFrame::_setFrameGeometry(const QRect & bounds)
-{
-    QRect g = this->geometry();
-    QRect fg = this->frameGeometry();
-    QPoint tl = this->mapToGlobal(QPoint(0, 0));
-    this->setGeometry(
-        bounds.x() + (tl.x() - fg.x()),
-        bounds.y() + (tl.y() - fg.y()),
-        bounds.width(),
-        bounds.height() - (tl.y() - fg.y()));
+    //  Is a VM with the same location already open ?
+    for (auto vm : _virtualMachines)
+    {
+        if (vm->location() == location)
+        {   //  Yes - nothing to be done
+            return;
+        }
+    }
+    //  Open, add...
+    _virtualMachines.append(
+        emuone::core::VirtualMachine::load(location));  //  may throw
+    //  ...and set up the UI
 }
 
 //////////
@@ -189,6 +183,32 @@ void MainFrame::_onActionNewVirtualMachine()
         //  TODO ?
     }
 
+}
+
+void MainFrame::_onActionOpenVirtualMachine()
+{
+    QString path =
+        QFileDialog::getOpenFileName(
+            this,
+            "Open virtual machine",
+            /*dir =*/ QString(),
+            "EmuOne files (*" +
+            emuone::core::VirtualMachine::PreferredExtension +
+            ");;All files (*.*)");
+    if (path.isEmpty())
+    {   //  User has cancelled the dialog
+        return;
+    }
+    try
+    {
+        _openVirtualMachine(path);  //  may throw
+    }
+    catch (const emuone::util::Exception & ex)
+    {
+        qCritical() << ex;
+        //  TODO MessageDialog
+        QMessageBox::critical(this, "ERROR", ex.errorMessage());
+    }
 }
 
 void MainFrame::_onActionExit()

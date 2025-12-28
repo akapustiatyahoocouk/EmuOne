@@ -37,9 +37,9 @@ namespace emuone
             //  Properties
         public:
             /// \brief
-            ///     The "normal" bounds of the main UI frame
+            ///     The "normal" geometry of the main UI frame
             ///     (that is, when it is noe minimized or maximized).
-            emuone::util::Setting<QRect>   mainFrameBounds;
+            emuone::util::Setting<QByteArray>   mainFrameGeometry;
 
             /// \brief
             ///     True if the main UI frame is maximized, false if not.
