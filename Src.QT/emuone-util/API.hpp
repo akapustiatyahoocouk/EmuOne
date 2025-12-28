@@ -66,6 +66,7 @@
 #include <QTimeZone>
 #include <QVersionNumber>
 #include <QSemaphore>
+#include <QStackedLayout>
 #include <QThread>
 
 #if defined(__GNUC__)

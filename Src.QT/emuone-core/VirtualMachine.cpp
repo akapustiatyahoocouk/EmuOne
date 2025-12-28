@@ -136,6 +136,14 @@ auto VirtualMachine::createdFrom() const -> IVirtualMachineTemplate *
 }
 
 //////////
+//  Operations (state control)
+VirtualMachine::State VirtualMachine::state() const
+{
+    emuone::util::Lock _(_guard);
+    return _state;
+}
+
+//////////
 //  Operations (persistency)
 void VirtualMachine::save()
 {

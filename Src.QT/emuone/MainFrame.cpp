@@ -59,12 +59,6 @@ MainFrame::MainFrame()
 
 MainFrame::~MainFrame()
 {
-    //  Stop & destroy all VMs
-    for (auto vm : _virtualMachines)
-    {
-        delete vm;
-    }
-    //  Cleanuo & done
     delete _ui;
 }
 
@@ -109,9 +103,77 @@ void MainFrame::hide()
     }
 }
 
+auto MainFrame::virtualMachines(
+    ) const -> emuone::core::VirtualMachines
+{
+    emuone::core::VirtualMachines result;
+    for (int i = 1; i < _ui->tabWidget->count(); i++)
+    {
+         auto page =
+            dynamic_cast<VirtualMachinePage*>(
+                _ui->tabWidget->widget(i));
+        Q_ASSERT(page != nullptr);
+         result.append(page->virtualMachine());
+    }
+    return result;
+}
+
+auto MainFrame::currentVirtualMachine(
+    ) const -> emuone::core::VirtualMachine *
+{
+    if (auto page =
+        dynamic_cast<VirtualMachinePage*>(
+            _ui->tabWidget->currentWidget()))
+    {
+        return page->virtualMachine();
+    }
+    return nullptr;
+}
+
+void MainFrame::setCurrentVirtualMachine(
+        emuone::core::VirtualMachine * virtualMachine
+    )
+{
+    if (virtualMachine == nullptr)
+    {
+        _ui->tabWidget->setCurrentIndex(0);
+    }
+    else
+    {
+        for (int i = 1; i < _ui->tabWidget->count(); i++)
+        {
+            auto page =
+                dynamic_cast<VirtualMachinePage*>(
+                    _ui->tabWidget->widget(i));
+            Q_ASSERT(page != nullptr);
+            if (page->virtualMachine() == virtualMachine)
+            {   //  This one!
+                _ui->tabWidget->setCurrentIndex(i);
+                break;
+            }
+        }
+    }
+    refresh();
+}
+
 void MainFrame::refresh()
 {
-    //  TODO title ? states ? status bar ?
+    auto vm = currentVirtualMachine();
+
+    //  TODO title, status bar
+
+    //  Actions
+    _ui->actionCloseVirtualMachine->setEnabled(vm != nullptr);
+
+    //  Pages
+    for (int i = 1; i < _ui->tabWidget->count(); i++)
+    {
+        auto page =
+            dynamic_cast<VirtualMachinePage*>(
+                _ui->tabWidget->widget(i));
+        Q_ASSERT(page != nullptr);
+        page->refresh();
+    }
 }
 
 //////////
@@ -142,20 +204,27 @@ void MainFrame::_savePosition()
     }
 }
 
-void MainFrame::_openVirtualMachine(const QString & location)
+auto MainFrame::_openVirtualMachine(
+        const QString & location
+    ) -> emuone::core::VirtualMachine *
 {
     //  Is a VM with the same location already open ?
-    for (auto vm : _virtualMachines)
+    for (auto vm : virtualMachines())
     {
         if (vm->location() == location)
         {   //  Yes - nothing to be done
-            return;
+            return vm;
         }
     }
-    //  Open, add...
-    _virtualMachines.append(
-        emuone::core::VirtualMachine::load(location));  //  may throw
-    //  ...and set up the UI
+    //  Open and set up the UI
+    auto vm = emuone::core::VirtualMachine::load(location); //  may throw
+    auto page = new VirtualMachinePage(this, vm);
+    int index = _ui->tabWidget->addTab(page, vm->name());
+    _ui->tabWidget->setTabIcon(
+        index,
+        QPixmap::fromImage(vm->architecture()->smallImage()));
+    refresh();
+    return vm;
 }
 
 //////////
@@ -172,15 +241,26 @@ void MainFrame::_savePositionTimerTimeout()
 }
 
 void MainFrame::_refreshTimerTimeout()
-{   //  TODO VM states ?
+{
+    refresh();
 }
 
 void MainFrame::_onActionNewVirtualMachine()
 {
     NewVirtualMachineDialog dlg(this);
     if (dlg.doModal() == NewVirtualMachineDialog::Result::Ok)
-    {   //  VM created
-        //  TODO ?
+    {   //  VM created - open it now
+        try
+        {
+            setCurrentVirtualMachine(
+                _openVirtualMachine(dlg.virtualMachineLocation())); //  may throw
+        }
+        catch (const emuone::util::Exception & ex)
+        {
+            qCritical() << ex;
+            //  TODO MessageDialog
+            QMessageBox::critical(this, "ERROR", ex.errorMessage());
+        }
     }
 
 }
@@ -201,7 +281,8 @@ void MainFrame::_onActionOpenVirtualMachine()
     }
     try
     {
-        _openVirtualMachine(path);  //  may throw
+        setCurrentVirtualMachine(
+            _openVirtualMachine(path)); //  may throw
     }
     catch (const emuone::util::Exception & ex)
     {

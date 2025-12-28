@@ -80,6 +80,28 @@ namespace emuone
         void            hide();
 
         /// \brief
+        ///     Returns the list of all currently open VMs.
+        /// \return
+        ///     The list of all currently open VMs.
+        auto            virtualMachines(
+                            ) const -> emuone::core::VirtualMachines;
+
+        /// \brief
+        ///     Returns the VM that is "current" in this frame.
+        /// \return
+        ///     The VM that is "current" in this frame; nullptr == none (home page).
+        auto            currentVirtualMachine(
+                            ) const -> emuone::core::VirtualMachine *;
+
+        /// \brief
+        ///     Sets the VM that is "current" in this frame.
+        /// \param virtualMachine
+        ///     The VM to make "current" in this frame; nullptr == none (home page).
+        void            setCurrentVirtualMachine(
+                                emuone::core::VirtualMachine * virtualMachine
+                            );
+
+        /// \brief
         ///     Refreshes this main frame and controls within
         void            refresh();
 
@@ -90,13 +112,13 @@ namespace emuone
 
         bool            _trackPosition = false;
 
-        VirtualMachines _virtualMachines;   //  currently open
-
         //  Helpers
         void            _loadPosition();
         void            _savePosition();
 
-        void            _openVirtualMachine(const QString & location);  //  may throw
+        auto            _openVirtualMachine(
+                                const QString & location
+                            ) -> emuone::core::VirtualMachine *;  //  may throw
 
         //////////
         //  Controls
