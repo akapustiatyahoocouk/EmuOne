@@ -311,7 +311,7 @@
     <string>&amp;Stop</string>
    </property>
    <property name="shortcut">
-    <string>Esc, Esc</string>
+    <string>Ctrl+Alt+F4</string>
    </property>
   </action>
   <action name="actionSuspend">
@@ -323,7 +323,7 @@
     <string>S&amp;uspend</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+S</string>
+    <string>Ctrl+Alt+S</string>
    </property>
   </action>
   <action name="actionResume">
@@ -335,7 +335,7 @@
     <string>R&amp;esume</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+R</string>
+    <string>F5</string>
    </property>
   </action>
   <action name="actionReset">
@@ -468,10 +468,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>tabWidget</sender>
+   <signal>currentChanged(int)</signal>
+   <receiver>emuone::MainFrame</receiver>
+   <slot>_tabWidgetCurrentChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>179</x>
+     <y>171</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>179</x>
+     <y>171</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>_onActionExit()</slot>
   <slot>_onActionNewVirtualMachine()</slot>
   <slot>_onActionOpenVirtualMachine()</slot>
+  <slot>_tabWidgetCurrentChanged(int)</slot>
  </slots>
 </ui>

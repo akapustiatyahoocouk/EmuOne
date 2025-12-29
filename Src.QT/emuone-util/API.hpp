@@ -115,7 +115,7 @@
 //  TODO ? #include "tt3-util/Component.hpp"
 //  TODO ? #include "tt3-util/Subsystem.hpp"
 //  TODO ? #include "tt3-util/Tool.hpp"
-#include "emuone-util/Dynaload.hpp"
+#include "emuone-util/Component.hpp"
 
 //  Misc
 //  TODO ? #include "tt3-util/ProductInformation.hpp"

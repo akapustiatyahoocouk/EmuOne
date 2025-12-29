@@ -4,8 +4,8 @@ TEMPLATE = lib
 DEFINES += EMUONE_UTIL_LIBRARY
 
 SOURCES += \
+    Component.cpp \
     ComponentManager.cpp \
-    Dynaload.cpp \
     Exceptions.cpp \
     FromString.cpp \
     IComponent.cpp \
@@ -16,7 +16,7 @@ SOURCES += \
 HEADERS += \
     API.hpp \
     Classes.hpp \
-    Dynaload.hpp \
+    Component.hpp \
     Exceptions.hpp \
     FromString.hpp \
     Linkage.hpp \

@@ -239,6 +239,10 @@ namespace emuone::core
         ///     The State of this VM.
         State           state() const;
 
+        bool            isStopped() const;
+        bool            isRunning() const;
+        bool            isSuspended() const;
+
         /// \brief
         ///     Perorms the Stopped -> Running or Suspended -> Running
         ///     state change.

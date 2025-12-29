@@ -1,5 +1,5 @@
 //
-//  emuone/Dynaload.hpp - Dynamic loading support
+//  emuone/Component.hpp - emuone Component
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -57,6 +57,10 @@ namespace emuone
             ///     The recently opened VMs (youngest first, oldest last).
             emuone::util::Setting<KnownVirtualMachines> recentVirtualMachines;
 
+            /// \brief
+            ///     The location of the "current" VM, "" == no "current" VM.
+            emuone::util::Setting<QString> currentVirtualMachineLocation;
+
             //////////
             //  Operations
         public:
@@ -86,4 +90,4 @@ namespace emuone
     };
 }
 
-//  End of emuone/Dynaload.hpp
+//  End of emuone/Component.hpp

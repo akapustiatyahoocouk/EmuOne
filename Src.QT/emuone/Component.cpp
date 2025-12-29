@@ -1,5 +1,5 @@
 //
-//  emuone-hades/Dynaload.cpp - Dynamic loading support
+//  emuone/Component.cpp - emuone::Component class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -14,23 +14,23 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 //////////
-#include "emuone-hades/API.hpp"
-using namespace emuone::hades;
+#include "emuone/API.hpp"
+using namespace emuone;
 
 //////////
-//  Registration
+//  Singleton
 EMUONE_IMPLEMENT_COMPONENT(Component)
 
 //////////
 //  emuone::util::IStockObject
 QString Component::mnemonic() const
 {
-    return "emuone::hades";
+    return "emuone";
 }
 
 QString Component::displayName() const
 {
-    return "EmuOne HADES support";
+    return "EmuOne";
 }
 
 //////////
@@ -57,20 +57,53 @@ auto Component::settings() const -> const Settings *
 
 void Component::iniialize()
 {
-    //  Register standard stock objects
-    emuone::core::ArchitectureManager::register(Architecture::instance());
 }
 
 void Component::deiniialize()
 {
-    //  Unregister standard stock objects
-    emuone::core::ArchitectureManager::unregister(Architecture::instance());
 }
 
 //////////
 //  Component::Setting
 EMUONE_IMPLEMENT_SINGLETON(Component::Settings)
-Component::Settings::Settings() {}
-Component::Settings::~Settings() {}
 
-//  End of emuone-hades/Dynaload.cpp
+Component::Settings::Settings()
+    :   mainFrameGeometry(this, "MainFrameGeometry", QByteArray()),
+        mainFrameMaximized(this, "MainFrameMaximized", false),
+        recentVirtualMachines(this, "RecentVirtualMachines", KnownVirtualMachines()),
+        currentVirtualMachineLocation(this, "CurrentVirtualMachineLocation", "")
+{
+}
+
+Component::Settings::~Settings()
+{
+}
+
+void Component::Settings::addRecentVirtualMachine(
+        const KnownVirtualMachine & kvm
+    )
+{
+    KnownVirtualMachines mru = recentVirtualMachines;
+    mru.removeAll(kvm);
+    mru.insert(0, kvm);
+    while (mru.size() > MaxRecentVirtualMachines)
+    {
+        mru.remove(mru.size() - 1);
+    }
+    recentVirtualMachines = mru;
+}
+
+void Component::Settings::removeRecentVirtualMachine(
+        const KnownVirtualMachine & kvm
+    )
+{
+    KnownVirtualMachines mru = recentVirtualMachines;
+    mru.removeAll(kvm);
+    while (mru.size() > MaxRecentVirtualMachines)
+    {
+        mru.remove(mru.size() - 1);
+    }
+    recentVirtualMachines = mru;
+}
+
+//  End of emuone/Component.cpp

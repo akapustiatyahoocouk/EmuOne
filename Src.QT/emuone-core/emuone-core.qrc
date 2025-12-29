@@ -1,7 +1,21 @@
 <RCC>
     <qresource prefix="/emuone-core">
+        <file>Resources/Images/Objects/GenericDeviceLarge.png</file>
+        <file>Resources/Images/Objects/GenericDeviceSmall.png</file>
+        <file>Resources/Images/Objects/MemoryLarge.png</file>
+        <file>Resources/Images/Objects/MemorySmall.png</file>
+        <file>Resources/Images/Objects/OnboardDeviceLarge.png</file>
+        <file>Resources/Images/Objects/OnboardDeviceSmall.png</file>
+        <file>Resources/Images/Objects/ProcessorLarge.png</file>
+        <file>Resources/Images/Objects/ProcessorSmall.png</file>
         <file>Resources/Images/Objects/RemoteTerminalLarge.png</file>
         <file>Resources/Images/Objects/RemoteTerminalSmall.png</file>
+        <file>Resources/Images/Objects/SoftwareLarge.png</file>
+        <file>Resources/Images/Objects/SoftwareSmall.png</file>
+        <file>Resources/Images/Objects/StorageLarge.png</file>
+        <file>Resources/Images/Objects/StorageSmall.png</file>
+        <file>Resources/Images/Objects/UiDeviceLarge.png</file>
+        <file>Resources/Images/Objects/UiDeviceSmall.png</file>
         <file>Resources/Images/Objects/VirtualMachineLarge.png</file>
         <file>Resources/Images/Objects/VirtualMachineSmall.png</file>
     </qresource>

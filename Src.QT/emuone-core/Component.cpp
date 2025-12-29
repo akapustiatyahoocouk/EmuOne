@@ -1,5 +1,5 @@
 //
-//  emuone/Dynaload.cpp - Dynamic loading support
+//  emuone-core/Component.cpp - emuone::core::Component class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -14,23 +14,23 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 //////////
-#include "emuone/API.hpp"
-using namespace emuone;
+#include "emuone-core/API.hpp"
+using namespace emuone::core;
 
 //////////
-//  Singleton
+//  Registration
 EMUONE_IMPLEMENT_COMPONENT(Component)
 
 //////////
 //  emuone::util::IStockObject
 QString Component::mnemonic() const
 {
-    return "emuone";
+    return "emuone::core";
 }
 
 QString Component::displayName() const
 {
-    return "EmuOne";
+    return "EmuOne core";
 }
 
 //////////
@@ -57,52 +57,20 @@ auto Component::settings() const -> const Settings *
 
 void Component::iniialize()
 {
+    //  Register standard stock objects
+    //  TODO
 }
 
 void Component::deiniialize()
 {
+    //  Unregister standard stock objects
+    //  TODO
 }
 
 //////////
 //  Component::Setting
 EMUONE_IMPLEMENT_SINGLETON(Component::Settings)
+Component::Settings::Settings() {}
+Component::Settings::~Settings() {}
 
-Component::Settings::Settings()
-    :   mainFrameGeometry(this, "MainFrameGeometry", QByteArray()),
-        mainFrameMaximized(this, "MainFrameMaximized", false),
-        recentVirtualMachines(this, "RecentVirtualMachines", KnownVirtualMachines())
-{
-}
-
-Component::Settings::~Settings()
-{
-}
-
-void Component::Settings::addRecentVirtualMachine(
-        const KnownVirtualMachine & kvm
-    )
-{
-    KnownVirtualMachines mru = recentVirtualMachines;
-    mru.removeAll(kvm);
-    mru.insert(0, kvm);
-    while (mru.size() > MaxRecentVirtualMachines)
-    {
-        mru.remove(mru.size() - 1);
-    }
-    recentVirtualMachines = mru;
-}
-
-void Component::Settings::removeRecentVirtualMachine(
-        const KnownVirtualMachine & kvm
-    )
-{
-    KnownVirtualMachines mru = recentVirtualMachines;
-    mru.removeAll(kvm);
-    while (mru.size() > MaxRecentVirtualMachines)
-    {
-        mru.remove(mru.size() - 1);
-    }
-    recentVirtualMachines = mru;
-}
-
-//  End of emuone/Dynaload.cpp
+//  End of emuone-core/Component.cpp

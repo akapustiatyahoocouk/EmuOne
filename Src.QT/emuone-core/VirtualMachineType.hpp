@@ -87,7 +87,7 @@ namespace emuone::core
     };
 
     /// \class StandardVirtualMachineTypes emuone-core/API.hpp
-    /// \brief Standard predefined VN virtualMachineTypes.
+    /// \brief Standard predefined VN types.
     class EMUONE_CORE_PUBLIC StandardVirtualMachineTypes final
     {
         EMUONE_UTILITY_CLASS(StandardVirtualMachineTypes)
@@ -102,7 +102,7 @@ namespace emuone::core
         static auto     all() -> VirtualMachineTypes;
 
         //////////
-        //  VirtualMachineTypes
+        //  VM types
     public:
         /// \class VirtualMachine emuone-core/API.hpp
         /// \brief The "VM" virtualMachineType.

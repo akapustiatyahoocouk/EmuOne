@@ -136,6 +136,7 @@ namespace emuone
         void            _trackPositionTimerTimeout();
         void            _savePositionTimerTimeout();
         void            _refreshTimerTimeout();
+        void            _tabWidgetCurrentChanged(int);
 
         void            _onActionNewVirtualMachine();
         void            _onActionOpenVirtualMachine();

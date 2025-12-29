@@ -1,5 +1,5 @@
 //
-//  emuone-hades/Dynaload.hpp - Dynamic loading support
+//  emuone-hades/Component.hpp - emuone-hades Component
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -52,4 +52,4 @@ namespace emuone::hades
     };
 }
 
-//  End of emuone-hades/Dynaload.hpp
+//  End of emuone-hades/Component.hpp

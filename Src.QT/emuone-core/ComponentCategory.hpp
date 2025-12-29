@@ -32,12 +32,6 @@ namespace emuone::core
         virtual ~IComponentCategory() = default;
 
         //////////
-        //  emuone::util::IStockObject
-    public:
-        virtual QImage  smallImage() const = 0;
-        virtual QImage  largeImage() const = 0;
-
-        //////////
         //  Operations
     public:
     };
@@ -90,6 +84,123 @@ namespace emuone::core
     private:
         struct _Impl;
         static _Impl *  _impl();
+    };
+
+    /// \class StandardComponentCategories emuone-core/API.hpp
+    /// \brief Standard predefined component categories.
+    class EMUONE_CORE_PUBLIC StandardComponentCategories final
+    {
+        EMUONE_UTILITY_CLASS(StandardComponentCategories)
+
+        //////////
+        //  Operations
+    public:
+        /// \brief
+        ///     Returns the set of all standard component categories.
+        /// \return
+        ///     The set of all standard component categories.
+        static auto     all() -> ComponentCategories;
+
+        //////////
+        //  Component categories
+    public:
+        class EMUONE_CORE_PUBLIC Processors final
+            :   public virtual IComponentCategory
+        {
+            EMUONE_DECLARE_SINGLETON(Processors)
+
+            //////////
+            //  emuone::util::IStockObject
+        public:
+            virtual QString mnemonic() const override;
+            virtual QString displayName() const override;
+            virtual QIcon   smallIcon() const override;
+            virtual QIcon   largeIcon() const override;
+        };
+
+        class EMUONE_CORE_PUBLIC Memory final
+            :   public virtual IComponentCategory
+        {
+            EMUONE_DECLARE_SINGLETON(Memory)
+
+            //////////
+            //  emuone::util::IStockObject
+        public:
+            virtual QString mnemonic() const override;
+            virtual QString displayName() const override;
+            virtual QIcon   smallIcon() const override;
+            virtual QIcon   largeIcon() const override;
+        };
+
+        class EMUONE_CORE_PUBLIC Storage final
+            :   public virtual IComponentCategory
+        {
+            EMUONE_DECLARE_SINGLETON(Storage)
+
+            //////////
+            //  emuone::util::IStockObject
+        public:
+            virtual QString mnemonic() const override;
+            virtual QString displayName() const override;
+            virtual QIcon   smallIcon() const override;
+            virtual QIcon   largeIcon() const override;
+        };
+
+        class EMUONE_CORE_PUBLIC OnboardDevices final
+            :   public virtual IComponentCategory
+        {
+            EMUONE_DECLARE_SINGLETON(OnboardDevices)
+
+            //////////
+            //  emuone::util::IStockObject
+        public:
+            virtual QString mnemonic() const override;
+            virtual QString displayName() const override;
+            virtual QIcon   smallIcon() const override;
+            virtual QIcon   largeIcon() const override;
+        };
+
+        class EMUONE_CORE_PUBLIC UiDevices final
+            :   public virtual IComponentCategory
+        {
+            EMUONE_DECLARE_SINGLETON(UiDevices)
+
+            //////////
+            //  emuone::util::IStockObject
+        public:
+            virtual QString mnemonic() const override;
+            virtual QString displayName() const override;
+            virtual QIcon   smallIcon() const override;
+            virtual QIcon   largeIcon() const override;
+        };
+
+        class EMUONE_CORE_PUBLIC Software final
+            :   public virtual IComponentCategory
+        {
+            EMUONE_DECLARE_SINGLETON(Software)
+
+            //////////
+            //  emuone::util::IStockObject
+        public:
+            virtual QString mnemonic() const override;
+            virtual QString displayName() const override;
+            virtual QIcon   smallIcon() const override;
+            virtual QIcon   largeIcon() const override;
+        };
+
+        class EMUONE_CORE_PUBLIC Miscellaneous final
+            :   public virtual IComponentCategory
+        {
+            EMUONE_DECLARE_SINGLETON(Miscellaneous)
+
+            //////////
+            //  emuone::util::IStockObject
+        public:
+            virtual QString mnemonic() const override;
+            virtual QString displayName() const override;
+            virtual QIcon   smallIcon() const override;
+            virtual QIcon   largeIcon() const override;
+        };
     };
 }
 

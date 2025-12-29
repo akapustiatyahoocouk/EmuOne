@@ -24,7 +24,7 @@
 //////////
 //  emuone components
 #include "emuone/KnownVirtualMachine.hpp"
-#include "emuone/Dynaload.hpp"
+#include "emuone/Component.hpp"
 
 #include "emuone/StoppedVirtualMachineView.hpp"
 #include "emuone/VirtualMachinePage.hpp"

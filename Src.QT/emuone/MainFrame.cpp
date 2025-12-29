@@ -33,7 +33,26 @@ MainFrame::MainFrame()
     _loadPosition();
     _refreshMruList();
 
-    //  Reopen known VMs
+    //  Reopen known VMs and restore "current" VM
+    for (auto kvm : Component::Settings::instance()->recentVirtualMachines.value())
+    {
+        try
+        {
+            _openVirtualMachine(kvm.location());    //  May throw
+        }
+        catch (const emuone::util::Exception & ex)
+        {   //  OOPS! Log, but ignore
+            qCritical() << ex;
+        }
+    }
+    for (auto vm : virtualMachines())
+    {
+        if (vm->location() == Component::Settings::instance()->currentVirtualMachineLocation)
+        {   //  This one!
+            setCurrentVirtualMachine(vm);
+            break;
+        }
+    }
 
     //  Set up signal handlers
     _trackPositionTimer.setSingleShot(true);
@@ -165,6 +184,20 @@ void MainFrame::refresh()
 
     //  Actions
     _ui->actionCloseVirtualMachine->setEnabled(vm != nullptr);
+    _ui->actionStart->setEnabled(
+        vm != nullptr && vm->isStopped());
+    _ui->actionStop->setEnabled(
+        vm != nullptr && !vm->isStopped());
+    _ui->actionSuspend->setEnabled(
+        vm != nullptr && vm->isRunning());
+    _ui->actionResume->setEnabled(
+        vm != nullptr && vm->isSuspended());
+    _ui->actionReset->setEnabled(
+        vm != nullptr && vm->isRunning());
+    _ui->actionConfigure->setEnabled(
+        vm != nullptr && vm->isStopped());
+    _ui->actionFullScreen->setEnabled(
+        vm != nullptr && vm->isRunning());
 
     //  Pages
     for (int i = 1; i < _ui->tabWidget->count(); i++)
@@ -281,6 +314,14 @@ void MainFrame::_savePositionTimerTimeout()
 
 void MainFrame::_refreshTimerTimeout()
 {
+    refresh();
+}
+
+void MainFrame::_tabWidgetCurrentChanged(int)
+{
+    auto vm = currentVirtualMachine();
+    Component::Settings::instance()->currentVirtualMachineLocation =
+        (vm != nullptr) ? vm->location() : "";
     refresh();
 }
 

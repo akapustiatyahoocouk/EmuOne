@@ -5,13 +5,13 @@ DEFINES += EMUONE_HADES_LIBRARY
 
 SOURCES += \
     Architecture.cpp \
-    Dynaload.cpp
+    Component.cpp
 
 HEADERS += \
     API.hpp \
     Architecture.hpp \
     Classes.hpp \
-    Dynaload.hpp \
+    Component.hpp \
     Linkage.hpp
 
 LIBS += \

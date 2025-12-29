@@ -2,7 +2,7 @@ include(../emuone.pri)
 
 SOURCES += \
     Application.cpp \
-    Dynaload.cpp \
+    Component.cpp \
     KnownVirtualMachine.cpp \
     Main.cpp \
     MainFrame.cpp \
@@ -13,7 +13,7 @@ SOURCES += \
 HEADERS += \
     API.hpp \
     Application.hpp \
-    Dynaload.hpp \
+    Component.hpp \
     KnownVirtualMachine.hpp \
     MainFrame.hpp \
     NewVirtualMachineDialog.hpp \

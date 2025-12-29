@@ -1,5 +1,5 @@
 //
-//  emuone-util/Dynaload.hpp - Dynamic loading support
+//  emuone-util/Component.hpp - emuone-itil Component
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -260,4 +260,4 @@ namespace emuone::util
     };
 }
 
-//  End of emuone-util/Dynaload.hpp
+//  End of emuone-util/Component.hpp

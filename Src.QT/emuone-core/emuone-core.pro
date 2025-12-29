@@ -5,12 +5,13 @@ DEFINES += EMUONE_CORE_LIBRARY
 
 SOURCES += \
     ArchitectureManager.cpp \
+    Component.cpp \
     ComponentTypeManager.cpp \
-    Dynaload.cpp \
     Exceptions.cpp \
     IComponent.cpp \
     IComponentType.cpp \
     IVirtualMachineTemplate.cpp \
+    StandardComponentCategories.cpp \
     StandardVirtualMachineTypes.cpp \
     VirtualMachineTemplateManager.cpp \
     VirtualMachineTypeManager.cpp \
@@ -23,7 +24,7 @@ HEADERS += \
     Component.hpp \
     ComponentCategory.hpp \
     ComponentType.hpp \
-    Dynaload.hpp \
+    Components.hpp \
     Exceptions.hpp \
     Linkage.hpp \
     VirtualMachine.hpp \

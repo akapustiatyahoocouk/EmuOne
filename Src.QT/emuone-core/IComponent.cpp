@@ -19,14 +19,14 @@ using namespace emuone::core;
 
 //////////
 //  emuone::util::IStockObject
-QImage IComponent::smallImage() const
+QIcon IComponent::smallIcon() const
 {
-    return type()->smallImage();
+    return type()->smallIcon();
 }
 
-QImage IComponent::largeImage() const
+QIcon IComponent::largeIcon() const
 {
-    return type()->largeImage();
+    return type()->largeIcon();
 }
 
 //////////

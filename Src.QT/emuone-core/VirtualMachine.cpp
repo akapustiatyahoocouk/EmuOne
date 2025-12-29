@@ -147,6 +147,20 @@ VirtualMachine::State VirtualMachine::state() const
     emuone::util::Lock _(_guard);
     return _state;
 }
+bool VirtualMachine::isStopped() const
+{
+    return state() == State::Stopped;
+}
+
+bool VirtualMachine::isRunning() const
+{
+    return state() == State::Running;
+}
+
+bool VirtualMachine::isSuspended() const
+{
+    return state() == State::Suspended;
+}
 
 //////////
 //  Operations (persistency)

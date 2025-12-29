@@ -25,7 +25,7 @@
 //  emuone-hades components
 #include "emuone-hades/Linkage.hpp"
 #include "emuone-hades/Classes.hpp"
-#include "emuone-hades/Dynaload.hpp"
+#include "emuone-hades/Component.hpp"
 
 #include "emuone-hades/Architecture.hpp"
 

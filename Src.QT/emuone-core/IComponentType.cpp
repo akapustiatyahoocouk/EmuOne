@@ -19,14 +19,14 @@
 
 //////////
 //  emuone::util::IStockObject
-QImage IComponentType::smallImage() const
+QIcon IComponentType::smallIcon() const
 {
-    return category()->smallImage();
+    return category()->smallIcon();
 }
 
-QImage IComponentType::largeImage() const
+QIcon IComponentType::largeIcon() const
 {
-    return category()->largeImage();
+    return category()->largeIcon();
 }
 
 //  End of emuone-core/IComponentType.cpp
