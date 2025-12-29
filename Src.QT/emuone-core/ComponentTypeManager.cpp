@@ -1,5 +1,5 @@
 //
-//  emuone-core/ComponentTypeManager.cpp - emuone::util::ComponentTypeManager class implementation
+//  emuone-core/ComponentTypeManager.cpp - emuone::core::ComponentTypeManager class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin

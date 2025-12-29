@@ -116,8 +116,8 @@ namespace emuone::core
         public:
             virtual QString mnemonic() const override;
             virtual QString displayName() const override;
-            virtual QImage  smallImage() const override;
-            virtual QImage  largeImage() const override;
+            virtual QIcon   smallIcon() const override;
+            virtual QIcon   largeIcon() const override;
         };
 
         /// \class RemoteTerminal emuone-core/API.hpp
@@ -132,8 +132,8 @@ namespace emuone::core
         public:
             virtual QString mnemonic() const override;
             virtual QString displayName() const override;
-            virtual QImage  smallImage() const override;
-            virtual QImage  largeImage() const override;
+            virtual QIcon   smallIcon() const override;
+            virtual QIcon   largeIcon() const override;
         };
     };
 }

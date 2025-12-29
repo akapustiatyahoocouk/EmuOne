@@ -33,8 +33,8 @@ namespace emuone::util
         //////////
         //  IStockObject
     public:
-        virtual QImage  smallImage() const override;
-        virtual QImage  largeImage() const override;
+        virtual QIcon   smallIcon() const override;
+        virtual QIcon   largeIcon() const override;
 
         //////////
         //  Operations

@@ -1,5 +1,5 @@
 //
-//  emuone-core/VirtualMachineTemplateManager.cpp - emuone::util::VirtualMachineTemplateManager class implementation
+//  emuone-core/VirtualMachineTemplateManager.cpp - emuone::core::VirtualMachineTemplateManager class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin

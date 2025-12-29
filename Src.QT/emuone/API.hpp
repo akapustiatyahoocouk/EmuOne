@@ -23,6 +23,7 @@
 
 //////////
 //  emuone components
+#include "emuone/KnownVirtualMachine.hpp"
 #include "emuone/Dynaload.hpp"
 
 #include "emuone/StoppedVirtualMachineView.hpp"

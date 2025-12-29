@@ -180,7 +180,7 @@
     <addaction name="separator"/>
     <addaction name="actionCloseVirtualMachine"/>
     <addaction name="separator"/>
-    <addaction name="action_Recent_virtual_machines"/>
+    <addaction name="actionRecentVirtualMachines"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -374,7 +374,7 @@
     <string>Ctrl+Return</string>
    </property>
   </action>
-  <action name="action_Recent_virtual_machines">
+  <action name="actionRecentVirtualMachines">
    <property name="icon">
     <iconset resource="emuone.qrc">
      <normaloff>:/emuone/Resources/Images/Misc/SubmenuSmall.png</normaloff>:/emuone/Resources/Images/Misc/SubmenuSmall.png</iconset>

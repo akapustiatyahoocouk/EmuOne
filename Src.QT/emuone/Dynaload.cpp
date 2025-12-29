@@ -69,12 +69,40 @@ EMUONE_IMPLEMENT_SINGLETON(Component::Settings)
 
 Component::Settings::Settings()
     :   mainFrameGeometry(this, "MainFrameGeometry", QByteArray()),
-        mainFrameMaximized(this, "MainFrameMaximized", false)
+        mainFrameMaximized(this, "MainFrameMaximized", false),
+        recentVirtualMachines(this, "RecentVirtualMachines", KnownVirtualMachines())
 {
 }
 
 Component::Settings::~Settings()
 {
+}
+
+void Component::Settings::addRecentVirtualMachine(
+        const KnownVirtualMachine & kvm
+    )
+{
+    KnownVirtualMachines mru = recentVirtualMachines;
+    mru.removeAll(kvm);
+    mru.insert(0, kvm);
+    while (mru.size() > MaxRecentVirtualMachines)
+    {
+        mru.remove(mru.size() - 1);
+    }
+    recentVirtualMachines = mru;
+}
+
+void Component::Settings::removeRecentVirtualMachine(
+        const KnownVirtualMachine & kvm
+    )
+{
+    KnownVirtualMachines mru = recentVirtualMachines;
+    mru.removeAll(kvm);
+    while (mru.size() > MaxRecentVirtualMachines)
+    {
+        mru.remove(mru.size() - 1);
+    }
+    recentVirtualMachines = mru;
 }
 
 //  End of emuone/Dynaload.cpp

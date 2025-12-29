@@ -1,5 +1,5 @@
 //
-//  emuone-core/ArchitectureManager.cpp - emuone::util::ArchitectureManager class implementation
+//  emuone-core/ArchitectureManager.cpp - emuone::core::ArchitectureManager class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin

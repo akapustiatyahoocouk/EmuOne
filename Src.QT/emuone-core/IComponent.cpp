@@ -1,5 +1,5 @@
 //
-//  emuone-core/IComponent.cpp - emuone::util::IComponent class implementation
+//  emuone-core/IComponent.cpp - emuone::core::IComponent class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin

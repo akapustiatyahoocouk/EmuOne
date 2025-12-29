@@ -19,16 +19,16 @@ using namespace emuone::util;
 
 //////////
 //  IStockObject
-QImage IComponent::smallImage() const
+QIcon IComponent::smallIcon() const
 {
-    static const QImage image(":/emuone-util/Resources/Images/Misc/ComponentSmall.png");
-    return image;
+    static const QIcon icon(":/emuone-util/Resources/Images/Misc/ComponentSmall.png");
+    return icon;
 }
 
-QImage IComponent::largeImage() const
+QIcon IComponent::largeIcon() const
 {
-    static const QImage image(":/emuone-util/Resources/Images/Misc/ComponentLarge.png");
-    return image;
+    static const QIcon icon(":/emuone-util/Resources/Images/Misc/ComponentLarge.png");
+    return icon;
 }
 
 //  End of emuone-util/IComponent.cpp

@@ -35,16 +35,16 @@ QString Architecture::displayName() const
     return "HADES VM";
 }
 
-QImage Architecture::smallImage() const
+QIcon Architecture::smallIcon() const
 {
-    static const QImage image(":/emuone-hades/Resources/Images/Objects/HadesSmall.png");
-    return image;
+    static const QIcon icon(":/emuone-hades/Resources/Images/Objects/HadesSmall.png");
+    return icon;
 }
 
-QImage Architecture::largeImage() const
+QIcon Architecture::largeIcon() const
 {
-    static const QImage image(":/emuone-hades/Resources/Images/Objects/HadesLarge.png");
-    return image;
+    static const QIcon icon(":/emuone-hades/Resources/Images/Objects/HadesLarge.png");
+    return icon;
 }
 
 //  End of emuone-hades/Architecture.cpp

@@ -10,7 +10,7 @@ SOURCES += \
     Exceptions.cpp \
     IComponent.cpp \
     IComponentType.cpp \
-    ITemplate.cpp \
+    IVirtualMachineTemplate.cpp \
     StandardVirtualMachineTypes.cpp \
     VirtualMachineTemplateManager.cpp \
     VirtualMachineTypeManager.cpp \

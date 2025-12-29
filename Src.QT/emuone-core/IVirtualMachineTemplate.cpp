@@ -1,5 +1,5 @@
 //
-//  emuone-core/ITemplate.cpp - emuone::util::ITemplate class implementation
+//  emuone-core/IVirtualMachineTemplate.cpp - emuone::core::IVirtualMachineTemplate class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -19,14 +19,14 @@ using namespace emuone::core;
 
 //////////
 //  emuone::util::IStockObject
-QImage IVirtualMachineTemplate::smallImage() const
+QIcon IVirtualMachineTemplate::smallIcon() const
 {
-    return architecture()->smallImage();
+    return architecture()->smallIcon();
 }
 
-QImage IVirtualMachineTemplate::largeImage() const
+QIcon IVirtualMachineTemplate::largeIcon() const
 {
-    return architecture()->largeImage();
+    return architecture()->largeIcon();
 }
 
-//  End of emuone-core/ITemplate.cpp
+//  End of emuone-core/IVirtualMachineTemplate.cpp

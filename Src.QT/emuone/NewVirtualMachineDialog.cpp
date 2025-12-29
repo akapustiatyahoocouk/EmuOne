@@ -36,12 +36,12 @@ NewVirtualMachineDialog::NewVirtualMachineDialog(
         {
             return a->displayName() < b->displayName();
         });
-    for (auto architecture : architectures)
+    for (auto a : std::as_const(architectures))
     {
         _ui->architectureComboBox->addItem(
-            QIcon(QPixmap::fromImage(architecture->smallImage())),
-            architecture->displayName(),
-            QVariant::fromValue(architecture));
+            a->smallIcon(),
+            a->displayName(),
+            QVariant::fromValue(a));
     }
 
     //  Populate the "virtualMachineType" combo box
@@ -53,12 +53,12 @@ NewVirtualMachineDialog::NewVirtualMachineDialog(
         {
             return a->displayName() < b->displayName();
         });
-    for (auto virtualMachineType : virtualMachineTypes)
+    for (auto t : std::as_const(virtualMachineTypes))
     {
         _ui->virtualMachineTypeComboBox->addItem(
-            QIcon(QPixmap::fromImage(virtualMachineType->smallImage())),
-            virtualMachineType->displayName(),
-            QVariant::fromValue(virtualMachineType));
+            t->smallIcon(),
+            t->displayName(),
+            QVariant::fromValue(t));
     }
 
     //  Populate the "templates" combo box
@@ -184,15 +184,15 @@ void NewVirtualMachineDialog::_refillTemplatesComboBox()
         {
             return a->displayName() < b->displayName();
         });
-    for (auto template_ : templates)
+    for (auto t : std::as_const(templates))
     {
-        if (template_->architecture() == _selectedArchitecture() &&
-            template_->virtualMachineType() == _selectedType())
+        if (t->architecture() == _selectedArchitecture() &&
+            t->virtualMachineType() == _selectedType())
         {
             _ui->templateComboBox->addItem(
-                QIcon(QPixmap::fromImage(template_->smallImage())),
-                template_->displayName(),
-                QVariant::fromValue(template_));
+                t->smallIcon(),
+                t->displayName(),
+                QVariant::fromValue(t));
         }
     }
 }

@@ -34,6 +34,14 @@ namespace emuone
             EMUONE_DECLARE_SINGLETON(Settings)
 
             //////////
+            //  Constants
+        public:
+            /// \brief
+            ///     The maximum number of recent VMs to keep.
+            inline static const qsizetype MaxRecentVirtualMachines = 9;
+            static_assert(MaxRecentVirtualMachines > 0 && MaxRecentVirtualMachines <= 9);
+
+            //////////
             //  Properties
         public:
             /// \brief
@@ -44,6 +52,20 @@ namespace emuone
             /// \brief
             ///     True if the main UI frame is maximized, false if not.
             emuone::util::Setting<bool>    mainFrameMaximized;
+
+            /// \brief
+            ///     The recently opened VMs (youngest first, oldest last).
+            emuone::util::Setting<KnownVirtualMachines> recentVirtualMachines;
+
+            //////////
+            //  Operations
+        public:
+            void        addRecentVirtualMachine(
+                                const KnownVirtualMachine & kvm
+                            );
+             void       removeRecentVirtualMachine(
+                                const KnownVirtualMachine & kvm
+                            );
         };
 
         //////////

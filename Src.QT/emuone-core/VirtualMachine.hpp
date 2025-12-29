@@ -178,6 +178,18 @@ namespace emuone::core
         auto            createdFrom() const -> IVirtualMachineTemplate *;
 
         /// \brief
+        ///     Returns the small (16x16) icon reprsewnting this virtual machine.
+        /// \return
+        ///     The small (16x16) icon reprsewnting this virtual machine.
+        QIcon           smallIcon() const;
+
+        /// \brief
+        ///     Returns the large (32x32) icon reprsewnting this virtual machine.
+        /// \return
+        ///     The large (32x32) icon reprsewnting this virtual machine.
+        QIcon           largeIcon() const;
+
+        /// \brief
         ///     Checks whether this VM can save its runtime
         ///     state and reload it later on.
         /// \details
@@ -308,9 +320,9 @@ namespace emuone::core
 
         QString         _name;
         const QString   _location;  //  always full path
-        IArchitecture *         _architecture;  //  never nullptr
-        IVirtualMachineType *   _type;          //  never nullptr
-        IVirtualMachineTemplate*_createdFrom;   //  may be nullptr
+        IArchitecture *const            _architecture;  //  never nullptr
+        IVirtualMachineType *const      _type;          //  never nullptr
+        IVirtualMachineTemplate *const  _createdFrom;   //  may be nullptr
     };
 }
 

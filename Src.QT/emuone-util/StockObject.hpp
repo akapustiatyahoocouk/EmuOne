@@ -45,16 +45,16 @@ namespace emuone::util
         virtual QString displayName() const = 0;
 
         /// \brief
-        ///     Returns the small (16x16) image reprsewnting this stock object.
+        ///     Returns the small (16x16) icon reprsewnting this stock object.
         /// \return
-        ///     The small (16x16) image reprsewnting this stock object.
-        virtual QImage  smallImage() const = 0;
+        ///     The small (16x16) icon reprsewnting this stock object.
+        virtual QIcon   smallIcon() const = 0;
 
         /// \brief
-        ///     Returns the large (32x32) image reprsewnting this stock object.
+        ///     Returns the large (32x32) icon reprsewnting this stock object.
         /// \return
-        ///     The large (32x32) image reprsewnting this stock object.
-        virtual QImage  largeImage() const = 0;
+        ///     The large (32x32) icon reprsewnting this stock object.
+        virtual QIcon   largeIcon() const = 0;
     };
 }
 

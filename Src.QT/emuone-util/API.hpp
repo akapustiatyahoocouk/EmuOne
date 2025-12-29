@@ -59,7 +59,7 @@
 #include <QMessageBox>
 #include <QMutex>
 #include <QMutexLocker>
-#include <QPixmap>
+//  TODO kill off #include <QPixmap>
 #include <QRegularExpression>
 #include <QStyleFactory>
 #include <QTimer>

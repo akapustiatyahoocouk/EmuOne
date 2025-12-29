@@ -45,16 +45,16 @@ QString StandardVirtualMachineTypes::VirtualMachine::displayName() const
     return "Virtual Machine";
 }
 
-QImage StandardVirtualMachineTypes::VirtualMachine::smallImage() const
+QIcon StandardVirtualMachineTypes::VirtualMachine::smallIcon() const
 {
-    static const QImage image(":/emuone-core/Resources/Images/Objects/VirtualMachineSmall.png");
-    return image;
+    static const QIcon icon(":/emuone-core/Resources/Images/Objects/VirtualMachineSmall.png");
+    return icon;
 }
 
-QImage StandardVirtualMachineTypes::VirtualMachine::largeImage() const
+QIcon StandardVirtualMachineTypes::VirtualMachine::largeIcon() const
 {
-    static const QImage image(":/emuone-core/Resources/Images/Objects/VirtualMachineLarge.png");
-    return image;
+    static const QIcon icon(":/emuone-core/Resources/Images/Objects/VirtualMachineLarge.png");
+    return icon;
 }
 
 //////////
@@ -73,16 +73,16 @@ QString StandardVirtualMachineTypes::RemoteTerminal::displayName() const
     return "Remote Terminal";
 }
 
-QImage StandardVirtualMachineTypes::RemoteTerminal::smallImage() const
+QIcon StandardVirtualMachineTypes::RemoteTerminal::smallIcon() const
 {
-    static const QImage image(":/emuone-core/Resources/Images/Objects/RemoteTerminalSmall.png");
-    return image;
+    static const QIcon icon(":/emuone-core/Resources/Images/Objects/RemoteTerminalSmall.png");
+    return icon;
 }
 
-QImage StandardVirtualMachineTypes::RemoteTerminal::largeImage() const
+QIcon StandardVirtualMachineTypes::RemoteTerminal::largeIcon() const
 {
-    static const QImage image(":/emuone-core/Resources/Images/Objects/RemoteTerminalLarge.png");
-    return image;
+    static const QIcon icon(":/emuone-core/Resources/Images/Objects/RemoteTerminalLarge.png");
+    return icon;
 }
 
 //  End of emuone-core/StandardVirtualMachineTypes.cpp

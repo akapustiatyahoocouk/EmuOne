@@ -105,34 +105,39 @@ bool VirtualMachine::isValidName(const QString & name)
 }
 
 QString VirtualMachine::location() const
-{
-    emuone::util::Lock _(_guard);
+{   //  No need to synchronize
 
     return _location;
 }
 
 QString VirtualMachine::savedStateFileName() const
-{
-    emuone::util::Lock _(_guard);
+{   //  No need to synchronize
     return _location + SavedStateExtension;
 }
 
 IArchitecture * VirtualMachine::architecture() const
-{
-    emuone::util::Lock _(_guard);
+{   //  No need to synchronize
     return _architecture;
 }
 
 auto VirtualMachine::type() const -> IVirtualMachineType *
-{
-    emuone::util::Lock _(_guard);
+{   //  No need to synchronize
     return _type;
 }
 
 auto VirtualMachine::createdFrom() const -> IVirtualMachineTemplate *
-{
-    emuone::util::Lock _(_guard);
+{   //  No need to synchronize
     return _createdFrom;
+}
+
+QIcon VirtualMachine::smallIcon() const
+{
+    return _architecture->smallIcon();
+}
+
+QIcon VirtualMachine::largeIcon() const
+{
+    return _architecture->largeIcon();
 }
 
 //////////

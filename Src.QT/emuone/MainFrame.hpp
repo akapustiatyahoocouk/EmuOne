@@ -116,6 +116,8 @@ namespace emuone
         void            _loadPosition();
         void            _savePosition();
 
+        void            _refreshMruList();
+
         auto            _openVirtualMachine(
                                 const QString & location
                             ) -> emuone::core::VirtualMachine *;  //  may throw

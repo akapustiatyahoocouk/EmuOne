@@ -31,6 +31,7 @@ MainFrame::MainFrame()
     this->setMinimumSize(MinimumSize);
 
     _loadPosition();
+    _refreshMruList();
 
     //  Reopen known VMs
 
@@ -204,6 +205,46 @@ void MainFrame::_savePosition()
     }
 }
 
+void MainFrame::_refreshMruList()
+{
+    QMenu * menu = _ui->actionRecentVirtualMachines->menu();
+    if (menu == nullptr)
+    {
+        menu = new QMenu();
+        _ui->actionRecentVirtualMachines->setMenu(menu);
+    }
+    menu->clear();
+
+    KnownVirtualMachines mru =
+        Component::Settings::instance()->recentVirtualMachines;
+    for (int i = 0; i < mru.size() && i < 9; i++)
+    {
+        QAction * action = menu->addAction(
+            mru[i].architecture()->smallIcon(),
+            "&" + QString(QChar('1' + i)) + " - " +
+                mru[i].name() + " [" + mru[i].location() + "]");
+        auto location = mru[i].location();
+        connect(
+            action,
+            &QAction::triggered,
+            this,
+            [&, location]()
+            {
+                try
+                {
+                    auto vm = _openVirtualMachine(location);  //  may throw
+                    setCurrentVirtualMachine(vm);
+                }
+                catch (const emuone::util::Exception & ex)
+                {
+                    qCritical() << ex;
+                    //  TODO Ask user to remove entry from MRU list
+                }
+            });
+    }
+    _ui->actionRecentVirtualMachines->setEnabled(!menu->isEmpty());
+}
+
 auto MainFrame::_openVirtualMachine(
         const QString & location
     ) -> emuone::core::VirtualMachine *
@@ -220,9 +261,7 @@ auto MainFrame::_openVirtualMachine(
     auto vm = emuone::core::VirtualMachine::load(location); //  may throw
     auto page = new VirtualMachinePage(this, vm);
     int index = _ui->tabWidget->addTab(page, vm->name());
-    _ui->tabWidget->setTabIcon(
-        index,
-        QPixmap::fromImage(vm->architecture()->smallImage()));
+    _ui->tabWidget->setTabIcon(index,vm->smallIcon());
     refresh();
     return vm;
 }
@@ -252,8 +291,17 @@ void MainFrame::_onActionNewVirtualMachine()
     {   //  VM created - open it now
         try
         {
-            setCurrentVirtualMachine(
-                _openVirtualMachine(dlg.virtualMachineLocation())); //  may throw
+            auto vm = _openVirtualMachine(dlg.virtualMachineLocation());    //  may throw
+            setCurrentVirtualMachine(vm);
+            //  Update MRU list and we're done
+            Component::Settings::instance()->addRecentVirtualMachine(
+                KnownVirtualMachine(
+                    vm->architecture(),
+                    vm->type(),
+                    vm->name(),
+                    vm->location()));
+            _refreshMruList();
+            refresh();
         }
         catch (const emuone::util::Exception & ex)
         {
@@ -281,8 +329,17 @@ void MainFrame::_onActionOpenVirtualMachine()
     }
     try
     {
-        setCurrentVirtualMachine(
-            _openVirtualMachine(path)); //  may throw
+        auto vm = _openVirtualMachine(path);    //  may throw
+        setCurrentVirtualMachine(vm);
+        //  Update MRU list and we're done
+        Component::Settings::instance()->addRecentVirtualMachine(
+            KnownVirtualMachine(
+                vm->architecture(),
+                vm->type(),
+                vm->name(),
+                vm->location()));
+        _refreshMruList();
+        refresh();
     }
     catch (const emuone::util::Exception & ex)
     {
