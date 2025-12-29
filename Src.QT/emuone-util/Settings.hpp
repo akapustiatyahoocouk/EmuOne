@@ -1,5 +1,5 @@
 //
-//  emuone-util/Settings.cpp - Persistent settinga framework
+//  emuone-util/Settings.hpp - Persistent settinga framework
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -275,4 +275,4 @@ namespace emuone::util
 //  Macro needed for MOC-generated .cpp files
 #define EMUONE_UTIL_SETTINGS_DEFINED
 
-//  End of emuone-util/Settings.cpp
+//  End of emuone-util/Settings.hpp

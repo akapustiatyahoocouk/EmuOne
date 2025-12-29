@@ -1,5 +1,5 @@
 //
-//  emuone-util/Classes.hpp - Forward declarations and typedefs
+//  emuone-core/ComponentAdaptorEditor.cpp - emuone::core::ComponentAdaptorEditor class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -14,14 +14,22 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 //////////
+#include "emuone-core/API.hpp"
+using namespace emuone::core;
 
-namespace emuone::util
+//////////
+//  Construction/destruction
+ComponentAdaptorEditor::ComponentAdaptorEditor(
+        QWidget * parent,
+        IComponentAdaptor * componentAdaptor
+    ) : QWidget(parent),
+        _componentAdaptor(componentAdaptor)
 {
-    //  Classes
-    class EMUONE_UTIL_PUBLIC IComponent;
-
-    //  Collections
-    using Components = QSet<IComponent*>;
+    Q_ASSERT(_componentAdaptor != nullptr);
 }
 
-//  End of emuone-util/Classes.hpp
+ComponentAdaptorEditor::~ComponentAdaptorEditor()
+{
+}
+
+//  End of emuone-core/ComponentAdaptorEditor.cpp

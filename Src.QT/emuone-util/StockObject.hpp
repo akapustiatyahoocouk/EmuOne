@@ -1,5 +1,5 @@
 //
-//  emuone-util/StockObject.cpp - Stock objects support
+//  emuone-util/StockObject.hpp - Stock objects support
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -45,17 +45,17 @@ namespace emuone::util
         virtual QString displayName() const = 0;
 
         /// \brief
-        ///     Returns the small (16x16) icon reprsewnting this stock object.
+        ///     Returns the small (16x16) icon reprsenting this stock object.
         /// \return
-        ///     The small (16x16) icon reprsewnting this stock object.
+        ///     The small (16x16) icon reprsenting this stock object.
         virtual QIcon   smallIcon() const = 0;
 
         /// \brief
-        ///     Returns the large (32x32) icon reprsewnting this stock object.
+        ///     Returns the large (32x32) icon reprsenting this stock object.
         /// \return
-        ///     The large (32x32) icon reprsewnting this stock object.
+        ///     The large (32x32) icon reprsenting this stock object.
         virtual QIcon   largeIcon() const = 0;
     };
 }
 
-//  End of emuone-util/StockObject.cpp
+//  End of emuone-util/StockObject.hpp

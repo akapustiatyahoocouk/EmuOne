@@ -1,5 +1,5 @@
 //
-//  emuone-core/VirtualMachineTemplate.cpp - VM template
+//  emuone-core/VirtualMachineTemplate.hpp - VM template
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -108,4 +108,4 @@ namespace emuone::core
     };
 }
 
-//  End of emuone-core/VirtualMachineTemplate.cpp
+//  End of emuone-core/VirtualMachineTemplate.hpp

@@ -6,9 +6,14 @@ DEFINES += EMUONE_CORE_LIBRARY
 SOURCES += \
     ArchitectureManager.cpp \
     Component.cpp \
+    ComponentAdaptorEditor.cpp \
+    ComponentAdaptorTypeManager.cpp \
+    ComponentCategoryManager.cpp \
+    ComponentEditor.cpp \
     ComponentTypeManager.cpp \
     Exceptions.cpp \
     IComponent.cpp \
+    IComponentAdaptorType.cpp \
     IComponentType.cpp \
     IVirtualMachineTemplate.cpp \
     StandardComponentCategories.cpp \
@@ -22,7 +27,11 @@ HEADERS += \
     Architecture.hpp \
     Classes.hpp \
     Component.hpp \
+    ComponentAdaptor.hpp \
+    ComponentAdaptorEditor.hpp \
+    ComponentAdaptorType.hpp \
     ComponentCategory.hpp \
+    ComponentEditor.hpp \
     ComponentType.hpp \
     Components.hpp \
     Exceptions.hpp \

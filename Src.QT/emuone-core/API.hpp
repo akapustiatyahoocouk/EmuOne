@@ -34,6 +34,10 @@
 #include "emuone-core/ComponentCategory.hpp"
 #include "emuone-core/ComponentType.hpp"
 #include "emuone-core/Components.hpp"
+#include "emuone-core/ComponentEditor.hpp"
+#include "emuone-core/ComponentAdaptorType.hpp"
+#include "emuone-core/ComponentAdaptor.hpp"
+#include "emuone-core/ComponentAdaptorEditor.hpp"
 #include "emuone-core/VirtualMachine.hpp"
 
 //  End of emuone-core/API.hpp

@@ -30,6 +30,7 @@
 #include "emuone/VirtualMachinePage.hpp"
 #include "emuone/MainFrame.hpp"
 #include "emuone/NewVirtualMachineDialog.hpp"
+#include "emuone/ConfigureVirtualMachineDialog.hpp"
 
 #include "emuone/Application.hpp"
 

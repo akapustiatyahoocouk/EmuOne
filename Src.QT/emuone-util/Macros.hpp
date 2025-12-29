@@ -1,5 +1,5 @@
 //
-//  emuone-util/Macros.cpp - Helper macros
+//  emuone-util/Macros.hpp - Helper macros
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -46,4 +46,4 @@ Clazz * Clazz::instance()                           \
 //  We need some dark magic with C++ keywords
 #define register register_  /*  it's a verb, not a description! */
 
-//  End of emuone-util/Macros.cpp
+//  End of emuone-util/Macros.hpp

@@ -1,5 +1,5 @@
 //
-//  emuone-core/Exceptions.cpp - VM-related exceptions.
+//  emuone-core/Exceptions.hpp - VM-related exceptions.
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -99,6 +99,49 @@ namespace emuone::core
         virtual QString errorMessage() const override;
     };
 
+    /// \class IncompatibleComponentException emuone-core/API.hpp
+    /// \brief Thrown when adding an imcompatible component to a VM.
+    class EMUONE_CORE_PUBLIC IncompatibleComponentException
+        :   public VirtualMachineException
+    {
+        using Self = IncompatibleComponentException;
+
+        //////////
+        //  Construction/destruction
+    public:
+        IncompatibleComponentException(
+                const QString & componentTypeMnemonic,
+                const QString & componentTypeDisplayName
+            );
+        explicit IncompatibleComponentException(
+                IComponent * component
+            );
+
+        //////////
+        //  QException
+    public:
+        Q_NORETURN
+        void            raise() const override { throw *this; }
+        Self *          clone() const override { return new Self(*this); }
+
+        //////////
+        //  emuone::util::Exception
+    public:
+        virtual QString errorMessage() const override;
+
+        //////////
+        //  Operations
+    public:
+        QString         componentTypeMnemonic() const { return _componentTypeMnemonic; }
+        QString         componentTypeDisplayName() const { return _componentTypeDisplayName; }
+
+        //////////
+        //  Implementation
+    private:
+        QString         _componentTypeMnemonic;
+        QString         _componentTypeDisplayName;
+    };
+
     /// \class CustomVirtualMachineException emuone-core/API.hpp
     /// \brief A VM exception with a custom error message.
     class EMUONE_CORE_PUBLIC CustomVirtualMachineException
@@ -132,4 +175,4 @@ namespace emuone::core
     };
 }
 
-//  End of emuone-core/Exceptions.cpp
+//  End of emuone-core/Exceptions.hpp

@@ -1,5 +1,5 @@
 //
-//  emuone-util/Exceptions.cpp - Exceptions framework
+//  emuone-util/Exceptions.hpp - Exceptions framework
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -255,4 +255,4 @@ QDebug operator << (QDebug debug, const emuone::util::Error & ex)
     return debug;
 }
 
-//  End of emuone-util/Exceptions.cpp
+//  End of emuone-util/Exceptions.hpp

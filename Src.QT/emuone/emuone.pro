@@ -3,6 +3,7 @@ include(../emuone.pri)
 SOURCES += \
     Application.cpp \
     Component.cpp \
+    ConfigureVirtualMachineDialog.cpp \
     KnownVirtualMachine.cpp \
     Main.cpp \
     MainFrame.cpp \
@@ -14,6 +15,7 @@ HEADERS += \
     API.hpp \
     Application.hpp \
     Component.hpp \
+    ConfigureVirtualMachineDialog.hpp \
     KnownVirtualMachine.hpp \
     MainFrame.hpp \
     NewVirtualMachineDialog.hpp \
@@ -23,6 +25,7 @@ HEADERS += \
 PRECOMPILED_HEADER = API.hpp
 
 FORMS += \
+    ConfigureVirtualMachineDialog.ui \
     MainFrame.ui \
     NewVirtualMachineDialog.ui \
     StoppedVirtualMachineView.ui \

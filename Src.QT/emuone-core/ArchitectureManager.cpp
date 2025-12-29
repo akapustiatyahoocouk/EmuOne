@@ -21,8 +21,8 @@ struct ArchitectureManager::_Impl
 {
     using Registry = QMap<QString, IArchitecture*>;
 
-    QMutex      guard;
-    Registry    registry;   //  mnemonic -> VAT
+    emuone::util::Mutex guard;
+    Registry            registry;   //  mnemonic -> VAT
 };
 
 //////////
@@ -30,7 +30,7 @@ struct ArchitectureManager::_Impl
 auto ArchitectureManager::all() -> Architectures
 {
     _Impl * impl = _impl();
-    QMutexLocker _(&impl->guard);
+    emuone::util::Lock _(impl->guard);
 
     auto result = impl->registry.values();
     return Architectures(result.cbegin(), result.cend());
@@ -41,7 +41,7 @@ bool ArchitectureManager::register(IArchitecture * architecture)
     Q_ASSERT(architecture != nullptr);
 
     _Impl * impl = _impl();
-    QMutexLocker _(&impl->guard);
+    emuone::util::Lock _(impl->guard);
 
     auto key = architecture->mnemonic();
     if (impl->registry.contains(key))
@@ -58,7 +58,7 @@ bool ArchitectureManager::unregister(IArchitecture * architecture)
     Q_ASSERT(architecture != nullptr);
 
     _Impl * impl = _impl();
-    QMutexLocker _(&impl->guard);
+    emuone::util::Lock _(impl->guard);
 
     auto key = architecture->mnemonic();
     if (impl->registry.contains(key))
@@ -76,7 +76,7 @@ bool ArchitectureManager::unregister(IArchitecture * architecture)
 auto ArchitectureManager::find(const QString & mnemonic) -> IArchitecture *
 {
     _Impl * impl = _impl();
-    QMutexLocker _(&impl->guard);
+    emuone::util::Lock _(impl->guard);
 
     return impl->registry.contains(mnemonic) ?
                impl->registry[mnemonic] :

@@ -43,5 +43,9 @@
         <file>Resources/Images/Actions/OpenHuge.png</file>
         <file>Resources/Images/Misc/SubmenuLarge.png</file>
         <file>Resources/Images/Misc/SubmenuSmall.png</file>
+        <file>Resources/Images/Actions/AddLarge.png</file>
+        <file>Resources/Images/Actions/AddSmall.png</file>
+        <file>Resources/Images/Actions/RemoveLarge.png</file>
+        <file>Resources/Images/Actions/RemoveSmall.png</file>
     </qresource>
 </RCC>

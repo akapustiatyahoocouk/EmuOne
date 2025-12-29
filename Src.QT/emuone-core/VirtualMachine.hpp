@@ -1,5 +1,5 @@
 //
-//  emuone-core/VirtualMachine.cpp - A complete VM
+//  emuone-core/VirtualMachine.hpp - A complete VM
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -178,15 +178,15 @@ namespace emuone::core
         auto            createdFrom() const -> IVirtualMachineTemplate *;
 
         /// \brief
-        ///     Returns the small (16x16) icon reprsewnting this virtual machine.
+        ///     Returns the small (16x16) icon reprsenting this virtual machine.
         /// \return
-        ///     The small (16x16) icon reprsewnting this virtual machine.
+        ///     The small (16x16) icon reprsenting this virtual machine.
         QIcon           smallIcon() const;
 
         /// \brief
-        ///     Returns the large (32x32) icon reprsewnting this virtual machine.
+        ///     Returns the large (32x32) icon reprsenting this virtual machine.
         /// \return
-        ///     The large (32x32) icon reprsewnting this virtual machine.
+        ///     The large (32x32) icon reprsenting this virtual machine.
         QIcon           largeIcon() const;
 
         /// \brief
@@ -203,29 +203,77 @@ namespace emuone::core
         //  Operations (configuration)
     public:
         /// \brief
-        ///     Adds an unbound Component to this VM.
+        ///     Returns the set of all Components of this VM.
+        /// \return
+        ///     The set of all Components of this VM.
+        Components      components() const;
+
+        /// \brief
+        ///     Returns the set of all native Components of this VM.
+        /// \details
+        ///     These are VM components for which adaptors did not need
+        ///     to be created when adding them to this VM.
+        /// \return
+        ///     The set of all native Components of this VM.
+        Components      nativeComponents() const;
+
+        /// \brief
+        ///     Returns the set of all adapted Components of this VM.
+        /// \details
+        ///     These are VM components for which adaptors had to be
+        ///     created when adding them to this VM.
+        /// \return
+        ///     The set of all adapted Components of this VM.
+        Components      adaptedComponents() const;
+
+        /// \brief
+        ///     Finds the ComponentAdaptor for the specified Component.
+        /// \return
+        ///     If the specified Compoonent a) belongs to (is owned by) this
+        ///     VN and b) is adapted t it, returns the ComponentAdaptor that
+        ///     wraps this component; otherwise returns nullptr.
+        auto            findAdaptor(IComponent * component) const -> IComponentAdaptor *;
+
+        /// \brief
+        ///     Adds an unbound Component to this VM, creating
+        ///     a corresponding ComponentAdaptor if necessary.
         /// \details
         ///     -   If the Component is already bound to
         ///         this VM, the call has no effect.
         ///     -   If the Component is already bound to
         ///         another VM, the call is an error.
-        ///     -   Of the Cmponent is not compatible with or
+        ///     -   Of the Component is not compatible with or
         ///         adaptable to this VM, the call is an error.
         ///     -   Can be safely called from any thread.
         /// \param component
-        ///     The Component to add.
+        ///     The Component to add to this VM.
+        /// \param componentAdaptorType
+        ///     If the component can be assed to this VM as a native
+        ///     component, this parameter is ignored.
+        ///     If the component requires adaptation to this VM, specifies
+        ///     the preferred component adaptor type; if nullptr or
+        ///     unavailable then any compatible component adaptor
+        ///     type will be chosen automatically.
         /// \exception VirtualMachineException
-        ///     If an error occurs.
-        void            addComponent(IComponent * component);
+        ///     If an error occurs (e.g. component is incompatible
+        ///     with this VM or already belongs to another VM).
+        void            addComponent(
+                                IComponent * component,
+                                IComponentAdaptorType * componentAdaptorType = nullptr
+                            );
 
         /// \brief
-        ///     Removes a bound Component from this M.
+        ///     Removes a bound Component from this VM, also
+        ///     destroying the corresponding ComponentAdaptor
+        ///     if one exists.
         /// \details
+        ///     The Component is unbound after the call.
         ///     Can be safely called from any thread.
         /// \param component
-        ///     The Component to remove.
+        ///     The Component to remove from this VM.
         /// \exception VirtualMachineException
-        ///     If an error occurs.
+        ///     If an error occurs (e.g. component does
+        ///     not belong to this VM).
         void            removeComponent(IComponent * component);
 
         //////////
@@ -327,7 +375,12 @@ namespace emuone::core
         IArchitecture *const            _architecture;  //  never nullptr
         IVirtualMachineType *const      _type;          //  never nullptr
         IVirtualMachineTemplate *const  _createdFrom;   //  may be nullptr
+
+        Components          _nativeComponents;
+        Components          _adaptedComponents;
+        ComponentAdaptors   _adaptors;  //  for all _adaptedComponents
+
     };
 }
 
-//  End of emuone-core/VirtualMachine.cpp
+//  End of emuone-core/VirtualMachine.hpp

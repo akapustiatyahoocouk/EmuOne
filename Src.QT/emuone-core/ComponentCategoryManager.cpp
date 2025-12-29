@@ -1,5 +1,5 @@
 //
-//  emuone-core/VirtualMachineTypeManager.cpp - emuone::core::VirtualMachineTypeManager class implementation
+//  emuone-core/ComponentCategoryManager.cpp - emuone::core::ComponentCategoryManager class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -17,17 +17,16 @@
 #include "emuone-core/API.hpp"
 using namespace emuone::core;
 
-struct VirtualMachineTypeManager::_Impl
+struct ComponentCategoryManager::_Impl
 {
-    using Registry = QMap<QString, IVirtualMachineType*>;
+    using Registry = QMap<QString, IComponentCategory*>;
 
     _Impl()
     {
-        for (auto virtualMachineType : StandardVirtualMachineTypes::all())
+        for (auto cc : StandardComponentCategories::all())
         {
-            QString key = virtualMachineType->mnemonic();
-            Q_ASSERT(!registry.contains(key));
-            registry[key] = virtualMachineType;
+            Q_ASSERT(!registry.contains(cc->mnemonic()));
+            registry[cc->mnemonic()] = cc;
         }
     }
 
@@ -37,44 +36,44 @@ struct VirtualMachineTypeManager::_Impl
 
 //////////
 //  Operations
-auto VirtualMachineTypeManager::all() -> VirtualMachineTypes
+auto ComponentCategoryManager::all() -> ComponentCategories
 {
     _Impl * impl = _impl();
     emuone::util::Lock _(impl->guard);
 
     auto result = impl->registry.values();
-    return VirtualMachineTypes(result.cbegin(), result.cend());
+    return ComponentCategories(result.cbegin(), result.cend());
 }
 
-bool VirtualMachineTypeManager::register(IVirtualMachineType * virtualMachineType)
+bool ComponentCategoryManager::register(IComponentCategory * componentCategory)
 {
-    Q_ASSERT(virtualMachineType != nullptr);
+    Q_ASSERT(componentCategory != nullptr);
 
     _Impl * impl = _impl();
     emuone::util::Lock _(impl->guard);
 
-    auto key = virtualMachineType->mnemonic();
+    auto key = componentCategory->mnemonic();
     if (impl->registry.contains(key))
     {   //  Repeated registration is a kind of "success"
         auto registered = impl->registry[key];
-        return virtualMachineType == registered;
+        return componentCategory == registered;
     }
-    impl->registry[key] = virtualMachineType;
+    impl->registry[key] = componentCategory;
     return true;
 }
 
-bool VirtualMachineTypeManager::unregister(IVirtualMachineType * virtualMachineType)
+bool ComponentCategoryManager::unregister(IComponentCategory * componentCategory)
 {
-    Q_ASSERT(virtualMachineType != nullptr);
+    Q_ASSERT(componentCategory != nullptr);
 
     _Impl * impl = _impl();
     emuone::util::Lock _(impl->guard);
 
-    auto key = virtualMachineType->mnemonic();
+    auto key = componentCategory->mnemonic();
     if (impl->registry.contains(key))
     {
         auto registered = impl->registry[key];
-        if (virtualMachineType == registered)
+        if (componentCategory == registered)
         {   //  We're not trying to un-register an impersonator
             impl->registry.remove(key);
             return true;
@@ -83,7 +82,7 @@ bool VirtualMachineTypeManager::unregister(IVirtualMachineType * virtualMachineT
     return false;
 }
 
-auto VirtualMachineTypeManager::find(const QString & mnemonic) -> IVirtualMachineType *
+auto ComponentCategoryManager::find(const QString & mnemonic) -> IComponentCategory *
 {
     _Impl * impl = _impl();
     emuone::util::Lock _(impl->guard);
@@ -95,10 +94,10 @@ auto VirtualMachineTypeManager::find(const QString & mnemonic) -> IVirtualMachin
 
 //////////
 //  Implementation
-auto VirtualMachineTypeManager::_impl() -> _Impl *
+auto ComponentCategoryManager::_impl() -> _Impl *
 {
     static _Impl impl;
     return &impl;
 }
 
-//  End of emuone-core/VirtualMachineTypeManager.cpp
+//  End of emuone-core/ComponentCategoryManager.cpp

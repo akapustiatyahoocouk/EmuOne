@@ -21,27 +21,27 @@ struct ComponentTypeManager::_Impl
 {
     using Registry = QMap<QString, IComponentType*>;
 
-    QMutex      guard;
-    Registry    registry;   //  mnemonic -> VAT
+    emuone::util::Mutex guard;
+    Registry            registry;   //  mnemonic -> VAT
 };
 
 //////////
 //  Operations
-auto ComponentTypeManager::allComponentTypes() -> ComponentTypes
+auto ComponentTypeManager::all() -> ComponentTypes
 {
     _Impl * impl = _impl();
-    QMutexLocker _(&impl->guard);
+    emuone::util::Lock _(impl->guard);
 
     auto result = impl->registry.values();
     return ComponentTypes(result.cbegin(), result.cend());
 }
 
-bool ComponentTypeManager::registerComponentType(IComponentType * componentType)
+bool ComponentTypeManager::register(IComponentType * componentType)
 {
     Q_ASSERT(componentType != nullptr);
 
     _Impl * impl = _impl();
-    QMutexLocker _(&impl->guard);
+    emuone::util::Lock _(impl->guard);
 
     auto key = componentType->mnemonic();
     if (impl->registry.contains(key))
@@ -53,12 +53,12 @@ bool ComponentTypeManager::registerComponentType(IComponentType * componentType)
     return true;
 }
 
-bool ComponentTypeManager::unregisterComponentType(IComponentType * componentType)
+bool ComponentTypeManager::unregister(IComponentType * componentType)
 {
     Q_ASSERT(componentType != nullptr);
 
     _Impl * impl = _impl();
-    QMutexLocker _(&impl->guard);
+    emuone::util::Lock _(impl->guard);
 
     auto key = componentType->mnemonic();
     if (impl->registry.contains(key))
@@ -73,10 +73,10 @@ bool ComponentTypeManager::unregisterComponentType(IComponentType * componentTyp
     return false;
 }
 
-auto ComponentTypeManager::findComponentType(const QString & mnemonic) -> IComponentType *
+auto ComponentTypeManager::find(const QString & mnemonic) -> IComponentType *
 {
     _Impl * impl = _impl();
-    QMutexLocker _(&impl->guard);
+    emuone::util::Lock _(impl->guard);
 
     return impl->registry.contains(mnemonic) ?
                impl->registry[mnemonic] :

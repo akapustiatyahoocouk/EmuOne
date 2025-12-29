@@ -1,5 +1,5 @@
 //
-//  emuone-core/ComponentType.cpp - VM component type
+//  emuone-core/ComponentType.hpp - VM component type
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -34,8 +34,8 @@ namespace emuone::core
         //////////
         //  emuone::util::IStockObject
     public:
-        virtual QIcon   smallIcon() const;
-        virtual QIcon   largeIcon() const;
+        virtual QIcon   smallIcon() const override;
+        virtual QIcon   largeIcon() const override;
 
         //////////
         //  Operations
@@ -99,7 +99,7 @@ namespace emuone::core
         ///     Returns the set of all registered VM Component Types.
         /// \return
         ///     Returns the set of all registered VM Component Types.
-        static auto     allComponentTypes() -> ComponentTypes;
+        static auto     all() -> ComponentTypes;
 
         /// \brief
         ///     Registers the specified Component Type.
@@ -110,7 +110,7 @@ namespace emuone::core
         ///     The VM Component Type to register.
         /// \return
         ///     True on success, false on failure.
-        static bool     registerComponentType(IComponentType * componentType);
+        static bool     register(IComponentType * componentType);
 
         /// \brief
         ///     Un-registers the specified VM Component Type.
@@ -118,7 +118,7 @@ namespace emuone::core
         ///     The VM Component Type to un-register.
         /// \return
         ///     True on success, false on failure.
-        static bool     unregisterComponentType(IComponentType * componentType);
+        static bool     unregister(IComponentType * componentType);
 
         /// \brief
         ///     Finds a registered component by mnemonic.
@@ -127,7 +127,7 @@ namespace emuone::core
         /// \return
         ///     The registered VM Component Type with the
         ///     required mnemonic or nullptr if none found.
-        static auto     findComponentType(const QString & mnemonic) -> IComponentType *;
+        static auto     find(const QString & mnemonic) -> IComponentType *;
 
         //////////
         //  Implementation
@@ -137,4 +137,4 @@ namespace emuone::core
     };
 }
 
-//  End of emuone-core/ComponentType.cpp
+//  End of emuone-core/ComponentType.hpp

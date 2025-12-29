@@ -32,9 +32,21 @@ QIcon IComponent::largeIcon() const
 //////////
 //  Operations
 VirtualMachine * IComponent::owner() const
-{
-    QMutexLocker _(&_guard);
+{   //  Guarded, as Components can be added/removed to/from VMs
+    emuone::util::Lock _(guard);
     return _owner;
+}
+
+void IComponent::saveConfiguration(QDomElement & element) const
+{
+    Q_ASSERT(!element.isNull());
+    element.setAttribute("Type", type()->mnemonic());
+}
+
+void IComponent::restoreConfiguration(const QDomElement & element)
+{
+    Q_ASSERT(!element.isNull());
+    Q_ASSERT(element.attribute("Type") == type()->mnemonic());
 }
 
 //  End of emuone-core/IComponent.cpp

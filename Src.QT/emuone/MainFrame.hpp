@@ -141,6 +141,9 @@ namespace emuone
         void            _onActionNewVirtualMachine();
         void            _onActionOpenVirtualMachine();
         void            _onActionExit();
+        void            _onActionStart();
+        void            _onActionStop();
+        void            _onActionConfigure();
     };
 }
 

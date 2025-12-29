@@ -1,5 +1,5 @@
 //
-//  emuone-core/VirtualMachineType.cpp - VM VirtualMachineType
+//  emuone-core/VirtualMachineType.hpp - VM VirtualMachineType
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -138,4 +138,4 @@ namespace emuone::core
     };
 }
 
-//  End of emuone-core/VirtualMachineType.cpp
+//  End of emuone-core/VirtualMachineType.hpp

@@ -141,12 +141,135 @@ QIcon VirtualMachine::largeIcon() const
 }
 
 //////////
+//  Operations (configuration)
+Components VirtualMachine::components() const
+{
+    emuone::util::Lock _(_guard);
+    return _nativeComponents + _adaptedComponents;
+}
+
+Components VirtualMachine::nativeComponents() const
+{
+    emuone::util::Lock _(_guard);
+    return Components(_nativeComponents);   //  shallow clone
+}
+
+Components VirtualMachine::adaptedComponents() const
+{
+    emuone::util::Lock _(_guard);
+    return Components(_adaptedComponents);   //  shallow clone
+}
+
+auto VirtualMachine::findAdaptor(IComponent * component) const -> IComponentAdaptor *
+{
+    emuone::util::Lock _(_guard);
+
+    for (auto a : _adaptors)
+    {
+        if (a->component() == component)
+        {
+            Q_ASSERT(a->owner() == this && a->component()->owner() == this);
+            return a;
+        }
+    }
+    return nullptr;
+}
+
+void VirtualMachine::addComponent(
+        IComponent * component,
+        IComponentAdaptorType * componentAdaptorType
+    )
+{
+    Q_ASSERT(component != nullptr);
+    //  Synchronize IN ORDER, so there can't be a deadlock
+    emuone::util::Lock _1(_guard);
+    emuone::util::Lock _2(component->guard);
+
+    Q_ASSERT(!component->isBound());    //  TODO throw instead
+    //  Already added ?
+    if (component->owner() == this)
+    {   //  Nothing to do
+        Q_ASSERT(_nativeComponents.contains(component) ||
+                 _adaptedComponents.contains(component));
+        return;
+    }
+    //  Can we add as native ?
+    if (component->type()->isCompatibleWith(_architecture) &&
+        component->type()->isCompatibleWith(_type))
+    {   //  Yes
+        _nativeComponents.insert(component);
+        component->_owner = this;
+        return;
+    }
+    //  Can we add using the specified comonent adaptor type ?
+    if (componentAdaptorType != nullptr &&
+        componentAdaptorType->architecture() == _architecture &&
+        componentAdaptorType->componentType() == component->type() &&
+        component->type()->isCompatibleWith(_type))
+    {   //  Yes!
+        _adaptedComponents.insert(component);
+        component->_owner = this;
+        auto adaptor = componentAdaptorType->createAdaptor(this, component);
+        _adaptors.insert(adaptor);
+        return;
+    }
+    //  Can we add using ANY comonent adaptor type ?
+    for (auto cat : ComponentAdaptorTypeManager::all())
+    {
+        if (cat != nullptr &&
+            cat->architecture() == _architecture &&
+            cat->componentType() == component->type() &&
+            component->type()->isCompatibleWith(_type))
+        {   //  Yes!
+            _adaptedComponents.insert(component);
+            component->_owner = this;
+            auto adaptor = cat->createAdaptor(this, component);
+            _adaptors.insert(adaptor);
+            return;
+        }
+    }
+    //  OOPS! Give up
+    throw IncompatibleComponentException(component);
+}
+
+void VirtualMachine::removeComponent(IComponent * component)
+{
+    Q_ASSERT(component != nullptr);
+    //  Synchronize IN ORDER, so there can't be a deadlock
+    emuone::util::Lock _1(_guard);
+    emuone::util::Lock _2(component->guard);
+
+    Q_ASSERT(component->owner() == this);   //  TODO throw instead
+    //  Native ?
+    if (_nativeComponents.contains(component))
+    {
+        _nativeComponents.remove(component);
+        component->_owner = nullptr;
+        return;
+    }
+    //  Adapted ?
+    if (_adaptedComponents.contains(component))
+    {
+        auto adaptor = findAdaptor(component);
+        Q_ASSERT(adaptor != nullptr);
+        _adaptedComponents.remove(component);
+        component->_owner = nullptr;
+        _adaptors.remove(adaptor);
+        delete adaptor;
+        return;
+    }
+    //  OOPS! Should never happen!
+    Q_ASSERT(false);
+}
+
+//////////
 //  Operations (state control)
 VirtualMachine::State VirtualMachine::state() const
 {
     emuone::util::Lock _(_guard);
     return _state;
 }
+
 bool VirtualMachine::isStopped() const
 {
     return state() == State::Stopped;

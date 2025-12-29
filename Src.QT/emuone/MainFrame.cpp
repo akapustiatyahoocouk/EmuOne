@@ -395,4 +395,26 @@ void MainFrame::_onActionExit()
     QApplication::exit(0);
 }
 
+void MainFrame::_onActionStart()
+{
+    QMessageBox::critical(this, "ERROR", "Not yet implemented");
+}
+
+void MainFrame::_onActionStop()
+{
+    QMessageBox::critical(this, "ERROR", "Not yet implemented");
+}
+
+void MainFrame::_onActionConfigure()
+{
+    if (auto vm = currentVirtualMachine();
+        vm != nullptr && vm->isStopped())
+    {
+        ConfigureVirtualMachineDialog dlg(this, vm);
+        if (dlg.doModal() == ConfigureVirtualMachineDialog::Result::Ok)
+        {   //  TODO ?
+        }
+    }   //  else do nothing
+}
+
 //  End of emuone/MainFrame.cpp

@@ -1,5 +1,5 @@
 //
-//  emuone-core/Architecture.cpp - VM Architecture
+//  emuone-core/Architecture.hpp - VM Architecture
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -87,4 +87,4 @@ namespace emuone::core
     };
 }
 
-//  End of emuone-core/Architecture.cpp
+//  End of emuone-core/Architecture.hpp

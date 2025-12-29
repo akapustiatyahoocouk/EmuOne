@@ -85,8 +85,7 @@ NewVirtualMachineDialog::~NewVirtualMachineDialog()
 
 //////////
 //  Operations
-auto NewVirtualMachineDialog::doModal(
-    ) -> Result
+auto NewVirtualMachineDialog::doModal() -> Result
 {
     return Result(this->exec());
 }

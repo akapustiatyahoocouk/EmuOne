@@ -1,5 +1,5 @@
 //
-//  emuone-core/Classes.cpp - Forward declarations and typedefs
+//  emuone-core/Classes.hpp - Forward declarations and typedefs
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -18,13 +18,18 @@
 namespace emuone::core
 {
     //  Classes
-    class EMUONE_CORE_PUBLIC IArchitecture;
-    class EMUONE_CORE_PUBLIC IVirtualMachineType;
-    class EMUONE_CORE_PUBLIC IVirtualMachineTemplate;
-    class EMUONE_CORE_PUBLIC IComponentCategory;
-    class EMUONE_CORE_PUBLIC IComponentType;
-    class EMUONE_CORE_PUBLIC IComponent;
-    class EMUONE_CORE_PUBLIC VirtualMachine;
+    class IArchitecture;
+    class IVirtualMachineType;
+    class IVirtualMachineTemplate;
+    class IComponentCategory;
+    class IComponentType;
+    class IComponent;
+    class IComponentAdaptorType;
+    class IComponentAdaptor;
+    class VirtualMachine;
+
+    class ComponentEditor;
+    class ComponentAdaptorEditor;
 
     //  Collections
     using Architectures = QSet<IArchitecture*>;
@@ -33,7 +38,9 @@ namespace emuone::core
     using ComponentCategories = QSet<IComponentCategory*>;
     using ComponentTypes = QSet<IComponentType*>;
     using Components = QSet<IComponent*>;
+    using ComponentAdaptorTypes = QSet<IComponentAdaptorType*>;
+    using ComponentAdaptors = QSet<IComponentAdaptor*>;
     using VirtualMachines = QList<VirtualMachine*>;
 }
 
-//  End of emuone-core/Classes.cpp
+//  End of emuone-core/Classes.hpp

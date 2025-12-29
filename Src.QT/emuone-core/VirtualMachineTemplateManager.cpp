@@ -21,8 +21,8 @@ struct VirtualMachineTemplateManager::_Impl
 {
     using Registry = QMap<QString, IVirtualMachineTemplate*>;
 
-    QMutex      guard;
-    Registry    registry;   //  mnemonic -> VAT
+    emuone::util::Mutex guard;
+    Registry            registry;   //  mnemonic -> VAT
 };
 
 //////////
@@ -30,7 +30,7 @@ struct VirtualMachineTemplateManager::_Impl
 auto VirtualMachineTemplateManager::all() -> VirtualMachineTemplates
 {
     _Impl * impl = _impl();
-    QMutexLocker _(&impl->guard);
+    emuone::util::Lock _(impl->guard);
 
     auto result = impl->registry.values();
     return VirtualMachineTemplates(result.cbegin(), result.cend());
@@ -41,7 +41,7 @@ bool VirtualMachineTemplateManager::register(IVirtualMachineTemplate * virtualMa
     Q_ASSERT(virtualMachineTemplate != nullptr);
 
     _Impl * impl = _impl();
-    QMutexLocker _(&impl->guard);
+    emuone::util::Lock _(impl->guard);
 
     auto key = virtualMachineTemplate->mnemonic();
     if (impl->registry.contains(key))
@@ -58,7 +58,7 @@ bool VirtualMachineTemplateManager::unregister(IVirtualMachineTemplate * virtual
     Q_ASSERT(virtualMachineTemplate != nullptr);
 
     _Impl * impl = _impl();
-    QMutexLocker _(&impl->guard);
+    emuone::util::Lock _(impl->guard);
 
     auto key = virtualMachineTemplate->mnemonic();
     if (impl->registry.contains(key))
@@ -76,7 +76,7 @@ bool VirtualMachineTemplateManager::unregister(IVirtualMachineTemplate * virtual
 auto VirtualMachineTemplateManager::find(const QString & mnemonic) -> IVirtualMachineTemplate *
 {
     _Impl * impl = _impl();
-    QMutexLocker _(&impl->guard);
+    emuone::util::Lock _(impl->guard);
 
     return impl->registry.contains(mnemonic) ?
                impl->registry[mnemonic] :

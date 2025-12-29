@@ -42,6 +42,29 @@ QString InvalidVirtualMachineStateException::errorMessage() const
 }
 
 //////////
+//  IncompatibleComponentException
+IncompatibleComponentException::IncompatibleComponentException(
+        const QString & componentTypeMnemonic,
+        const QString & componentTypeDisplayName
+    ) : _componentTypeMnemonic(componentTypeMnemonic),
+        _componentTypeDisplayName(componentTypeDisplayName)
+{
+}
+
+IncompatibleComponentException::IncompatibleComponentException(
+        IComponent * component
+    ) : IncompatibleComponentException(
+            component->type()->mnemonic(),
+            component->type()->displayName())
+{
+}
+
+QString IncompatibleComponentException::errorMessage() const
+{
+    return "Incompatible " + _componentTypeDisplayName;
+}
+
+//////////
 //  CustomVirtualMachineException
 CustomVirtualMachineException::CustomVirtualMachineException(
         const QString & errorMessage

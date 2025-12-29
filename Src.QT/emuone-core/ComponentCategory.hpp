@@ -1,5 +1,5 @@
 //
-//  emuone-core/ComponentType.cpp - VM component type
+//  emuone-core/ComponentType.hpp - VM component type
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -49,7 +49,7 @@ namespace emuone::core
         ///     Returns the set of all registered VM Component Categories.
         /// \return
         ///     Returns the set of all registered VM Component Categories.
-        static auto     allComponentCategories() -> ComponentCategories;
+        static auto     all() -> ComponentCategories;
 
         /// \brief
         ///     Registers the specified Component Category.
@@ -60,7 +60,7 @@ namespace emuone::core
         ///     The VM Component Category to register.
         /// \return
         ///     True on success, false on failure.
-        static bool     registerComponentCategory(IComponentCategory * componentCategory);
+        static bool     register(IComponentCategory * componentCategory);
 
         /// \brief
         ///     Un-registers the specified VM Component Category.
@@ -68,7 +68,7 @@ namespace emuone::core
         ///     The VM Component Category to un-register.
         /// \return
         ///     True on success, false on failure.
-        static bool     unregisterComponentCategory(IComponentCategory * componentCategory);
+        static bool     unregister(IComponentCategory * componentCategory);
 
         /// \brief
         ///     Finds a registered component by mnemonic.
@@ -77,7 +77,7 @@ namespace emuone::core
         /// \return
         ///     The registered VM Component Category with the
         ///     required mnemonic or nullptr if none found.
-        static auto     findComponentCategory(const QString & mnemonic) -> IComponentCategory *;
+        static auto     find(const QString & mnemonic) -> IComponentCategory *;
 
         //////////
         //  Implementation
@@ -204,4 +204,4 @@ namespace emuone::core
     };
 }
 
-//  End of emuone-core/ComponentCategory.cpp
+//  End of emuone-core/ComponentCategory.hpp

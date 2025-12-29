@@ -1,5 +1,5 @@
 //
-//  emuone-core/VirtualMachineTypeManager.cpp - emuone::core::VirtualMachineTypeManager class implementation
+//  emuone-core/ComponentAdaptorTypeManager.cpp - emuone::core::ComponentAdaptorTypeManager class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -17,19 +17,9 @@
 #include "emuone-core/API.hpp"
 using namespace emuone::core;
 
-struct VirtualMachineTypeManager::_Impl
+struct ComponentAdaptorTypeManager::_Impl
 {
-    using Registry = QMap<QString, IVirtualMachineType*>;
-
-    _Impl()
-    {
-        for (auto virtualMachineType : StandardVirtualMachineTypes::all())
-        {
-            QString key = virtualMachineType->mnemonic();
-            Q_ASSERT(!registry.contains(key));
-            registry[key] = virtualMachineType;
-        }
-    }
+    using Registry = QMap<QString, IComponentAdaptorType*>;
 
     emuone::util::Mutex guard;
     Registry            registry;   //  mnemonic -> VAT
@@ -37,44 +27,44 @@ struct VirtualMachineTypeManager::_Impl
 
 //////////
 //  Operations
-auto VirtualMachineTypeManager::all() -> VirtualMachineTypes
+auto ComponentAdaptorTypeManager::all() -> ComponentAdaptorTypes
 {
     _Impl * impl = _impl();
     emuone::util::Lock _(impl->guard);
 
     auto result = impl->registry.values();
-    return VirtualMachineTypes(result.cbegin(), result.cend());
+    return ComponentAdaptorTypes(result.cbegin(), result.cend());
 }
 
-bool VirtualMachineTypeManager::register(IVirtualMachineType * virtualMachineType)
+bool ComponentAdaptorTypeManager::register(IComponentAdaptorType * componentAdaptorType)
 {
-    Q_ASSERT(virtualMachineType != nullptr);
+    Q_ASSERT(componentAdaptorType != nullptr);
 
     _Impl * impl = _impl();
     emuone::util::Lock _(impl->guard);
 
-    auto key = virtualMachineType->mnemonic();
+    auto key = componentAdaptorType->mnemonic();
     if (impl->registry.contains(key))
     {   //  Repeated registration is a kind of "success"
         auto registered = impl->registry[key];
-        return virtualMachineType == registered;
+        return componentAdaptorType == registered;
     }
-    impl->registry[key] = virtualMachineType;
+    impl->registry[key] = componentAdaptorType;
     return true;
 }
 
-bool VirtualMachineTypeManager::unregister(IVirtualMachineType * virtualMachineType)
+bool ComponentAdaptorTypeManager::unregister(IComponentAdaptorType * componentAdaptorType)
 {
-    Q_ASSERT(virtualMachineType != nullptr);
+    Q_ASSERT(componentAdaptorType != nullptr);
 
     _Impl * impl = _impl();
     emuone::util::Lock _(impl->guard);
 
-    auto key = virtualMachineType->mnemonic();
+    auto key = componentAdaptorType->mnemonic();
     if (impl->registry.contains(key))
     {
         auto registered = impl->registry[key];
-        if (virtualMachineType == registered)
+        if (componentAdaptorType == registered)
         {   //  We're not trying to un-register an impersonator
             impl->registry.remove(key);
             return true;
@@ -83,7 +73,7 @@ bool VirtualMachineTypeManager::unregister(IVirtualMachineType * virtualMachineT
     return false;
 }
 
-auto VirtualMachineTypeManager::find(const QString & mnemonic) -> IVirtualMachineType *
+auto ComponentAdaptorTypeManager::find(const QString & mnemonic) -> IComponentAdaptorType *
 {
     _Impl * impl = _impl();
     emuone::util::Lock _(impl->guard);
@@ -93,12 +83,34 @@ auto VirtualMachineTypeManager::find(const QString & mnemonic) -> IVirtualMachin
                nullptr;
 }
 
+auto ComponentAdaptorTypeManager::find(
+        IArchitecture * architecture,
+        IComponentType * componentType
+    ) -> IComponentAdaptorType *
+{
+    Q_ASSERT(architecture != nullptr);
+    Q_ASSERT(componentType != nullptr);
+
+    _Impl * impl = _impl();
+    emuone::util::Lock _(impl->guard);
+
+    for (auto cat : impl->registry.values())
+    {
+        if (cat->architecture() == architecture &&
+            cat->componentType() == componentType)
+        {
+            return cat;
+        }
+    }
+    return nullptr;
+}
+
 //////////
 //  Implementation
-auto VirtualMachineTypeManager::_impl() -> _Impl *
+auto ComponentAdaptorTypeManager::_impl() -> _Impl *
 {
     static _Impl impl;
     return &impl;
 }
 
-//  End of emuone-core/VirtualMachineTypeManager.cpp
+//  End of emuone-core/ComponentAdaptorTypeManager.cpp
