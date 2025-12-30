@@ -55,19 +55,6 @@ namespace emuone::core
         virtual auto    component() const -> IComponent * { return _component; }
 
         /// \brief
-        ///     Sets controls in this editor to  reflect the current
-        ///     onfiguration of the edited Component.
-        virtual void    loadControlValues() = 0;
-
-        /// \brief
-        ///     Applies the values of controls in this editor to the
-        ///     edited Component, changing its configuration accordingly.
-        /// \details
-        ///     If one or more of the the editor controls have invalid
-        ///     values, this call will have no effect.
-        virtual void    saveControlValues() const = 0;
-
-        /// \brief
         ///     Checks whether controls in this editor have valid values.
         /// \return
         ///     True if controls in this editor have valid values, else false.

@@ -28,6 +28,8 @@ ExternalFileSystemEditor::ExternalFileSystemEditor(
         _ui(new Ui::ExternalFileSystemEditor)
 {
     _ui->setupUi(this);
+    _loadControlValues();
+    _constructed = true;
 }
 
 ExternalFileSystemEditor::~ExternalFileSystemEditor()
@@ -37,21 +39,6 @@ ExternalFileSystemEditor::~ExternalFileSystemEditor()
 
 //////////
 //  emuone::core::ComponentEditor
-void ExternalFileSystemEditor::loadControlValues()
-{
-    _ui->volumeNameLineEdit->setText(_externalFileSystem->volumeName());
-    _ui->hostPathLineEdit->setText(_externalFileSystem->hostPath());
-}
-
-void ExternalFileSystemEditor::saveControlValues() const
-{
-    if (isValid())
-    {
-        _externalFileSystem->setVolumeName(_ui->volumeNameLineEdit->text());
-        _externalFileSystem->setHostPath(_ui->hostPathLineEdit->text());
-    }
-}
-
 bool ExternalFileSystemEditor::isValid() const
 {
     return ExternalFileSystem::isValidVolumeName(_ui->volumeNameLineEdit->text()) &&
@@ -60,16 +47,37 @@ bool ExternalFileSystemEditor::isValid() const
 
 //////////
 //  Signal handlers
+void ExternalFileSystemEditor::_loadControlValues()
+{
+    _ui->volumeNameLineEdit->setText(_externalFileSystem->volumeName());
+    _ui->hostPathLineEdit->setText(_externalFileSystem->hostPath());
+}
+
+void ExternalFileSystemEditor::_saveControlValues() const
+{
+    if (isValid())
+    {
+        _externalFileSystem->setVolumeName(_ui->volumeNameLineEdit->text());
+        _externalFileSystem->setHostPath(_ui->hostPathLineEdit->text());
+    }
+}
+
 void ExternalFileSystemEditor::_volumeNameLineEditTextChanged(QString)
 {
-    _externalFileSystem->setVolumeName(_ui->volumeNameLineEdit->text());
-    emit valueChanged();
+    if (_constructed)
+    {
+        _saveControlValues();
+        emit valueChanged();
+    }
 }
 
 void ExternalFileSystemEditor::_hostPathLineEditTextChanged(QString)
 {
-    _externalFileSystem->setHostPath(_ui->hostPathLineEdit->text());
-    emit valueChanged();
+    if (_constructed)
+    {
+        _saveControlValues();
+        emit valueChanged();
+    }
 }
 
 void ExternalFileSystemEditor::_browsePushButtonClicked()
@@ -86,7 +94,6 @@ void ExternalFileSystemEditor::_browsePushButtonClicked()
     {
         _ui->hostPathLineEdit->setText(
             _externalFileSystem->owner()->toRelatimePath(dir));
-        emit valueChanged();
     }
 }
 

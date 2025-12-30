@@ -8,10 +8,8 @@ SOURCES += \
     Component.cpp \
     devices/ExternalFileSystem.cpp \
     devices/ExternalFileSystemEditor.cpp \
-    kernel/EditSharedFolderDialog.cpp \
     kernel/Kernel.cpp \
-    kernel/KernelEditor.cpp \
-    kernel/SharedFolder.cpp
+    kernel/KernelEditor.cpp
 
 HEADERS += \
     API.hpp \
@@ -20,8 +18,9 @@ HEADERS += \
     Component.hpp \
     Linkage.hpp \
     devices/ExternalFileSystem.hpp \
-    kernel/EditSharedFolderDialog.hpp \
     kernel/Kernel.hpp
+
+PRECOMPILED_HEADER = API.hpp
 
 LIBS += \
     -lemuone-core$$TARGET_SUFFIX    \
@@ -32,5 +31,4 @@ RESOURCES += \
 
 FORMS += \
     devices/ExternalFileSystemEditor.ui \
-    kernel/EditSharedFolderDialog.ui \
     kernel/KernelEditor.ui

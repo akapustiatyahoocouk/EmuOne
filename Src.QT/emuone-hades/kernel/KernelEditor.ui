@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>291</width>
-    <height>204</height>
+    <width>284</width>
+    <height>68</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,15 +29,7 @@
    <property name="spacing">
     <number>4</number>
    </property>
-   <item row="0" column="0">
-    <widget class="QLabel" name="kernelVersionLavel">
-     <property name="text">
-      <string>Kernel version
-(major.minor.build):</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="2">
+   <item row="1" column="0" colspan="2">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Orientation::Vertical</enum>
@@ -53,84 +45,17 @@
    <item row="0" column="1">
     <widget class="QLineEdit" name="kernelVersionLneEdit"/>
    </item>
-   <item row="1" column="0" colspan="2">
-    <widget class="QGroupBox" name="sharedFoldersGroupBox">
-     <property name="title">
-      <string>Shared folders</string>
+   <item row="0" column="0">
+    <widget class="QLabel" name="kernelVersionLavel">
+     <property name="text">
+      <string>Kernel version
+(major.minor.build):</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <property name="leftMargin">
-       <number>4</number>
-      </property>
-      <property name="topMargin">
-       <number>4</number>
-      </property>
-      <property name="rightMargin">
-       <number>4</number>
-      </property>
-      <property name="bottomMargin">
-       <number>4</number>
-      </property>
-      <property name="spacing">
-       <number>4</number>
-      </property>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="modifySharedFolderPoushButton">
-        <property name="text">
-         <string>Modify</string>
-        </property>
-        <property name="icon">
-         <iconset resource="../emuone-hades.qrc">
-          <normaloff>:/emuone-hades/Resources/Images/Actions/ModifySmall.png</normaloff>:/emuone-hades/Resources/Images/Actions/ModifySmall.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QPushButton" name="addSharedFolderPushButton">
-        <property name="text">
-         <string>Add</string>
-        </property>
-        <property name="icon">
-         <iconset resource="../emuone-hades.qrc">
-          <normaloff>:/emuone-hades/Resources/Images/Actions/AddSmall.png</normaloff>:/emuone-hades/Resources/Images/Actions/AddSmall.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QPushButton" name="removeSharedFolderPushButton">
-        <property name="text">
-         <string>Remove</string>
-        </property>
-        <property name="icon">
-         <iconset resource="../emuone-hades.qrc">
-          <normaloff>:/emuone-hades/Resources/Images/Actions/RemoveSmall.png</normaloff>:/emuone-hades/Resources/Images/Actions/RemoveSmall.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0" colspan="3">
-       <widget class="QListWidget" name="sharedFoldersListWidget">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>64</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>64</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </widget>
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../emuone-hades.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>kernelVersionLneEdit</sender>
@@ -145,70 +70,6 @@
     <hint type="destinationlabel">
      <x>150</x>
      <y>37</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>addSharedFolderPushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>emuone::hades::kernel::KernelEditor</receiver>
-   <slot>_addSharedFolderPushButtonClicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>50</x>
-     <y>159</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>145</x>
-     <y>101</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>modifySharedFolderPoushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>emuone::hades::kernel::KernelEditor</receiver>
-   <slot>_modifySharedFolderPushButtonClicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>138</x>
-     <y>159</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>145</x>
-     <y>101</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>removeSharedFolderPushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>emuone::hades::kernel::KernelEditor</receiver>
-   <slot>_removeSharedFolderPushButtonClicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>232</x>
-     <y>159</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>145</x>
-     <y>101</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>sharedFoldersListWidget</sender>
-   <signal>currentRowChanged(int)</signal>
-   <receiver>emuone::hades::kernel::KernelEditor</receiver>
-   <slot>_sharedFoldersListWidgetCurrentRowChanged(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>145</x>
-     <y>109</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>145</x>
-     <y>101</y>
     </hint>
    </hints>
   </connection>

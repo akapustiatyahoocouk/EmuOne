@@ -126,14 +126,17 @@ namespace emuone::hades::devices
         //////////
         //  emuone::core::ComponentEditor
     public:
-        virtual void    loadControlValues() override;
-        virtual void    saveControlValues() const override;
         virtual bool    isValid() const override;
 
         //////////
         //  Implementation
     private:
         ExternalFileSystem *const   _externalFileSystem;
+        bool            _constructed = false;
+
+        //  Helpers
+        void            _loadControlValues();
+        void            _saveControlValues() const;
 
         //////////
         //  Controls

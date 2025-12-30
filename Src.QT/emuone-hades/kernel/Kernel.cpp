@@ -36,7 +36,9 @@ auto Kernel::type() const -> emuone::core::IComponentType *
 
 QString Kernel::displayName() const
 {
-    return type()->displayName();
+    return type()->displayName() +
+           " " +
+           emuone::util::toString(_version);
 }
 
 auto Kernel::createEditor(QWidget * parent) -> emuone::core::ComponentEditor *
@@ -51,9 +53,6 @@ void Kernel::saveConfiguration(QDomElement & element) const
     element.setAttribute(
         "Version",
         emuone::util::toString(_version));
-    element.setAttribute(
-        "SharedFolders",
-        emuone::util::toString(_sharedFolders));
 }
 
 void Kernel::restoreConfiguration(const QDomElement & element)
@@ -63,9 +62,6 @@ void Kernel::restoreConfiguration(const QDomElement & element)
     _version = emuone::util::fromString(
         element.attribute("Version"),
         _version);
-    _sharedFolders = emuone::util::fromString(
-        element.attribute("SharedFolders"),
-        _sharedFolders);
 }
 
 //////////
@@ -125,32 +121,6 @@ void Kernel::setVersion(const QVersionNumber & version)
     if (version > QVersionNumber(0, 0, 0))
     {
         _version = version;
-    }
-}
-
-SharedFolders Kernel::sharedFolders() const
-{
-    emuone::util::Lock _(guard);
-    return _sharedFolders;
-}
-
-void Kernel::setSharedFolders(const SharedFolders & sharedFolders)
-{
-    emuone::util::Lock _(guard);
-
-    if (state() != State::Constructed)
-    {   //  OOPOS! Can't!
-        throw emuone::core::InvalidComponentStateException();
-    }
-    QSet<QString> volumeNames;
-    _sharedFolders.clear();
-    for (auto sharedFolder : sharedFolders)
-    {
-        if (!volumeNames.contains(sharedFolder.volumeName()))
-        {
-            _sharedFolders.insert(sharedFolder);
-            volumeNames.insert(sharedFolder.volumeName());
-        }
     }
 }
 

@@ -19,50 +19,6 @@
 
 namespace emuone::hades::kernel
 {
-    /// \class SharedFolder emuone-hades/API.hpp
-    /// \brief A definition of a host folder that appears as
-    ///        an external file system in a HADES kernel.
-    class EMUONE_HADES_PUBLIC SharedFolder final
-    {
-        //////////
-        //  Construction/destruction/assignment
-    public:
-        SharedFolder() = default;
-        SharedFolder(const QString & volumeName, const QString & hostPath);
-
-        //////////
-        //  Operators
-    public:
-        bool        operator == (const SharedFolder & op2) const;
-        bool        operator != (const SharedFolder & op2) const;
-        bool        operator <  (const SharedFolder & op2) const;
-        bool        operator <= (const SharedFolder & op2) const;
-        bool        operator >  (const SharedFolder & op2) const;
-        bool        operator >= (const SharedFolder & op2) const;
-
-        //////////
-        //  Operations
-    public:
-        bool        isValid() const;
-        QString     volumeName() const { return _volumeName; }
-        QString     hostPath() const { return _hostPath; }
-
-        static bool isValidVolumeName(const QString & volumeName);
-        static bool isValidHostPath(const QString & hostPath);
-
-        //////////
-        //  Implementation
-    private:
-        QString     _volumeName;    //  as known to HADES OS
-        QString     _hostPath;      //  where data resides
-    };
-    using SharedFolders = QSet<SharedFolder>;
-
-    inline size_t qHash(const SharedFolder & key, size_t seed)
-    {
-        return qHash(key.volumeName(), seed);
-    }
-
     /// \class Kernel emuone-hades/API.hpp
     /// \brief The HADES OS Kernel.
     class EMUONE_HADES_PUBLIC Kernel final
@@ -130,8 +86,6 @@ namespace emuone::hades::kernel
     public:
         QVersionNumber  version() const;
         void            setVersion(const QVersionNumber & version);
-        SharedFolders   sharedFolders() const;
-        void            setSharedFolders(const SharedFolders & sharedFolders);
 
         //////////
         //  Implementation
@@ -140,7 +94,6 @@ namespace emuone::hades::kernel
 
         //  Configuration
         QVersionNumber  _version = DefaultVersion;
-        SharedFolders   _sharedFolders; //  All VolumeNames different!!!
     };
 
     namespace Ui { class KernelEditor; }
@@ -171,23 +124,17 @@ namespace emuone::hades::kernel
         //////////
         //  emuone::core::ComponentEditor
     public:
-        virtual void    loadControlValues() override;
-        virtual void    saveControlValues() const override;
         virtual bool    isValid() const override;
 
         //////////
         //  Implementation
     private:
         Kernel *const   _kernel;
-        inline static const QString _SharedFoldersSeparator = " -> ";
+        bool            _constructed = false;
 
-        //  Helpers
-        void            _refresh();
-        SharedFolder    _selectedSharedFolder() const;
-        SharedFolders   _sharedFolders() const;
-        void            _setSharedFolders(const SharedFolders & sharedFolders);
-        void            _addSharedFolder(const SharedFolder & sharedFolder);
-        void            _removeSharedFolder(const QString & volumeName);
+        //
+        void            _loadControlValues();
+        void            _saveControlValues() const;
 
         //////////
         //  Controls
@@ -198,30 +145,7 @@ namespace emuone::hades::kernel
         //  Signal handlers
     private slots:
         void            _kernelVersionLineEditTextChanged(QString);
-        void            _sharedFoldersListWidgetCurrentRowChanged(int);
-        void            _addSharedFolderPushButtonClicked();
-        void            _modifySharedFolderPushButtonClicked();
-        void            _removeSharedFolderPushButtonClicked();
     };
-}
-
-//////////
-//  Formatting/parwing
-namespace emuone::util
-{
-    template <> EMUONE_HADES_PUBLIC
-    QString toString<emuone::hades::kernel::SharedFolder>(const emuone::hades::kernel::SharedFolder & value);
-
-    template <> EMUONE_HADES_PUBLIC
-    QString toString<emuone::hades::kernel::SharedFolders>(const emuone::hades::kernel::SharedFolders & value);
-
-    template <> EMUONE_HADES_PUBLIC
-    emuone::hades::kernel::SharedFolder
-    fromString<emuone::hades::kernel::SharedFolder>(const QString & s, qsizetype & scan);
-
-    template <> EMUONE_HADES_PUBLIC
-    emuone::hades::kernel::SharedFolders
-    fromString<emuone::hades::kernel::SharedFolders>(const QString & s, qsizetype & scan);
 }
 
 //  Macro required to allow MOC compiler to do its work

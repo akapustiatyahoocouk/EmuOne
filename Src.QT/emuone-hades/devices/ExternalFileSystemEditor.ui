@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>458</width>
-    <height>135</height>
+    <width>418</width>
+    <height>132</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,13 +35,13 @@
     <widget class="QLineEdit" name="hostPathLineEdit">
      <property name="minimumSize">
       <size>
-       <width>240</width>
+       <width>200</width>
        <height>0</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>240</width>
+       <width>200</width>
        <height>16777215</height>
       </size>
      </property>

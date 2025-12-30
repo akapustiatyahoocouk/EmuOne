@@ -96,7 +96,7 @@ ConfigureVirtualMachineDialog::ConfigureVirtualMachineDialog(
                                      Qt::AlignmentFlag::AlignVCenter);
     for (auto editor : _componentEditors.values())
     {
-        editor->loadControlValues();
+        //  TODO kill off this loop editor->loadControlValues();
     }
 
     //  Done
@@ -322,9 +322,9 @@ QAction * ConfigureVirtualMachineDialog::_createAddComponenyAction(emuone::core:
                 auto component = componentType->createComponent();
                 _virtualMachine->addComponent(component);
                 _addedComponents.insert(component);
-                _refresh();
-                _setSelectedComponent(component);
                 _createEditor(component);
+                _refresh(); //  to insert new Component into the components tree
+                _setSelectedComponent(component);
             });
     //  Done
     return action;
@@ -424,11 +424,6 @@ void ConfigureVirtualMachineDialog::accept()
     {
         Q_ASSERT(!c->isBound());
         delete c;
-    }
-    //  Apply all editors to the edited components
-    for (auto editor : _componentEditors.values())
-    {
-        editor->saveControlValues();
     }
     //  Changes already made to VM - save configuration
     try
