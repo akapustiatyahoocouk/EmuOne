@@ -93,6 +93,7 @@ namespace emuone
         QMenu *         _createAddComponentMenu();
         QMenu *         _createAddComponentMenu(emuone::core::IComponentCategory * componentCategory);
         QAction *       _createAddComponenyAction(emuone::core::IComponentType * componentType);
+        void            _createEditor(emuone::core::IComponent * component);
 
         auto            _selectedComponent() const -> emuone::core::IComponent *;
         void            _setSelectedComponent(emuone::core::IComponent * component);
@@ -104,14 +105,18 @@ namespace emuone
         //  Dynamic controls
         QStackedLayout *    _editorsPanelLayout;
         QLabel *            _noPropertiesLabel;
+        QMap<emuone::core::IComponent*,
+             emuone::core::ComponentEditor*>    _componentEditors;  //  for all current VM components, native and apapted
         std::unique_ptr<QMenu>  _addComponentMenu;
 
         //////////
         //  Signal handlers
     private slots:
         void            _nameLineEditTextChanged(QString);
+        void            _componentsTreeWidgetCurrentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*);
         void            _addComponentPushButtonClicked();
         void            _removeComponentPushButtonClicked();
+        void            _editorValueChanged();
         virtual void    accept() override;
         virtual void    reject() override;
     };

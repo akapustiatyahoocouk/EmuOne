@@ -36,10 +36,7 @@ namespace emuone::core
         ///     The parent for the editor; nullptr == none.
         /// \param component
         ///     The component to edit.
-        ComponentEditor(
-                QWidget * parent,
-                IComponent * component
-            );
+        ComponentEditor(QWidget * parent, IComponent * component);
 
         /// \brief
         ///     The class destructor.
@@ -56,6 +53,33 @@ namespace emuone::core
         /// \return
         ///     The component being edited.
         virtual auto    component() const -> IComponent * { return _component; }
+
+        /// \brief
+        ///     Sets controls in this editor to  reflect the current
+        ///     onfiguration of the edited Component.
+        virtual void    loadControlValues() = 0;
+
+        /// \brief
+        ///     Applies the values of controls in this editor to the
+        ///     edited Component, changing its configuration accordingly.
+        /// \details
+        ///     If one or more of the the editor controls have invalid
+        ///     values, this call will have no effect.
+        virtual void    saveControlValues() const = 0;
+
+        /// \brief
+        ///     Checks whether controls in this editor have valid values.
+        /// \return
+        ///     True if controls in this editor have valid values, else false.
+        virtual bool    isValid() const = 0;
+
+        //////////
+        //  Signals
+    signals:
+        /// \brief
+        ///     Emitted when one of the editor's controls changes
+        ///     their value.
+        void            valueChanged();
 
         //////////
         //  Implementation

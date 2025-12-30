@@ -331,10 +331,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>componentsTreeWidget</sender>
+   <signal>currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)</signal>
+   <receiver>emuone::ConfigureVirtualMachineDialog</receiver>
+   <slot>_componentsTreeWidgetCurrentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>137</x>
+     <y>239</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>189</x>
+     <y>216</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>_addComponentPushButtonClicked()</slot>
   <slot>_removeComponentPushButtonClicked()</slot>
   <slot>_nameLineEditTextChanged(QString)</slot>
+  <slot>_componentsTreeWidgetCurrentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)</slot>
  </slots>
 </ui>

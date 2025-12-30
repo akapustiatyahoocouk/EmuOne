@@ -99,6 +99,31 @@ namespace emuone::core
         virtual QString errorMessage() const override;
     };
 
+    /// \class InvalidComponentStateException emuone-core/API.hpp
+    /// \brief Thrown when a VM service fails because component is in an invalid state,
+    class EMUONE_CORE_PUBLIC InvalidComponentStateException
+        :   public VirtualMachineException
+    {
+        using Self = InvalidComponentStateException;
+
+        //////////
+        //  Construction/destruction
+    public:
+        InvalidComponentStateException();
+
+        //////////
+        //  QException
+    public:
+        Q_NORETURN
+        void            raise() const override { throw *this; }
+        Self *          clone() const override { return new Self(*this); }
+
+        //////////
+        //  emuone::util::Exception
+    public:
+        virtual QString errorMessage() const override;
+    };
+
     /// \class IncompatibleComponentException emuone-core/API.hpp
     /// \brief Thrown when adding an imcompatible component to a VM.
     class EMUONE_CORE_PUBLIC IncompatibleComponentException

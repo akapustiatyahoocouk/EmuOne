@@ -42,6 +42,17 @@ QString InvalidVirtualMachineStateException::errorMessage() const
 }
 
 //////////
+//  InvalidComponentStateException
+InvalidComponentStateException::InvalidComponentStateException()
+{
+}
+
+QString InvalidComponentStateException::errorMessage() const
+{
+    return "The virtual machine component state is invalid";
+}
+
+//////////
 //  IncompatibleComponentException
 IncompatibleComponentException::IncompatibleComponentException(
         const QString & componentTypeMnemonic,

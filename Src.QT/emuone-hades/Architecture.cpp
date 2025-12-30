@@ -60,7 +60,7 @@ bool Architecture::isValid(
         return false;
     }
     //  A HADES VM must have exactly one HADES OS Kernel
-    if (virtualMachine->componentsOfType<Kernel>().size() != 1)
+    if (virtualMachine->componentsOfType<kernel::Kernel>().size() != 1)
     {   //  OOPS! No Kernel or multiple Kernels
         return false;
     }

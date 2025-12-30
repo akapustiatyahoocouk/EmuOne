@@ -76,6 +76,11 @@ ConfigureVirtualMachineDialog::ConfigureVirtualMachineDialog(
     _editorsPanelLayout->addWidget(_noPropertiesLabel);
     _ui->editorsPanel->setLayout(_editorsPanelLayout);
 
+    for (auto component : _virtualMachine->components())
+    {
+        _createEditor(component);
+    }
+
     //  Set editable control values
     _ui->nameLineEdit->setText(
         _virtualMachine->name());
@@ -89,6 +94,11 @@ ConfigureVirtualMachineDialog::ConfigureVirtualMachineDialog(
     _noPropertiesLabel->setText("No properties to edit");
     _noPropertiesLabel->setAlignment(Qt::AlignmentFlag::AlignHCenter |
                                      Qt::AlignmentFlag::AlignVCenter);
+    for (auto editor : _componentEditors.values())
+    {
+        editor->loadControlValues();
+    }
+
     //  Done
     _refresh();
     _ui->componentsTreeWidget->expandAll();
@@ -114,12 +124,27 @@ void ConfigureVirtualMachineDialog::_refresh()
     if (!_refreshUnderway)
     {
         _refreshUnderway = true;
-
+        //  Components tree
         _refreshComponentsTree();
-
+        //  Active editor
+        auto component = _selectedComponent();
+        if (component != nullptr && _componentEditors.contains(component))
+        {   //  Editor exists - show it
+            _editorsPanelLayout->setCurrentWidget(_componentEditors[component]);
+        }
+        else
+        {   //  No editor - show none
+            _editorsPanelLayout->setCurrentWidget(_noPropertiesLabel);
+        }
+        //  Action buttons
         _ui->buttonBox->button(QDialogButtonBox::StandardButton::Ok)->setEnabled(
             emuone::core::VirtualMachine::isValidName(_ui->nameLineEdit->text()) &&
-            _virtualMachine->architecture()->isValid(_virtualMachine));
+            _virtualMachine->architecture()->isValid(_virtualMachine) &&
+            std::all_of(
+                _componentEditors.begin(),
+                _componentEditors.end(),
+                [](auto e) { return e->isValid(); }));
+        //  Done
         _refreshUnderway = false;
     }
 }
@@ -236,7 +261,7 @@ QMenu * ConfigureVirtualMachineDialog::_createAddComponentMenu()
             return a->displayName() < b->displayName();
         });
     QMenu * menu = new QMenu();
-    for (auto cc : componentCategories)
+    for (auto cc : std::as_const(componentCategories))
     {
         auto action =
             menu->addAction(cc->smallIcon(),
@@ -267,7 +292,7 @@ QMenu * ConfigureVirtualMachineDialog::_createAddComponentMenu(emuone::core::ICo
             return a->displayName() < b->displayName();
         });
     QMenu * menu = new QMenu();
-    for (auto ct : componentTypes)
+    for (auto ct : std::as_const(componentTypes))
     {
         if (ct->isCompatibleWith(_virtualMachine->architecture()) &&
             ct->isCompatibleWith(_virtualMachine->type()))
@@ -295,15 +320,46 @@ QAction * ConfigureVirtualMachineDialog::_createAddComponenyAction(emuone::core:
                 _virtualMachine->addComponent(component);
                 _refresh();
                 _setSelectedComponent(component);
+                _createEditor(component);
             });
     //  Done
     return action;
 }
 
+void ConfigureVirtualMachineDialog::_createEditor(emuone::core::IComponent * component)
+{
+    auto componentEditor = component->createEditor(_ui->editorsPanel);
+    emuone::core::ComponentAdaptorEditor * adaptorEditor = nullptr;
+    if (auto adaptor = _virtualMachine->findAdaptor(component))
+    {
+        adaptorEditor = adaptor->createEditor(_ui->editorsPanel);
+    }
+    if (componentEditor != nullptr && adaptorEditor == nullptr)
+    {   //  Component editor only
+        _componentEditors[component] = componentEditor;
+        _editorsPanelLayout->addWidget(componentEditor);
+        //  Set up change listener BY NAME (private inheritabce)
+        connect(componentEditor,
+                SIGNAL(valueChanged()),
+                this,
+                SLOT(_editorValueChanged()),
+                Qt::ConnectionType::QueuedConnection);
+    }
+    else if (componentEditor == nullptr && adaptorEditor != nullptr)
+    {   //  Adaptor editor only
+        Q_ASSERT(false);    //  TODO implement
+    }
+    if (componentEditor != nullptr && adaptorEditor != nullptr)
+    {   //  Need a joint editor
+        Q_ASSERT(false);    //  TODO implement
+    }
+    //  else no editor
+}
+
 auto ConfigureVirtualMachineDialog::_selectedComponent() const -> emuone::core::IComponent *
 {
     auto item = _ui->componentsTreeWidget->currentItem();
-    if (item->parent() != nullptr)
+    if (item != nullptr && item->parent() != nullptr)
     {
         return item->data(0, Qt::ItemDataRole::UserRole).value<emuone::core::IComponent*>();
     }
@@ -334,6 +390,11 @@ void ConfigureVirtualMachineDialog::_nameLineEditTextChanged(QString)
     _refresh();
 }
 
+void ConfigureVirtualMachineDialog::_componentsTreeWidgetCurrentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)
+{
+    _refresh();
+}
+
 void ConfigureVirtualMachineDialog::_addComponentPushButtonClicked()
 {
     _addComponentMenu.reset(_createAddComponentMenu());
@@ -344,6 +405,11 @@ void ConfigureVirtualMachineDialog::_addComponentPushButtonClicked()
 
 void ConfigureVirtualMachineDialog::_removeComponentPushButtonClicked()
 {
+}
+
+void ConfigureVirtualMachineDialog::_editorValueChanged()
+{
+    _refresh();
 }
 
 void ConfigureVirtualMachineDialog::accept()
@@ -365,6 +431,12 @@ void ConfigureVirtualMachineDialog::accept()
         Q_ASSERT(!c->isBound());
         delete c;
     }
+    //  Apply all editors to the edited components
+    for (auto editor : _componentEditors.values())
+    {
+        editor->saveControlValues();
+    }
+    //  Done
     done(int(Result::Ok));
 }
 

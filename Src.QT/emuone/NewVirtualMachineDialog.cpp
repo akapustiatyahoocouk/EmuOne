@@ -75,7 +75,7 @@ NewVirtualMachineDialog::NewVirtualMachineDialog(
     //  Done
     _refresh();
     adjustSize();
-    _ui->nameLabel->setFocus();
+    _ui->nameLineEdit->setFocus();
 }
 
 NewVirtualMachineDialog::~NewVirtualMachineDialog()

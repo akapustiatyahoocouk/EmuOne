@@ -1,5 +1,5 @@
 //
-//  emuone-hades/Kernel.cpp - emuone::hades::Kernel class implementation
+//  emuone-hades/kernel/Kernel.cpp - emuone::hades::kernel::Kernel class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -15,7 +15,7 @@
 //  GNU General Public License for more details.
 //////////
 #include "emuone-hades/API.hpp"
-using namespace emuone::hades;
+using namespace emuone::hades::kernel;
 
 //////////
 //  Construction/destruction
@@ -87,6 +87,54 @@ void Kernel::stop() noexcept
 }
 
 //////////
+//  Operations (configuration)
+QVersionNumber Kernel::version() const
+{
+    emuone::util::Lock _(guard);
+    return _version;
+}
+
+void Kernel::setVersion(const QVersionNumber & version)
+{
+    emuone::util::Lock _(guard);
+
+    if (state() != State::Constructed)
+    {   //  OOPOS! Can't!
+        throw emuone::core::InvalidComponentStateException();
+    }
+    if (version > QVersionNumber(0, 0, 0))
+    {
+        _version = version;
+    }
+}
+
+SharedFolders Kernel::sharedFolders() const
+{
+    emuone::util::Lock _(guard);
+    return _sharedFolders;
+}
+
+void Kernel::setSharedFolders(const SharedFolders & sharedFolders)
+{
+    emuone::util::Lock _(guard);
+
+    if (state() != State::Constructed)
+    {   //  OOPOS! Can't!
+        throw emuone::core::InvalidComponentStateException();
+    }
+    QSet<QString> volumeNames;
+    _sharedFolders.clear();
+    for (auto sharedFolder : sharedFolders)
+    {
+        if (!volumeNames.contains(sharedFolder.volumeName()))
+        {
+            _sharedFolders.insert(sharedFolder);
+            volumeNames.insert(sharedFolder.volumeName());
+        }
+    }
+}
+
+//////////
 //  Kernel::Type
 EMUONE_IMPLEMENT_SINGLETON(Kernel::Type)
 Kernel::Type::Type() {}
@@ -127,4 +175,4 @@ auto Kernel::Type::createComponent() -> Kernel *
     return new Kernel();
 }
 
-//  End of emuone-hades/Kernel.cpp
+//  End of emuone-hades/kernel/Kernel.cpp

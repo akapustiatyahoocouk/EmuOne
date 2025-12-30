@@ -33,6 +33,9 @@
 //  Devices
 
 //  HADES OS
-#include "emuone-hades/Kernel.hpp"
+#include "emuone-hades/kernel/Kernel.hpp"
+
+//  GUI
+#include "emuone-hades/kernel/EditSharedFolderDialog.hpp"
 
 //  End of emuone-hades/API.hpp

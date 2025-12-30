@@ -2,5 +2,15 @@
     <qresource prefix="/emuone-hades">
         <file>Resources/Images/Objects/HadesLarge.png</file>
         <file>Resources/Images/Objects/HadesSmall.png</file>
+        <file>Resources/Images/Actions/AddLarge.png</file>
+        <file>Resources/Images/Actions/AddSmall.png</file>
+        <file>Resources/Images/Actions/ModifyLarge.png</file>
+        <file>Resources/Images/Actions/ModifySmall.png</file>
+        <file>Resources/Images/Actions/RemoveLarge.png</file>
+        <file>Resources/Images/Actions/RemoveSmall.png</file>
+        <file>Resources/Images/Objects/RemoteFolderLarge.png</file>
+        <file>Resources/Images/Objects/RemoteFolderSmall.png</file>
+        <file>Resources/Images/Actions/BrowseLarge.png</file>
+        <file>Resources/Images/Actions/BrowseSmall.png</file>
     </qresource>
 </RCC>
