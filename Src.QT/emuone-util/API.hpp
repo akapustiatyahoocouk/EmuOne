@@ -62,14 +62,16 @@
 #include <QMutex>
 #include <QMutexLocker>
 #include <QRegularExpression>
+#include <QStyledItemDelegate>
 #include <QStyleFactory>
+#include <QThread>
 #include <QTimer>
 #include <QTimeZone>
+#include <QTooltip>
 #include <QTreeWidgetItem>
-#include <QVersionNumber>
 #include <QSemaphore>
 #include <QStackedLayout>
-#include <QThread>
+#include <QVersionNumber>
 
 #if defined(__GNUC__)
     #pragma GCC diagnostic pop

@@ -175,8 +175,8 @@ namespace emuone::core
         ///     change for this Component, connecting it to other
         ///     relevant Components of the same VM.
         /// \details
-        ///     If the Component is not in the Constructed state,
-        ///     the call is an error.
+        ///     If the Component is not in the Constructed state
+        ///     or is not bound, the call is an error.
         /// \exception VirtualMachineException
         ///     If an error occurs; the component state remains
         ///     unchanged when an exception is thrown.
@@ -187,8 +187,8 @@ namespace emuone::core
         ///     change for this Component, disonnecting it from
         ///     other Components of the same VM.
         /// \details
-        ///     If the Component is not in the Connected state,
-        ///     the call has no effect.
+        ///     If the Component is not in the Connected state
+        ///     or is not bound, the call has no effect.
         virtual void    disconnect() noexcept = 0;
 
         /// \brief
@@ -196,8 +196,8 @@ namespace emuone::core
         ///     change for this Component, allocating its
         ///     "runtime state".
         /// \details
-        ///     If the Component is not in the Connected state,
-        ///     the call is an error.
+        ///     If the Component is not in the Connected state
+        ///     or is not bound, the call is an error.
         /// \exception VirtualMachineException
         ///     If an error occurs; the component state remains
         ///     unchanged when an exception is thrown.
@@ -208,8 +208,8 @@ namespace emuone::core
         ///     change for this Component, deallocating its
         ///     "runtime state".
         /// \details
-        ///     If the Component is not in the Initialized state,
-        ///     the call has no effect.
+        ///     If the Component is not in the Initialized state
+        ///     or is not bound, the call has no effect.
         virtual void    deinitialize() noexcept = 0;
 
         /// \brief
@@ -217,8 +217,8 @@ namespace emuone::core
         ///     change for this Component, starting its
         ///     normal operation.
         /// \details
-        ///     If the Component is not in the Initialized state,
-        ///     the call is an error.
+        ///     If the Component is not in the Initialized state
+        ///     or is not bound, the call is an error.
         /// \exception VirtualMachineException
         ///     If an error occurs; the component state remains
         ///     unchanged when an exception is thrown.
@@ -229,8 +229,8 @@ namespace emuone::core
         ///     change for this Component, stopping its
         ///     normal operation.
         /// \details
-        ///     If the Component is not in the Running or Suspended state,
-        ///     the call has no effect.
+        ///     If the Component is not in the Running or Suspended state
+        ///     or is not bound, the call has no effect.
         virtual void    stop() noexcept = 0;
 
     protected:

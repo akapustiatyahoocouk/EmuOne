@@ -189,7 +189,7 @@ void MainFrame::refresh()
     _ui->actionStop->setEnabled(
         vm != nullptr && !vm->isStopped());
     _ui->actionSuspend->setEnabled(
-        vm != nullptr && vm->isRunning());
+        vm != nullptr && vm->isRunning() && vm->isPersistable());
     _ui->actionResume->setEnabled(
         vm != nullptr && vm->isSuspended());
     _ui->actionReset->setEnabled(
@@ -397,12 +397,34 @@ void MainFrame::_onActionExit()
 
 void MainFrame::_onActionStart()
 {
-    QMessageBox::critical(this, "ERROR", "Not yet implemented");
+    if (auto vm = currentVirtualMachine())
+    {
+        try
+        {
+            vm->start();
+        }
+        catch (const emuone::util::Exception & ex)
+        {
+            qCritical() << ex;
+            QMessageBox::critical(this, "ERROR", ex.errorMessage());
+        }
+    }
 }
 
 void MainFrame::_onActionStop()
 {
-    QMessageBox::critical(this, "ERROR", "Not yet implemented");
+    if (auto vm = currentVirtualMachine())
+    {
+        try
+        {
+            vm->stop();
+        }
+        catch (const emuone::util::Exception & ex)
+        {
+            qCritical() << ex;
+            QMessageBox::critical(this, "ERROR", ex.errorMessage());
+        }
+    }
 }
 
 void MainFrame::_onActionConfigure()

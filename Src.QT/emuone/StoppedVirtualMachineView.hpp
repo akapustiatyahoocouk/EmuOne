@@ -19,6 +19,50 @@
 
 namespace emuone
 {
+    //  TODO move to emuone-util and cleanup
+    class AutoToolTipDelegate : public QStyledItemDelegate
+    {
+        Q_OBJECT
+    public:
+        explicit AutoToolTipDelegate(QObject * parent)
+            :   QStyledItemDelegate(parent) {}
+        virtual ~AutoToolTipDelegate() {}
+
+    public slots:
+        bool helpEvent(QHelpEvent* e, QAbstractItemView* view, const QStyleOptionViewItem & option,
+                       const QModelIndex& index )
+        {
+            if (!e || !view)
+            {
+                return false;
+            }
+
+            if (e->type() == QEvent::ToolTip)
+            {
+                QRect rect = view->visualRect(index);
+                QSize size = sizeHint(option, index);
+                if (rect.width() < size.width())
+                {
+                    QVariant tooltip = index.data(Qt::DisplayRole);
+                    if (tooltip.canConvert<QString>())
+                    {
+                        QToolTip::showText(
+                            e->globalPos(),
+                            "<div>" + tooltip.toString().toHtmlEscaped() + "</div>",
+                            view);
+                        return true;
+                    }
+                }
+                if (!QStyledItemDelegate::helpEvent(e, view, option, index))
+                {
+                    QToolTip::hideText();
+                }
+                return true;
+            }
+            return QStyledItemDelegate::helpEvent(e, view, option, index);
+        }
+    };
+
     namespace Ui { class StoppedVirtualMachineView; }
 
     /// \class StoppedVirtualMachineView emuone/API.hpp
@@ -49,6 +93,11 @@ namespace emuone
         //  Implementation
     private:
         emuone::core::VirtualMachine *const _virtualMachine;
+
+        //  Helpers
+        void            _refreshComponentsTree();
+        void            _refreshComponentCategoryItem(QTreeWidgetItem * categoryItem);
+        void            _refreshComponentItem(QTreeWidgetItem * componentItem);
 
         //////////
         //  Controls

@@ -140,6 +140,25 @@ QIcon VirtualMachine::largeIcon() const
     return _architecture->largeIcon();
 }
 
+bool VirtualMachine::isPersistable() const
+{
+    emuone::util::Lock _(_guard);
+
+    return
+        std::all_of(
+            _nativeComponents.cbegin(),
+            _nativeComponents.cend(),
+            [](auto c) { return c->type()->isPersistable(); }) &&
+        std::all_of(
+            _adaptedComponents.cbegin(),
+            _adaptedComponents.cend(),
+            [](auto c) { return c->type()->isPersistable(); }) &&
+        std::all_of(
+            _adaptors.cbegin(),
+            _adaptors.cend(),
+               [](auto a) { return a->type()->isPersistable(); });
+}
+
 //////////
 //  Operations (configuration)
 Components VirtualMachine::components() const
@@ -312,6 +331,69 @@ bool VirtualMachine::isSuspended() const
     return state() == State::Suspended;
 }
 
+
+void VirtualMachine::start()
+{
+    {   //  State changes must occur in "locked"ode
+        emuone::util::Lock _(_guard);
+
+        if (_state != State::Stopped)
+        {   //  OOPS!
+            throw InvalidVirtualMachineStateException();
+        }
+        try
+        {
+            _connectComponents();   //  may throw
+            _initializeComponents();//  may throw
+            _startCompoonents();    //  may throw
+            //  Start sequence successful
+            _state = State::Running;
+        }
+        catch (...)
+        {   //  OOPS! Cleanup & re-throw
+            _stopCompoonents();
+            _deinitializeComponents();
+            _disconnectComponents();
+        }
+    }
+    //  TODO emit state change signal in "unlocked" mode
+}
+
+void VirtualMachine::stop() noexcept
+{
+    {   //  State changes must occur in "locked"ode
+        emuone::util::Lock _(_guard);
+
+        if (_state == State::Running)
+        {   //  Must stop & cleanup
+            _stopCompoonents();
+            _deinitializeComponents();
+            _disconnectComponents();
+            _state = State::Stopped;
+        }
+        else if (_state == State::Suspended)
+        {   //  Must destroy runtime state
+            Q_ASSERT(false);    //  TODO implement
+            _state = State::Stopped;
+        }
+    }
+    //  TODO emit state change signal in "unlocked" mode
+}
+
+void VirtualMachine::suspend()
+{
+    emuone::util::Lock _(_guard);
+    //  TODO implement
+    Q_ASSERT(false);
+}
+
+void VirtualMachine::resume()
+{
+    emuone::util::Lock _(_guard);
+    //  TODO implement
+    Q_ASSERT(false);
+}
+
 //////////
 //  Operations (persistency)
 void VirtualMachine::save()
@@ -461,5 +543,158 @@ auto VirtualMachine::load(const QString & location) -> VirtualMachine *
     //  All done
     return vm.release();
 }
+
+//////////
+//  Implementation helpers
+void VirtualMachine::_connectComponents()
+{
+    for (auto c : _nativeComponents)
+    {
+        Q_ASSERT(c->state() == IComponent::State::Constructed);
+        c->connect();   //  may throw
+        Q_ASSERT(c->state() == IComponent::State::Connected);
+    }
+    for (auto c : _adaptedComponents)
+    {
+        Q_ASSERT(c->state() == IComponent::State::Constructed);
+        c->connect();   //  may throw
+        Q_ASSERT(c->state() == IComponent::State::Connected);
+    }
+    for (auto a : _adaptors)
+    {
+        Q_ASSERT(a->state() == IComponentAdaptor::State::Constructed);
+        a->connect();   //  may throw
+        Q_ASSERT(a->state() == IComponentAdaptor::State::Connected);
+    }
+}
+
+void VirtualMachine::_initializeComponents()
+{
+    for (auto c : _nativeComponents)
+    {
+        Q_ASSERT(c->state() == IComponent::State::Connected);
+        c->initialize();    //  may throw
+        Q_ASSERT(c->state() == IComponent::State::Initialized);
+    }
+    for (auto c : _adaptedComponents)
+    {
+        Q_ASSERT(c->state() == IComponent::State::Connected);
+        c->initialize();    //  may throw
+        Q_ASSERT(c->state() == IComponent::State::Initialized);
+    }
+    for (auto a : _adaptors)
+    {
+        Q_ASSERT(a->state() == IComponentAdaptor::State::Connected);
+        a->initialize();    //  may throw
+        Q_ASSERT(a->state() == IComponentAdaptor::State::Initialized);
+    }
+}
+
+void VirtualMachine::_startCompoonents()
+{
+    for (auto c : _nativeComponents)
+    {
+        Q_ASSERT(c->state() == IComponent::State::Initialized);
+        c->start(); //  may throw
+        Q_ASSERT(c->state() == IComponent::State::Running);
+    }
+    for (auto c : _adaptedComponents)
+    {
+        Q_ASSERT(c->state() == IComponent::State::Initialized);
+        c->start(); //  may throw
+        Q_ASSERT(c->state() == IComponent::State::Running);
+    }
+    for (auto a : _adaptors)
+    {
+        Q_ASSERT(a->state() == IComponentAdaptor::State::Initialized);
+        a->start(); //  may throw
+        Q_ASSERT(a->state() == IComponentAdaptor::State::Running);
+    }
+}
+
+void VirtualMachine::_stopCompoonents()
+{   //  Any Running component must be Stopped
+    for (auto a : _adaptors)
+    {
+        if (a->state() == IComponentAdaptor::State::Running)
+        {   //  Guard needed when recovering from failed partial start
+            a->stop();  //  npexcept
+            Q_ASSERT(a->state() == IComponentAdaptor::State::Initialized);
+        }
+    }
+    for (auto c : _adaptedComponents)
+    {   //  Guard needed when recovering from failed partial start
+        if (c->state() == IComponent::State::Running)
+        {
+            c->stop();  //  noexcept
+            Q_ASSERT(c->state() == IComponent::State::Initialized);
+        }
+    }
+    for (auto c : _nativeComponents)
+    {   //  Guard needed when recovering from failed partial start
+        if (c->state() == IComponent::State::Running)
+        {
+            c->stop();  //  noexcept
+            Q_ASSERT(c->state() == IComponent::State::Initialized);
+        }
+    }
+}
+
+void VirtualMachine::_deinitializeComponents()
+{   //  Any Initialized component must be Deinitialized
+    for (auto a : _adaptors)
+    {
+        if (a->state() == IComponentAdaptor::State::Initialized)
+        {   //  Guard needed when recovering from failed partial start
+            a->deinitialize();  //  npexcept
+            Q_ASSERT(a->state() == IComponentAdaptor::State::Connected);
+        }
+    }
+    for (auto c : _adaptedComponents)
+    {
+        if (c->state() == IComponent::State::Initialized)
+        {   //  Guard needed when recovering from failed partial start
+            c->deinitialize();  //  noexcept
+            Q_ASSERT(c->state() == IComponent::State::Connected);
+        }
+    }
+    for (auto c : _nativeComponents)
+    {
+        if (c->state() == IComponent::State::Initialized)
+        {   //  Guard needed when recovering from failed partial start
+            c->deinitialize();  //  noexcept
+            Q_ASSERT(c->state() == IComponent::State::Connected);
+        }
+    }
+}
+
+void VirtualMachine::_disconnectComponents()
+{   //  Any Connected component must be Disconnected
+    for (auto a : _adaptors)
+    {
+        if (a->state() == IComponentAdaptor::State::Connected)
+        {   //  Guard needed when recovering from failed partial start
+            a->disconnect();    //  npexcept
+            Q_ASSERT(a->state() == IComponentAdaptor::State::Constructed);
+        }
+    }
+    for (auto c : _adaptedComponents)
+    {
+        if (c->state() == IComponent::State::Connected)
+        {   //  Guard needed when recovering from failed partial start
+            c->disconnect();    //  noexcept
+            Q_ASSERT(c->state() == IComponent::State::Constructed);
+        }
+    }
+    for (auto c : _nativeComponents)
+    {
+        if (c->state() == IComponent::State::Connected)
+        {   //  Guard needed when recovering from failed partial start
+            c->disconnect();    //  noexcept
+            Q_ASSERT(c->state() == IComponent::State::Constructed);
+        }
+    }
+}
+
 
 //  End of emuone-core/VirtualMachine.cpp

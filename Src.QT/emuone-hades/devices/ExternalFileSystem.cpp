@@ -72,32 +72,86 @@ ExternalFileSystem::State ExternalFileSystem::state() const
 
 void ExternalFileSystem::connect()
 {
-    //  TODO implement
+    emuone::util::Lock _(guard);
+
+    //  Check preconditions
+    if (_state != State::Constructed || !isBound())
+    {   //  OOPS!
+        Q_ASSERT(false);    //  TODO throw
+    }
+    //  There is nothing to connect to
+    //  Perform state change
+    _state = State::Connected;
 }
 
 void ExternalFileSystem::disconnect() noexcept
 {
-    //  TODO implement
+    emuone::util::Lock _(guard);
+
+    //  Check preconditions
+    if (_state != State::Connected || !isBound())
+    {   //  Nothing to do
+        return;
+    }
+    //  There is nothing to disconnect
+    //  Perform state change
+    _state = State::Constructed;
 }
 
 void ExternalFileSystem::initialize()
 {
-    //  TODO implement
+    emuone::util::Lock _(guard);
+
+    //  Check preconditions
+    if (_state != State::Connected || !isBound())
+    {   //  OOPS!
+        Q_ASSERT(false);    //  TODO throw
+    }
+    //  There is nothing to intiialize
+    //  Perform state change
+    _state = State::Initialized;
 }
 
 void ExternalFileSystem::deinitialize() noexcept
 {
-    //  TODO implement
+    emuone::util::Lock _(guard);
+
+    //  Check preconditions
+    if (_state != State::Initialized || !isBound())
+    {   //  Nothing to do
+        return;
+    }
+    //  There is nothing to deinitialize
+    //  Perform state change
+    _state = State::Connected;
 }
 
 void ExternalFileSystem::start()
 {
-    //  TODO implement
+    emuone::util::Lock _(guard);
+
+    //  Check preconditions
+    if (_state != State::Initialized || !isBound())
+    {   //  OOPS!
+        Q_ASSERT(false);    //  TODO throw
+    }
+    //  There is nothing to start
+    //  Perform state change
+    _state = State::Running;
 }
 
 void ExternalFileSystem::stop() noexcept
 {
-    //  TODO implement
+    emuone::util::Lock _(guard);
+
+    //  Check preconditions
+    if (_state != State::Running || !isBound())
+    {   //  Nothing to do
+        return;
+    }
+    //  There is nothing to stop
+    //  Perform state change
+    _state = State::Initialized;
 }
 
 //////////

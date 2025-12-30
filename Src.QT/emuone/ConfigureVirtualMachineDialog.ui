@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>380</width>
+    <width>377</width>
     <height>434</height>
    </rect>
   </property>
@@ -20,6 +20,12 @@
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="1" column="0" colspan="3">
     <widget class="QGroupBox" name="componentsGroupBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="title">
       <string>Components</string>
      </property>
@@ -49,18 +55,21 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>240</width>
+          <width>200</width>
           <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>240</width>
+          <width>200</width>
           <height>16777215</height>
          </size>
         </property>
         <attribute name="headerVisible">
          <bool>false</bool>
+        </attribute>
+        <attribute name="headerStretchLastSection">
+         <bool>true</bool>
         </attribute>
         <column>
          <property name="text">
@@ -75,7 +84,7 @@
    <item row="1" column="3">
     <widget class="QGroupBox" name="propertiesGroupBox">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>

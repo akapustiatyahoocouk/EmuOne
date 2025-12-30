@@ -74,32 +74,86 @@ Kernel::State Kernel::state() const
 
 void Kernel::connect()
 {
-    //  TODO implement
+    emuone::util::Lock _(guard);
+
+    //  Check preconditions
+    if (_state != State::Constructed || !isBound())
+    {   //  OOPS!
+        Q_ASSERT(false);    //  TODO throw
+    }
+    //  TODO connect
+    //  Perform state change
+    _state = State::Connected;
 }
 
 void Kernel::disconnect() noexcept
 {
-    //  TODO implement
+    emuone::util::Lock _(guard);
+
+    //  Check preconditions
+    if (_state != State::Connected || !isBound())
+    {   //  Nothing to do
+        return;
+    }
+    //  TODO disconnect
+    //  Perform state change
+    _state = State::Constructed;
 }
 
 void Kernel::initialize()
 {
-    //  TODO implement
+    emuone::util::Lock _(guard);
+
+    //  Check preconditions
+    if (_state != State::Connected || !isBound())
+    {   //  OOPS!
+        Q_ASSERT(false);    //  TODO throw
+    }
+    //  TODO initialize
+    //  Perform state change
+    _state = State::Initialized;
 }
 
 void Kernel::deinitialize() noexcept
 {
-    //  TODO implement
+    emuone::util::Lock _(guard);
+
+    //  Check preconditions
+    if (_state != State::Initialized || !isBound())
+    {   //  Nothing to do
+        return;
+    }
+    //  TODO deinitialize
+    //  Perform state change
+    _state = State::Connected;
 }
 
 void Kernel::start()
 {
-    //  TODO implement
+    emuone::util::Lock _(guard);
+
+    //  Check preconditions
+    if (_state != State::Initialized || !isBound())
+    {   //  OOPS!
+        Q_ASSERT(false);    //  TODO throw
+    }
+    //  TODO start
+    //  Perform state change
+    _state = State::Running;
 }
 
 void Kernel::stop() noexcept
 {
-    //  TODO implement
+    emuone::util::Lock _(guard);
+
+    //  Check preconditions
+    if (_state != State::Running || !isBound())
+    {   //  Nothing to do
+        return;
+    }
+    //  TODO stop
+    //  Perform state change
+    _state = State::Initialized;
 }
 
 //////////

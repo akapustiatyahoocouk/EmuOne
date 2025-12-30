@@ -305,15 +305,12 @@ namespace emuone::core
         ///     Perorms the Stopped -> Running or Suspended -> Running
         ///     state change.
         /// \details
-        ///     -   All VM Components are connected, initialized and
-        ///         started, in that order.
-        ///     -   If the VM is Suspended (and saved VM state exists),
-        ///         it is loaded after all components have been initialized
-        ///         but before they are started.
-        ///     -   If the VM is Running, the call has no effect.
+        ///     -   All Stopped VM Components are connected, initialized
+        ///         and started, in that order.
+        ///     -   If the VM is not Stopped, the call is an error.
         ///     -   This method can be safely called from any thread.
         /// \exception VirtualMachineException
-        ///     If an error occurs; the component state remains
+        ///     If an error occurs; the VM and component states remain
         ///     unchanged when an exception is thrown.
         void            start();
 
@@ -333,13 +330,13 @@ namespace emuone::core
         ///     Performs the Running -> Suspended state change.
         /// \details
         ///     -   All VM Components are stopped, then VM runtime
-        ///         state is saved, them components are deinitialized
+        ///         state is saved, then components are deinitialized
         ///         and disconnected.
         ///     -   If one of the VM Components does not support
         ///         persistency, the call is an error.
         ///     -   This method can be safely called from any thread.
         /// \exception VirtualMachineException
-        ///     If an error occurs; the component state remains
+        ///     If an error occurs; the AM and component states remain
         ///     unchanged when an exception is thrown.
         void            suspend();
 
@@ -390,6 +387,13 @@ namespace emuone::core
         Components          _adaptedComponents;
         ComponentAdaptors   _adaptors;  //  for all _adaptedComponents
 
+        //  Helpers
+        void                _connectComponents();
+        void                _initializeComponents();
+        void                _startCompoonents();
+        void                _stopCompoonents();
+        void                _deinitializeComponents();
+        void                _disconnectComponents();
     };
 
     template <class T>

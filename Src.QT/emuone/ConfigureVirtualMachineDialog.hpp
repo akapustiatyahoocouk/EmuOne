@@ -94,6 +94,7 @@ namespace emuone
         QMenu *         _createAddComponentMenu(emuone::core::IComponentCategory * componentCategory);
         QAction *       _createAddComponenyAction(emuone::core::IComponentType * componentType);
         void            _createEditor(emuone::core::IComponent * component);
+        void            _destroyEditor(emuone::core::IComponent * component);
 
         auto            _selectedComponent() const -> emuone::core::IComponent *;
         void            _setSelectedComponent(emuone::core::IComponent * component);

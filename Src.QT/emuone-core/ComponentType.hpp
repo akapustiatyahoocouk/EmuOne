@@ -69,6 +69,9 @@ namespace emuone::core
         /// \brief
         ///     Checks whether Components of this type can
         ///     save their runtime state and reload it later on.
+        /// \details
+        ///     If all components of a VM are of persistable types,
+        ///     that VM can be suspended and later resumed.
         /// \return
         ///     True if Components of this type can
         ///     save their runtime state and reload it later on,

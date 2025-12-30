@@ -94,11 +94,6 @@ ConfigureVirtualMachineDialog::ConfigureVirtualMachineDialog(
     _noPropertiesLabel->setText("No properties to edit");
     _noPropertiesLabel->setAlignment(Qt::AlignmentFlag::AlignHCenter |
                                      Qt::AlignmentFlag::AlignVCenter);
-    for (auto editor : _componentEditors.values())
-    {
-        //  TODO kill off this loop editor->loadControlValues();
-    }
-
     //  Done
     _refresh();
     _ui->componentsTreeWidget->expandAll();
@@ -360,6 +355,19 @@ void ConfigureVirtualMachineDialog::_createEditor(emuone::core::IComponent * com
     //  else no editor
 }
 
+void ConfigureVirtualMachineDialog::_destroyEditor(emuone::core::IComponent * component)
+{
+    if (_componentEditors.contains(component))
+    {
+        delete _componentEditors[component];
+        _componentEditors.remove(component);
+    }
+    else
+    {   //  TODO implement
+        Q_ASSERT(false);
+    }
+}
+
 auto ConfigureVirtualMachineDialog::_selectedComponent() const -> emuone::core::IComponent *
 {
     auto item = _ui->componentsTreeWidget->currentItem();
@@ -409,6 +417,30 @@ void ConfigureVirtualMachineDialog::_addComponentPushButtonClicked()
 
 void ConfigureVirtualMachineDialog::_removeComponentPushButtonClicked()
 {
+    if (auto component = _selectedComponent())
+    {   //  Confirm...
+        if (QMessageBox::question(
+            this,
+            "Remove component",
+                "Really remove " + component->displayName() + " ?") != QMessageBox::Yes)
+        {   //  No
+            return;
+        }
+        //  ...and remove
+        _destroyEditor(component);
+        _virtualMachine->removeComponent(component);
+        //  If the component was added and then removed we can just delete it
+        if (_addedComponents.contains(component))
+        {
+            _addedComponents.remove(component);
+            delete component;
+        }
+        else
+        {   //  Component removed that was in the VM to begin with
+            _removedComponents.insert(component);
+        }
+        _refresh();
+    }
 }
 
 void ConfigureVirtualMachineDialog::_editorValueChanged()
