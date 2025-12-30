@@ -78,26 +78,32 @@ Kernel::State Kernel::state() const
 
 void Kernel::connect()
 {
+    //  TODO implement
 }
 
 void Kernel::disconnect() noexcept
 {
+    //  TODO implement
 }
 
 void Kernel::initialize()
 {
+    //  TODO implement
 }
 
 void Kernel::deinitialize() noexcept
 {
+    //  TODO implement
 }
 
 void Kernel::start()
 {
+    //  TODO implement
 }
 
 void Kernel::stop() noexcept
 {
+    //  TODO implement
 }
 
 //////////
@@ -156,7 +162,7 @@ Kernel::Type::~Type() {}
 
 QString Kernel::Type::mnemonic() const
 {
-    return "emuone::hades::Kernel";
+    return "emuone::hades::kernel::Kernel";
 }
 
 QString Kernel::Type::displayName() const

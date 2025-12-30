@@ -59,6 +59,9 @@ void Component::iniialize()
 {
     //  Register standard stock objects
     emuone::core::ArchitectureManager::register(Architecture::instance());
+
+    emuone::core::ComponentTypeManager::register(devices::ExternalFileSystem::Type::instance());
+
     emuone::core::ComponentTypeManager::register(kernel::Kernel::Type::instance());
 }
 
@@ -66,6 +69,9 @@ void Component::deiniialize()
 {
     //  Unregister standard stock objects
     emuone::core::ArchitectureManager::unregister(Architecture::instance());
+
+    emuone::core::ComponentTypeManager::unregister(devices::ExternalFileSystem::Type::instance());
+
     emuone::core::ComponentTypeManager::unregister(kernel::Kernel::Type::instance());
 }
 

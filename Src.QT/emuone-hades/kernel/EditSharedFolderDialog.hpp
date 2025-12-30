@@ -23,7 +23,7 @@ namespace emuone::hades::kernel
 {
     namespace Ui { class EditSharedFolderDialog; }
 
-    /// \class SharedFolder emuoe-hades/API.hpp
+    /// \class SharedFolder emuone-hades/API.hpp
     /// \brief A definition of a host folder that appears as
     ///        an external file system in a HADES kernel.
     class EMUONE_HADES_PUBLIC EditSharedFolderDialog final

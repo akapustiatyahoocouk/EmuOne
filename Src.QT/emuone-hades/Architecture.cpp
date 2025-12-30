@@ -64,7 +64,23 @@ bool Architecture::isValid(
     {   //  OOPS! No Kernel or multiple Kernels
         return false;
     }
-    //  All checjs passed
+    //  All external file systems must specify different and
+    //  valid volume names and valid hst paths
+    QSet<QString> volumeNames;
+    for (auto efs : virtualMachine->componentsOfType<devices::ExternalFileSystem>())
+    {
+        if (!devices::ExternalFileSystem::isValidVolumeName(efs->volumeName()) ||
+            !devices::ExternalFileSystem::isValidHostPath(efs->hostPath()))
+        {   //  OOPS!
+            return false;
+        }
+        if (volumeNames.contains(efs->volumeName()))
+        {   //  OOPS!
+            return false;
+        }
+        volumeNames.insert(efs->volumeName());
+    }
+    //  All checks passed
     return true;
 
 }

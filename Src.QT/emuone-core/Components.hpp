@@ -243,6 +243,24 @@ namespace emuone::core
     private:
         VirtualMachine *_owner = nullptr;
     };
+
+    /// \class IDevice emuone-core/API.hpp
+    /// \brief A generally asynchronous message-driven Component.
+    class EMUONE_CORE_PUBLIC IDevice
+        :   public virtual IComponent
+    {
+        EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(IDevice)
+
+        //////////
+        //  Construction/destruction
+    public:
+        IDevice() = default;
+        virtual ~IDevice() = default;
+
+        //////////
+        //  Operations
+    public:
+    };
 }
 
 //  End of emuone-core/Components.hpp

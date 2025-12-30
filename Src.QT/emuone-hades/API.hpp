@@ -31,6 +31,7 @@
 #include "emuone-hades/Architecture.hpp"
 
 //  Devices
+#include "emuone-hades/devices/ExternalFileSystem.hpp"
 
 //  HADES OS
 #include "emuone-hades/kernel/Kernel.hpp"

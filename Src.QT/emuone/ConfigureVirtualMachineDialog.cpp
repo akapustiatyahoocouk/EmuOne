@@ -121,6 +121,7 @@ auto ConfigureVirtualMachineDialog::doModal() -> Result
 //  Implementation helpers
 void ConfigureVirtualMachineDialog::_refresh()
 {
+    auto selectedComponent = _selectedComponent();
     if (!_refreshUnderway)
     {
         _refreshUnderway = true;
@@ -137,6 +138,7 @@ void ConfigureVirtualMachineDialog::_refresh()
             _editorsPanelLayout->setCurrentWidget(_noPropertiesLabel);
         }
         //  Action buttons
+        _ui->removeComponentPushButton->setEnabled(component != nullptr);
         _ui->buttonBox->button(QDialogButtonBox::StandardButton::Ok)->setEnabled(
             emuone::core::VirtualMachine::isValidName(_ui->nameLineEdit->text()) &&
             _virtualMachine->architecture()->isValid(_virtualMachine) &&
@@ -147,6 +149,7 @@ void ConfigureVirtualMachineDialog::_refresh()
         //  Done
         _refreshUnderway = false;
     }
+    _setSelectedComponent(selectedComponent);
 }
 
 void ConfigureVirtualMachineDialog::_refreshComponentsTree()
