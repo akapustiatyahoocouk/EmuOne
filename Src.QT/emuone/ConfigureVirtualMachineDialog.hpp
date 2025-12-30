@@ -62,6 +62,7 @@ namespace emuone
         //  Implementation
     private:
         emuone::core::VirtualMachine *const _virtualMachine;
+        bool            _refreshUnderway = false;
 
         //  Data needed for rollback on cancel
         emuone::core::Components    _addedComponents;   //  to be removed on rollback
@@ -72,6 +73,9 @@ namespace emuone
 
         //  Helpers
         void            _refresh();
+        void            _refreshComponentsTree();
+        void            _refreshComponentCategoryItem(QTreeWidgetItem * categoryItem);
+        void            _refreshComponentItem(QTreeWidgetItem * componentItem);
         QString         _saveConfiguration(
                                 emuone::core::IComponent * component
                             );
@@ -86,6 +90,12 @@ namespace emuone
                                 emuone::core::IComponentAdaptor * componentAdaptor,
                                 const QString & configurationXml
                             );
+        QMenu *         _createAddComponentMenu();
+        QMenu *         _createAddComponentMenu(emuone::core::IComponentCategory * componentCategory);
+        QAction *       _createAddComponenyAction(emuone::core::IComponentType * componentType);
+
+        auto            _selectedComponent() const -> emuone::core::IComponent *;
+        void            _setSelectedComponent(emuone::core::IComponent * component);
 
         //////////
         //  Controls
@@ -94,6 +104,7 @@ namespace emuone
         //  Dynamic controls
         QStackedLayout *    _editorsPanelLayout;
         QLabel *            _noPropertiesLabel;
+        std::unique_ptr<QMenu>  _addComponentMenu;
 
         //////////
         //  Signal handlers

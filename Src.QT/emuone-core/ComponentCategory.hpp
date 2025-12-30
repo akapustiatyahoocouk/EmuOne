@@ -34,6 +34,13 @@ namespace emuone::core
         //////////
         //  Operations
     public:
+        /// \brief
+        ///     Returns the set of all registered component types that
+        ///     belong to this component category.
+        /// \return
+        ///     The set of all registered component types that
+        ///     belong to this component category.
+        auto            componentTypes() const -> ComponentTypes;
     };
 
     /// \class ComponentCategoryManager emuone-core/API.hpp

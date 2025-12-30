@@ -14,6 +14,7 @@ SOURCES += \
     Exceptions.cpp \
     IComponent.cpp \
     IComponentAdaptorType.cpp \
+    IComponentCategory.cpp \
     IComponentType.cpp \
     IVirtualMachineTemplate.cpp \
     StandardComponentCategories.cpp \

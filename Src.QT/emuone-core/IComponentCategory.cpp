@@ -1,5 +1,5 @@
 //
-//  emuone-hades/API.hpp - emuone-hades master header
+//  emuone-core/IComponentCategory.cpp - emuone::core::IComponentCategory class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -14,25 +14,22 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 //////////
-#pragma once
-
-//////////
-//  Dependencies
 #include "emuone-core/API.hpp"
-#include "emuone-util/API.hpp"
+using namespace emuone::core;
 
 //////////
-//  emuone-hades components
-#include "emuone-hades/Linkage.hpp"
-#include "emuone-hades/Classes.hpp"
-#include "emuone-hades/Component.hpp"
+//  Operations
+auto IComponentCategory::componentTypes() const -> ComponentTypes
+{
+    ComponentTypes result;
+    for (auto ct : ComponentTypeManager::all())
+    {
+        if (ct->category() == this)
+        {
+            result.insert(ct);
+        }
+    }
+    return result;
+}
 
-//  Stock objects
-#include "emuone-hades/Architecture.hpp"
-
-//  Devices
-
-//  HADES OS
-#include "emuone-hades/Kernel.hpp"
-
-//  End of emuone-hades/API.hpp
+//  End of emuone-core/IComponentCategory.cpp

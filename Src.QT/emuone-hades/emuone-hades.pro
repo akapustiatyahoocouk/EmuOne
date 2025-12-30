@@ -5,13 +5,15 @@ DEFINES += EMUONE_HADES_LIBRARY
 
 SOURCES += \
     Architecture.cpp \
-    Component.cpp
+    Component.cpp \
+    Kernel.cpp
 
 HEADERS += \
     API.hpp \
     Architecture.hpp \
     Classes.hpp \
     Component.hpp \
+    Kernel.hpp \
     Linkage.hpp
 
 LIBS += \

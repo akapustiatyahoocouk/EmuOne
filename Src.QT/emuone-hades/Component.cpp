@@ -59,12 +59,14 @@ void Component::iniialize()
 {
     //  Register standard stock objects
     emuone::core::ArchitectureManager::register(Architecture::instance());
+    emuone::core::ComponentTypeManager::register(Kernel::Type::instance());
 }
 
 void Component::deiniialize()
 {
     //  Unregister standard stock objects
     emuone::core::ArchitectureManager::unregister(Architecture::instance());
+    emuone::core::ComponentTypeManager::unregister(Kernel::Type::instance());
 }
 
 //////////

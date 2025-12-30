@@ -57,14 +57,15 @@
 #include <QLabel>
 #include <QLibrary>
 #include <QMainWindow>
+#include <QMenu>
 #include <QMessageBox>
 #include <QMutex>
 #include <QMutexLocker>
-//  TODO kill off #include <QPixmap>
 #include <QRegularExpression>
 #include <QStyleFactory>
 #include <QTimer>
 #include <QTimeZone>
+#include <QTreeWidgetItem>
 #include <QVersionNumber>
 #include <QSemaphore>
 #include <QStackedLayout>

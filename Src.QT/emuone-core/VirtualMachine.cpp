@@ -315,7 +315,12 @@ void VirtualMachine::save()
     document.appendChild(rootElement);
 
     //  Do the components
-    //  TODO
+    for (auto c : components())
+    {
+        QDomElement componentElement = document.createElement("Component");
+        rootElement.appendChild(componentElement);
+        c->saveConfiguration(componentElement);
+    }
 
     //  Save DOM & we're done
     QFile file(_location);
@@ -386,7 +391,44 @@ auto VirtualMachine::load(const QString & location) -> VirtualMachine *
         type,
         createdFrom) };
 
-    //  TODO components
+    //  Components
+    for (auto componentElement = rootElement.firstChildElement("Component");
+         !componentElement.isNull();
+         componentElement = componentElement.nextSiblingElement("Component"))
+    {
+        auto typeMnemonic = componentElement.attribute("Type");
+        auto componentType = ComponentTypeManager::find(typeMnemonic);
+        if (componentType == nullptr)
+        {   //  OOPS! TODO throw
+            Q_ASSERT(false);
+        }
+        auto component = componentType->createComponent();
+        //  Is there an adaptor involved ?
+        IComponentAdaptorType * adaptorType = nullptr;
+        auto adaptorElement = componentElement.firstChildElement("Adaptor");
+        if (!adaptorElement.isNull())
+        {   //  Yes
+            adaptorType =
+                ComponentAdaptorTypeManager::find(
+                    adaptorElement.attribute("Type"));
+        }
+        //  Add component to VM
+        try
+        {
+            vm->addComponent(component, adaptorType);   //  may throw
+        }
+        catch (...)
+        {   //  OOPS! Cleanup & re-throw
+            delete component;
+            throw;
+        }
+        //  If there IS an adaptor, load its configuration
+        if (auto adaptor = vm->findAdaptor(component);
+            adaptor != nullptr && !adaptorElement.isNull())
+        {   //  Guard against adapted component definition missing Adaptor sub-element
+            adaptor->restoreConfiguration(adaptorElement);
+        }
+    }
 
     //  All done
     return vm.release();

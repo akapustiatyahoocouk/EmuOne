@@ -106,6 +106,15 @@ namespace emuone::core
         virtual auto    type() const -> IComponentType * = 0;
 
         /// \brief
+        ///     Returns the user-readable display name of this Component.
+        /// \details
+        ///     This typically includes component type's display name and, maybe,
+        ///     one or two of the most important component configuration items.
+        /// \return
+        ///     The user-readable display name of this Component.
+        virtual QString displayName() const = 0;
+
+        /// \brief
         ///     Returns the VM to which this Component is bound.
         /// \return
         ///     The VM to which this Component is bound; nullptr ==
