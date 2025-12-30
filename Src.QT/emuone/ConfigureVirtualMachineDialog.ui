@@ -315,9 +315,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>nameLineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>emuone::ConfigureVirtualMachineDialog</receiver>
+   <slot>_nameLineEditTextChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>233</x>
+     <y>28</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>189</x>
+     <y>216</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>_addComponentPushButtonClicked()</slot>
   <slot>_removeComponentPushButtonClicked()</slot>
+  <slot>_nameLineEditTextChanged(QString)</slot>
  </slots>
 </ui>

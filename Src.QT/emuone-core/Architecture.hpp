@@ -34,6 +34,15 @@ namespace emuone::core
         //////////
         //  Operations
     public:
+        /// \brief
+        ///     Performs the quick validity check of the specified VM.
+        /// \details
+        ///     The "quick check" means checking that all components mandatory
+        ///     for this Architecture are actually present in the VM and in the
+        ///     proper numbers (e.g. at most one Kernel/Monitor, etc.)
+        /// \return
+        ///     True if the VM is valid fr this architecture, false if not.
+        virtual bool    isValid(VirtualMachine * virtualMachine) const = 0;
     };
 
     /// \class ArchitectureManager emuone-core/API.hpp

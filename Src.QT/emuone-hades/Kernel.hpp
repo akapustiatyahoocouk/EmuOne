@@ -14,6 +14,8 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 //////////
+#pragma once
+#include "emuone-hades/API.hpp"
 
 namespace emuone::hades
 {
@@ -76,6 +78,45 @@ namespace emuone::hades
         //  Implementation
     private:
         State           _state = State::Constructed;
+    };
+
+    namespace Ui { class KernelEditor; }
+
+    /// \class KernelEditor emuone-hades/API.hpp
+    /// \brief The editor for Kernel components.
+    class EMUONE_HADES_PUBLIC KernelEditor final
+        :   public emuone::core::ComponentEditor
+    {
+        Q_OBJECT
+        EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(KernelEditor)
+
+        //////////
+        //  Construction/destruction
+    public:
+        /// \brief
+        ///     Constructs the editor.
+        /// \param parent
+        ///     The parent for the editor; nullptr == none.
+        /// \param kernel
+        ///     The Kernel to edit.
+        KernelEditor(
+                QWidget * parent,
+                Kernel * kernel
+            );
+
+        /// \brief
+        ///     The class destructor.
+        virtual ~KernelEditor();
+
+        //////////
+        //  Implementation
+    private:
+        Kernel *const   _kernel;
+
+        //////////
+        //  Controls
+    private:
+        Ui::KernelEditor *const _ui;
     };
 }
 

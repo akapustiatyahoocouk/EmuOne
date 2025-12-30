@@ -116,7 +116,10 @@ void ConfigureVirtualMachineDialog::_refresh()
         _refreshUnderway = true;
 
         _refreshComponentsTree();
-        //  TODO
+
+        _ui->buttonBox->button(QDialogButtonBox::StandardButton::Ok)->setEnabled(
+            emuone::core::VirtualMachine::isValidName(_ui->nameLineEdit->text()) &&
+            _virtualMachine->architecture()->isValid(_virtualMachine));
         _refreshUnderway = false;
     }
 }
@@ -322,11 +325,15 @@ void ConfigureVirtualMachineDialog::_setSelectedComponent(emuone::core::ICompone
             }
         }
     }
-
 }
 
 //////////
 //  Signal handlers
+void ConfigureVirtualMachineDialog::_nameLineEditTextChanged(QString)
+{
+    _refresh();
+}
+
 void ConfigureVirtualMachineDialog::_addComponentPushButtonClicked()
 {
     _addComponentMenu.reset(_createAddComponentMenu());

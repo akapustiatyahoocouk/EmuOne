@@ -6,7 +6,8 @@ DEFINES += EMUONE_HADES_LIBRARY
 SOURCES += \
     Architecture.cpp \
     Component.cpp \
-    Kernel.cpp
+    Kernel.cpp \
+    KernelEditor.cpp
 
 HEADERS += \
     API.hpp \
@@ -22,3 +23,6 @@ LIBS += \
 
 RESOURCES += \
     emuone-hades.qrc
+
+FORMS += \
+    KernelEditor.ui

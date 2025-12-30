@@ -31,6 +31,13 @@ namespace emuone::hades
         virtual QString displayName() const override;
         virtual QIcon   smallIcon() const override;
         virtual QIcon   largeIcon() const override;
+
+        //////////
+        //  emuone::core::IArchitecture
+    public:
+        virtual bool    isValid(
+                                emuone::core::VirtualMachine * virtualMachine
+                            ) const override;
     };
 }
 

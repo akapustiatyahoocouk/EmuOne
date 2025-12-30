@@ -235,6 +235,13 @@ namespace emuone::core
         auto            findAdaptor(IComponent * component) const -> IComponentAdaptor *;
 
         /// \brief
+        ///     Finds all components that are of the specified type.
+        /// \return
+        ///     The set of all VM components of the specified type.
+        template <class T>
+        auto            componentsOfType() const -> QSet<T*>;
+
+        /// \brief
         ///     Adds an unbound Component to this VM, creating
         ///     a corresponding ComponentAdaptor if necessary.
         /// \details
@@ -381,6 +388,22 @@ namespace emuone::core
         ComponentAdaptors   _adaptors;  //  for all _adaptedComponents
 
     };
+
+    template <class T>
+    auto VirtualMachine::componentsOfType() const -> QSet<T*>
+    {
+        emuone::util::Lock _(_guard);
+
+        QSet<T*> result;
+        for (auto c : components())
+        {
+            if (auto t = dynamic_cast<T*>(c))
+            {   //  Match!
+                result.insert(t);
+            }
+        }
+        return result;
+    }
 }
 
 //  End of emuone-core/VirtualMachine.hpp

@@ -47,4 +47,26 @@ QIcon Architecture::largeIcon() const
     return icon;
 }
 
+//////////
+//  emuone::core::IArchitecture
+bool Architecture::isValid(
+        emuone::core::VirtualMachine * virtualMachine
+    ) const
+{
+    Q_ASSERT(virtualMachine != nullptr);
+
+    if (virtualMachine->architecture() != this)
+    {   //  OOPS!
+        return false;
+    }
+    //  A HADES VM must have exactly one HADES OS Kernel
+    if (virtualMachine->componentsOfType<Kernel>().size() != 1)
+    {   //  OOPS! No Kernel or multiple Kernels
+        return false;
+    }
+    //  All checjs passed
+    return true;
+
+}
+
 //  End of emuone-hades/Architecture.cpp

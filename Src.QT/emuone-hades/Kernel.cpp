@@ -41,7 +41,7 @@ QString Kernel::displayName() const
 
 auto Kernel::createEditor(QWidget * parent) -> emuone::core::ComponentEditor *
 {
-    return nullptr;
+    return new KernelEditor(parent, this);
 }
 
 void Kernel::saveConfiguration(QDomElement & element) const

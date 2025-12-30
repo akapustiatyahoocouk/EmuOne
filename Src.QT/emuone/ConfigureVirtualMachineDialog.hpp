@@ -109,6 +109,7 @@ namespace emuone
         //////////
         //  Signal handlers
     private slots:
+        void            _nameLineEditTextChanged(QString);
         void            _addComponentPushButtonClicked();
         void            _removeComponentPushButtonClicked();
         virtual void    accept() override;
