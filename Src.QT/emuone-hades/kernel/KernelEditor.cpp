@@ -28,6 +28,7 @@ KernelEditor::KernelEditor(
         _ui(new Ui::KernelEditor)
 {
     _ui->setupUi(this);
+    _refresh();
 }
 
 KernelEditor::~KernelEditor()
@@ -41,6 +42,8 @@ void KernelEditor::loadControlValues()
 {
     _ui->kernelVersionLneEdit->setText(
         emuone::util::toString(_kernel->version()));
+    _setSharedFolders(_kernel->sharedFolders());
+    _refresh();;
 }
 
 void KernelEditor::saveControlValues() const
@@ -49,6 +52,7 @@ void KernelEditor::saveControlValues() const
     {
         _kernel->setVersion(
             emuone::util::fromString<QVersionNumber>(_ui->kernelVersionLneEdit->text()));
+        _kernel->setSharedFolders(_sharedFolders());
     }
 }
 
@@ -59,7 +63,28 @@ bool KernelEditor::isValid() const
 
 //////////
 //  Implementation helpers
-SharedFolders KernelEditor::_sharedFolders()
+void KernelEditor::_refresh()
+{
+    _ui->modifySharedFolderPoushButton->setEnabled(
+        _selectedSharedFolder().isValid());
+    _ui->removeSharedFolderPushButton->setEnabled(
+        _selectedSharedFolder().isValid());
+}
+
+SharedFolder KernelEditor::_selectedSharedFolder() const
+{
+    if (auto item = _ui->sharedFoldersListWidget->currentItem())
+    {
+        auto chunks = item->text().split(_SharedFoldersSeparator);
+        if (chunks.size() == 2)
+        {
+            return SharedFolder(chunks[0], chunks[1]);
+        }
+    }
+    return SharedFolder();
+}
+
+SharedFolders KernelEditor::_sharedFolders() const
 {
     SharedFolders result;
     for (int i = 0; i < _ui->sharedFoldersListWidget->count(); i++)
@@ -130,7 +155,13 @@ void KernelEditor::_removeSharedFolder(const QString & volumeName)
 //  Signal handlers
 void KernelEditor::_kernelVersionLineEditTextChanged(QString)
 {
+    _refresh();
     emit valueChanged();
+}
+
+void KernelEditor::_sharedFoldersListWidgetCurrentRowChanged(int)
+{
+    _refresh();
 }
 
 void KernelEditor::_addSharedFolderPushButtonClicked()
@@ -138,18 +169,50 @@ void KernelEditor::_addSharedFolderPushButtonClicked()
     EditSharedFolderDialog dlg(this);
     if (dlg.doModal() == EditSharedFolderDialog::Result::Ok)
     {
-        _addSharedFolder(dlg.sharedFolder());
+        _addSharedFolder(
+            SharedFolder(
+                dlg.sharedFolder().volumeName(),
+                _kernel->owner()->toRelatimePath(
+                    dlg.sharedFolder().hostPath())));
+        _refresh();
+        emit valueChanged();
     }
 }
 
 void KernelEditor::_modifySharedFolderPushButtonClicked()
 {
-    QMessageBox::critical(this, "ERROR", "Not yet implemented");
+    if (SharedFolder sharedFolder = _selectedSharedFolder();
+        sharedFolder.isValid())
+    {
+        EditSharedFolderDialog dlg(
+            this,
+            SharedFolder(
+                sharedFolder.volumeName(),
+                _kernel->owner()->toAbsolutePath(
+                    sharedFolder.hostPath())));
+        if (dlg.doModal() == EditSharedFolderDialog::Result::Ok)
+        {   //  Replace!
+            _removeSharedFolder(sharedFolder.volumeName());
+            _addSharedFolder(
+                SharedFolder(
+                    dlg.sharedFolder().volumeName(),
+                    _kernel->owner()->toRelatimePath(
+                        dlg.sharedFolder().hostPath())));
+            _refresh();
+            emit valueChanged();
+        }
+    }
 }
 
 void KernelEditor::_removeSharedFolderPushButtonClicked()
 {
-    QMessageBox::critical(this, "ERROR", "Not yet implemented");
+    if (SharedFolder sharedFolder = _selectedSharedFolder();
+        sharedFolder.isValid())
+    {
+        _removeSharedFolder(sharedFolder.volumeName());
+        _refresh();
+        emit valueChanged();
+    }
 }
 
 //  End of emuone-hades/KernelEditor.cpp

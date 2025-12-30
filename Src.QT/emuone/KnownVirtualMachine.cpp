@@ -225,6 +225,7 @@ namespace
         return result;
     }
 }
+
 namespace emuone::util
 {
     template <>

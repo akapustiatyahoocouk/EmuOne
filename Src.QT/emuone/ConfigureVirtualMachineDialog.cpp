@@ -318,6 +318,7 @@ QAction * ConfigureVirtualMachineDialog::_createAddComponenyAction(emuone::core:
             {
                 auto component = componentType->createComponent();
                 _virtualMachine->addComponent(component);
+                _addedComponents.insert(component);
                 _refresh();
                 _setSelectedComponent(component);
                 _createEditor(component);
@@ -413,17 +414,7 @@ void ConfigureVirtualMachineDialog::_editorValueChanged()
 }
 
 void ConfigureVirtualMachineDialog::accept()
-{   //  Changes already made to VM - save configuration
-    try
-    {
-        _virtualMachine->save();    //  may throw
-    }
-    catch (const emuone::util::Exception & ex)
-    {
-        qCritical() << ex;
-        QMessageBox::critical(this, "ERROR", ex.errorMessage());
-        return;
-    }
+{
     //  The components that were removed from VM are now
     //  unbound and must be delete'd
     for (auto c : std::as_const(_removedComponents))
@@ -435,6 +426,17 @@ void ConfigureVirtualMachineDialog::accept()
     for (auto editor : _componentEditors.values())
     {
         editor->saveControlValues();
+    }
+    //  Changes already made to VM - save configuration
+    try
+    {
+        _virtualMachine->save();    //  may throw
+    }
+    catch (const emuone::util::Exception & ex)
+    {
+        qCritical() << ex;
+        QMessageBox::critical(this, "ERROR", ex.errorMessage());
+        return;
     }
     //  Done
     done(int(Result::Ok));

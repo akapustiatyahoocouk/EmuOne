@@ -78,6 +78,21 @@ void EditSharedFolderDialog::_hostPathLineEditTextChanged(QString)
     _refresh();
 }
 
+void EditSharedFolderDialog::_browsePushButtonClicked()
+{
+    QString dir =
+        QFileDialog::getExistingDirectory(
+            this,
+            "Select Directory",
+            _ui->hostPathLineEdit->text(),
+            QFileDialog::ShowDirsOnly |
+            QFileDialog::DontResolveSymlinks);
+    if (!dir.isEmpty())
+    {
+        _ui->hostPathLineEdit->setText(dir);
+    }
+}
+
 void EditSharedFolderDialog::accept()
 {
     _sharedFolder = SharedFolder(

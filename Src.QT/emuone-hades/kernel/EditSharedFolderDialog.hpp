@@ -94,6 +94,7 @@ namespace emuone::hades::kernel
     private slots:
         void            _volumeNameLineEditTextChanged(QString);
         void            _hostPathLineEditTextChanged(QString);
+        void            _browsePushButtonClicked();
         virtual void    accept() override;
         virtual void    reject() override;
     };

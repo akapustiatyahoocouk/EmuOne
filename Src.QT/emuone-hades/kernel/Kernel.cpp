@@ -47,11 +47,25 @@ auto Kernel::createEditor(QWidget * parent) -> emuone::core::ComponentEditor *
 void Kernel::saveConfiguration(QDomElement & element) const
 {
     IComponent::saveConfiguration(element);
+
+    element.setAttribute(
+        "Version",
+        emuone::util::toString(_version));
+    element.setAttribute(
+        "SharedFolders",
+        emuone::util::toString(_sharedFolders));
 }
 
 void Kernel::restoreConfiguration(const QDomElement & element)
 {
     IComponent::restoreConfiguration(element);
+
+    _version = emuone::util::fromString(
+        element.attribute("Version"),
+        _version);
+    _sharedFolders = emuone::util::fromString(
+        element.attribute("SharedFolders"),
+        _sharedFolders);
 }
 
 //////////

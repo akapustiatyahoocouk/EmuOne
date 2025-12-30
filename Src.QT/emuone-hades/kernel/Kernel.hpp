@@ -43,6 +43,7 @@ namespace emuone::hades::kernel
         //////////
         //  Operations
     public:
+        bool        isValid() const;
         QString     volumeName() const { return _volumeName; }
         QString     hostPath() const { return _hostPath; }
 
@@ -181,7 +182,9 @@ namespace emuone::hades::kernel
         inline static const QString _SharedFoldersSeparator = " -> ";
 
         //  Helpers
-        SharedFolders   _sharedFolders();
+        void            _refresh();
+        SharedFolder    _selectedSharedFolder() const;
+        SharedFolders   _sharedFolders() const;
         void            _setSharedFolders(const SharedFolders & sharedFolders);
         void            _addSharedFolder(const SharedFolder & sharedFolder);
         void            _removeSharedFolder(const QString & volumeName);
@@ -195,10 +198,30 @@ namespace emuone::hades::kernel
         //  Signal handlers
     private slots:
         void            _kernelVersionLineEditTextChanged(QString);
+        void            _sharedFoldersListWidgetCurrentRowChanged(int);
         void            _addSharedFolderPushButtonClicked();
         void            _modifySharedFolderPushButtonClicked();
         void            _removeSharedFolderPushButtonClicked();
     };
+}
+
+//////////
+//  Formatting/parwing
+namespace emuone::util
+{
+    template <> EMUONE_HADES_PUBLIC
+    QString toString<emuone::hades::kernel::SharedFolder>(const emuone::hades::kernel::SharedFolder & value);
+
+    template <> EMUONE_HADES_PUBLIC
+    QString toString<emuone::hades::kernel::SharedFolders>(const emuone::hades::kernel::SharedFolders & value);
+
+    template <> EMUONE_HADES_PUBLIC
+    emuone::hades::kernel::SharedFolder
+    fromString<emuone::hades::kernel::SharedFolder>(const QString & s, qsizetype & scan);
+
+    template <> EMUONE_HADES_PUBLIC
+    emuone::hades::kernel::SharedFolders
+    fromString<emuone::hades::kernel::SharedFolders>(const QString & s, qsizetype & scan);
 }
 
 //  Macro required to allow MOC compiler to do its work

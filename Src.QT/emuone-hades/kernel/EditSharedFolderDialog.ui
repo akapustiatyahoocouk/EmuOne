@@ -152,9 +152,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>browsePushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>emuone::hades::kernel::EditSharedFolderDialog</receiver>
+   <slot>_browsePushButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>402</x>
+     <y>59</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>228</x>
+     <y>65</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>_volumeNameLineEditTextChanged(QString)</slot>
   <slot>_hostPathLineEditTextChanged(QString)</slot>
+  <slot>_browsePushButtonClicked()</slot>
  </slots>
 </ui>

@@ -262,6 +262,33 @@ void VirtualMachine::removeComponent(IComponent * component)
     Q_ASSERT(false);
 }
 
+QString VirtualMachine::toAbsolutePath(const QString & relativePath)
+{
+    if (QFileInfo(relativePath).isAbsolute())
+    {   //  Already absolute
+        return QFileInfo(relativePath).canonicalFilePath();
+    }
+    //  Try ansolutizing
+    QDir baseDir(QFileInfo(_location).absolutePath());
+    QString result = baseDir.absoluteFilePath(relativePath);
+    return QFileInfo(result).canonicalFilePath();
+}
+
+QString VirtualMachine::toRelatimePath(const QString & absolutePath)
+{
+    QDir baseDir(QFileInfo(_location).absolutePath());
+    QString result = baseDir.relativeFilePath(absolutePath);
+    if (result.contains(".."))
+    {   //  Can't go above the VM directory
+        return absolutePath;
+    }
+    else if (result != ".")
+    {   //  Prepend sub-dirs with ./ prefx
+        result = "./" + result;
+    }
+    return result;
+}
+
 //////////
 //  Operations (state control)
 VirtualMachine::State VirtualMachine::state() const
@@ -403,6 +430,7 @@ auto VirtualMachine::load(const QString & location) -> VirtualMachine *
             Q_ASSERT(false);
         }
         auto component = componentType->createComponent();
+        component->restoreConfiguration(componentElement);
         //  Is there an adaptor involved ?
         IComponentAdaptorType * adaptorType = nullptr;
         auto adaptorElement = componentElement.firstChildElement("Adaptor");

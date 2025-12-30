@@ -283,6 +283,9 @@ namespace emuone::core
         ///     not belong to this VM).
         void            removeComponent(IComponent * component);
 
+        QString         toAbsolutePath(const QString & relativePath);
+        QString         toRelatimePath(const QString & absolutePath);
+
         //////////
         //  Operations (state control)
     public:

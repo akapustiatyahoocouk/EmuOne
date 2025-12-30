@@ -196,11 +196,28 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>sharedFoldersListWidget</sender>
+   <signal>currentRowChanged(int)</signal>
+   <receiver>emuone::hades::kernel::KernelEditor</receiver>
+   <slot>_sharedFoldersListWidgetCurrentRowChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>145</x>
+     <y>109</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>145</x>
+     <y>101</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>_kernelVersionLineEditTextChanged(QString)</slot>
   <slot>_addSharedFolderPushButtonClicked()</slot>
   <slot>_modifySharedFolderPushButtonClicked()</slot>
   <slot>_removeSharedFolderPushButtonClicked()</slot>
+  <slot>_sharedFoldersListWidgetCurrentRowChanged(int)</slot>
  </slots>
 </ui>
