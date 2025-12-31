@@ -33,8 +33,10 @@
 //  Devices
 #include "emuone-hades/devices/ExternalFileSystem.hpp"
 
-//  HADES OS
-#include "emuone-hades/kernel/Object.hpp"
+//  HADES Kernel
+#include "emuone-hades/kernel/DataTypes.hpp"
 #include "emuone-hades/kernel/Kernel.hpp"
+#include "emuone-hades/kernel/Object.hpp"
+#include "emuone-hades/kernel/Identity.hpp"
 
 //  End of emuone-hades/API.hpp

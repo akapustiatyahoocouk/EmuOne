@@ -17,82 +17,42 @@
 
 namespace emuone::hades::kernel
 {
-    /// \class Oid emuone-hades/API.hpp
-    /// \brief The Lernel Object ID - unique.
-    class EMUONE_HADES_PUBLIC Oid final
-    {
-        //////////
-        //  Constants
-    private:
-        static const uint32_t _InvalidImpl = 0;
-    public:
-        static const Oid    Invalid;
-
-        //////////
-        //  Construction/destruction/assignment
-    private:
-        constexpr Oid(uint32_t impl) : _impl(impl) {}
-    public:
-        Oid();
-
-        //  Default copy constructor, destructor and
-        //  assignment are all OK.
-
-        //////////
-        //  Operatora
-    public:
-        bool            operator == (const Oid & op2) const;
-        bool            operator != (const Oid & op2) const;
-        bool            operator <  (const Oid & op2) const;
-        bool            operator <= (const Oid & op2) const;
-        bool            operator >  (const Oid & op2) const;
-        bool            operator >= (const Oid & op2) const;
-
-        //////////
-        //  Operations
-    public:
-        /// \brief
-        ///     Checks whether this OID is valid.
-        /// \return
-        ///     True if this OID is valid (can be used by so e Object),
-        ///     false if not.
-        bool            isValid() const { return _impl != _InvalidImpl; }
-
-        //////////
-        //  Implementation
-    private:
-        uint32_t    _impl;
-    };
-
     /// \class Object emuone-hades/API.hpp
     /// \brief The HADES OS Kernel.object.
     class EMUONE_HADES_PUBLIC Object
     {
         EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Object)
 
+        friend class Kernel;
+        friend class Identity;
+        friend class SystemIdentity;
+
+        //////////
+        //  All members are private - for Kernel only
+    private:
+
+        //////////
+        //  Constants
+        //  A special constant that makes a newly constructed
+        //  Object to "own itself"
+        static Identity *const SelfOwner;
+
         //////////
         //  Construction/destruction
-    public:
-        Object(Kernel * kernel, const Oid & oid);
+        Object(Kernel * kernel, const Oid & oid, Identity * owner);
         virtual ~Object();
 
         //////////
         //  Properties
-    public:
-        /// \brief
-        ///     The Kernel managing this Object.
-        Kernel *const   kernel;
+        Kernel *const   kernel; //  managing this Object
+        const Oid       oid;    //  unique per Kernel
 
-        /// \brief
-        ///     The OID of this Object; unique per Kernel.
-        const Oid       oid;
+        //  counts all pointers to this object from kernel data structures
+        uint32_t        referenceCount = 0;
 
         //////////
-        //  Implementation
-    private:
-
-        //  counts all pointers to thids object from kernel data structures
-        uint32_t        _referenceCount = 0;
+        //  Associations
+        Identity *      owner;  //  counts as a reference
     };
 }
 

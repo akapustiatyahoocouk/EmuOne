@@ -21,6 +21,7 @@ HEADERS += \
     FromString.hpp \
     Linkage.hpp \
     Macros.hpp \
+    Memory.hpp \
     Settings.hpp \
     StockObject.hpp \
     Sync.hpp \

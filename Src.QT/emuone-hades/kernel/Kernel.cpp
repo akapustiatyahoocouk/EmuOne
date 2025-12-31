@@ -137,7 +137,26 @@ void Kernel::start()
     {   //  OOPS!
         Q_ASSERT(false);    //  TODO throw
     }
-    //  TODO start
+
+    //  Kernel in non-persistable, so we must always
+    //  perform a cold start
+    Q_ASSERT(_objects.isEmpty());
+    Q_ASSERT(_systemIdentity == nullptr);
+    //  TODO other secondary caches
+
+    //  To start the Kernel, we need several things:
+    //  1.  To create a System identity,
+    //  2.  To create the default Executor and
+    //      ExecutionEnvironment.
+    //  3.  To create an init process with a single
+    //      native thread (both owned by System identity),
+    //  4.  And start that init thread
+    {
+        emuone::util::Lock _1(kernelGuard);
+        createSystemIdentity();
+        //  TODO start
+    }
+
     //  Perform state change
     _state = State::Running;
 }
@@ -151,7 +170,24 @@ void Kernel::stop() noexcept
     {   //  Nothing to do
         return;
     }
-    //  TODO stop
+
+    //  Terminate all native threads, politrly if
+    //  possible, forcefully otherwise
+    //  TODO
+
+    //  Destroy all kernel objects and clear the
+    //  primary and secondary caches
+    {
+        emuone::util::Lock _1(kernelGuard);
+        for (Object * object : _objects.values())
+        {
+            delete object;
+        }
+        Q_ASSERT(_objects.isEmpty());
+        Q_ASSERT(_systemIdentity == nullptr);
+        //  TODO other secondary caches
+    }
+
     //  Perform state change
     _state = State::Initialized;
 }

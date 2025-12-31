@@ -1,5 +1,5 @@
 //
-//  emuone-hades/Classes.hpp - Forward declarations and typedef
+//  emuone-hades/kernel/Identity.cpp - emuone::hades::kernel::Identity class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -14,19 +14,18 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 //////////
+#include "emuone-hades/API.hpp"
+using namespace emuone::hades::kernel;
 
-namespace emuone::hades::kernel
+//////////
+//  Construction/destruction
+Identity::Identity(Kernel * kernel, const Oid & oid)
+    :   Object(kernel, oid, SelfOwner)
 {
-    //  Objects
-    class Kernel;
-    class Object;
-    class Identity;
-    class SystemIdentity;
-    class UserIdentity;
-    class SyntheticIdentity;
-
-    //  Collections
-    using Objects = QSet<Object*>;
 }
 
-//  End of emuone-hades/Classes.hpp
+Identity::~Identity()
+{
+}
+
+//  End of emuone-hades/kernel/Identity.cpp

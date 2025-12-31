@@ -1,5 +1,5 @@
 //
-//  emuone-hades/Classes.hpp - Forward declarations and typedef
+//  emuone-util/Memory.hpp - low-level memory access
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -15,18 +15,23 @@
 //  GNU General Public License for more details.
 //////////
 
-namespace emuone::hades::kernel
+namespace emuone::util
 {
-    //  Objects
-    class Kernel;
-    class Object;
-    class Identity;
-    class SystemIdentity;
-    class UserIdentity;
-    class SyntheticIdentity;
-
-    //  Collections
-    using Objects = QSet<Object*>;
+    /// \brief
+    ///     The order in which bytes of a multibyte
+    ///     valye appear in memory.
+    enum class ByteOrder
+    {
+        BigEndian = 0,      ///< MSB first (0x1234 -> 0x12, 0x34).
+        LittleEndian = 1,   ///< LSB first (0x1234 -> 0x34, 0x12).
+#if Q_BYTE_ORDER == Q_BIG_ENDIAN
+        Host = BigEndian
+#elif Q_BYTE_ORDER == Q_LITTLE_ENDIAN
+        Host = LittleEndian
+#else
+    #error Unsupported byte order
+#endif
+    };
 }
 
-//  End of emuone-hades/Classes.hpp
+//  End of emuone-util/Memory.hpp

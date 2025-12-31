@@ -99,6 +99,7 @@
 #include "emuone-util/Macros.hpp"
 
 //  Platform API
+#include "emuone-util/Memory.hpp"
 #include "emuone-util/Sync.hpp"
 //  TODO ? #include "tt3-util/Locale.hpp"
 

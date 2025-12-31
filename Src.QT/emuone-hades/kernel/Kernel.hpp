@@ -24,6 +24,11 @@ namespace emuone::hades::kernel
     class EMUONE_HADES_PUBLIC Kernel final
         :   public virtual emuone::core::IComponent
     {
+        EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Kernel)
+
+        friend class Object;
+        friend class SystemIdentity;
+
         //////////
         //  Constants
     public:
@@ -88,6 +93,11 @@ namespace emuone::hades::kernel
         void            setVersion(const QVersionNumber & version);
 
         //////////
+        //  Operations (identity management)
+    public:
+        SystemIdentity *createSystemIdentity();
+
+        //////////
         //  Implementation
     private:
         State           _state = State::Constructed;
@@ -97,13 +107,26 @@ namespace emuone::hades::kernel
 
         //////////
         //  Runtime state
+    public:
+        /// \brief
+        ///     Locked whenever running kernel code.
+        /// \details
+        ///     This guard functions as an "interrupts disabled"
+        ///     hardware flag in real processors.
+        emuone::util::Mutex kernelGuard;
+
     private:
+        //  If a process is asked to terminate but does not
+        //  do so within nthe specified time, it is force-killed
+        static const int _GraceBeforeKillMs = 10000;
+
         //  The primary objact table - contains all live
         //  kernel objects and counts as a "reference"
         QMap<Oid, Object*>  _objects;
 
         //  Secondary object caches for access speedup -
         //  all of them do NOT count as "references"
+        SystemIdentity *    _systemIdentity = nullptr;
     };
 
     namespace Ui { class KernelEditor; }
