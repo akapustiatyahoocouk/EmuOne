@@ -236,7 +236,7 @@ namespace emuone::core
     protected:
         /// \brief
         ///     The guard to use for synchronizing all state changes.
-        mutable emuone::util::Mutex guard;
+        mutable emuone::util::Mutex stateGuard;
 
         //////////
         //  Implementation
@@ -252,14 +252,173 @@ namespace emuone::core
         EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(IDevice)
 
         //////////
+        //  Types
+    public:
+        /// \class Command emuone-core/API.pp
+        /// \brief A generic "command" that can be sent to a Device.
+        class EMUONE_CORE_PUBLIC Command
+        {
+            EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Command)
+
+            //////////
+            //  Construction/destruction
+        protected:
+            Command(uintmax_t sequenceNumber)
+                :   sequenceNumber(sequenceNumber) {}
+            virtual ~Command() = default;
+
+            //////////
+            //  Properties
+        public:
+            /// \brief
+            ///     The unique sequence number assigned to the Command
+            ///     by the sender.
+            const uintmax_t sequenceNumber;
+        };
+
+        /// \class Response emuone-core/API.pp
+        /// \brief A generic response to a Command.
+        class EMUONE_CORE_PUBLIC Response
+        {
+            EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Response)
+
+            //////////
+            //  Construction/destruction
+        protected:
+            Response(uintmax_t sequenceNumber)
+                :   sequenceNumber(sequenceNumber) {}
+            virtual ~Response() = default;
+
+            //////////
+            //  Properties
+        public:
+            /// \brief
+            ///     The unique sequence number assigned to the Command
+            ///     that caused this Response.
+            const uintmax_t sequenceNumber;
+        };
+
+        /// \brief
+        ///     An outcome of an attempt to send a Command to the Device.
+        enum class SendCommandOutcome
+        {
+            Success,            ///< Command sent successfully.
+            InvalidDeviceState, ///< The Device is not Running.
+            UnsupportedCommand, ///< Invalid command type.
+            DeviceBusy,         ///< Device annot accept Command at this time.
+            UnknownError        ///< Something went wrong; vsn't tell what.
+        };
+
+        class EMUONE_CORE_PUBLIC IResponseListener
+        {
+            //////////
+            //  This is an interface
+        public:
+            IResponseListener() = default;
+            virtual ~IResponseListener() = default;
+
+            //////////
+            //  Operations
+        public:
+            /// \brief
+            ///     Called on an internal thread managed by a Device when a
+            ///     Command execution has finished.
+            /// \param response
+            ///     The Response; OWNED BY THE CALLER so the
+            ///     listener must not delete it.
+            virtual void    onResponse(Response * response) = 0;
+        };
+        using ResponseListeners = QList<IResponseListener*>;
+
+        //////////
         //  Construction/destruction
     public:
+        /// \brief
+        ///     The default [interface] constructor.
         IDevice() = default;
-        virtual ~IDevice() = default;
+        //  The default virtual destructor is OK.
 
         //////////
         //  Operations
     public:
+        /// \brief
+        ///     Sends the specified Command to this Device.
+        /// \details
+        ///     The method returns immediately.
+        ///     For each command whose sending was a Success
+        ///     the Device guaramtees that:
+        ///     -   a Response will become available later on.
+        ///     -   The Response will be delivered to all registered
+        ///         ResposeListeners on an internal worker thread
+        ///         managed internally by the Device.
+        ///     -   The Response will carry the same sequenceNumber
+        ///         as the Command that caused it did.
+        /// \param command
+        ///     The Command to send.
+        /// \return
+        ///     The outcome of the send attempt. If Success, the
+        ///     Device takes ownership of the posted Command; otherwise
+        ///     the caller is responsible for delete'ing it.
+        virtual auto    sendCommand(
+                            Command * command
+                        ) -> SendCommandOutcome = 0;
+
+        /// \brief
+        ///     Returns the list of all response listeners
+        ///     added to this Device.
+        /// \details
+        ///     This is a NONSHARED COPY of the actual list of
+        ///     registered listeners, so the caller is thread-safe
+        ///     with using it as seen fit.
+        auto            responseListeners() const -> ResponseListeners;
+
+        /// \brief
+        ///     Adds the scefied listener to the list of listeners
+        ///     notified when a Response to a Command is ready.
+        /// \details
+        ///     If the listener is already in that list, the call
+        ///     has no effect.
+        /// \param listener
+        ///     The listener to add.
+        void            addResponseListener(
+                                IResponseListener * listener
+                            );
+
+        /// \brief
+        ///     Removes the scefied listener from the list of listeners
+        ///     notified when a Response to a Command is ready.
+        /// \details
+        ///     If the listener is not in that list, the call
+        ///     has no effect.
+        /// \param listener
+        ///     The listener to remove.
+        void            removeResponseListener(
+                                IResponseListener * listener
+                            );
+
+        /// \brief
+        ///     Clears the list of listeners notified when a
+        ///     Response to a Command is ready.
+        void            clearResponseListeners();
+
+    protected:
+        /// \brief
+        ///     Delivers the specified Response to all response
+        ///     listeners registered with this Device.
+        /// \details
+        ///     Concrete Devices will normally call this method
+        ///     from their internal worker threads.
+        /// \param response
+        ///     The response to dispatch.
+        void            dispatchResponse(Response * response);
+
+        //////////
+        //  Implementation
+    private:
+        ResponseListeners   _responseListeners;
+        mutable emuone::util::Spinlock  _responseListenersGuard;
+        //  Dispatch optimiations
+        static const qsizetype  _MaxStaticListeners = 14;
     };
 }
 

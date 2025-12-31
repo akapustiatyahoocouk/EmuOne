@@ -65,7 +65,7 @@ void VirtualMachinePage::refresh()
             //  TODO
             break;
         case emuone::core::VirtualMachine::State::Suspended:
-            //  TODO
+            Q_ASSERT(false);    //  TODO implement
             break;
         default:
             Q_ASSERT(false);

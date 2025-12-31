@@ -34,6 +34,7 @@
 #include "emuone-hades/devices/ExternalFileSystem.hpp"
 
 //  HADES OS
+#include "emuone-hades/kernel/Object.hpp"
 #include "emuone-hades/kernel/Kernel.hpp"
 
 //  End of emuone-hades/API.hpp

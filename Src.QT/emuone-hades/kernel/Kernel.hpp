@@ -94,6 +94,16 @@ namespace emuone::hades::kernel
 
         //  Configuration
         QVersionNumber  _version = DefaultVersion;
+
+        //////////
+        //  Runtime state
+    private:
+        //  The primary objact table - contains all live
+        //  kernel objects and counts as a "reference"
+        QMap<Oid, Object*>  _objects;
+
+        //  Secondary object caches for access speedup -
+        //  all of them do NOT count as "references"
     };
 
     namespace Ui { class KernelEditor; }

@@ -18,7 +18,8 @@ HEADERS += \
     Component.hpp \
     Linkage.hpp \
     devices/ExternalFileSystem.hpp \
-    kernel/Kernel.hpp
+    kernel/Kernel.hpp \
+    kernel/Object.hpp
 
 PRECOMPILED_HEADER = API.hpp
 

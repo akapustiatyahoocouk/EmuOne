@@ -27,6 +27,11 @@ ExternalFileSystem::ExternalFileSystem()
 
 ExternalFileSystem::~ExternalFileSystem()
 {
+    if (_notificationThread != nullptr)
+    {   //  Make sure it's not running
+        _notificationThread->terminate();
+        delete _notificationThread;
+    }
 }
 
 //////////
@@ -66,13 +71,13 @@ void ExternalFileSystem::restoreConfiguration(const QDomElement & element)
 //  emuone::core::IComponent (state control)
 ExternalFileSystem::State ExternalFileSystem::state() const
 {
-    emuone::util::Lock _(guard);
+    emuone::util::Lock _(stateGuard);
     return _state;
 }
 
 void ExternalFileSystem::connect()
 {
-    emuone::util::Lock _(guard);
+    emuone::util::Lock _(stateGuard);
 
     //  Check preconditions
     if (_state != State::Constructed || !isBound())
@@ -86,7 +91,7 @@ void ExternalFileSystem::connect()
 
 void ExternalFileSystem::disconnect() noexcept
 {
-    emuone::util::Lock _(guard);
+    emuone::util::Lock _(stateGuard);
 
     //  Check preconditions
     if (_state != State::Connected || !isBound())
@@ -100,7 +105,7 @@ void ExternalFileSystem::disconnect() noexcept
 
 void ExternalFileSystem::initialize()
 {
-    emuone::util::Lock _(guard);
+    emuone::util::Lock _(stateGuard);
 
     //  Check preconditions
     if (_state != State::Connected || !isBound())
@@ -114,7 +119,7 @@ void ExternalFileSystem::initialize()
 
 void ExternalFileSystem::deinitialize() noexcept
 {
-    emuone::util::Lock _(guard);
+    emuone::util::Lock _(stateGuard);
 
     //  Check preconditions
     if (_state != State::Initialized || !isBound())
@@ -128,34 +133,107 @@ void ExternalFileSystem::deinitialize() noexcept
 
 void ExternalFileSystem::start()
 {
-    emuone::util::Lock _(guard);
+    emuone::util::Lock _(stateGuard);
 
     //  Check preconditions
     if (_state != State::Initialized || !isBound())
     {   //  OOPS!
         Q_ASSERT(false);    //  TODO throw
     }
-    //  There is nothing to start
+    //  Start notification thread
+    Q_ASSERT(_notificationThread == nullptr);
+    _notificationThread = new _NotificationThread(this);
+    _notificationThread->start();
     //  Perform state change
     _state = State::Running;
 }
 
 void ExternalFileSystem::stop() noexcept
 {
-    emuone::util::Lock _(guard);
+    emuone::util::Lock _(stateGuard);
 
     //  Check preconditions
     if (_state != State::Running || !isBound())
     {   //  Nothing to do
         return;
     }
-    //  There is nothing to stop
+    //  Stop the notification thread, cleanly if possible...
+    Q_ASSERT(_notificationThread != nullptr);
+    _notificationThread->requestStop();
+    _notificationThread->wait(_NotificationThread::WaitChunkMs * 5);
+    if (_notificationThread->isRunning())
+    {   //  ...or dirtyli if not
+        _notificationThread->terminate();
+        _notificationThread->wait(_NotificationThread::WaitChunkMs * 5);
+    }
+    delete _notificationThread;
+    _notificationThread = nullptr;
     //  Perform state change
     _state = State::Initialized;
 }
 
 //////////
+//  emuone::core::IDevice
+auto ExternalFileSystem::sendCommand(
+        IDevice::Command * command
+    ) -> SendCommandOutcome
+{
+    if (state() != State::Running)
+    {   //  OOPS
+        return SendCommandOutcome::InvalidDeviceState;
+    }
+
+    //  We use double-dispatch for speed, but make sure
+    //  at least the Debug build performs the validity checks
+    Q_ASSERT(dynamic_cast<Command*>(command) != nullptr);
+    Command * cmd = static_cast<Command*>(command);
+    //  TODO implement properly
+    return SendCommandOutcome::UnsupportedCommand;
+}
+
+//////////
 //  Operations (configuration)
+bool ExternalFileSystem::isValidVolumeName(const QString & volumeName)
+{   //  TODO implement properly
+    if (volumeName.trimmed().length() != volumeName.length() ||
+        volumeName.length() == 0)
+    {   //  OOPS!
+        return false;
+    }
+    return true;
+}
+
+bool ExternalFileSystem::isValidHostPath(const QString & hostPath)
+{
+    return QFileInfo(hostPath).isNativePath();
+}
+
+QString ExternalFileSystem::volumeName() const
+{
+    emuone::util::Lock _(stateGuard);
+    return _volumeName;
+}
+
+void ExternalFileSystem::setVolumeName(const QString & volumeName)
+{
+    emuone::util::Lock _(stateGuard);
+    Q_ASSERT(isValidHostPath(volumeName));  //  TODO throw instead
+
+    _volumeName = volumeName;
+}
+
+QString ExternalFileSystem::hostPath() const
+{
+    emuone::util::Lock _(stateGuard);
+    return _hostPath;
+}
+
+void ExternalFileSystem::setHostPath(const QString & hostPath)
+{
+    emuone::util::Lock _(stateGuard);
+    Q_ASSERT(isValidHostPath(hostPath));    //  TODO throw instead
+    _hostPath = hostPath;
+}
 
 //////////
 //  ExternalFileSystem::Type
@@ -199,47 +277,24 @@ auto ExternalFileSystem::Type::createComponent() -> ExternalFileSystem *
 }
 
 //////////
-//  Operations (configuration)
-bool ExternalFileSystem::isValidVolumeName(const QString & volumeName)
-{   //  TODO implement properly
-    if (volumeName.trimmed().length() != volumeName.length() ||
-        volumeName.length() == 0)
-    {   //  OOPS!
-        return false;
+//  ExternalFileSystem::_NotificationThread
+void ExternalFileSystem::_NotificationThread::run()
+{
+    while (!_stopRequested)
+    {
+        Response * response;
+        if (_pendingResponses.tryDequeue(response, WaitChunkMs))
+        {   //  Dispatch one response...
+            _extfs->dispatchResponse(response); //  TODO may throw
+            delete response;
+            //  ...and all subsequent ones which are ready
+            while (_pendingResponses.tryDequeue(response, 0))
+            {
+                _extfs->dispatchResponse(response); //  TODO may throw
+                delete response;
+            }
+        }
     }
-    return true;
-}
-
-bool ExternalFileSystem::isValidHostPath(const QString & hostPath)
-{
-    return QFileInfo(hostPath).isNativePath();
-}
-
-QString ExternalFileSystem::volumeName() const
-{
-    emuone::util::Lock _(guard);
-    return _volumeName;
-}
-
-void ExternalFileSystem::setVolumeName(const QString & volumeName)
-{
-    emuone::util::Lock _(guard);
-    Q_ASSERT(isValidHostPath(volumeName));  //  TODO throw instead
-
-    _volumeName = volumeName;
-}
-
-QString ExternalFileSystem::hostPath() const
-{
-    emuone::util::Lock _(guard);
-    return _hostPath;
-}
-
-void ExternalFileSystem::setHostPath(const QString & hostPath)
-{
-    emuone::util::Lock _(guard);
-    Q_ASSERT(isValidHostPath(hostPath));    //  TODO throw instead
-    _hostPath = hostPath;
 }
 
 //  End of emuone-hades/devices/ExternalFileSystem.cpp

@@ -16,6 +16,7 @@ SOURCES += \
     IComponentAdaptorType.cpp \
     IComponentCategory.cpp \
     IComponentType.cpp \
+    IDevice.cpp \
     IVirtualMachineTemplate.cpp \
     StandardComponentCategories.cpp \
     StandardVirtualMachineTypes.cpp \

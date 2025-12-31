@@ -48,6 +48,34 @@ namespace emuone::hades::devices
             virtual auto    createComponent() -> ExternalFileSystem * override;
         };
 
+        /// \class Command emuone-hades/API.hpp
+        /// \brief A generic command accepted by an ExyFS device.
+        class EMUONE_HADES_PUBLIC Command
+            :   public IDevice::Command
+        {
+            EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Command)
+
+            //////////
+            //  Construction/destruction
+        public:
+            Command(uintmax_t sequenceNumber)
+                :   IDevice::Command(sequenceNumber) {}
+        };
+
+        /// \class Response emuone-hades/API.hpp
+        /// \brief A generic response from an ExyFS device.
+        class EMUONE_HADES_PUBLIC Response
+            :   public IDevice::Response
+        {
+            EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Response)
+
+            //////////
+            //  Construction/destruction
+        public:
+            Response(uintmax_t sequenceNumber)
+                :   IDevice::Response(sequenceNumber) {}
+        };
+
         //////////
         //  Construction/destruction
     public:
@@ -75,6 +103,13 @@ namespace emuone::hades::devices
         virtual void    stop() noexcept override;
 
         //////////
+        //  emuone::core::IDevice
+    public:
+        virtual auto    sendCommand(
+                                IDevice::Command * command
+                            ) -> SendCommandOutcome override;
+
+        //////////
         //  Operations (configuration)
     public:
         static bool     isValidVolumeName(const QString & volumeName);
@@ -93,6 +128,48 @@ namespace emuone::hades::devices
         //  Configuration
         QString         _volumeName;
         QString         _hostPath;
+
+        //////////
+        //  Threads
+    private:
+        class _NotificationThread : public QThread
+        {
+            EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_NotificationThread)
+
+            //////////
+            //  Constants
+        public:
+            static const int WaitChunkMs = 500;
+
+            //////////
+            //  Construction/destruction
+        public:
+            _NotificationThread(ExternalFileSystem * extfs)
+                :   _extfs(extfs) {}
+
+            //////////
+            //  QThread
+        protected:
+            virtual void    run() override;
+
+            //////////
+            //  Operations
+        public:
+            void        requestStop() { _stopRequested = true; }
+            void        postResponse(Response * response)
+            {
+                Q_ASSERT(response != nullptr);
+                _pendingResponses.enqueue(response);
+            }
+
+            //////////
+            //  Implementation
+        private:
+            ExternalFileSystem *const   _extfs;
+            std::atomic<bool>   _stopRequested = false;
+            emuone::util::BlockingQueue<Response*>  _pendingResponses;
+        };
+        _NotificationThread *   _notificationThread = nullptr;
     };
 
     namespace Ui { class ExternalFileSystemEditor; }

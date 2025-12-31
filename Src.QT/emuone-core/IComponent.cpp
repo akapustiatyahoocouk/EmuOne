@@ -33,7 +33,7 @@ QIcon IComponent::largeIcon() const
 //  Operations
 VirtualMachine * IComponent::owner() const
 {   //  Guarded, as Components can be added/removed to/from VMs
-    emuone::util::Lock _(guard);
+    emuone::util::Lock _(stateGuard);
     return _owner;
 }
 

@@ -45,35 +45,6 @@ namespace emuone::util
         virtual void    release() = 0;
     };
 
-    /// \class Lock emuone-util/API.hpp
-    /// \brief
-    ///     A helper object that "grabs" a synchronisation object
-    ///     in constructor and "released" it in destructor.
-    class EMUONE_UTIL_PUBLIC Lock final
-    {
-        EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Lock)
-
-        //////////
-        //  Construction/destruction
-    public:
-        /// \brief
-        ///     The class constructor; "grabs" the synchronization object.
-        /// \param guard
-        ///     The synchronization object to "grab".
-        explicit Lock(SynchronisationObject & guard)
-            :   _guard(guard) { _guard.grab(); }
-
-        /// \brief
-        ///     The class destructor; "releases" the synchronization
-        ///     object specified to the lock constructor.
-        ~Lock() { _guard.release(); }
-
-        //////////
-        //  Implementation
-    private:
-        SynchronisationObject & _guard;
-    };
-
     /// \class Mutex emuone-util/API.hpp
     /// \brief An extended mutex - only one thread can
     ///        have it "grabbed"/"locked" at a time.
@@ -162,6 +133,145 @@ namespace emuone::util
         QThread *       _lockingThread = nullptr;
     };
 
+    /// \class Spinlock emuone-util/API.hpp
+    /// \brief A fast non-reentrant spinlock.
+    class EMUONE_UTIL_PUBLIC Spinlock final
+        :   public SynchronisationObject
+    {
+        EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Spinlock)
+
+        //////////
+        //  Construction/destruction
+    public:
+        /// \brief
+        ///     Constructs an initially un-"grabbed" mutex.
+        Spinlock() = default;
+
+        /// \brief
+        ///     The class destructor.
+        virtual ~Spinlock() = default;
+
+        //////////
+        //  SynchronisationObject
+    public:
+        virtual void    grab() override
+        {
+            while (_flag.test_and_set(std::memory_order_acquire))
+            {   //  Give other threads a chance
+                std::this_thread::yield();
+            }
+        }
+
+        virtual bool    tryGrab(int timeoutMs) override
+        {   //  No timeout is a special case
+            if (timeoutMs <= 0)
+            {
+                return !_flag.test_and_set(std::memory_order_acquire);
+            }
+            //  General case
+            QElapsedTimer timer;
+            timer.start();
+            while (_flag.test_and_set(std::memory_order_acquire))
+            {   //  Give other threads a chance
+                std::this_thread::yield();
+                if (timer.elapsed() > timeoutMs)
+                {   //  Give up
+                    return false;
+                }
+            }
+            //  Success!
+            return true;
+        }
+
+        virtual void    release() override
+        {   //  Release lock: clear() sets the flag to false.
+            _flag.clear(std::memory_order_release);
+        }
+
+        //////////
+        //  Operations
+    public:
+        /// \brief
+        ///     "Locks" this Spinlock, idle-waiting until it is
+        ///     available for locking.
+        /// \details
+        ///     Same as "grab()".
+        ///     A thread is NOT allowed to repeatedly "lock"
+        ///     the same Spinlock.
+        void            lock() { grab(); }
+
+        /// \brief
+        ///     "Locks" this Mutex, waiying until it is available for
+        ///     locking OR the specified timeout expires.
+        /// \details
+        ///     Same as "tryGrab(timeoutMs)".
+        ///     A thread is NOT allowed to repeatedly "lock"
+        ///     the same Spinlock.
+        /// \param timeoutMs
+        ///     The timeout, in milliseconds, to want for.
+        /// \return
+        ///     True on lock success, false on timeout.
+        bool            tryLock(int timeoutMs) { return tryGrab(timeoutMs); }
+
+        /// \brief
+        ///     "Unlocks" a locked Spinlock.
+        /// \details
+        ///     Same as "release()".
+        void            unlock() { release(); }
+
+        /// \brief
+        ///     Checks whether this Mutex is locked by
+        ///     the specified thread.
+        /// \param thread
+        ///     The thread to check toe Mutex state for.
+        /// \return
+        ///     True if this Mutex is locked by the
+        ///     specified thread, else false.
+        bool            isLockedBy(QThread * thread);
+
+        /// \brief
+        ///     Checks whether this Mutex is locked by
+        ///     the current thread.
+        /// \return
+        ///     True if this Mutex is locked by the
+        ///     current thread, else false.
+        bool            isLockedByCurrentThread();
+
+        //////////
+        //  Implementation
+    private:
+        std::atomic_flag    _flag = ATOMIC_FLAG_INIT;
+    };
+
+    /// \class Lock emuone-util/API.hpp
+    /// \brief
+    ///     A helper object that "grabs" a synchronisation object
+    ///     in constructor and "released" it in destructor.
+    class EMUONE_UTIL_PUBLIC Lock final
+    {
+        EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Lock)
+
+        //////////
+        //  Construction/destruction
+    public:
+        /// \brief
+        ///     The class constructor; "grabs" the synchronization object.
+        /// \param guard
+        ///     The synchronization object to "grab".
+        explicit Lock(SynchronisationObject & guard)
+            :   _guard(guard) { _guard.grab(); }
+
+        /// \brief
+        ///     The class destructor; "releases" the synchronization
+        ///     object specified to the lock constructor.
+        ~Lock() { _guard.release(); }
+
+        //////////
+        //  Implementation
+    private:
+        SynchronisationObject & _guard;
+    };
+
     /// \class BlockingQueue emuone-util/API.hpp
     /// \brief A "blocking inter-thread queue" ADT.
     template <class T>
@@ -217,13 +327,13 @@ namespace emuone::util
     private:
         QQueue<T>   _data;
         QSemaphore  _dataSize;  //  value == _data.size()
-        QMutex      _dataGuard;
+        Spinlock    _dataGuard;
     };
 
     template <class T>
     void BlockingQueue<T>::enqueue(const T & value)
     {
-        QMutexLocker lock(&_dataGuard);
+        Lock _(_dataGuard);
         _data.enqueue(value);
         _dataSize.release();
     }
@@ -232,7 +342,7 @@ namespace emuone::util
     T BlockingQueue<T>::dequeue()
     {
         _dataSize.acquire();
-        QMutexLocker lock(&_dataGuard);
+        Lock _(_dataGuard);
         return _data.dequeue();
     }
 
@@ -241,7 +351,7 @@ namespace emuone::util
     {
         if (_dataSize.tryAcquire(1, timeoutMs))
         {
-            QMutexLocker lock(&_dataGuard);
+            Lock _(_dataGuard);
             value = _data.dequeue();
             return true;
         }

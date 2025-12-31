@@ -68,13 +68,13 @@ void Kernel::restoreConfiguration(const QDomElement & element)
 //  emuone::core::IComponent (state control)
 Kernel::State Kernel::state() const
 {
-    emuone::util::Lock _(guard);
+    emuone::util::Lock _(stateGuard);
     return _state;
 }
 
 void Kernel::connect()
 {
-    emuone::util::Lock _(guard);
+    emuone::util::Lock _(stateGuard);
 
     //  Check preconditions
     if (_state != State::Constructed || !isBound())
@@ -88,7 +88,7 @@ void Kernel::connect()
 
 void Kernel::disconnect() noexcept
 {
-    emuone::util::Lock _(guard);
+    emuone::util::Lock _(stateGuard);
 
     //  Check preconditions
     if (_state != State::Connected || !isBound())
@@ -102,7 +102,7 @@ void Kernel::disconnect() noexcept
 
 void Kernel::initialize()
 {
-    emuone::util::Lock _(guard);
+    emuone::util::Lock _(stateGuard);
 
     //  Check preconditions
     if (_state != State::Connected || !isBound())
@@ -116,7 +116,7 @@ void Kernel::initialize()
 
 void Kernel::deinitialize() noexcept
 {
-    emuone::util::Lock _(guard);
+    emuone::util::Lock _(stateGuard);
 
     //  Check preconditions
     if (_state != State::Initialized || !isBound())
@@ -130,7 +130,7 @@ void Kernel::deinitialize() noexcept
 
 void Kernel::start()
 {
-    emuone::util::Lock _(guard);
+    emuone::util::Lock _(stateGuard);
 
     //  Check preconditions
     if (_state != State::Initialized || !isBound())
@@ -144,7 +144,7 @@ void Kernel::start()
 
 void Kernel::stop() noexcept
 {
-    emuone::util::Lock _(guard);
+    emuone::util::Lock _(stateGuard);
 
     //  Check preconditions
     if (_state != State::Running || !isBound())
@@ -160,13 +160,13 @@ void Kernel::stop() noexcept
 //  Operations (configuration)
 QVersionNumber Kernel::version() const
 {
-    emuone::util::Lock _(guard);
+    emuone::util::Lock _(stateGuard);
     return _version;
 }
 
 void Kernel::setVersion(const QVersionNumber & version)
 {
-    emuone::util::Lock _(guard);
+    emuone::util::Lock _(stateGuard);
 
     if (state() != State::Constructed)
     {   //  OOPOS! Can't!

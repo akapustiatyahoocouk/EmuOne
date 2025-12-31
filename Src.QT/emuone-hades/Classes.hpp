@@ -15,4 +15,9 @@
 //  GNU General Public License for more details.
 //////////
 
+namespace emuone::hades::kernel
+{
+    class Kernel;
+}
+
 //  End of emuone-hades/Classes.hpp

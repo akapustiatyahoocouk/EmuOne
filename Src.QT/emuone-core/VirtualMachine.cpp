@@ -202,7 +202,7 @@ void VirtualMachine::addComponent(
     Q_ASSERT(component != nullptr);
     //  Synchronize IN ORDER, so there can't be a deadlock
     emuone::util::Lock _1(_guard);
-    emuone::util::Lock _2(component->guard);
+    emuone::util::Lock _2(component->stateGuard);
 
     Q_ASSERT(!component->isBound());    //  TODO throw instead
     //  Already added ?
@@ -256,7 +256,7 @@ void VirtualMachine::removeComponent(IComponent * component)
     Q_ASSERT(component != nullptr);
     //  Synchronize IN ORDER, so there can't be a deadlock
     emuone::util::Lock _1(_guard);
-    emuone::util::Lock _2(component->guard);
+    emuone::util::Lock _2(component->stateGuard);
 
     Q_ASSERT(component->owner() == this);   //  TODO throw instead
     //  Native ?

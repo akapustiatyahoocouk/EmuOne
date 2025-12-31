@@ -50,6 +50,7 @@
 #include <QDialog>
 #include <QDir>
 #include <QDomDocument>
+#include <QElapsedTimer>
 #include <QException>
 #include <QFileDialog>
 #include <QIcon>
@@ -61,6 +62,7 @@
 #include <QMessageBox>
 #include <QMutex>
 #include <QMutexLocker>
+#include <QQueue>
 #include <QRegularExpression>
 #include <QStyledItemDelegate>
 #include <QStyleFactory>
