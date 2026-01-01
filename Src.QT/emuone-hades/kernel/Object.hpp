@@ -26,6 +26,7 @@ namespace emuone::hades::kernel
         friend class Kernel;
         friend class Identity;
         friend class SystemIdentity;
+        friend class DeviceType;
 
         //////////
         //  All members are private - for Kernel only

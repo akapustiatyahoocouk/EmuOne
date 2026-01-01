@@ -1,5 +1,5 @@
 //
-//  emuone-hades/kernel/Kernel.IdentityManager.cpp - Identity manager
+//  emuone-hades/kernel/Kernel.ObjectManagement.cpp - Object management
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -18,16 +18,20 @@
 using namespace emuone::hades::kernel;
 
 //////////
-//  Operations (identity management)
-SystemIdentity * Kernel::createSystemIdentity()
+//  Operations (object management)
+Oid Kernel::generateUnusedOid()
 {
-    Q_ASSERT(kernelGuard.isLockedByCurrentThread());
-    Q_ASSERT(_systemIdentity == nullptr);   //  One only per Kernel!
-
-    auto systemIdentity = new SystemIdentity(this, Oid(1));
-    Q_ASSERT(systemIdentity == _systemIdentity);
-    Q_ASSERT(_objects.value(systemIdentity->oid, nullptr) == systemIdentity);
-    return systemIdentity;
+    uint32_t spread = Oid::MaxRandomOid._impl - Oid::MinRandomOid._impl + 1;
+    for (; ; )
+    {   //  Will succeed eventually
+        uint32_t impl =
+            QRandomGenerator::global()->bounded(spread) +
+            Oid::MinRandomOid._impl;
+        if (Oid oid = Oid(impl); !_objects.contains(oid))
+        {   //  Use this one
+            return oid;
+        }
+    }
 }
 
-//  End of emuone-hades/kernel/Kernel.IdentityManager.cpp
+//  End of emuone-hades/kernel/Kernel.ObjectManagement.cpp

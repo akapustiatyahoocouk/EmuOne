@@ -144,17 +144,44 @@ void Kernel::start()
     Q_ASSERT(_systemIdentity == nullptr);
     //  TODO other secondary caches
 
-    //  To start the Kernel, we need several things:
-    //  1.  To create a System identity,
-    //  2.  To create the default Executor and
-    //      ExecutionEnvironment.
-    //  3.  To create an init process with a single
-    //      native thread (both owned by System identity),
-    //  4.  And start that init thread
+    //  To start the Kernel, we need several things...
     {
         emuone::util::Lock _1(kernelGuard);
+
+        //  1.  To create a System identity,
         createSystemIdentity();
-        //  TODO start
+        //  2.  To create native Processor and ProcessorCores
+        //      along with DeviceTypes for both
+        DeviceType * processorDeviceType,
+                   * processorCoreDeviceType;
+        createDeviceType(_systemIdentity,
+                         DeviceTypeId::HostProcessor,
+                         defaultDeviceTypeName(DeviceTypeId::HostProcessor),
+                         processorDeviceType);
+        Q_ASSERT(processorDeviceType != nullptr);
+        createDeviceType(_systemIdentity,
+                         DeviceTypeId::HostProcessorCore,
+                         defaultDeviceTypeName(DeviceTypeId::HostProcessorCore),
+                         processorCoreDeviceType);
+        Q_ASSERT(processorCoreDeviceType != nullptr);
+        Processor * processor = nullptr;
+        createProcessor(
+            _systemIdentity,
+            processorDeviceType,
+            0,
+            processor);
+        Q_ASSERT(processor != nullptr);
+        int numHosrtCores = QThread::idealThreadCount();
+        numHosrtCores = std::max(1, std::min(255, numHosrtCores));
+        //  TODO cores
+        //  3.  To create the default Executor and
+        //      ExecutionEnvironment.
+        //  TODO
+        //  4.  To create an init process with a single
+        //      native thread (both owned by System identity),
+        //  TODO
+        //  5.  And start that init thread
+        //  TODO
     }
 
     //  Perform state change
@@ -172,20 +199,22 @@ void Kernel::stop() noexcept
     }
 
     //  Terminate all native threads, politrly if
-    //  possible, forcefully otherwise
+    //  possible, forcibly otherwise
     //  TODO
 
     //  Destroy all kernel objects and clear the
     //  primary and secondary caches
     {
         emuone::util::Lock _1(kernelGuard);
-        for (Object * object : _objects.values())
+        _shutdownInProgress = true; //  we're killing EVERYTHING!
+        for (Object * object : std::as_const(_objects))
         {
             delete object;
         }
-        Q_ASSERT(_objects.isEmpty());
-        Q_ASSERT(_systemIdentity == nullptr);
+        _objects.clear();
+        _systemIdentity = nullptr;
         //  TODO other secondary caches
+        _shutdownInProgress = false;    //  we're done shutting down the Kernel
     }
 
     //  Perform state change

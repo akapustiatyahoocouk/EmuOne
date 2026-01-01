@@ -17,6 +17,15 @@
 
 namespace emuone::hades::kernel
 {
+    enum class StatusCode : uint32_t
+    {
+        Success         = 0x00000000,
+        InvalidArgument = 0x00000001,
+        AlreadyExists   = 0x00000002,
+        DoesNotExist    = 0x00000003,
+        UnknownError    = 0x7FFFFFFF
+    };
+
     /// \class Oid emuone-hades/API.hpp
     /// \brief The Lernel Object ID - unique.
     class EMUONE_HADES_PUBLIC Oid final
@@ -28,7 +37,16 @@ namespace emuone::hades::kernel
     private:
         static const uint32_t _InvalidImpl = 0;
     public:
+        //  Special OIDs
         static const Oid    Invalid;
+
+        //  Fixed OIDs
+        static const Oid    MinFixedOid;    //  inclusive
+        static const Oid    MaxFixedOid;    //  inclusive
+
+        //  Random OIDs
+        static const Oid    MinRandomOid;   //  inclusive
+        static const Oid    MaxRandomOid;   //  inclusive
 
         //////////
         //  Construction/destruction/assignment
@@ -66,6 +84,20 @@ namespace emuone::hades::kernel
         //  Implementation
     private:
         uint32_t    _impl;
+    };
+
+    /// \brief
+    ///     Standard device type IDs.
+    enum DeviceTypeId : uint16_t
+    {
+        Amd64Processor      = 0x0100,
+        Amd64ProcessorCore  = 0x0101,
+#if defined(Q_PROCESSOR_X86_64)
+        HostProcessor       = Amd64Processor,
+        HostProcessorCore   = Amd64ProcessorCore,
+#else
+    #error Unsupported processor architecture
+#endif
     };
 }
 

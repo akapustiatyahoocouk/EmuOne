@@ -25,8 +25,26 @@ namespace emuone::hades::kernel
     class UserIdentity;
     class SyntheticIdentity;
 
+    class Executor;
+    class NativeExecutor;
+    class EmulatedExecutor;
+    class ExecutionEnvironment;
+    class NativeExecutionEnvironment;
+
+    class DeviceType;
+    class Device;
+    class Processor;
+    class ProcessorCore;
+
+    //  Pointers (used as output parameters in Kernel services)
+    using PDeviceType = DeviceType*;
+    using PDevice = Device*;
+    using PProcessor = Processor*;
+    using PProcessorCore = ProcessorCore*;
+
     //  Collections
     using Objects = QSet<Object*>;
+    using Devices = QSet<Device*>;
 }
 
 //  End of emuone-hades/Classes.hpp

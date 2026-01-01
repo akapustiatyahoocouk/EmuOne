@@ -1,5 +1,5 @@
 //
-//  emuone-hades/kernel/SystemIdentity.cpp - emuone::hades::kernel::SystemIdentity class implementation
+//  emuone-hades/kernel/DeviceType.cpp - emuone::hades::kernel::DeviceType class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -19,22 +19,16 @@ using namespace emuone::hades::kernel;
 
 //////////
 //  Construction/destruction
-SystemIdentity::SystemIdentity(Kernel * kernel, const Oid & oid)
-    :   Identity(kernel, oid)
+DeviceType::DeviceType(Kernel * kernel, const Oid & oid, Identity * owner,
+                       uint16_t deviceTypeId_, const QString & name_)
+    :   Object(kernel, oid, owner),
+        deviceTypeId(deviceTypeId_),
+        name(name_)
 {
-    //  Add to kernel cache(s)
-    Q_ASSERT(kernel->_systemIdentity == nullptr);
-    kernel->_systemIdentity = this; //  NOT a "reference"!
 }
 
-SystemIdentity::~SystemIdentity()
+DeviceType::~DeviceType()
 {
-    if (!kernel->_shutdownInProgress)
-    {   //  On shutdown everything will be force-destroyed
-        //  Remove from kernel cache(s)
-        Q_ASSERT(kernel->_systemIdentity == this);
-        kernel->_systemIdentity = nullptr;  //  NOT a "reference"!
-    }
 }
 
-//  End of emuone-hades/kernel/SystemIdentity.cpp
+//  End of emuone-hades/kernel/DeviceType.cpp

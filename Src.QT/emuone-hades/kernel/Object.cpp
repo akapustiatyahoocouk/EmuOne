@@ -56,29 +56,32 @@ Object::~Object()
 {
     Q_ASSERT(kernel->kernelGuard.isLockedByCurrentThread());
 
-    //  Break owner/object links
-    if (owner == this)
-    {   //  Must be a system identity
-        //  Owner and owned object no longer "refer to" each other
-        Q_ASSERT(this->referenceCount >= 2);
-        owner->referenceCount -= 2;
-    }
-    else
-    {   //  Just an object
-        Q_ASSERT(owner->ownedObjects.contains(this));
-        owner->ownedObjects.remove(this);
-        //  Owner and owned object no longer "refer to" each other
-        Q_ASSERT(owner->referenceCount > 0);
-        Q_ASSERT(this->referenceCount > 0);
-        owner->referenceCount--;
-        this->referenceCount--;
-    }
+    if (!kernel->_shutdownInProgress)
+    {   //  On shutdown everything will be force-destroyed
+        //  Break owner/object links
+        if (owner == this)
+        {   //  Must be a system identity
+            //  Owner and owned object no longer "refer to" each other
+            Q_ASSERT(this->referenceCount >= 2);
+            owner->referenceCount -= 2;
+        }
+        else
+        {   //  Just an object
+            Q_ASSERT(owner->ownedObjects.contains(this));
+            owner->ownedObjects.remove(this);
+            //  Owner and owned object no longer "refer to" each other
+            Q_ASSERT(owner->referenceCount > 0);
+            Q_ASSERT(this->referenceCount > 0);
+            owner->referenceCount--;
+            this->referenceCount--;
+        }
 
-    //  Remove from to kernel cache(s)
-    Q_ASSERT(kernel->_objects.value(oid, nullptr) == this);
-    kernel->_objects.remove(oid);
-    Q_ASSERT(this->referenceCount == 1);    //  otherwise destruction is an error
-    referenceCount--;
+        //  Remove from kernel cache(s)
+        Q_ASSERT(kernel->_objects.value(oid, nullptr) == this);
+        kernel->_objects.remove(oid);
+        Q_ASSERT(this->referenceCount == 1);    //  otherwise destruction is an error
+        referenceCount--;
+    }
 }
 
 //  End of emuone-hades/kernel/Object.cpp

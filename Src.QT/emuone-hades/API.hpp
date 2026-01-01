@@ -38,5 +38,7 @@
 #include "emuone-hades/kernel/Kernel.hpp"
 #include "emuone-hades/kernel/Object.hpp"
 #include "emuone-hades/kernel/Identity.hpp"
+#include "emuone-hades/kernel/Executor.hpp"
+#include "emuone-hades/kernel/DeviceType.hpp"
 
 //  End of emuone-hades/API.hpp

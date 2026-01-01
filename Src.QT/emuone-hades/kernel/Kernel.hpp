@@ -93,9 +93,49 @@ namespace emuone::hades::kernel
         void            setVersion(const QVersionNumber & version);
 
         //////////
+        //  Operations (object management)
+    public:
+        Oid             generateUnusedOid();
+
+        //////////
         //  Operations (identity management)
     public:
-        SystemIdentity *createSystemIdentity();
+        StatusCode      createSystemIdentity();
+
+        //////////
+        //  Operations (device type management)
+    public:
+        StatusCode      createDeviceType(
+                                Identity * owner,
+                                uint16_t deviceTypeId,
+                                const QString & name,
+                                PDeviceType & deviceType
+                            );
+        static QString  defaultDeviceTypeName(uint16_t deviceTypeId);
+
+        //////////
+        //  Operations (device type management)
+    public:
+        StatusCode      createDevice(
+                                Identity * owner,
+                                DeviceType * deviceType,
+                                uint16_t deviceId,
+                                const QString & name,
+                                PDevice & device
+                            );
+        StatusCode      createProcessor(
+                            Identity * owner,
+                            DeviceType * deviceType,
+                            uint8_t processorId,
+                            PProcessor & processor
+                        );
+        StatusCode      createProcessorCore(
+                            Identity * owner,
+                            DeviceType * deviceType,
+                            Processor * processor,
+                            uint8_t coreId,
+                            PProcessorCore & processorCore
+                        );
 
         //////////
         //  Implementation
@@ -116,6 +156,8 @@ namespace emuone::hades::kernel
         emuone::util::Mutex kernelGuard;
 
     private:
+        bool            _shutdownInProgress = false;
+
         //  If a process is asked to terminate but does not
         //  do so within nthe specified time, it is force-killed
         static const int _GraceBeforeKillMs = 10000;

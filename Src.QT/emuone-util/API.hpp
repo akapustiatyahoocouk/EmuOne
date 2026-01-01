@@ -63,6 +63,7 @@
 #include <QMutex>
 #include <QMutexLocker>
 #include <QQueue>
+#include <QRandomGenerator>
 #include <QRegularExpression>
 #include <QStyledItemDelegate>
 #include <QStyleFactory>
