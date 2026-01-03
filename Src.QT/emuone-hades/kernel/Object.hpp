@@ -27,6 +27,9 @@ namespace emuone::hades::kernel
         friend class Identity;
         friend class SystemIdentity;
         friend class DeviceType;
+        friend class Device;
+        friend class Processor;
+        friend class ProcessorCore;
 
         //////////
         //  All members are private - for Kernel only
@@ -40,7 +43,7 @@ namespace emuone::hades::kernel
 
         //////////
         //  Construction/destruction
-        Object(Kernel * kernel, const Oid & oid, Identity * owner);
+        Object(Kernel * kernel, const Oid & oid, Identity * ownerOrSelf);
         virtual ~Object();
 
         //////////

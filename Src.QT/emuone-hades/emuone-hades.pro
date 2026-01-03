@@ -8,8 +8,10 @@ SOURCES += \
     Component.cpp \
     devices/ExternalFileSystem.cpp \
     devices/ExternalFileSystemEditor.cpp \
+    kernel/Device.cpp \
     kernel/DeviceType.cpp \
     kernel/Identity.cpp \
+    kernel/Kernel.DeviceManagement.cpp \
     kernel/Kernel.DeviceTypeManagement.cpp \
     kernel/Kernel.IdentityManagement.cpp \
     kernel/Kernel.ObjectManagement.cpp \
@@ -17,6 +19,8 @@ SOURCES += \
     kernel/KernelEditor.cpp \
     kernel/Object.cpp \
     kernel/Oid.cpp \
+    kernel/Processor.cpp \
+    kernel/ProcessorCore.cpp \
     kernel/SystemIdentity.cpp
 
 HEADERS += \
@@ -27,6 +31,7 @@ HEADERS += \
     Linkage.hpp \
     devices/ExternalFileSystem.hpp \
     kernel/DataTypes.hpp \
+    kernel/Device.hpp \
     kernel/DeviceType.hpp \
     kernel/Executor.hpp \
     kernel/Identity.hpp \

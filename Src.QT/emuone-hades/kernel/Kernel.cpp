@@ -149,37 +149,57 @@ void Kernel::start()
         emuone::util::Lock _1(kernelGuard);
 
         //  1.  To create a System identity,
-        createSystemIdentity();
+        SystemIdentity * systemIdentity = nullptr;
+        createSystemIdentity(systemIdentity);
+
         //  2.  To create native Processor and ProcessorCores
         //      along with DeviceTypes for both
         DeviceType * processorDeviceType,
                    * processorCoreDeviceType;
-        createDeviceType(_systemIdentity,
-                         DeviceTypeId::HostProcessor,
-                         defaultDeviceTypeName(DeviceTypeId::HostProcessor),
-                         processorDeviceType);
+        createDeviceType(
+            systemIdentity,
+            DeviceTypeId::HostProcessor,
+            defaultDeviceTypeName(DeviceTypeId::HostProcessor),
+            processorDeviceType);
         Q_ASSERT(processorDeviceType != nullptr);
-        createDeviceType(_systemIdentity,
-                         DeviceTypeId::HostProcessorCore,
-                         defaultDeviceTypeName(DeviceTypeId::HostProcessorCore),
-                         processorCoreDeviceType);
+
+        createDeviceType(
+            systemIdentity,
+            DeviceTypeId::HostProcessorCore,
+            defaultDeviceTypeName(DeviceTypeId::HostProcessorCore),
+            processorCoreDeviceType);
         Q_ASSERT(processorCoreDeviceType != nullptr);
+
         Processor * processor = nullptr;
         createProcessor(
-            _systemIdentity,
+            systemIdentity,
             processorDeviceType,
-            0,
+            ProcessorId(0),
             processor);
         Q_ASSERT(processor != nullptr);
-        int numHosrtCores = QThread::idealThreadCount();
-        numHosrtCores = std::max(1, std::min(255, numHosrtCores));
-        //  TODO cores
+
+        int numHostCores = QThread::idealThreadCount();
+        numHostCores = std::max(1, std::min(255, numHostCores));
+        for (int i = 0; i < numHostCores; i++)
+        {
+            ProcessorCore * processorCore = nullptr;
+            createProcessorCore(
+                systemIdentity,
+                processorCoreDeviceType,
+                processor,
+                CoreId(i),
+                processorCore);
+            Q_ASSERT(processorCore != nullptr);
+        }
+
         //  3.  To create the default Executor and
         //      ExecutionEnvironment.
+
         //  TODO
         //  4.  To create an init process with a single
         //      native thread (both owned by System identity),
         //  TODO
+
         //  5.  And start that init thread
         //  TODO
     }
@@ -207,12 +227,15 @@ void Kernel::stop() noexcept
     {
         emuone::util::Lock _1(kernelGuard);
         _shutdownInProgress = true; //  we're killing EVERYTHING!
-        for (Object * object : std::as_const(_objects))
+        for (Object * object : _objects.values())   //  shallow clone
         {
             delete object;
         }
-        _objects.clear();
-        _systemIdentity = nullptr;
+        Q_ASSERT(_objects.isEmpty());
+        Q_ASSERT(_identities.isEmpty());
+        Q_ASSERT(_systemIdentity == nullptr);
+        Q_ASSERT(_deviceTypes.isEmpty());
+        Q_ASSERT(_processors.isEmpty());
         //  TODO other secondary caches
         _shutdownInProgress = false;    //  we're done shutting down the Kernel
     }

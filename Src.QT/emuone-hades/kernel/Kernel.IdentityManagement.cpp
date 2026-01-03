@@ -19,12 +19,15 @@ using namespace emuone::hades::kernel;
 
 //////////
 //  Operations (identity management)
-StatusCode Kernel::createSystemIdentity()
+StatusCode Kernel::createSystemIdentity(
+        PSystemIdentity & systemIdentity
+    )
 {
     Q_ASSERT(kernelGuard.isLockedByCurrentThread());
     Q_ASSERT(_systemIdentity == nullptr);   //  One only per Kernel!
 
-    auto systemIdentity = new SystemIdentity(this, Oid(1));
+    //  Create System Identity
+    systemIdentity = new SystemIdentity(this, generateUnusedOid());
     Q_ASSERT(systemIdentity == _systemIdentity);
     Q_ASSERT(_objects.value(systemIdentity->oid, nullptr) == systemIdentity);
     return StatusCode::Success;

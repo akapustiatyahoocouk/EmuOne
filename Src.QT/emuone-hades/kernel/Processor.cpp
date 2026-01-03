@@ -1,5 +1,5 @@
 //
-//  emuone-hades/kernel/DeviceType.cpp - emuone::hades::kernel::DeviceType class implementation
+//  emuone-hades/kernel/Processor.cpp - emuone::hades::kernel::Processor class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -19,31 +19,37 @@ using namespace emuone::hades::kernel;
 
 //////////
 //  Construction/destruction
-DeviceType::DeviceType(
-        Kernel * kernel, const Oid & oid, Identity * owner,
-        DeviceTypeId deviceTypeId, const QString & name
-    ) : Object(kernel, oid, owner),
+Processor::Processor(
+        Kernel * kernel,
+        const Oid & oid,
+        Identity * owner,
+        DeviceType * deviceType,
+        ProcessorId processorId
+    ) : Device(
+            kernel, oid, owner,
+            deviceType,
+            DeviceId(processorId),
+            "cpu" + emuone::util::toString(int(processorId))),
         //  Properties
-        deviceTypeId(deviceTypeId),
-        name(name)
+        processorId(processorId)
 {
     Q_ASSERT(kernel->kernelGuard.isLockedByCurrentThread());
-    Q_ASSERT(deviceTypeId != DeviceTypeId::Invalid);
+    Q_ASSERT(deviceType->deviceTypeId == DeviceTypeId::HostProcessor);
 
     //  Add to Kernel's secondary caches
     //  All of them do not count as "references"
-    Q_ASSERT(!kernel->_deviceTypes.contains(deviceTypeId));
-    kernel->_deviceTypes[deviceTypeId] = this;
+    Q_ASSERT(!kernel->_processors.contains(processorId));
+    kernel->_processors[processorId] = this;
 }
 
-DeviceType::~DeviceType()
+Processor::~Processor()
 {
     Q_ASSERT(kernel->kernelGuard.isLockedByCurrentThread());
 
-    //  Remove from Kernel's secondary caches
+    //  Remove from Kernel's secondarycaches
     //  All of them do not count as "references"
-    Q_ASSERT(kernel->_deviceTypes.value(deviceTypeId, nullptr) == this);
-    kernel->_deviceTypes.remove(deviceTypeId);
+    Q_ASSERT(kernel->_processors.value(processorId, nullptr) == this);
+    kernel->_processors.remove(processorId);
 }
 
-//  End of emuone-hades/kernel/DeviceType.cpp
+//  End of emuone-hades/kernel/Processor.cpp

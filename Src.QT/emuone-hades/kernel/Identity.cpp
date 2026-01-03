@@ -19,13 +19,25 @@ using namespace emuone::hades::kernel;
 
 //////////
 //  Construction/destruction
-Identity::Identity(Kernel * kernel, const Oid & oid)
-    :   Object(kernel, oid, SelfOwner)
+Identity::Identity(
+        Kernel * kernel, const Oid & oid,
+        const QString & name
+    ) : Object(kernel, oid, SelfOwner),
+        //  Properties
+        name(name)
 {
+    //  Add to kernel secondary cache(s)
+    //  All of them do not count as "references"
+    Q_ASSERT(!kernel->_identities.contains(name));
+    kernel->_identities[name] = this;
 }
 
 Identity::~Identity()
 {
+    //  Remove from kernel secondary cache(s)
+    //  All of them do not count as "references"
+    Q_ASSERT(kernel->_identities.value(name, nullptr) == this);
+    kernel->_identities.remove(name);
 }
 
 //  End of emuone-hades/kernel/Identity.cpp

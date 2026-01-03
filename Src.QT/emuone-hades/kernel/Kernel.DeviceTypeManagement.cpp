@@ -21,35 +21,35 @@ using namespace emuone::hades::kernel;
 //  Operations (device type management)
 StatusCode Kernel::createDeviceType(
         Identity * owner,
-        uint16_t deviceTypeId,
+        DeviceTypeId deviceTypeId,
         const QString & name,
         PDeviceType & deviceType
     )
 {
     Q_ASSERT(kernelGuard.isLockedByCurrentThread());
+    Q_ASSERT(deviceTypeId != DeviceTypeId::Invalid);
 
-    //  The deviceTypeId/name must NOT already be in
-    //  use by an existing DeviceType
-    for (auto object : _objects)
-    {
-        if (auto deviceType =
-            dynamic_cast<DeviceType*>(object))
-        {
-            if (deviceType->deviceTypeId == deviceTypeId ||
-                deviceType->name == name)
-            {   //  OOPS!
-                deviceType = nullptr;
-                return StatusCode::AlreadyExists;
-            }
-        }
+    //  Ensure deviceTypeId uniqueness
+    if (_deviceTypes.contains(deviceTypeId))
+    {   //  OOPS!
+        deviceType = nullptr;
+        return StatusCode::AlreadyExists;
     }
+
     //  Create new DeviceType.
-    deviceType = new DeviceType(this, generateUnusedOid(), owner,
-                                deviceTypeId, name);;
+    deviceType =
+        new DeviceType(
+            this,
+            generateUnusedOid(),
+            owner,
+            deviceTypeId,
+            name);
+    Q_ASSERT(_deviceTypes.value(deviceTypeId) == deviceType);
+    Q_ASSERT(_objects.value(deviceType->oid, nullptr) == deviceType);
     return StatusCode::Success;
 }
 
-QString Kernel::defaultDeviceTypeName(uint16_t deviceTypeId)
+QString Kernel::defaultDeviceTypeName(DeviceTypeId deviceTypeId)
 {
     char s[64];
 

@@ -23,16 +23,17 @@ Identity *const Object::SelfOwner = reinterpret_cast<Identity*>(0x1234);
 
 //////////
 //  Construction/destruction
-Object::Object(Kernel * kernel_, const Oid & oid_, Identity * owner_)
-    :   kernel(kernel_),
-        oid(oid_),
-        owner((owner_ == SelfOwner) ? static_cast<Identity*>(this) : owner)
+Object::Object(
+        Kernel * kernel, const Oid & oid, Identity * ownerOrSelf
+    ) : kernel(kernel),
+        oid(oid),
+        owner((ownerOrSelf == SelfOwner) ? static_cast<Identity*>(this) : ownerOrSelf)
 {
     Q_ASSERT(kernel != nullptr);
     Q_ASSERT(owner != nullptr);
     Q_ASSERT(kernel->kernelGuard.isLockedByCurrentThread());
 
-    //  Add to kernel cache(s)
+    //  Add to Kernel's caches
     Q_ASSERT(!kernel->_objects.contains(oid));
     kernel->_objects[oid] = this;
     referenceCount++;
@@ -75,13 +76,14 @@ Object::~Object()
             owner->referenceCount--;
             this->referenceCount--;
         }
-
-        //  Remove from kernel cache(s)
-        Q_ASSERT(kernel->_objects.value(oid, nullptr) == this);
-        kernel->_objects.remove(oid);
-        Q_ASSERT(this->referenceCount == 1);    //  otherwise destruction is an error
-        referenceCount--;
     }
+
+    //  Remove from Kernel's caches
+    Q_ASSERT(kernel->_objects.value(oid, nullptr) == this);
+    kernel->_objects.remove(oid);
+    Q_ASSERT(kernel->_shutdownInProgress ||
+             this->referenceCount == 1);    //  otherwise destruction is an error
+    referenceCount--;
 }
 
 //  End of emuone-hades/kernel/Object.cpp

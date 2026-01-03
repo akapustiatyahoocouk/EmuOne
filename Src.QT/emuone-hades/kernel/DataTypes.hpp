@@ -88,8 +88,8 @@ namespace emuone::hades::kernel
 
     /// \brief
     ///     Standard device type IDs.
-    enum DeviceTypeId : uint16_t
-    {
+    enum class DeviceTypeId : uint16_t
+    {   //  An ID of a DeviceType, unique per Kernel
         Amd64Processor      = 0x0100,
         Amd64ProcessorCore  = 0x0101,
 #if defined(Q_PROCESSOR_X86_64)
@@ -98,6 +98,22 @@ namespace emuone::hades::kernel
 #else
     #error Unsupported processor architecture
 #endif
+        Invalid = 0xFFFF    //  never used for actual DeviceTypes
+    };
+
+    enum class DeviceId : uint16_t
+    {   //  An ID of the Device, unique per DeviceType
+        Invalid = 0xFFFF
+    };
+
+    enum class ProcessorId : uint8_t
+    {   //  An ID of a Processor, unique per Kernel
+        Invalid = 0xFF
+    };
+
+    enum class CoreId : uint8_t
+    {   //  An ID of a ProcessorCore, unique per Processor
+        Invalid = 0xFF
     };
 }
 

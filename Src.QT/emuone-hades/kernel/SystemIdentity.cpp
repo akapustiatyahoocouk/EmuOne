@@ -20,21 +20,20 @@ using namespace emuone::hades::kernel;
 //////////
 //  Construction/destruction
 SystemIdentity::SystemIdentity(Kernel * kernel, const Oid & oid)
-    :   Identity(kernel, oid)
+    :   Identity(kernel, oid, Name)
 {
-    //  Add to kernel cache(s)
+    //  Add to kernel secondary cache(s)
+    //  All of them do not count as "references"
     Q_ASSERT(kernel->_systemIdentity == nullptr);
-    kernel->_systemIdentity = this; //  NOT a "reference"!
+    kernel->_systemIdentity = this;
 }
 
 SystemIdentity::~SystemIdentity()
 {
-    if (!kernel->_shutdownInProgress)
-    {   //  On shutdown everything will be force-destroyed
-        //  Remove from kernel cache(s)
-        Q_ASSERT(kernel->_systemIdentity == this);
-        kernel->_systemIdentity = nullptr;  //  NOT a "reference"!
-    }
+    //  Remove from kernel's secondary cache(s)
+    //  All of them do not count as "references"
+    Q_ASSERT(kernel->_systemIdentity == this);
+    kernel->_systemIdentity = nullptr;
 }
 
 //  End of emuone-hades/kernel/SystemIdentity.cpp

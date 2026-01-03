@@ -21,6 +21,8 @@ using namespace emuone::hades::kernel;
 //  Operations (object management)
 Oid Kernel::generateUnusedOid()
 {
+    Q_ASSERT(kernelGuard.isLockedByCurrentThread());
+
     uint32_t spread = Oid::MaxRandomOid._impl - Oid::MinRandomOid._impl + 1;
     for (; ; )
     {   //  Will succeed eventually

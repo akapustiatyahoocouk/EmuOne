@@ -27,7 +27,12 @@ namespace emuone::hades::kernel
         EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Kernel)
 
         friend class Object;
+        friend class Identity;
         friend class SystemIdentity;
+        friend class DeviceType;
+        friend class Device;
+        friend class Processor;
+        friend class ProcessorCore;
 
         //////////
         //  Constants
@@ -100,21 +105,23 @@ namespace emuone::hades::kernel
         //////////
         //  Operations (identity management)
     public:
-        StatusCode      createSystemIdentity();
+        StatusCode      createSystemIdentity(
+                                PSystemIdentity & systemIdentity
+                            );
 
         //////////
         //  Operations (device type management)
     public:
         StatusCode      createDeviceType(
                                 Identity * owner,
-                                uint16_t deviceTypeId,
+                                DeviceTypeId deviceTypeId,
                                 const QString & name,
                                 PDeviceType & deviceType
                             );
-        static QString  defaultDeviceTypeName(uint16_t deviceTypeId);
+        static QString  defaultDeviceTypeName(DeviceTypeId deviceTypeId);
 
         //////////
-        //  Operations (device type management)
+        //  Operations (device management)
     public:
         StatusCode      createDevice(
                                 Identity * owner,
@@ -124,18 +131,18 @@ namespace emuone::hades::kernel
                                 PDevice & device
                             );
         StatusCode      createProcessor(
-                            Identity * owner,
-                            DeviceType * deviceType,
-                            uint8_t processorId,
-                            PProcessor & processor
-                        );
+                                Identity * owner,
+                                DeviceType * deviceType,
+                                ProcessorId processorId,
+                                PProcessor & processor
+                            );
         StatusCode      createProcessorCore(
-                            Identity * owner,
-                            DeviceType * deviceType,
-                            Processor * processor,
-                            uint8_t coreId,
-                            PProcessorCore & processorCore
-                        );
+                                Identity * owner,
+                                DeviceType * deviceType,
+                                Processor * processor,
+                                CoreId coreId,
+                                PProcessorCore & processorCore
+                            );
 
         //////////
         //  Implementation
@@ -168,7 +175,10 @@ namespace emuone::hades::kernel
 
         //  Secondary object caches for access speedup -
         //  all of them do NOT count as "references"
-        SystemIdentity *    _systemIdentity = nullptr;
+        QMap<QString, Identity*>    _identities;
+        SystemIdentity *            _systemIdentity = nullptr;
+        QMap<DeviceTypeId, DeviceType*> _deviceTypes;
+        QMap<ProcessorId, Processor*>   _processors;
     };
 
     namespace Ui { class KernelEditor; }

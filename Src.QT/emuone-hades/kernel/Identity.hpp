@@ -33,16 +33,17 @@ namespace emuone::hades::kernel
 
         //////////
         //  Construction/destruction
-        Identity(Kernel * kernel, const Oid & oid);
+        Identity(Kernel * kernel, const Oid & oid,
+                 const QString & name);
         virtual ~Identity();
+
+        //////////
+        //  Properties
+        QString         name;
 
         //////////
         //  Associations
         Objects         ownedObjects;   //  count as references
-
-        //////////
-        //  Operations
-        virtual QString name() const = 0;
     };
 
     /// \class SystemIdentity emuone-hades/API.hpp
@@ -66,10 +67,6 @@ namespace emuone::hades::kernel
         //  Construction/destruction
         SystemIdentity(Kernel * kernel, const Oid & oid);
         virtual ~SystemIdentity();
-
-        //////////
-        //  Identity
-        virtual QString name() const override { return Name; }
     };
 }
 

@@ -19,12 +19,15 @@ namespace emuone::hades::kernel
 {
     /// \class DeviceType emuone-hades/API.hpp
     /// \brief The device type.
-    class EMUONE_HADES_PUBLIC DeviceType
+    class EMUONE_HADES_PUBLIC DeviceType final
         :   public Object
     {
         EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(DeviceType)
 
         friend class Kernel;
+        friend class Device;
+        friend class Processor;
+        friend class ProcessorCore;
 
         //////////
         //  All members are private - for Kernel only
@@ -33,17 +36,17 @@ namespace emuone::hades::kernel
         //////////
         //  Construction/destruction
         DeviceType(Kernel * kernel, const Oid & oid, Identity * owner,
-                   uint16_t deviceTypeId, const QString & name);
+                   DeviceTypeId deviceTypeId, const QString & name);
         virtual ~DeviceType();
 
         //////////
         //  Properties
-        const uint16_t  deviceTypeId;
-        const QString   name;
+        const DeviceTypeId  deviceTypeId;
+        const QString       name;
 
         //////////
         //  Associations
-        Devices         devices;    //  count as references
+        Devices             devices;    //  count as references
     };
 }
 
