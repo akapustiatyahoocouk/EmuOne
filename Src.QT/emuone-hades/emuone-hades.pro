@@ -23,13 +23,16 @@ SOURCES += \
     kernel/Kernel.ExecutorManagement.cpp \
     kernel/Kernel.IdentityManagement.cpp \
     kernel/Kernel.ObjectManagement.cpp \
+    kernel/Kernel.ProcessManagement.cpp \
     kernel/Kernel.cpp \
     kernel/KernelConsoleDisplaySurface.cpp \
     kernel/KernelEditor.cpp \
     kernel/NativeExecutionEnvironment.cpp \
     kernel/NativeExecutor.cpp \
+    kernel/NativeProcess.cpp \
     kernel/Object.cpp \
     kernel/Oid.cpp \
+    kernel/Process.cpp \
     kernel/Processor.cpp \
     kernel/ProcessorCore.cpp \
     kernel/SystemIdentity.cpp

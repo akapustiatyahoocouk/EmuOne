@@ -34,6 +34,7 @@ namespace emuone::hades::kernel
         friend class NativeExecutor;
         friend class ExecutionEnvironment;
         friend class NativeExecutionEnvironment;
+        friend class Process;
 
         //////////
         //  All members are private - for Kernel only

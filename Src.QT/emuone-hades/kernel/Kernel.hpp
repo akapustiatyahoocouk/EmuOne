@@ -36,6 +36,7 @@ namespace emuone::hades::kernel
         friend class Executor;
         friend class NativeExecutor;
         friend class ExecutionEnvironment;
+        friend class Process;
 
         //////////
         //  Constants
@@ -207,6 +208,21 @@ namespace emuone::hades::kernel
                             );
 
         //////////
+        //  Operations (process management)
+    public:
+        StatusCode      createNativeProcess(
+                                Identity * owner,
+                                NativeExecutionEnvironment * executionEnvironment,
+                                Process * parent,
+                                PriorityClass priorityClass,
+                                const QString & name,
+                                const QString & command,
+                                const QString & commandLine,
+                                const QString & currentDirectory,
+                                PNativeProcess & nativeProcess
+                            );
+
+        //////////
         //  Implementation
     private:
         State           _state = State::Constructed;
@@ -243,6 +259,7 @@ namespace emuone::hades::kernel
         QMap<ProcessorId, Processor*>   _processors;
         QMap<QString, Executor*>    _executors;
         QMap<QString, ExecutionEnvironment*>    _executionEnvironments;
+        QMap<Oid, Process*>         _processes;
     };
 
     namespace Ui { class KernelEditor; }

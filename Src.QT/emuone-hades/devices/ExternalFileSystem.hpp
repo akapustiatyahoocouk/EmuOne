@@ -167,8 +167,7 @@ namespace emuone::hades::devices
         public:
             void        requestStop() { _stopRequested = true; }
             void        postResponse(Response * response)
-            {
-                Q_ASSERT(response != nullptr);
+            {   //  Allow nullptrs to break wait on stop()
                 _pendingResponses.enqueue(response);
             }
 

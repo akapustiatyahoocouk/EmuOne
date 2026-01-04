@@ -182,6 +182,7 @@ void TextTerminal::stop() noexcept
     //  Stop the notification thread, cleanly if possible...
     Q_ASSERT(_notificationThread != nullptr);
     _notificationThread->requestStop();
+    _notificationThread->postResponse(nullptr); //  ...to break the queue wait
     _notificationThread->wait(_NotificationThread::WaitChunkMs * 5);
     if (_notificationThread->isRunning())
     {   //  ...or dirtyli if not
@@ -326,7 +327,12 @@ void TextTerminal::_NotificationThread::run()
     {
         Response * response;
         if (_pendingResponses.tryDequeue(response, WaitChunkMs))
-        {   //  Dispatch one response...
+        {
+            if (response == nullptr)
+            {   //  The thread is being stopped - check for stop reauest
+                continue;
+            }
+            //  Dispatch one response...
             _extfs->dispatchResponse(response); //  TODO may throw
             delete response;
             //  ...and all subsequent ones which are ready

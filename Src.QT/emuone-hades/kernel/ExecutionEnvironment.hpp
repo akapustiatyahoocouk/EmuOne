@@ -26,6 +26,7 @@ namespace emuone::hades::kernel
 
         friend class Kernel;
         friend class NativeExecutionEnvironment;
+        friend class Process;
 
         //////////
         //  All members are private - for Kernel only
@@ -48,6 +49,7 @@ namespace emuone::hades::kernel
         //////////
         //  Associations
         Executors       affinity;   //  count as "references"
+        Processes       processes;
     };
 
     /// \class NativeExecutionEnvironment emuone-hades/API.hpp

@@ -53,6 +53,8 @@ ExecutionEnvironment::~ExecutionEnvironment()
 {
     if (!kernel->_shutdownInProgress)
     {   //  On shutdown everything will be force-destroyed
+        //  All Proxcesses must die first!
+        Q_ASSERT(processes.isEmpty());
         //  Un-link ExecutionEnvironment from Executors
         for (auto e : affinity)
         {

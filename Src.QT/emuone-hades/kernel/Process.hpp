@@ -19,12 +19,13 @@ namespace emuone::hades::kernel
 {
     /// \class Process emuone-hades/API.hpp
     /// \brief The Kernel's Process; pid_t == Oid.
-    class EMUONE_HADES_PUBLIC Process final
+    class EMUONE_HADES_PUBLIC Process
         :   public Object
     {
         EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Process)
 
         friend class Kernel;
+        friend class NativeProcess;
 
         //////////
         //  All members are private - for Kernel only
@@ -42,7 +43,15 @@ namespace emuone::hades::kernel
 
         //////////
         //  Construction/destruction
-        Process(Kernel * kernel, const Oid & oid, Identity * owner);
+        Process(Kernel * kernel, const Oid & oid, Identity * owner,
+                ExecutionEnvironment * executionEnvironment,
+                Process * parent,
+                PriorityClass priorityClass,
+                const QString & name,
+                const QString & command,
+                const QString & commandLine,
+                const QString & currentDirectory
+            );
         virtual ~Process();
 
         //////////
@@ -57,10 +66,40 @@ namespace emuone::hades::kernel
 
         //////////
         //  Associations
+        ExecutionEnvironment *  executionEnvironment;   //  counts as "reference"
         Process *       parent;     //  counts as "refrerence", can be nullptr
         Processes       children;   //  count as "references"
 
-        Threads         threads;
+        Threads         threads;    //  count as "references"
+        Thread *        mainThread = nullptr;   //  counts as "reference"
+    };
+
+    /// \class NativeProcess emuone-hades/API.hpp
+    /// \brief The Process running native (C++) code.
+    class EMUONE_HADES_PUBLIC NativeProcess final
+        :   public Process
+    {
+        EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(NativeProcess)
+
+        friend class Kernel;
+
+        //////////
+        //  All members are private - for Kernel only
+    private:
+
+        //////////
+        //  Construction/destruction
+        NativeProcess(
+                Kernel * kernel, const Oid & oid, Identity * owner,
+                NativeExecutionEnvironment * executionEnvironment,
+                Process * parent,
+                PriorityClass priorityClass,
+                const QString & name,
+                const QString & command,
+                const QString & commandLine,
+                const QString & currentDirectory
+            );
+        virtual ~NativeProcess();
     };
 }
 

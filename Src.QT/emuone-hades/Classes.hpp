@@ -37,7 +37,9 @@ namespace emuone::hades::kernel
     class ProcessorCore;
 
     class Process;
+    class NativeProcess;
     class Thread;
+    class NativeThread;
 
     //  Pointers (used as output parameters in Kernel services)
     using PSystemIdentity = SystemIdentity*;
@@ -54,8 +56,8 @@ namespace emuone::hades::kernel
     using PProcessor = Processor*;
     using PProcessorCore = ProcessorCore*;
 
-    using PProcess = Process*;
-    using PThread = Thread*;
+    using PNativeProcess = NativeProcess*;
+    using PNativeThread = NativeThread*;
 
     //  Collections
     using Objects = QSet<Object*>;

@@ -152,6 +152,7 @@ void Kernel::start()
     Q_ASSERT(_processors.isEmpty());
     Q_ASSERT(_executors.isEmpty());
     Q_ASSERT(_executionEnvironments.isEmpty());
+    Q_ASSERT(_processes.isEmpty());
     //  TODO other secondary caches
 
     //  To start the Kernel, we need several things...
@@ -230,6 +231,19 @@ void Kernel::start()
 
         //  4.  To create an init process with a single
         //      native thread (both owned by System identity),
+        NativeProcess * initProcess = nullptr;
+        createNativeProcess(
+            systemIdentity,
+            nativeExecutionEnvironment,
+            nullptr,
+            PriorityClass::Normal,
+            "init",
+            "init",
+            "iniy",
+            "",
+            initProcess);
+        Q_ASSERT(initProcess != nullptr &&
+                 initProcess->state == Process::State::Created);
         //  TODO
 
         //  5.  And start that init thread
@@ -270,6 +284,7 @@ void Kernel::stop() noexcept
         Q_ASSERT(_processors.isEmpty());
         Q_ASSERT(_executors.isEmpty());
         Q_ASSERT(_executionEnvironments.isEmpty());
+        Q_ASSERT(_processes.isEmpty());
         //  TODO other secondary caches
         _shutdownInProgress = false;    //  we're done shutting down the Kernel
     }
