@@ -43,6 +43,8 @@
 #include "emuone-hades/kernel/ExecutionEnvironment.hpp"
 #include "emuone-hades/kernel/DeviceType.hpp"
 #include "emuone-hades/kernel/Device.hpp"
+#include "emuone-hades/kernel/Process.hpp"
+#include "emuone-hades/kernel/Thread.hpp"
 
 //  Miscellaneous
 #include "emuone-hades/VirtualMachine.hpp"

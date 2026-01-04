@@ -50,7 +50,9 @@ HEADERS += \
     kernel/Executor.hpp \
     kernel/Identity.hpp \
     kernel/Kernel.hpp \
-    kernel/Object.hpp
+    kernel/Object.hpp \
+    kernel/Process.hpp \
+    kernel/Thread.hpp
 
 PRECOMPILED_HEADER = API.hpp
 

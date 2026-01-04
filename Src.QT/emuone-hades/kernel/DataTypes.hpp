@@ -127,6 +127,18 @@ namespace emuone::hades::kernel
 
     /// \brief An ID of a ProcessorCore, unique per Processor.
     using CoreId = Id<uint8_t>;
+
+    ///\brief The Process/Thread priority class
+    enum class PriorityClass
+    {
+        Idle,           ///< Only run where nothing else is ready.
+        LowPriority,    ///< Low-priority round-robin, boost priority when passed over.
+        Normal,         ///< Standard round-robin, boost priority when passed over..
+        HighPriority,   ///< High-priority round-robin.
+        TimeCritical,   ///< Oly preempt by other TimeCriticals.
+        Realtime        ///< Never preempt until it yields.
+    };
+
 }
 
 //  End of emuone-hades/kernel/DataTypes.hpp

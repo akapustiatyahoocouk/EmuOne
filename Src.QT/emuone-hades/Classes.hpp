@@ -36,6 +36,9 @@ namespace emuone::hades::kernel
     class Processor;
     class ProcessorCore;
 
+    class Process;
+    class Thread;
+
     //  Pointers (used as output parameters in Kernel services)
     using PSystemIdentity = SystemIdentity*;
     using PUserIdentity = UserIdentity*;
@@ -51,6 +54,9 @@ namespace emuone::hades::kernel
     using PProcessor = Processor*;
     using PProcessorCore = ProcessorCore*;
 
+    using PProcess = Process*;
+    using PThread = Thread*;
+
     //  Collections
     using Objects = QSet<Object*>;
     using Executors = QSet<Executor*>;
@@ -59,6 +65,8 @@ namespace emuone::hades::kernel
     using Devices = QSet<Device*>;
     using Processors = QSet<Processor*>;
     using ProcessorCores = QSet<ProcessorCore*>;
+    using Processes = QSet<Process*>;
+    using Threads = QSet<Thread*>;
 }
 
 //  End of emuone-hades/Classes.hpp
