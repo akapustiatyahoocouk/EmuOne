@@ -46,6 +46,11 @@ auto Kernel::createEditor(QWidget * parent) -> emuone::core::ComponentEditor *
     return new KernelEditor(parent, this);
 }
 
+bool Kernel::isConfigurationValid() const
+{   //  Nothing here
+    return true;
+}
+
 void Kernel::saveConfiguration(QDomElement & element) const
 {
     IComponent::saveConfiguration(element);
@@ -141,7 +146,12 @@ void Kernel::start()
     //  Kernel in non-persistable, so we must always
     //  perform a cold start
     Q_ASSERT(_objects.isEmpty());
+    Q_ASSERT(_identities.isEmpty());
     Q_ASSERT(_systemIdentity == nullptr);
+    Q_ASSERT(_deviceTypes.isEmpty());
+    Q_ASSERT(_processors.isEmpty());
+    Q_ASSERT(_executors.isEmpty());
+    Q_ASSERT(_executionEnvironments.isEmpty());
     //  TODO other secondary caches
 
     //  To start the Kernel, we need several things...
@@ -181,6 +191,7 @@ void Kernel::start()
 
         int numHostCores = QThread::idealThreadCount();
         numHostCores = std::max(1, std::min(255, numHostCores));
+        ProcessorCores processorCores;
         for (int i = 0; i < numHostCores; i++)
         {
             ProcessorCore * processorCore = nullptr;
@@ -191,12 +202,32 @@ void Kernel::start()
                 CoreId(static_cast<uint8_t>(i)),
                 processorCore);
             Q_ASSERT(processorCore != nullptr);
+            processorCores.insert(processorCore);
         }
 
-        //  3.  To create the default Executor and
+        //  3.  To create the default Executor(s) and
         //      ExecutionEnvironment.
+        NativeExecutors nativeExecutors;
+        for (auto processorCore : processorCores)
+        {
+            PNativeExecutor nativeExecutor = nullptr;
+            createNativeExecutor(
+                systemIdentity,
+                processorCore,
+                nativeExecutor);
+            Q_ASSERT(nativeExecutor != nullptr);
+            nativeExecutors.insert(nativeExecutor);
+        }
+        Q_ASSERT(!nativeExecutors.isEmpty());
 
-        //  TODO
+        PNativeExecutionEnvironment nativeExecutionEnvironment = nullptr;
+        createNativeExecutionEnvironment(
+            systemIdentity,
+            "SYSTEM",
+            nativeExecutors,
+            nativeExecutionEnvironment);
+        Q_ASSERT(nativeExecutionEnvironment != nullptr);
+
         //  4.  To create an init process with a single
         //      native thread (both owned by System identity),
         //  TODO
@@ -237,6 +268,8 @@ void Kernel::stop() noexcept
         Q_ASSERT(_systemIdentity == nullptr);
         Q_ASSERT(_deviceTypes.isEmpty());
         Q_ASSERT(_processors.isEmpty());
+        Q_ASSERT(_executors.isEmpty());
+        Q_ASSERT(_executionEnvironments.isEmpty());
         //  TODO other secondary caches
         _shutdownInProgress = false;    //  we're done shutting down the Kernel
     }

@@ -55,6 +55,13 @@ auto TextTerminal::createEditor(QWidget * parent) -> emuone::core::ComponentEdit
     return new TextTerminalEditor(parent, this);
 }
 
+bool TextTerminal::isConfigurationValid() const
+{
+    return isValidTerminalNumber(_terminalNumber) &&
+           isValidColumns(_columns) &&
+           isValidRows(_rows);
+}
+
 void TextTerminal::saveConfiguration(QDomElement & element) const
 {
     IDevice::saveConfiguration(element);

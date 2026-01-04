@@ -88,6 +88,11 @@ namespace emuone::hades::devices
         virtual auto    type() const -> emuone::core::IComponentType * override;
         virtual QString displayName() const override;
         virtual auto    createEditor(QWidget * parent) -> emuone::core::ComponentEditor * override;
+
+        //////////
+        //  emuone::core::IComponent (configuration)
+    public:
+        virtual bool    isConfigurationValid() const override;
         virtual void    saveConfiguration(QDomElement & element) const override;
         virtual void    restoreConfiguration(const QDomElement & element) override;
 

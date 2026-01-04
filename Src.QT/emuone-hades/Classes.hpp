@@ -41,6 +41,11 @@ namespace emuone::hades::kernel
     using PUserIdentity = UserIdentity*;
     using PSyntheticIdentity = SyntheticIdentity*;
 
+    using PExecutor = Executor*;
+    using PNativeExecutor = NativeExecutor*;
+    using PExecutionEnvironment = ExecutionEnvironment*;
+    using PNativeExecutionEnvironment = NativeExecutionEnvironment*;
+
     using PDeviceType = DeviceType*;
     using PDevice = Device*;
     using PProcessor = Processor*;
@@ -48,6 +53,9 @@ namespace emuone::hades::kernel
 
     //  Collections
     using Objects = QSet<Object*>;
+    using Executors = QSet<Executor*>;
+    using NativeExecutors = QSet<NativeExecutor*>;
+    using ExecutionEnvironments = QSet<ExecutionEnvironment*>;
     using Devices = QSet<Device*>;
     using Processors = QSet<Processor*>;
     using ProcessorCores = QSet<ProcessorCore*>;

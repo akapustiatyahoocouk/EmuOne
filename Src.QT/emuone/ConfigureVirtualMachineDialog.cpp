@@ -136,7 +136,7 @@ void ConfigureVirtualMachineDialog::_refresh()
         _ui->removeComponentPushButton->setEnabled(component != nullptr);
         _ui->buttonBox->button(QDialogButtonBox::StandardButton::Ok)->setEnabled(
             emuone::core::VirtualMachine::isValidName(_ui->nameLineEdit->text()) &&
-            _virtualMachine->architecture()->isValid(_virtualMachine) &&
+            _virtualMachine->isConfigurationValid() &&
             std::all_of(
                 _componentEditors.begin(),
                 _componentEditors.end(),

@@ -30,6 +30,10 @@ namespace emuone::hades::kernel
         friend class Device;
         friend class Processor;
         friend class ProcessorCore;
+        friend class Executor;
+        friend class NativeExecutor;
+        friend class ExecutionEnvironment;
+        friend class NativeExecutionEnvironment;
 
         //////////
         //  All members are private - for Kernel only

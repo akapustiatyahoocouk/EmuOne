@@ -120,6 +120,22 @@ namespace emuone::core
         ///     ComponentAdaptor requires no editor.
         virtual auto    createEditor(QWidget * parent) -> ComponentAdaptorEditor * = 0;
 
+        //////////
+        //  Operations (configuration)
+    public:
+        /// \brief
+        ///     Checks whether the current configuration of this
+        ///     component adaptor is valid.
+        /// \details
+        ///     A component adaptor will not permit setting invalid configuration
+        ///     properties via confoguration-affecting methods; however,
+        ///     that's no defense against a corrupt VM configuration
+        ///     file which has been manually altered.
+        /// \return
+        ///     True the current configuration of this component
+        ///     adaptor is valid, else false.
+        virtual bool    isConfigurationValid() const = 0;
+
         /// \brief
         ///     Saves the configuration of this component adaptor by
         ///     setting the attributes of an XML DOM element as needed.

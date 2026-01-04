@@ -136,6 +136,22 @@ namespace emuone::core
         ///     Component requires no editor
         virtual auto    createEditor(QWidget * parent) -> ComponentEditor * = 0;
 
+        //////////
+        //  Operations (configuration)
+    public:
+        /// \brief
+        ///     Checks whether the current configuration of this
+        ///     component is valid.
+        /// \details
+        ///     A component will not permit setting invalid configuration
+        ///     properties via confoguration-affecting methods; however,
+        ///     that's no defense against a corrupt VM configuration
+        ///     file which has been manually altered.
+        /// \return
+        ///     True the current configuration of this component
+        ///     is valid, else false.
+        virtual bool    isConfigurationValid() const = 0;
+
         /// \brief
         ///     Saves the configuration of this component by setting
         ///     the attributes of an XML DOM element as needed.

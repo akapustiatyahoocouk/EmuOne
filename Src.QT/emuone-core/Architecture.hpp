@@ -35,14 +35,18 @@ namespace emuone::core
         //  Operations
     public:
         /// \brief
-        ///     Performs the quick validity check of the specified VM.
-        /// \details
-        ///     The "quick check" means checking that all components mandatory
-        ///     for this Architecture are actually present in the VM and in the
-        ///     proper numbers (e.g. at most one Kernel/Monitor, etc.)
-        /// \return
-        ///     True if the VM is valid fr this architecture, false if not.
-        virtual bool    isValid(VirtualMachine * virtualMachine) const = 0;
+        ///     Creates a new empty VM of this Architecture.
+        /// \param name
+        ///     The VM name.
+        /// \param location
+        ///     The VM location (a full path to the VM configuration file).
+        /// \param type
+        ///     The VM type; cannot be nullptr.
+        virtual auto    createVirtualMachine(
+                                const QString & name,
+                                const QString & location,
+                                IVirtualMachineType * type
+                            ) -> VirtualMachine * = 0;
     };
 
     /// \class ArchitectureManager emuone-core/API.hpp

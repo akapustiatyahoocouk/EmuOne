@@ -6,6 +6,7 @@ DEFINES += EMUONE_HADES_LIBRARY
 SOURCES += \
     Architecture.cpp \
     Component.cpp \
+    VirtualMachine.cpp \
     devices/ExternalFileSystem.cpp \
     devices/ExternalFileSystemEditor.cpp \
     devices/TextTerminal.cpp \
@@ -13,13 +14,19 @@ SOURCES += \
     kernel/Device.cpp \
     kernel/DeviceType.cpp \
     kernel/DeviceTypeId.cpp \
+    kernel/ExecutionEnvironment.cpp \
+    kernel/Executor.cpp \
     kernel/Identity.cpp \
     kernel/Kernel.DeviceManagement.cpp \
     kernel/Kernel.DeviceTypeManagement.cpp \
+    kernel/Kernel.ExecutionEnvironmentManagement.cpp \
+    kernel/Kernel.ExecutorManagement.cpp \
     kernel/Kernel.IdentityManagement.cpp \
     kernel/Kernel.ObjectManagement.cpp \
     kernel/Kernel.cpp \
     kernel/KernelEditor.cpp \
+    kernel/NativeExecutionEnvironment.cpp \
+    kernel/NativeExecutor.cpp \
     kernel/Object.cpp \
     kernel/Oid.cpp \
     kernel/Processor.cpp \
@@ -32,11 +39,13 @@ HEADERS += \
     Classes.hpp \
     Component.hpp \
     Linkage.hpp \
+    VirtualMachine.hpp \
     devices/ExternalFileSystem.hpp \
     devices/TextTerminal.hpp \
     kernel/DataTypes.hpp \
     kernel/Device.hpp \
     kernel/DeviceType.hpp \
+    kernel/ExecutionEnvironment.hpp \
     kernel/Executor.hpp \
     kernel/Identity.hpp \
     kernel/Kernel.hpp \

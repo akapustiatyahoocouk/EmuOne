@@ -27,6 +27,7 @@ namespace emuone::hades::kernel
         friend class Kernel;
         friend class Processor;
         friend class ProcessorCore;
+        friend class NativeExecutor;
 
         //////////
         //  All members are private - for Kernel only
@@ -90,6 +91,7 @@ namespace emuone::hades::kernel
         EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(ProcessorCore)
 
         friend class Kernel;
+        friend class NativeExecutor;
 
         //////////
         //  All members are private - for Kernel only
@@ -113,6 +115,7 @@ namespace emuone::hades::kernel
         //////////
         //  Associations
         Processor *const    processor;  //  counts as "reference"
+        NativeExecutor *    executor = nullptr; //  nullptr == core not used as an Executor; otherwise a "reference"
     };
 }
 

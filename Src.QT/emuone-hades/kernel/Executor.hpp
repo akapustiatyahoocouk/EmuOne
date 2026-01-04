@@ -24,22 +24,31 @@ namespace emuone::hades::kernel
     {
         EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Executor)
 
+        friend class Kernel;
+        friend class NativeExecutor;
+        friend class ExecutionEnvironment;
+
         //////////
         //  All members are private - for Kernel only
     private:
 
         //////////
         //  Construction/destruction
-        Executor(Kernel * kernel, const Oid & oid);
+        Executor(Kernel * kernel, const Oid & oid, Identity * owner,
+                 const QString & name);
         virtual ~Executor();
 
         //////////
+        //  Properties
+        const QString   name;
+
+        //////////
         //  Associations
+        ExecutionEnvironments   executionEnvironments;  //  count as "references"
 
         //////////
         //  Operations
-        virtual QString name() const = 0;
-        virtual auto    byteOrder() const -> emuone::util::ByteOrder;
+        virtual auto    byteOrder() const -> emuone::util::ByteOrder = 0;
     };
 
     /// \class NativeExecutor emuone-hades/API.hpp
@@ -48,6 +57,8 @@ namespace emuone::hades::kernel
         :   public Executor
     {
         EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(NativeExecutor)
+
+        friend class Kernel;
 
         //////////
         //  All members are private - for Kernel only
@@ -61,7 +72,6 @@ namespace emuone::hades::kernel
 
         //////////
         //  Executor
-        virtual QString name() const override;
         virtual auto    byteOrder() const -> emuone::util::ByteOrder override;
 
         //////////

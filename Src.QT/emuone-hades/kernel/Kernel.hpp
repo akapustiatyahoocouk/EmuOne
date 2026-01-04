@@ -33,6 +33,9 @@ namespace emuone::hades::kernel
         friend class Device;
         friend class Processor;
         friend class ProcessorCore;
+        friend class Executor;
+        friend class NativeExecutor;
+        friend class ExecutionEnvironment;
 
         //////////
         //  Constants
@@ -77,6 +80,11 @@ namespace emuone::hades::kernel
         virtual auto    type() const -> emuone::core::IComponentType * override;
         virtual QString displayName() const override;
         virtual auto    createEditor(QWidget * parent) -> emuone::core::ComponentEditor * override;
+
+        //////////
+        //  emuone::core::IComponent (configuration)
+    public:
+        virtual bool    isConfigurationValid() const override;
         virtual void    saveConfiguration(QDomElement & element) const override;
         virtual void    restoreConfiguration(const QDomElement & element) override;
 
@@ -145,6 +153,25 @@ namespace emuone::hades::kernel
                             );
 
         //////////
+        //  Operations (executor management)
+    public:
+        StatusCode      createNativeExecutor(
+                                Identity * owner,
+                                ProcessorCore * processorCore,
+                                PNativeExecutor & nativeExecutor
+                            );
+
+        //////////
+        //  Operations (execution environment management)
+    public:
+        StatusCode      createNativeExecutionEnvironment(
+                                Identity * owner,
+                                const QString & name,
+                                const NativeExecutors & nativeExecutors,
+                                PNativeExecutionEnvironment & nativeExecutionEnvironment
+                            );
+
+        //////////
         //  Implementation
     private:
         State           _state = State::Constructed;
@@ -179,6 +206,8 @@ namespace emuone::hades::kernel
         SystemIdentity *            _systemIdentity = nullptr;
         QMap<DeviceTypeId, DeviceType*> _deviceTypes;
         QMap<ProcessorId, Processor*>   _processors;
+        QMap<QString, Executor*>    _executors;
+        QMap<QString, ExecutionEnvironment*>    _executionEnvironments;
     };
 
     namespace Ui { class KernelEditor; }

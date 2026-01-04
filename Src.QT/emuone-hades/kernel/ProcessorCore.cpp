@@ -56,6 +56,8 @@ ProcessorCore::~ProcessorCore()
 
     if (!kernel->_shutdownInProgress)
     {   //  On shutdown everything will be force-destroyed
+        //  NativeExecutor that uses this ProcessorCore must die first!
+        Q_ASSERT(executor == nullptr);
         //  Un-link ProcessorCore from Processor
         Q_ASSERT(processor->cores.contains(this));
         processor->cores.remove(this);

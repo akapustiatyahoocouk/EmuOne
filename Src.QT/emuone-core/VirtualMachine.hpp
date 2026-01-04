@@ -21,7 +21,7 @@ namespace emuone::core
 {
     /// \class VirtualMachine emuone-core/API.hpp
     /// \brief The complete VM.
-    class EMUONE_CORE_PUBLIC VirtualMachine final
+    class EMUONE_CORE_PUBLIC VirtualMachine
         : public QObject
     {
         Q_OBJECT
@@ -63,7 +63,7 @@ namespace emuone::core
 
         //////////
         //  Construction/destruction
-    private:
+    protected:
         VirtualMachine( //  used by deserialization
                 const QString & name,
                 const QString & location,
@@ -71,7 +71,7 @@ namespace emuone::core
                 IVirtualMachineType * type,
                 IVirtualMachineTemplate * createdFrom
             );
-    public:
+    protected:
         /// \brief
         ///     Constructs an empty VM (with no components).
         /// \param name
@@ -103,13 +103,14 @@ namespace emuone::core
                 IVirtualMachineTemplate * createdFrom
             );
 
+    public:
         /// \brief
         ///     The class destructor.
         /// \details
         ///     If the VM is currently Running, it is
         ///     Suspended (if possible) or Stopped (if not).
         ///     Any Suspend exceptions are logged but ignored.
-        ~VirtualMachine();
+        virtual ~VirtualMachine();
 
         //////////
         //  Operations (general)
@@ -206,6 +207,19 @@ namespace emuone::core
         //////////
         //  Operations (configuration)
     public:
+        /// \brief
+        ///     Checks whether the current configuration of this
+        ///     VM is valid.
+        /// \details
+        ///     A VM will not permit setting invalid configuration
+        ///     properties via confoguration-affecting methods; however,
+        ///     that's no defense against a corrupt VM configuration
+        ///     file which has been manually altered.
+        /// \return
+        ///     True the current configuration of this VM
+        ///     is valid, else false.
+        virtual bool    isConfigurationValid() const;
+
         /// \brief
         ///     Returns the set of all Components of this VM.
         /// \return

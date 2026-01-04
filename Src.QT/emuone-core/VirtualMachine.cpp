@@ -161,6 +161,20 @@ bool VirtualMachine::isPersistable() const
 
 //////////
 //  Operations (configuration)
+bool VirtualMachine::isConfigurationValid() const
+{
+    return isValidName(_name) &&
+           std::all_of(_nativeComponents.cbegin(),
+                       _nativeComponents.cend(),
+                       [](auto c) { return c->isConfigurationValid(); }) &&
+           std::all_of(_adaptedComponents.cbegin(),
+                       _adaptedComponents.cend(),
+                       [](auto c) { return c->isConfigurationValid(); }) &&
+           std::all_of(_adaptors.cbegin(),
+                       _adaptors.cend(),
+                       [](auto c) { return c->isConfigurationValid(); });
+}
+
 Components VirtualMachine::components() const
 {
     emuone::util::Lock _(_guard);
@@ -481,6 +495,7 @@ auto VirtualMachine::load(const QString & location) -> VirtualMachine *
     auto createdFrom =
         VirtualMachineTemplateManager::find(
             rootElement.attribute("Template"));
+    Q_ASSERT(createdFrom == nullptr);   //  TODO remove & implement
     if (!isValidName(name) ||
         architecture == nullptr ||
         type == nullptr ||
@@ -493,12 +508,10 @@ auto VirtualMachine::load(const QString & location) -> VirtualMachine *
 
     //  Create new, empty VM (delete on load exception)
     std::unique_ptr<VirtualMachine> vm
-    { new VirtualMachine(
-        name,
-        location,
-        architecture,
-        type,
-        createdFrom) };
+        { architecture->createVirtualMachine(
+            name,
+            location,
+            type) };
 
     //  Components
     for (auto componentElement = rootElement.firstChildElement("Component");

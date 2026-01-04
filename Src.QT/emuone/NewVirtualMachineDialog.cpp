@@ -250,12 +250,13 @@ void NewVirtualMachineDialog::accept()
 {
     if (_selectedTemplate() == nullptr)
     {   //  No template - create empty VM
-        auto vm =   //  auto-deleted when block exits
-            std::make_unique<emuone::core::VirtualMachine>(
+        std::unique_ptr<emuone::core::VirtualMachine> vm
+        {
+            _selectedArchitecture()->createVirtualMachine(
                 _ui->nameLineEdit->text().trimmed(),
                 _ui->locationLineEdit->text(),
-            _selectedArchitecture(),
-            _selectedType());
+                _selectedType())
+        };
         vm->save(); //  TODO may throw
         _virtualMachineLocation = vm->location();
         done(int(Result::Ok));

@@ -49,6 +49,12 @@ auto ExternalFileSystem::createEditor(QWidget * parent) -> emuone::core::Compone
     return new ExternalFileSystemEditor(parent, this);
 }
 
+bool ExternalFileSystem::isConfigurationValid() const
+{
+    return isValidVolumeName(_volumeName) &&
+           isValidHostPath(_hostPath);
+}
+
 void ExternalFileSystem::saveConfiguration(QDomElement & element) const
 {
     IDevice::saveConfiguration(element);

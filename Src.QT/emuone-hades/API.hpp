@@ -40,7 +40,11 @@
 #include "emuone-hades/kernel/Object.hpp"
 #include "emuone-hades/kernel/Identity.hpp"
 #include "emuone-hades/kernel/Executor.hpp"
+#include "emuone-hades/kernel/ExecutionEnvironment.hpp"
 #include "emuone-hades/kernel/DeviceType.hpp"
 #include "emuone-hades/kernel/Device.hpp"
+
+//  Miscellaneous
+#include "emuone-hades/VirtualMachine.hpp"
 
 //  End of emuone-hades/API.hpp

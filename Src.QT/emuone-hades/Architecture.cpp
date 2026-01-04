@@ -49,52 +49,13 @@ QIcon Architecture::largeIcon() const
 
 //////////
 //  emuone::core::IArchitecture
-bool Architecture::isValid(
-        emuone::core::VirtualMachine * virtualMachine
-    ) const
+auto Architecture::createVirtualMachine(
+        const QString & name,
+        const QString & location,
+        emuone::core::IVirtualMachineType * type
+    ) -> emuone::core::VirtualMachine *
 {
-    Q_ASSERT(virtualMachine != nullptr);
-
-    if (virtualMachine->architecture() != this)
-    {   //  OOPS!
-        return false;
-    }
-
-    //  A HADES VM must have exactly one HADES OS Kernel
-    if (virtualMachine->componentsOfType<kernel::Kernel>().size() != 1)
-    {   //  OOPS! No Kernel or multiple Kernels
-        return false;
-    }
-
-    //  All external file systems must specify different and
-    //  valid volume names and valid hst paths
-    const auto externalFileSystems = virtualMachine->componentsOfType<devices::ExternalFileSystem>();
-    for (auto a : externalFileSystems)
-    {
-        for (auto b : externalFileSystems)
-        {
-            if (a != b && a->volumeName() == b->volumeName())
-            {   //  OOPS!
-                return false;
-            }
-        }
-    }
-
-    //  All TextTerminals must have different TerminalNo's
-    const auto textTerminals = virtualMachine->componentsOfType<devices::TextTerminal>();
-    for (auto a : textTerminals)
-    {
-        for (auto b : textTerminals)
-        {
-            if (a != b && a->terminalNumber() == b->terminalNumber())
-            {   //  OOPS!
-                return false;
-            }
-        }
-    }
-
-    //  All checks passed
-    return true;
+    return new VirtualMachine(name, location, type);
 }
 
 //  End of emuone-hades/Architecture.cpp

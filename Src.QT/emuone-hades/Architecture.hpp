@@ -35,7 +35,11 @@ namespace emuone::hades
         //////////
         //  emuone::core::IArchitecture
     public:
-        virtual bool    isValid(emuone::core::VirtualMachine * virtualMachine) const override;
+        virtual auto    createVirtualMachine(
+                                const QString & name,
+                                const QString & location,
+                                emuone::core::IVirtualMachineType * type
+                            ) -> emuone::core::VirtualMachine * override;
     };
 }
 
