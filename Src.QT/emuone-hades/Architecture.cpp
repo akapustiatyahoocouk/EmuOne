@@ -59,30 +59,42 @@ bool Architecture::isValid(
     {   //  OOPS!
         return false;
     }
+
     //  A HADES VM must have exactly one HADES OS Kernel
     if (virtualMachine->componentsOfType<kernel::Kernel>().size() != 1)
     {   //  OOPS! No Kernel or multiple Kernels
         return false;
     }
+
     //  All external file systems must specify different and
     //  valid volume names and valid hst paths
-    QSet<QString> volumeNames;
-    for (auto efs : virtualMachine->componentsOfType<devices::ExternalFileSystem>())
+    const auto externalFileSystems = virtualMachine->componentsOfType<devices::ExternalFileSystem>();
+    for (auto a : externalFileSystems)
     {
-        if (!devices::ExternalFileSystem::isValidVolumeName(efs->volumeName()) ||
-            !devices::ExternalFileSystem::isValidHostPath(efs->hostPath()))
-        {   //  OOPS!
-            return false;
+        for (auto b : externalFileSystems)
+        {
+            if (a != b && a->volumeName() == b->volumeName())
+            {   //  OOPS!
+                return false;
+            }
         }
-        if (volumeNames.contains(efs->volumeName()))
-        {   //  OOPS!
-            return false;
-        }
-        volumeNames.insert(efs->volumeName());
     }
+
+    //  All TextTerminals must have different TerminalNo's
+    const auto textTerminals = virtualMachine->componentsOfType<devices::TextTerminal>();
+    for (auto a : textTerminals)
+    {
+        for (auto b : textTerminals)
+        {
+            if (a != b && a->terminalNumber() == b->terminalNumber())
+            {   //  OOPS!
+                return false;
+            }
+        }
+    }
+
     //  All checks passed
     return true;
-
 }
 
 //  End of emuone-hades/Architecture.cpp

@@ -14,13 +14,17 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 //////////
+#pragma once
+#include "emuone-core/API.hpp"
 
 namespace emuone::core
 {
     /// \class VirtualMachine emuone-core/API.hpp
     /// \brief The complete VM.
     class EMUONE_CORE_PUBLIC VirtualMachine final
+        : public QObject
     {
+        Q_OBJECT
         EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(VirtualMachine)
 
         //////////
@@ -351,6 +355,13 @@ namespace emuone::core
         ///     -   If the VM is not Suspended, the call has no effect.
         ///     -   This method can be safely called from any thread.
         void            resume();
+
+    signals:
+        /// \brief
+        ///     Emitted when the State of this VM changes.
+        /// \param virtualMachine
+        ///     The VM whose state has changed.
+        void            stateChanged(emuone::core::VirtualMachine * virtualMachine);
 
         //////////
         //  Operations (persistency)

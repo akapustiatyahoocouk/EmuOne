@@ -20,19 +20,20 @@ using namespace emuone::hades::kernel;
 //////////
 //  Construction/destruction
 ProcessorCore::ProcessorCore(
-        Kernel * kernel, const Oid & oid, Identity * owner,
-        DeviceType * deviceType,
-        Processor * processor,
-        CoreId coreId
+        Kernel * kernelParam, const Oid & oidParam, Identity * ownerParam,
+        DeviceType * deviceTypeParam,
+        Processor * processorParam,
+        CoreId coreIdParam, emuone::util::ByteOrder byteOrderParam
     ) : Device(
-            kernel, oid, owner,
-            deviceType,
-            DeviceId((int(processor->processorId) << 8) | int(coreId)),
-            processor->name + "c" + emuone::util::toString(int(coreId))),
+            kernelParam, oidParam, ownerParam,
+            deviceTypeParam,
+            DeviceId((static_cast<uint8_t>(processorParam->processorId) << 8) | static_cast<uint8_t>(coreIdParam)),
+            processorParam->name + "c" + emuone::util::toString(static_cast<uint8_t>(coreIdParam))),
         //  Properties
-        coreId(coreId),
+        coreId(coreIdParam),
+        byteOrder(byteOrderParam),
         //  Associations
-        processor(processor)
+        processor(processorParam)
 {
     Q_ASSERT(kernel->kernelGuard.isLockedByCurrentThread());
     Q_ASSERT(deviceType != nullptr &&

@@ -35,9 +35,7 @@ namespace emuone::hades
         //////////
         //  emuone::core::IArchitecture
     public:
-        virtual bool    isValid(
-                                emuone::core::VirtualMachine * virtualMachine
-                            ) const override;
+        virtual bool    isValid(emuone::core::VirtualMachine * virtualMachine) const override;
     };
 }
 

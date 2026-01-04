@@ -8,6 +8,7 @@ SOURCES += \
     Main.cpp \
     MainFrame.cpp \
     NewVirtualMachineDialog.cpp \
+    RunningVirtualMachineView.cpp \
     StoppedVirtualMachineView.cpp \
     VirtualMachinePage.cpp
 
@@ -19,6 +20,7 @@ HEADERS += \
     KnownVirtualMachine.hpp \
     MainFrame.hpp \
     NewVirtualMachineDialog.hpp \
+    RunningVirtualMachineView.hpp \
     StoppedVirtualMachineView.hpp \
     VirtualMachinePage.hpp
 
@@ -28,6 +30,7 @@ FORMS += \
     ConfigureVirtualMachineDialog.ui \
     MainFrame.ui \
     NewVirtualMachineDialog.ui \
+    RunningVirtualMachineView.ui \
     StoppedVirtualMachineView.ui \
     VirtualMachinePage.ui
 

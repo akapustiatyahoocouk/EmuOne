@@ -1,5 +1,5 @@
 //
-//  emuone-hades/devices/ExternalFileSystem.cpp - emuone::hades::devices::ExternalFileSystem class implementation
+//  emuone-hades/devices/TextTerminal.cpp - emuone::hades::devices::TextTerminal class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -19,11 +19,11 @@ using namespace emuone::hades::devices;
 
 //////////
 //  Construction/destruction
-ExternalFileSystem::ExternalFileSystem()
+TextTerminal::TextTerminal()
 {
 }
 
-ExternalFileSystem::~ExternalFileSystem()
+TextTerminal::~TextTerminal()
 {
     if (_notificationThread != nullptr)
     {   //  Make sure it's not running
@@ -34,46 +34,63 @@ ExternalFileSystem::~ExternalFileSystem()
 
 //////////
 //  emuone::core::IComponent
-auto ExternalFileSystem::type() const -> emuone::core::IComponentType *
+auto TextTerminal::type() const -> emuone::core::IComponentType *
 {
     return Type::instance();
 }
 
-QString ExternalFileSystem::displayName() const
+QString TextTerminal::displayName() const
 {
-    return "ExtFS: " + _volumeName + " -> " + _hostPath;
+    return "Text terminal #" +
+           emuone::util::toString(_terminalNumber) +
+           " (" +
+           emuone::util::toString(_columns) +
+           "x" +
+           emuone::util::toString(_rows) +
+           ")";
 }
 
-auto ExternalFileSystem::createEditor(QWidget * parent) -> emuone::core::ComponentEditor *
+auto TextTerminal::createEditor(QWidget * parent) -> emuone::core::ComponentEditor *
 {
-    return new ExternalFileSystemEditor(parent, this);
+    return new TextTerminalEditor(parent, this);
 }
 
-void ExternalFileSystem::saveConfiguration(QDomElement & element) const
+void TextTerminal::saveConfiguration(QDomElement & element) const
 {
     IDevice::saveConfiguration(element);
 
-    element.setAttribute("VolumeName", _volumeName);
-    element.setAttribute("HostPath", _hostPath);
+    element.setAttribute("TerminalNumber", _terminalNumber);
+    element.setAttribute("Columns", _columns);
+    element.setAttribute("Rows", _rows);
 }
 
-void ExternalFileSystem::restoreConfiguration(const QDomElement & element)
+void TextTerminal::restoreConfiguration(const QDomElement & element)
 {
     IDevice::restoreConfiguration(element);
 
-    _volumeName = element.attribute("VolumeName", _volumeName);
-    _hostPath = element.attribute("HostPath", _hostPath);
+    _terminalNumber =
+        emuone::util::fromString<int>(
+            element.attribute("TerminalNumber"),
+        _terminalNumber);
+    _columns =
+        emuone::util::fromString<int>(
+            element.attribute("Columns"),
+            _columns);
+    _rows =
+        emuone::util::fromString<int>(
+            element.attribute("Rows"),
+            _rows);
 }
 
 //////////
 //  emuone::core::IComponent (state control)
-ExternalFileSystem::State ExternalFileSystem::state() const
+TextTerminal::State TextTerminal::state() const
 {
     emuone::util::Lock _(stateGuard);
     return _state;
 }
 
-void ExternalFileSystem::connect()
+void TextTerminal::connect()
 {
     emuone::util::Lock _(stateGuard);
 
@@ -87,7 +104,7 @@ void ExternalFileSystem::connect()
     _state = State::Connected;
 }
 
-void ExternalFileSystem::disconnect() noexcept
+void TextTerminal::disconnect() noexcept
 {
     emuone::util::Lock _(stateGuard);
 
@@ -101,7 +118,7 @@ void ExternalFileSystem::disconnect() noexcept
     _state = State::Constructed;
 }
 
-void ExternalFileSystem::initialize()
+void TextTerminal::initialize()
 {
     emuone::util::Lock _(stateGuard);
 
@@ -115,7 +132,7 @@ void ExternalFileSystem::initialize()
     _state = State::Initialized;
 }
 
-void ExternalFileSystem::deinitialize() noexcept
+void TextTerminal::deinitialize() noexcept
 {
     emuone::util::Lock _(stateGuard);
 
@@ -129,7 +146,7 @@ void ExternalFileSystem::deinitialize() noexcept
     _state = State::Connected;
 }
 
-void ExternalFileSystem::start()
+void TextTerminal::start()
 {
     emuone::util::Lock _(stateGuard);
 
@@ -146,7 +163,7 @@ void ExternalFileSystem::start()
     _state = State::Running;
 }
 
-void ExternalFileSystem::stop() noexcept
+void TextTerminal::stop() noexcept
 {
     emuone::util::Lock _(stateGuard);
 
@@ -172,8 +189,8 @@ void ExternalFileSystem::stop() noexcept
 
 //////////
 //  emuone::core::IDevice
-auto ExternalFileSystem::sendCommand(
-        IDevice::Command * command
+auto TextTerminal::sendCommand(
+    IDevice::Command * command
     ) -> SendCommandOutcome
 {
     if (state() != State::Running)
@@ -191,92 +208,105 @@ auto ExternalFileSystem::sendCommand(
 
 //////////
 //  Operations (configuration)
-bool ExternalFileSystem::isValidVolumeName(const QString & volumeName)
-{   //  TODO implement properly
-    if (volumeName.trimmed().length() != volumeName.length() ||
-        volumeName.length() == 0)
-    {   //  OOPS!
-        return false;
-    }
-    return true;
-}
-
-bool ExternalFileSystem::isValidHostPath(const QString & hostPath)
+bool TextTerminal::isValidTerminalNumber(int terminalNumber)
 {
-    return QFileInfo(hostPath).isNativePath();
+    return terminalNumber >= MinTerminalNumber && terminalNumber <= MaxTerminalNumber;
 }
 
-QString ExternalFileSystem::volumeName() const
+bool TextTerminal::isValidColumns(int columns)
 {
-    emuone::util::Lock _(stateGuard);
-    return _volumeName;
+    return columns >= MinColumns && columns <= MaxColumns;
 }
 
-void ExternalFileSystem::setVolumeName(const QString & volumeName)
+bool TextTerminal::isValidRows(int rows)
+{
+    return rows >= MinRows && rows <= MaxRows;
+}
+
+int TextTerminal::terminalNumber() const
 {
     emuone::util::Lock _(stateGuard);
-    Q_ASSERT(isValidHostPath(volumeName));  //  TODO throw instead
-
-    _volumeName = volumeName;
+    return _terminalNumber;
 }
 
-QString ExternalFileSystem::hostPath() const
+void TextTerminal::setTerminalNumber(int terminalNumber)
 {
     emuone::util::Lock _(stateGuard);
-    return _hostPath;
+    Q_ASSERT(isValidTerminalNumber(terminalNumber));    //  TODO throw instead
+
+    _terminalNumber = terminalNumber;
 }
 
-void ExternalFileSystem::setHostPath(const QString & hostPath)
+int TextTerminal::columns() const
+{
+    return _columns;
+}
+
+void TextTerminal::setColumns(int columns)
 {
     emuone::util::Lock _(stateGuard);
-    Q_ASSERT(isValidHostPath(hostPath));    //  TODO throw instead
-    _hostPath = hostPath;
+    Q_ASSERT(isValidColumns(columns));  //  TODO throw instead
+
+    _columns = columns;
+}
+
+int TextTerminal::rows() const
+{
+    return _rows;
+}
+
+void TextTerminal::setRows(int rows)
+{
+    emuone::util::Lock _(stateGuard);
+    Q_ASSERT(isValidRows(rows));    //  TODO throw instead
+
+    _rows = rows;
 }
 
 //////////
-//  ExternalFileSystem::Type
-EMUONE_IMPLEMENT_SINGLETON(ExternalFileSystem::Type)
-ExternalFileSystem::Type::Type() {}
-ExternalFileSystem::Type::~Type() {}
+//  TextTerminal::Type
+EMUONE_IMPLEMENT_SINGLETON(TextTerminal::Type)
+TextTerminal::Type::Type() {}
+TextTerminal::Type::~Type() {}
 
-QString ExternalFileSystem::Type::mnemonic() const
+QString TextTerminal::Type::mnemonic() const
 {
-    return "emuone::hades::devices::ExternalFileSystem";
+    return "emuone::hades::devices::TextTerminal";
 }
 
-QString ExternalFileSystem::Type::displayName() const
+QString TextTerminal::Type::displayName() const
 {
-    return "External file system";
+    return "Text terminal";
 }
 
-auto ExternalFileSystem::Type::category() const -> emuone::core::IComponentCategory *
+auto TextTerminal::Type::category() const -> emuone::core::IComponentCategory *
 {
-    return emuone::core::StandardComponentCategories::Storage::instance();
+    return emuone::core::StandardComponentCategories::UiDevices::instance();
 }
 
-bool ExternalFileSystem::Type::isCompatibleWith(emuone::core::IArchitecture * architecture) const
+bool TextTerminal::Type::isCompatibleWith(emuone::core::IArchitecture * architecture) const
 {
     return architecture == Architecture::instance();
 }
 
-bool ExternalFileSystem::Type::isCompatibleWith(emuone::core::IVirtualMachineType * virtualMachineType) const
+bool TextTerminal::Type::isCompatibleWith(emuone::core::IVirtualMachineType * virtualMachineType) const
 {
     return virtualMachineType == emuone::core::StandardVirtualMachineTypes::VirtualMachine::instance();
 }
 
-bool ExternalFileSystem::Type::isPersistable() const
+bool TextTerminal::Type::isPersistable() const
 {
     return false;
 }
 
-auto ExternalFileSystem::Type::createComponent() -> ExternalFileSystem *
+auto TextTerminal::Type::createComponent() -> TextTerminal *
 {
-    return new ExternalFileSystem();
+    return new TextTerminal();
 }
 
 //////////
-//  ExternalFileSystem::_NotificationThread
-void ExternalFileSystem::_NotificationThread::run()
+//  TextTerminal::_NotificationThread
+void TextTerminal::_NotificationThread::run()
 {
     while (!_stopRequested)
     {
@@ -295,4 +325,4 @@ void ExternalFileSystem::_NotificationThread::run()
     }
 }
 
-//  End of emuone-hades/devices/ExternalFileSystem.cpp
+//  End of emuone-hades/devices/TextTerminal.cpp

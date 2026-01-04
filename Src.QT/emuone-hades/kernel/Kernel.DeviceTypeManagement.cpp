@@ -27,7 +27,7 @@ StatusCode Kernel::createDeviceType(
     )
 {
     Q_ASSERT(kernelGuard.isLockedByCurrentThread());
-    Q_ASSERT(deviceTypeId != DeviceTypeId::Invalid);
+    Q_ASSERT(deviceTypeId.isValid());
 
     //  Ensure deviceTypeId uniqueness
     if (_deviceTypes.contains(deviceTypeId))
@@ -51,18 +51,18 @@ StatusCode Kernel::createDeviceType(
 
 QString Kernel::defaultDeviceTypeName(DeviceTypeId deviceTypeId)
 {
-    char s[64];
-
-    switch (deviceTypeId)
+    if (deviceTypeId == DeviceTypeId::Amd64Processor)
     {
-        case DeviceTypeId::Amd64Processor:
-            return "AMD64";
-        case DeviceTypeId::Amd64ProcessorCore:
-            return "AMD64 core";
-        default:
-            sprintf(s, "Device type 0x%04X", deviceTypeId);
-            return s;
+        return "AMD64";
     }
+    if (deviceTypeId == DeviceTypeId::Amd64ProcessorCore)
+    {
+        return "AMD64 core";
+    }
+    //  Give up
+    char s[64];
+    sprintf(s, "Device type 0x%04X", static_cast<uint16_t>(deviceTypeId));
+    return s;
 }
 
 //  End of emuone-hades/kernel/Kernel.DeviceTypeManagement.cpp

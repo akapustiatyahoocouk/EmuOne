@@ -24,9 +24,9 @@ Identity *const Object::SelfOwner = reinterpret_cast<Identity*>(0x1234);
 //////////
 //  Construction/destruction
 Object::Object(
-        Kernel * kernel, const Oid & oid, Identity * ownerOrSelf
-    ) : kernel(kernel),
-        oid(oid),
+        Kernel * kernelParam, const Oid & oidParam, Identity * ownerOrSelf
+    ) : kernel(kernelParam),
+        oid(oidParam),
         owner((ownerOrSelf == SelfOwner) ? static_cast<Identity*>(this) : ownerOrSelf)
 {
     Q_ASSERT(kernel != nullptr);

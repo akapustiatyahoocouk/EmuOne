@@ -32,6 +32,7 @@
 
 //  Devices
 #include "emuone-hades/devices/ExternalFileSystem.hpp"
+#include "emuone-hades/devices/TextTerminal.hpp"
 
 //  HADES Kernel
 #include "emuone-hades/kernel/DataTypes.hpp"

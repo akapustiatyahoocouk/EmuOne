@@ -1,5 +1,5 @@
 //
-//  emuone/VirtualMachinePage.hpp - The VM tab page
+//  emuone/RunningVirtualMachineView.hpp - The Running VM view
 //
 //  TimeTracker3
 //  Copyright (C) 2026, Andrey Kapustin
@@ -19,38 +19,30 @@
 
 namespace emuone
 {
-    namespace Ui { class VirtualMachinePage; }
+    namespace Ui { class RunningVirtualMachineView; }
 
-    /// \class VirtualMachinePage emuone/API.hpp
-    /// \brief The tab page representing a single VM.
-    class VirtualMachinePage final
+    /// \class RunningVirtualMachineView emuone/API.hpp
+    /// \brief The view of a Running VM.
+    class RunningVirtualMachineView final
         :   public QWidget
     {
         Q_OBJECT
-        EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(VirtualMachinePage)
+        EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(RunningVirtualMachineView)
 
         //////////
         //  Construction/destruction
     public:
-        VirtualMachinePage(
+        RunningVirtualMachineView(
                 QWidget * parent,
                 emuone::core::VirtualMachine * virtualMachine
             );
-        virtual ~VirtualMachinePage();
+        virtual ~RunningVirtualMachineView();
 
         //////////
         //  Operations
     public:
         /// \brief
-        ///     Returns the VM displayed in this page.
-        /// \return
-        ///     The VM displayed in this page.
-        auto            virtualMachine(
-                            ) const -> emuone::core::VirtualMachine *
-                        { return _virtualMachine; }
-
-        /// \brief
-        ///     Refreshes this page.
+        ///     Refreshes this view.
         void            refresh();
 
         //////////
@@ -61,15 +53,9 @@ namespace emuone
         //////////
         //  Controls
     private:
-        Ui::VirtualMachinePage *const   _ui;
-        //  Dynamic controls
-        StoppedVirtualMachineView * _stoppedView;
-        RunningVirtualMachineView * _runningView;
-        QStackedLayout *    _layout;
+        Ui::RunningVirtualMachineView *const    _ui;
     };
-
-    using VirtualMachinePages = QList<VirtualMachinePage*>;
 }
 
-//  End of emuone/VirtualMachinePage.hpp
+//  End of emuone/RunningVirtualMachineView.hpp
 

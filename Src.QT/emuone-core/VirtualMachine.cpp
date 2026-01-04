@@ -356,7 +356,7 @@ void VirtualMachine::start()
             _disconnectComponents();
         }
     }
-    //  TODO emit state change signal in "unlocked" mode
+    emit stateChanged(this);
 }
 
 void VirtualMachine::stop() noexcept
@@ -377,7 +377,7 @@ void VirtualMachine::stop() noexcept
             _state = State::Stopped;
         }
     }
-    //  TODO emit state change signal in "unlocked" mode
+    emit stateChanged(this);
 }
 
 void VirtualMachine::suspend()
@@ -548,19 +548,19 @@ auto VirtualMachine::load(const QString & location) -> VirtualMachine *
 //  Implementation helpers
 void VirtualMachine::_connectComponents()
 {
-    for (auto c : _nativeComponents)
+    for (auto c : std::as_const(_nativeComponents))
     {
         Q_ASSERT(c->state() == IComponent::State::Constructed);
         c->connect();   //  may throw
         Q_ASSERT(c->state() == IComponent::State::Connected);
     }
-    for (auto c : _adaptedComponents)
+    for (auto c : std::as_const(_adaptedComponents))
     {
         Q_ASSERT(c->state() == IComponent::State::Constructed);
         c->connect();   //  may throw
         Q_ASSERT(c->state() == IComponent::State::Connected);
     }
-    for (auto a : _adaptors)
+    for (auto a : std::as_const(_adaptors))
     {
         Q_ASSERT(a->state() == IComponentAdaptor::State::Constructed);
         a->connect();   //  may throw
@@ -570,19 +570,19 @@ void VirtualMachine::_connectComponents()
 
 void VirtualMachine::_initializeComponents()
 {
-    for (auto c : _nativeComponents)
+    for (auto c : std::as_const(_nativeComponents))
     {
         Q_ASSERT(c->state() == IComponent::State::Connected);
         c->initialize();    //  may throw
         Q_ASSERT(c->state() == IComponent::State::Initialized);
     }
-    for (auto c : _adaptedComponents)
+    for (auto c : std::as_const(_adaptedComponents))
     {
         Q_ASSERT(c->state() == IComponent::State::Connected);
         c->initialize();    //  may throw
         Q_ASSERT(c->state() == IComponent::State::Initialized);
     }
-    for (auto a : _adaptors)
+    for (auto a : std::as_const(_adaptors))
     {
         Q_ASSERT(a->state() == IComponentAdaptor::State::Connected);
         a->initialize();    //  may throw
@@ -592,19 +592,19 @@ void VirtualMachine::_initializeComponents()
 
 void VirtualMachine::_startCompoonents()
 {
-    for (auto c : _nativeComponents)
+    for (auto c : std::as_const(_nativeComponents))
     {
         Q_ASSERT(c->state() == IComponent::State::Initialized);
         c->start(); //  may throw
         Q_ASSERT(c->state() == IComponent::State::Running);
     }
-    for (auto c : _adaptedComponents)
+    for (auto c : std::as_const(_adaptedComponents))
     {
         Q_ASSERT(c->state() == IComponent::State::Initialized);
         c->start(); //  may throw
         Q_ASSERT(c->state() == IComponent::State::Running);
     }
-    for (auto a : _adaptors)
+    for (auto a : std::as_const(_adaptors))
     {
         Q_ASSERT(a->state() == IComponentAdaptor::State::Initialized);
         a->start(); //  may throw
@@ -614,7 +614,7 @@ void VirtualMachine::_startCompoonents()
 
 void VirtualMachine::_stopCompoonents()
 {   //  Any Running component must be Stopped
-    for (auto a : _adaptors)
+    for (auto a : std::as_const(_adaptors))
     {
         if (a->state() == IComponentAdaptor::State::Running)
         {   //  Guard needed when recovering from failed partial start
@@ -622,7 +622,7 @@ void VirtualMachine::_stopCompoonents()
             Q_ASSERT(a->state() == IComponentAdaptor::State::Initialized);
         }
     }
-    for (auto c : _adaptedComponents)
+    for (auto c : std::as_const(_adaptedComponents))
     {   //  Guard needed when recovering from failed partial start
         if (c->state() == IComponent::State::Running)
         {
@@ -630,7 +630,7 @@ void VirtualMachine::_stopCompoonents()
             Q_ASSERT(c->state() == IComponent::State::Initialized);
         }
     }
-    for (auto c : _nativeComponents)
+    for (auto c : std::as_const(_nativeComponents))
     {   //  Guard needed when recovering from failed partial start
         if (c->state() == IComponent::State::Running)
         {
@@ -642,7 +642,7 @@ void VirtualMachine::_stopCompoonents()
 
 void VirtualMachine::_deinitializeComponents()
 {   //  Any Initialized component must be Deinitialized
-    for (auto a : _adaptors)
+    for (auto a : std::as_const(_adaptors))
     {
         if (a->state() == IComponentAdaptor::State::Initialized)
         {   //  Guard needed when recovering from failed partial start
@@ -650,7 +650,7 @@ void VirtualMachine::_deinitializeComponents()
             Q_ASSERT(a->state() == IComponentAdaptor::State::Connected);
         }
     }
-    for (auto c : _adaptedComponents)
+    for (auto c : std::as_const(_adaptedComponents))
     {
         if (c->state() == IComponent::State::Initialized)
         {   //  Guard needed when recovering from failed partial start
@@ -658,7 +658,7 @@ void VirtualMachine::_deinitializeComponents()
             Q_ASSERT(c->state() == IComponent::State::Connected);
         }
     }
-    for (auto c : _nativeComponents)
+    for (auto c : std::as_const(_nativeComponents))
     {
         if (c->state() == IComponent::State::Initialized)
         {   //  Guard needed when recovering from failed partial start
@@ -670,7 +670,7 @@ void VirtualMachine::_deinitializeComponents()
 
 void VirtualMachine::_disconnectComponents()
 {   //  Any Connected component must be Disconnected
-    for (auto a : _adaptors)
+    for (auto a : std::as_const(_adaptors))
     {
         if (a->state() == IComponentAdaptor::State::Connected)
         {   //  Guard needed when recovering from failed partial start
@@ -678,7 +678,7 @@ void VirtualMachine::_disconnectComponents()
             Q_ASSERT(a->state() == IComponentAdaptor::State::Constructed);
         }
     }
-    for (auto c : _adaptedComponents)
+    for (auto c : std::as_const(_adaptedComponents))
     {
         if (c->state() == IComponent::State::Connected)
         {   //  Guard needed when recovering from failed partial start
@@ -686,7 +686,7 @@ void VirtualMachine::_disconnectComponents()
             Q_ASSERT(c->state() == IComponent::State::Constructed);
         }
     }
-    for (auto c : _nativeComponents)
+    for (auto c : std::as_const(_nativeComponents))
     {
         if (c->state() == IComponent::State::Connected)
         {   //  Guard needed when recovering from failed partial start
@@ -695,6 +695,5 @@ void VirtualMachine::_disconnectComponents()
         }
     }
 }
-
 
 //  End of emuone-core/VirtualMachine.cpp

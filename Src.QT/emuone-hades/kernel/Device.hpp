@@ -101,13 +101,14 @@ namespace emuone::hades::kernel
                 Kernel * kernel, const Oid & oid, Identity * owner,
                 DeviceType * deviceType,
                 Processor * processor,
-                CoreId coreId
+                CoreId coreId, emuone::util::ByteOrder   byteOrder
             );
         virtual ~ProcessorCore();
 
         //////////
         //  Properties
-        const CoreId    coreId;    //  == deviceId, unique per Kernel
+        const CoreId    coreId;    //  lobyte of deviceId
+        const emuone::util::ByteOrder   byteOrder;
 
         //////////
         //  Associations

@@ -151,6 +151,7 @@ void Kernel::start()
         //  1.  To create a System identity,
         SystemIdentity * systemIdentity = nullptr;
         createSystemIdentity(systemIdentity);
+        Q_ASSERT(systemIdentity != nullptr);
 
         //  2.  To create native Processor and ProcessorCores
         //      along with DeviceTypes for both
@@ -187,7 +188,7 @@ void Kernel::start()
                 systemIdentity,
                 processorCoreDeviceType,
                 processor,
-                CoreId(i),
+                CoreId(static_cast<uint8_t>(i)),
                 processorCore);
             Q_ASSERT(processorCore != nullptr);
         }

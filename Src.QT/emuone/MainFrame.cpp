@@ -296,6 +296,13 @@ auto MainFrame::_openVirtualMachine(
     int index = _ui->tabWidget->addTab(page, vm->name());
     _ui->tabWidget->setTabIcon(index,vm->smallIcon());
     refresh();
+    //  Listen to VM state changes
+    connect(vm,
+            &emuone::core::VirtualMachine::stateChanged,
+            this,
+            &MainFrame::_virtualMachineStateChanged,
+            Qt::ConnectionType::QueuedConnection);
+    //  Done
     return vm;
 }
 
@@ -322,6 +329,11 @@ void MainFrame::_tabWidgetCurrentChanged(int)
     auto vm = currentVirtualMachine();
     Component::Settings::instance()->currentVirtualMachineLocation =
         (vm != nullptr) ? vm->location() : "";
+    refresh();
+}
+
+void MainFrame::_virtualMachineStateChanged(emuone::core::VirtualMachine * /*virtualMachine*/)
+{
     refresh();
 }
 
@@ -437,6 +449,11 @@ void MainFrame::_onActionConfigure()
         {   //  TODO ?
         }
     }   //  else do nothing
+}
+
+void MainFrame::_onActionAbout()
+{
+    QMessageBox::critical(this, "ERROR", "Not yet implemented");
 }
 
 //  End of emuone/MainFrame.cpp

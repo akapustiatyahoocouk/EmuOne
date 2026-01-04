@@ -137,6 +137,7 @@ namespace emuone
         void            _savePositionTimerTimeout();
         void            _refreshTimerTimeout();
         void            _tabWidgetCurrentChanged(int);
+        void            _virtualMachineStateChanged(emuone::core::VirtualMachine * virtualMachine);
 
         void            _onActionNewVirtualMachine();
         void            _onActionOpenVirtualMachine();
@@ -144,6 +145,7 @@ namespace emuone
         void            _onActionStart();
         void            _onActionStop();
         void            _onActionConfigure();
+        void            _onActionAbout();
     };
 }
 

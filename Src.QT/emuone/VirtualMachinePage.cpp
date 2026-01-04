@@ -34,10 +34,11 @@ VirtualMachinePage::VirtualMachinePage(
 
     //  Create dynamic controls
     _layout = new QStackedLayout(this);
-    _stoppedView =
-        new StoppedVirtualMachineView(this, _virtualMachine);
+    _stoppedView = new StoppedVirtualMachineView(this, _virtualMachine);
+    _runningView = new RunningVirtualMachineView(this, _virtualMachine);
     //  TODO views
     _layout->addWidget(_stoppedView);
+    _layout->addWidget(_runningView);
     this->setLayout(_layout);
 
     //  Done
@@ -56,13 +57,14 @@ VirtualMachinePage::~VirtualMachinePage()
 void VirtualMachinePage::refresh()
 {   //  TODO refresh all views & select ctive view
     _stoppedView->refresh();
+    _runningView->refresh();
     switch (_virtualMachine->state())
     {
         case emuone::core::VirtualMachine::State::Stopped:
             _layout->setCurrentWidget(_stoppedView);
             break;
         case emuone::core::VirtualMachine::State::Running:
-            //  TODO
+            _layout->setCurrentWidget(_runningView);
             break;
         case emuone::core::VirtualMachine::State::Suspended:
             Q_ASSERT(false);    //  TODO implement

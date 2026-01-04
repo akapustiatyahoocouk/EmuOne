@@ -26,49 +26,43 @@ namespace emuone::hades::kernel
         UnknownError    = 0x7FFFFFFF
     };
 
-    /// \class Oid emuone-hades/API.hpp
-    /// \brief The Lernel Object ID - unique.
-    class EMUONE_HADES_PUBLIC Oid final
+    /// \class Id emuone-hades/API.hpp
+    /// \brief A generic ID of something within ght kernel.
+    template <class T>
+    class Id
     {
+        static_assert(std::is_unsigned<T>::value, "T must be an unsigned type");
+        static_assert(std::is_integral <T>::value, "T must be an integer type");
+
         friend class Kernel;
 
         //////////
         //  Constants
     private:
-        static const uint32_t _InvalidImpl = 0;
-    public:
-        //  Special OIDs
-        static const Oid    Invalid;
-
-        //  Fixed OIDs
-        static const Oid    MinFixedOid;    //  inclusive
-        static const Oid    MaxFixedOid;    //  inclusive
-
-        //  Random OIDs
-        static const Oid    MinRandomOid;   //  inclusive
-        static const Oid    MaxRandomOid;   //  inclusive
+        static const T  _InvalidImpl = ~T(0);
 
         //////////
         //  Construction/destruction/assignment
-    private:
-        constexpr Oid(uint32_t impl) : _impl(impl) {}
+    public:
+        explicit constexpr Id(T impl) : _impl(impl) {}
     public:
         /// \brief
         ///     Constructs an invalid OID.
-        Oid() : _impl(_InvalidImpl) {}
+        Id() : _impl(_InvalidImpl) {}
 
         //  Default copy constructor, destructor and
         //  assignment are all OK.
 
         //////////
-        //  Operatora
+        //  Operators
     public:
-        bool            operator == (const Oid & op2) const { return _impl == op2._impl; }
-        bool            operator != (const Oid & op2) const { return _impl != op2._impl; }
-        bool            operator <  (const Oid & op2) const { return _impl <  op2._impl; }
-        bool            operator <= (const Oid & op2) const { return _impl <= op2._impl; }
-        bool            operator >  (const Oid & op2) const { return _impl >  op2._impl; }
-        bool            operator >= (const Oid & op2) const { return _impl >= op2._impl; }
+        bool            operator == (const Id<T> & op2) const { return _impl == op2._impl; }
+        bool            operator != (const Id<T> & op2) const { return _impl != op2._impl; }
+        bool            operator <  (const Id<T> & op2) const { return _impl <  op2._impl; }
+        bool            operator <= (const Id<T> & op2) const { return _impl <= op2._impl; }
+        bool            operator >  (const Id<T> & op2) const { return _impl >  op2._impl; }
+        bool            operator >= (const Id<T> & op2) const { return _impl >= op2._impl; }
+        explicit        operator T() const { return _impl; }
 
         //////////
         //  Operations
@@ -83,38 +77,56 @@ namespace emuone::hades::kernel
         //////////
         //  Implementation
     private:
-        uint32_t    _impl;
+        T               _impl;
     };
 
-    /// \brief
-    ///     Standard device type IDs.
-    enum class DeviceTypeId : uint16_t
-    {   //  An ID of a DeviceType, unique per Kernel
-        Amd64Processor      = 0x0100,
-        Amd64ProcessorCore  = 0x0101,
-#if defined(Q_PROCESSOR_X86_64)
-        HostProcessor       = Amd64Processor,
-        HostProcessorCore   = Amd64ProcessorCore,
-#else
-    #error Unsupported processor architecture
-#endif
-        Invalid = 0xFFFF    //  never used for actual DeviceTypes
+    /// \brief The Kernel Object ID - unique.
+    class EMUONE_HADES_PUBLIC Oid final : public Id<uint32_t>
+    {
+        //////////
+        //  Constants
+    public:
+        //  Fixed OID range
+        static const Oid    MinFixedOid;    //  inclusive
+        static const Oid    MaxFixedOid;    //  inclusive
+
+        //  Random OIDs
+        static const Oid    MinRandomOid;   //  inclusive
+        static const Oid    MaxRandomOid;   //  inclusive
+
+        //////////
+        //  Construction/destruction
+    public:
+        Oid() = default;
+        explicit Oid(uint32_t impl) : Id<uint32_t>(impl) {}
     };
 
-    enum class DeviceId : uint16_t
-    {   //  An ID of the Device, unique per DeviceType
-        Invalid = 0xFFFF
+    /// \brief An ID of the Device, unique per Kernel.
+    class EMUONE_HADES_PUBLIC DeviceTypeId final : public Id<uint16_t>
+    {
+        //////////
+        //  Constants
+    public:
+        static const DeviceTypeId   Amd64Processor;
+        static const DeviceTypeId   Amd64ProcessorCore;
+        static const DeviceTypeId   HostProcessor;
+        static const DeviceTypeId   HostProcessorCore;
+
+        //////////
+        //  Construction/destruction
+    public:
+        DeviceTypeId() = default;
+        explicit DeviceTypeId(uint16_t impl) : Id<uint16_t>(impl) {}
     };
 
-    enum class ProcessorId : uint8_t
-    {   //  An ID of a Processor, unique per Kernel
-        Invalid = 0xFF
-    };
+    /// \brief An ID of the Device, unique per DeviceType.
+    using DeviceId = Id<uint16_t>;
 
-    enum class CoreId : uint8_t
-    {   //  An ID of a ProcessorCore, unique per Processor
-        Invalid = 0xFF
-    };
+    /// \brief //  An ID of a Processor, unique per Kernel.
+    using ProcessorId = Id<uint8_t>;
+
+    /// \brief An ID of a ProcessorCore, unique per Processor.
+    using CoreId = Id<uint8_t>;
 }
 
 //  End of emuone-hades/kernel/DataTypes.hpp

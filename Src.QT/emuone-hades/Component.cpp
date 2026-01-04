@@ -61,6 +61,7 @@ void Component::iniialize()
     emuone::core::ArchitectureManager::register(Architecture::instance());
 
     emuone::core::ComponentTypeManager::register(devices::ExternalFileSystem::Type::instance());
+    emuone::core::ComponentTypeManager::register(devices::TextTerminal::Type::instance());
 
     emuone::core::ComponentTypeManager::register(kernel::Kernel::Type::instance());
 }
@@ -71,6 +72,7 @@ void Component::deiniialize()
     emuone::core::ArchitectureManager::unregister(Architecture::instance());
 
     emuone::core::ComponentTypeManager::unregister(devices::ExternalFileSystem::Type::instance());
+    emuone::core::ComponentTypeManager::unregister(devices::TextTerminal::Type::instance());
 
     emuone::core::ComponentTypeManager::unregister(kernel::Kernel::Type::instance());
 }

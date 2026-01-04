@@ -1,5 +1,5 @@
 //
-//  emuone-hades/devices/ExternalFileSystem.hpp - The external file system device
+//  emuone-hades/devices/TextTerminal.hpp - The text terminal
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -19,9 +19,9 @@
 
 namespace emuone::hades::devices
 {
-    /// \class ExternalFileSystem emuone-hades/API.hpp
-    /// \brief The HADES external file system device.
-    class EMUONE_HADES_PUBLIC ExternalFileSystem final
+    /// \class TextTerminal emuone-hades/API.hpp
+    /// \brief The HADES text terminal.
+    class EMUONE_HADES_PUBLIC TextTerminal final
         :   public virtual emuone::core::IDevice
     {
         //////////
@@ -45,7 +45,7 @@ namespace emuone::hades::devices
             virtual bool    isCompatibleWith(emuone::core::IArchitecture * architecture) const override;
             virtual bool    isCompatibleWith(emuone::core::IVirtualMachineType * virtualMachineType) const override;
             virtual bool    isPersistable() const override;
-            virtual auto    createComponent() -> ExternalFileSystem * override;
+            virtual auto    createComponent() -> TextTerminal * override;
         };
 
         /// \class Command emuone-hades/API.hpp
@@ -79,8 +79,8 @@ namespace emuone::hades::devices
         //////////
         //  Construction/destruction
     public:
-        ExternalFileSystem();
-        virtual ~ExternalFileSystem();
+        TextTerminal();
+        virtual ~TextTerminal();
 
         //////////
         //  emuone::core::IComponent
@@ -106,19 +106,34 @@ namespace emuone::hades::devices
         //  emuone::core::IDevice
     public:
         virtual auto    sendCommand(
-                                IDevice::Command * command
-                            ) -> SendCommandOutcome override;
+                IDevice::Command * command
+            ) -> SendCommandOutcome override;
 
         //////////
         //  Operations (configuration)
     public:
-        static bool     isValidVolumeName(const QString & volumeName);
-        static bool     isValidHostPath(const QString & hostPath);
+        inline static const int MinTerminalNumber = 0;
+        inline static const int MaxTerminalNumber = 255;
+        inline static const int DefaultTerminalNumber = 0;
 
-        QString         volumeName() const;
-        void            setVolumeName(const QString & volumeName);
-        QString         hostPath() const;
-        void            setHostPath(const QString & hostPath);
+        inline static const int MinColumns = 40;
+        inline static const int MaxColumns = 132;
+        inline static const int DefaultColumns = 80;
+
+        inline static const int MinRows = 4;
+        inline static const int MaxRows = 60;
+        inline static const int DefaultRows = 25;
+
+        static bool     isValidTerminalNumber(int terminalNumber);
+        static bool     isValidColumns(int columns);
+        static bool     isValidRows(int rows);
+
+        int             terminalNumber() const;
+        void            setTerminalNumber(int terminalNumber);
+        int             columns() const;
+        void            setColumns(int columns);
+        int             rows() const;
+        void            setRows(int rows);
 
         //////////
         //  Implementation
@@ -126,8 +141,9 @@ namespace emuone::hades::devices
         State           _state = State::Constructed;
 
         //  Configuration
-        QString         _volumeName = "SYSTEM";
-        QString         _hostPath = ".";
+        int             _terminalNumber = DefaultTerminalNumber;
+        int             _columns = DefaultColumns;
+        int             _rows = DefaultRows;
 
         //////////
         //  Threads
@@ -144,7 +160,7 @@ namespace emuone::hades::devices
             //////////
             //  Construction/destruction
         public:
-            _NotificationThread(ExternalFileSystem * extfs)
+            _NotificationThread(TextTerminal * extfs)
                 :   _extfs(extfs) {}
 
             //////////
@@ -165,22 +181,22 @@ namespace emuone::hades::devices
             //////////
             //  Implementation
         private:
-            ExternalFileSystem *const   _extfs;
+            TextTerminal *const   _extfs;
             std::atomic<bool>   _stopRequested = false;
             emuone::util::BlockingQueue<Response*>  _pendingResponses;
         };
         _NotificationThread *   _notificationThread = nullptr;
     };
 
-    namespace Ui { class ExternalFileSystemEditor; }
+    namespace Ui { class TextTerminalEditor; }
 
-    /// \class ExternalFileSystemEditor emuone-hades/API.hpp
+    /// \class TextTerminalEditor emuone-hades/API.hpp
     /// \brief The editor for external file system device.
-    class EMUONE_HADES_PUBLIC ExternalFileSystemEditor final
+    class EMUONE_HADES_PUBLIC TextTerminalEditor final
         :   public emuone::core::ComponentEditor
     {
         Q_OBJECT
-        EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(ExternalFileSystemEditor)
+        EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(TextTerminalEditor)
 
         //////////
         //  Construction/destruction
@@ -189,16 +205,16 @@ namespace emuone::hades::devices
         ///     Constructs the editor.
         /// \param parent
         ///     The parent for the editor; nullptr == none.
-        /// \param externalFileSystem
+        /// \param textTerminal
         ///     The External File System to edit.
-        ExternalFileSystemEditor(
+        TextTerminalEditor(
                 QWidget * parent,
-                ExternalFileSystem * externalFileSystem
+                TextTerminal * textTerminal
             );
 
         /// \brief
         ///     The class destructor.
-        virtual ~ExternalFileSystemEditor();
+        virtual ~TextTerminalEditor();
 
         //////////
         //  emuone::core::ComponentEditor
@@ -208,25 +224,31 @@ namespace emuone::hades::devices
         //////////
         //  Implementation
     private:
-        ExternalFileSystem *const   _externalFileSystem;
+        TextTerminal *const   _textTerminal;
         bool            _constructed = false;
 
         //  Helpers
         void            _loadControlValues();
         void            _saveControlValues() const;
+        int             _selectedTerminalNumber() const;
+        void            _setSelectedTerminalNumber(int terminalNumber);
+        int             _selectedColumns() const;
+        void            _setSelectedColumns(int columns);
+        int             _selectedRows() const;
+        void            _setSelectedRows(int rows);
 
         //////////
         //  Controls
     private:
-        Ui::ExternalFileSystemEditor *const _ui;
+        Ui::TextTerminalEditor *const _ui;
 
         //////////
         //  Signal handlers
     private slots:
-        void            _volumeNameLineEditTextChanged(QString);
-        void            _hostPathLineEditTextChanged(QString);
-        void            _browsePushButtonClicked();
+        void            _terminalNumberComboBoxCurrentIndexChanged(int);
+        void            _columnsComboBoxCurrentIndexChanged(int);
+        void            _rowsComboBoxCurrentIndexChanged(int);
     };
 }
 
-//  End of emuone-hades/devices/ExternalFileSystem.hpp
+//  End of emuone-hades/devices/TextTerminal.hpp

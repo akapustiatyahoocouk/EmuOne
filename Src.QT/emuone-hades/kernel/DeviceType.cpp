@@ -28,7 +28,7 @@ DeviceType::DeviceType(
         name(name)
 {
     Q_ASSERT(kernel->kernelGuard.isLockedByCurrentThread());
-    Q_ASSERT(deviceTypeId != DeviceTypeId::Invalid);
+    Q_ASSERT(deviceTypeId.isValid());
 
     //  Add to Kernel's secondary caches
     //  All of them do not count as "references"

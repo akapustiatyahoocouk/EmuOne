@@ -28,8 +28,8 @@ Processor::Processor(
     ) : Device(
             kernel, oid, owner,
             deviceType,
-            DeviceId(processorId),
-            "cpu" + emuone::util::toString(int(processorId))),
+            DeviceId(static_cast<uint8_t>(processorId)),
+            "cpu" + emuone::util::toString(static_cast<uint8_t>(processorId))),
         //  Properties
         processorId(processorId)
 {

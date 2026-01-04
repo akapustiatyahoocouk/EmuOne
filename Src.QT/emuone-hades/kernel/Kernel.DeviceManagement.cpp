@@ -34,7 +34,7 @@ StatusCode Kernel::createProcessor(
              deviceType->kernel == this &&
              _objects.value(deviceType->oid, nullptr) == deviceType &&
              deviceType->deviceTypeId == DeviceTypeId::HostProcessor);
-    Q_ASSERT(processorId != ProcessorId::Invalid);
+    Q_ASSERT(processorId.isValid());
 
     //  Ensure uniqueness
     if (_processors.contains(processorId))
@@ -75,7 +75,7 @@ StatusCode Kernel::createProcessorCore(
     Q_ASSERT(processor != nullptr &&
              processor->kernel == this &&
              _objects.value(processor->oid, nullptr) == processor);
-    Q_ASSERT(coreId != CoreId::Invalid);
+    Q_ASSERT(coreId.isValid());
 
     //  TODO uniqueness of processor ID within the Processor
 
@@ -87,7 +87,8 @@ StatusCode Kernel::createProcessorCore(
             owner,
             deviceType,
             processor,
-            coreId);
+            coreId,
+            emuone::util::ByteOrder::Host);
     //  TODO Q_ASSERT(_processorCores.value(coreId) == processorCore);
     Q_ASSERT(_objects.value(processor->oid, nullptr) == processor);
     return StatusCode::Success;

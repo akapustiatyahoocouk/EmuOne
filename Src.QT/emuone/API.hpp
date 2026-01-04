@@ -27,6 +27,7 @@
 #include "emuone/Component.hpp"
 
 #include "emuone/StoppedVirtualMachineView.hpp"
+#include "emuone/RunningVirtualMachineView.hpp"
 #include "emuone/VirtualMachinePage.hpp"
 #include "emuone/MainFrame.hpp"
 #include "emuone/NewVirtualMachineDialog.hpp"
