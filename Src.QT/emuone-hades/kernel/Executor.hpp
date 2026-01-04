@@ -45,6 +45,7 @@ namespace emuone::hades::kernel
         //////////
         //  Associations
         ExecutionEnvironments   executionEnvironments;  //  count as "references"
+        Threads         affineThreads;
 
         //////////
         //  Operations

@@ -39,6 +39,8 @@ Executor::~Executor()
     {   //  On shutdown everything will be force-destroyed
         //  Execution environments must die first!
         Q_ASSERT(executionEnvironments.isEmpty());
+        //  Affine threads must die first
+        Q_ASSERT(affineThreads.isEmpty());
     }
 
     //  Remove from Kernel's secondary caches

@@ -62,6 +62,7 @@ namespace emuone::hades::kernel
         QString         command;
         QString         commandLine;
         QString         currentDirectory;   //  "" == not known
+        uint32_t        suspendCount = 0;
         std::optional<uint32_t> exitCode;
 
         //////////
