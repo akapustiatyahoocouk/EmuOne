@@ -69,6 +69,43 @@ namespace emuone::core
             Running
         };
 
+        /// \class IUi emuone-core/API.hpp
+        /// \brief The UI of a running Component Adaptor.
+        class EMUONE_CORE_PUBLIC IUi
+        {
+            EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(IUi)
+
+            //////////
+            //  This is an interface
+        public:
+            IUi() = default;
+            virtual ~IUi() = default;
+
+            //////////
+            //  Operations
+        public:
+            /// \brief
+            ///     Returns the ComponentAdaptor represente by this UI.
+            /// \return
+            ///     The ComponentAdaptor represente by this UI.
+            virtual auto    adaptor() -> IComponentAdaptor * = 0;
+
+            /// \brief
+            ///     Returns the set of DisplaySurfaces that
+            ///     comprise the UI.
+            /// \details
+            ///     These are owned by the IUi instance and
+            ///     shall not be delete'd independently of it.
+            ///     Repeated invocations of the same method on
+            ///     the same IUi instance will yield the same
+            ///     result.
+            /// \return
+            ///     Returns the set of DisplaySurfaces that
+            ///     comprise the UI.
+            virtual auto    displaySurfacess(
+                                ) -> DisplaySurfaces = 0;
+        };
+
         //////////
         //  Construction/destruction
     protected:
@@ -232,6 +269,27 @@ namespace emuone::core
         ///     If the ComponentAdaptor is not in the Running or Suspended state,
         ///     the call has no effect.
         virtual void    stop() noexcept = 0;
+
+        //////////
+        //  Operations (runtime)
+    public:
+        /// \brief
+        ///     Creates a new UI fot rhis Component Adaptor.
+        /// \details
+        ///     The UI of a component Adaptor is a collection
+        ///     of various agents that visually represent this
+        ///     Component Adaptor within the UI of a Running VM.
+        /// \return
+        ///     The newly created UI for this Component
+        ///     Adaptor; nullptr if this Component Adaptor
+        ///     has no UI.
+        ///     If not nullptr, the caller is responsible
+        ///     for destroying the UI when it is no longer
+        ///     needed.
+        ///     Destroying a ComponentAdaptor while one of
+        ///     its UI objects is still alive is generally
+        ///     an error.
+        virtual IUi *       createUi() = 0;
 
     protected:
         /// \brief

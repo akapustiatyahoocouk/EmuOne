@@ -12,5 +12,9 @@
         <file>Resources/Images/Objects/RemoteFolderSmall.png</file>
         <file>Resources/Images/Actions/BrowseLarge.png</file>
         <file>Resources/Images/Actions/BrowseSmall.png</file>
+        <file>Resources/Images/Actions/ClearLarge.png</file>
+        <file>Resources/Images/Actions/ClearSmall.png</file>
+        <file>Resources/Images/Actions/SaveLarge.png</file>
+        <file>Resources/Images/Actions/SaveSmall.png</file>
     </qresource>
 </RCC>

@@ -25,7 +25,7 @@ EMUONE_IMPLEMENT_COMPONENT(Component)
 //  StockObject
 QString Component::mnemonic() const
 {
-    return "emuone::util";
+    return "emuone-util";
 }
 
 QString Component::displayName() const

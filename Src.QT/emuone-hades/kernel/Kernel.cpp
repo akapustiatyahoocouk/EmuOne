@@ -279,6 +279,13 @@ void Kernel::stop() noexcept
 }
 
 //////////
+//  emuone::core::IComponent (runtime)
+auto Kernel::createUi() -> IUi *
+{
+    return new Ui(this);
+}
+
+//////////
 //  Operations (configuration)
 QVersionNumber Kernel::version() const
 {
@@ -339,6 +346,34 @@ bool Kernel::Type::isPersistable() const
 auto Kernel::Type::createComponent() -> Kernel *
 {
     return new Kernel();
+}
+
+//////////
+//  Kernel::Ui
+Kernel::Ui::Ui(Kernel * kernel)
+    :   _kernel(kernel),
+        _displaySurfaces { new KernelConsoleDisplaySurface(nullptr, kernel) }
+{
+}
+
+Kernel::Ui::~Ui()
+{
+    for (auto ds : _displaySurfaces)
+    {
+        delete ds;
+    }
+}
+
+auto Kernel::Ui::component(
+    ) -> emuone::core::IComponent *
+{
+    return _kernel;
+}
+
+auto Kernel::Ui::displaySurfacess(
+    ) -> emuone::core::DisplaySurfaces
+{
+    return _displaySurfaces;
 }
 
 //  End of emuone-hades/kernel/Kernel.cpp

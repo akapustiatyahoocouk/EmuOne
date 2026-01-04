@@ -108,6 +108,11 @@ namespace emuone::hades::devices
         virtual void    stop() noexcept override;
 
         //////////
+        //  emuone::core::IComponent (runtime)
+    public:
+        virtual IUi *   createUi() override;
+
+        //////////
         //  emuone::core::IDevice
     public:
         virtual auto    sendCommand(

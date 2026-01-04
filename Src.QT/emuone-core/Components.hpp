@@ -71,6 +71,43 @@ namespace emuone::core
             Running
         };
 
+        /// \class IUi emuone-core/API.hpp
+        /// \brief The UI of a running Component.
+        class EMUONE_CORE_PUBLIC IUi
+        {
+            EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(IUi)
+
+            //////////
+            //  This is an interface
+        public:
+            IUi() = default;
+            virtual ~IUi() = default;
+
+            //////////
+            //  Operations
+        public:
+            /// \brief
+            ///     Returns the Component represente by this UI.
+            /// \return
+            ///     The Component represente by this UI.
+            virtual auto    component() -> IComponent * = 0;
+
+            /// \brief
+            ///     Returns the set of DisplaySurfaces that
+            ///     comprise the UI.
+            /// \details
+            ///     These are owned by the IUi instance and
+            ///     shall not be delete'd independently of it.
+            ///     Repeated invocations of the same method on
+            ///     the same IUi instance will yield the same
+            ///     result.
+            /// \return
+            ///     Returns the set of DisplaySurfaces that
+            ///     comprise the UI.
+            virtual auto    displaySurfacess(
+                                ) -> DisplaySurfaces = 0;
+        };
+
         //////////
         //  Construction/destruction
     public:
@@ -253,6 +290,25 @@ namespace emuone::core
         /// \brief
         ///     The guard to use for synchronizing all state changes.
         mutable emuone::util::Mutex stateGuard;
+
+        //////////
+        //  Operations (runtime)
+    public:
+        /// \brief
+        ///     Creates a new UI fot rhis Component.
+        /// \details
+        ///     The UI of a component is a collection of
+        ///     various agents that visually represent this
+        ///     Component within the UI of a Running VM.
+        /// \return
+        ///     The newly created UI for this Component;
+        ///     nullptr if this Component has no UI.
+        ///     If not nullptr, the caller is responsible
+        ///     for destroying the UI when it is no longer
+        ///     needed.
+        ///     Destroying a Component while one of its UI
+        ///     objects is still alive is generally an error.
+        virtual IUi *       createUi() = 0;
 
         //////////
         //  Implementation

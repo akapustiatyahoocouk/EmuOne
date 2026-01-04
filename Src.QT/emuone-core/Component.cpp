@@ -25,7 +25,7 @@ EMUONE_IMPLEMENT_COMPONENT(Component)
 //  emuone::util::IStockObject
 QString Component::mnemonic() const
 {
-    return "emuone::core";
+    return "emuone-core";
 }
 
 QString Component::displayName() const

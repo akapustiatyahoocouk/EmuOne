@@ -30,6 +30,7 @@ namespace emuone::core
 
     class ComponentEditor;
     class ComponentAdaptorEditor;
+    class DisplaySurface;
 
     //  Collections
     using Architectures = QSet<IArchitecture*>;
@@ -41,6 +42,7 @@ namespace emuone::core
     using ComponentAdaptorTypes = QSet<IComponentAdaptorType*>;
     using ComponentAdaptors = QSet<IComponentAdaptor*>;
     using VirtualMachines = QList<VirtualMachine*>;
+    using DisplaySurfaces = QSet<DisplaySurface*>;
 }
 
 //  End of emuone-core/Classes.hpp

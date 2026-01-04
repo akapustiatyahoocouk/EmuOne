@@ -195,6 +195,13 @@ void TextTerminal::stop() noexcept
 }
 
 //////////
+//  emuone::core::IComponent (runtime)
+auto TextTerminal::createUi() -> IUi *
+{
+    return nullptr; //  TODO implement
+}
+
+//////////
 //  emuone::core::IDevice
 auto TextTerminal::sendCommand(
     IDevice::Command * command

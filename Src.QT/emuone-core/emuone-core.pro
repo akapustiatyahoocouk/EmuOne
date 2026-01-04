@@ -11,6 +11,7 @@ SOURCES += \
     ComponentCategoryManager.cpp \
     ComponentEditor.cpp \
     ComponentTypeManager.cpp \
+    DisplaySurface.cpp \
     Exceptions.cpp \
     IComponent.cpp \
     IComponentAdaptorType.cpp \
@@ -36,6 +37,7 @@ HEADERS += \
     ComponentEditor.hpp \
     ComponentType.hpp \
     Components.hpp \
+    DisplaySurface.hpp \
     Exceptions.hpp \
     Linkage.hpp \
     VirtualMachine.hpp \

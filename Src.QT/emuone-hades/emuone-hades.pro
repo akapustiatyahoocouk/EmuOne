@@ -24,6 +24,7 @@ SOURCES += \
     kernel/Kernel.IdentityManagement.cpp \
     kernel/Kernel.ObjectManagement.cpp \
     kernel/Kernel.cpp \
+    kernel/KernelConsoleDisplaySurface.cpp \
     kernel/KernelEditor.cpp \
     kernel/NativeExecutionEnvironment.cpp \
     kernel/NativeExecutor.cpp \
@@ -63,6 +64,7 @@ RESOURCES += \
 FORMS += \
     devices/ExternalFileSystemEditor.ui \
     devices/TextTerminalEditor.ui \
+    kernel/KernelConsoleDisplaySurface.ui \
     kernel/KernelEditor.ui
 
 DISTFILES +=

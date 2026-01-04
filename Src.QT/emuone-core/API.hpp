@@ -34,6 +34,7 @@
 #include "emuone-core/ComponentCategory.hpp"
 #include "emuone-core/ComponentType.hpp"
 #include "emuone-core/Components.hpp"
+#include "emuone-core/DisplaySurface.hpp"
 #include "emuone-core/ComponentEditor.hpp"
 #include "emuone-core/ComponentAdaptorType.hpp"
 #include "emuone-core/ComponentAdaptor.hpp"

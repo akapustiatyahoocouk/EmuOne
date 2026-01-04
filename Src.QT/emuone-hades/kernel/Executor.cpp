@@ -39,11 +39,12 @@ Executor::~Executor()
     {   //  On shutdown everything will be force-destroyed
         //  Execution environments must die first!
         Q_ASSERT(executionEnvironments.isEmpty());
-        //  Remove from Kernel's secondary caches
-        //  All of them do not count as "references"
-        Q_ASSERT(kernel->_executors.value(name, nullptr) == this);
-        kernel->_executors.remove(name);
     }
+
+    //  Remove from Kernel's secondary caches
+    //  All of them do not count as "references"
+    Q_ASSERT(kernel->_executors.value(name, nullptr) == this);
+    kernel->_executors.remove(name);
 }
 
 //  End of emuone-hades/kernel/Executor.cpp

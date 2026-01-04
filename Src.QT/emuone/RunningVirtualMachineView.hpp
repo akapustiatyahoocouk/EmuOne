@@ -50,6 +50,19 @@ namespace emuone
     private:
         emuone::core::VirtualMachine *const _virtualMachine;
 
+        //  UI elements - created ONCE for a Running VM
+        bool            _uiCreated = false;
+        QMap<emuone::core::IComponent*,
+             emuone::core::IComponent::IUi*>    _componentUis;  //  native AND adapted
+        QMap<emuone::core::IComponentAdaptor*,
+             emuone::core::IComponentAdaptor::IUi*> _adaptorUis;
+
+        QList<emuone::core::DisplaySurface*>    _displaySurfaces;   //  In tab order
+
+        //  Helpers
+        void            _createUi();
+        void            _destroyUi();
+
         //////////
         //  Controls
     private:

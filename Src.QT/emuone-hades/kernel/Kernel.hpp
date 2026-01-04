@@ -68,6 +68,36 @@ namespace emuone::hades::kernel
             virtual auto    createComponent() -> Kernel * override;
         };
 
+        /// \class Ui emuone-hades/API.hpp
+        /// \brief The UI of the HADES Kernel.
+        class EMUONE_HADES_PUBLIC Ui final
+            :   public virtual IUi
+        {
+            EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Ui)
+
+            friend class Kernel;
+
+            //////////
+            //  Construction/destruction
+        private:
+            explicit Ui(Kernel * kernel);
+            virtual ~Ui();
+
+            //////////
+            //  IUi
+        public:
+            virtual auto    component(
+                                ) -> emuone::core::IComponent * override;
+            virtual auto    displaySurfacess(
+                                ) -> emuone::core::DisplaySurfaces override;
+
+            //////////
+            //  Implementation
+        private:
+            Kernel *const   _kernel;
+            const emuone::core::DisplaySurfaces _displaySurfaces;
+        };
+
         //////////
         //  Construction/destruction
     public:
@@ -98,6 +128,11 @@ namespace emuone::hades::kernel
         virtual void    deinitialize() noexcept override;
         virtual void    start() override;
         virtual void    stop() noexcept override;
+
+        //////////
+        //  emuone::core::IComponent (runtime)
+    public:
+        virtual IUi *   createUi() override;
 
         //////////
         //  Operations (configuration)
@@ -259,6 +294,41 @@ namespace emuone::hades::kernel
         //  Signal handlers
     private slots:
         void            _kernelVersionLineEditTextChanged(QString);
+    };
+
+    namespace Ui { class KernelConsoleDisplaySurface; }
+
+    /// \class KernelConsoleDisplaySurface emuone-hades/API.hpp
+    /// \brief The Kernel Console UI artefact.
+    class EMUONE_HADES_PUBLIC KernelConsoleDisplaySurface final
+        :   public emuone::core::DisplaySurface
+    {
+        Q_OBJECT
+        EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(KernelConsoleDisplaySurface)
+
+        //////////
+        //  Construction/destruction
+    public:
+        KernelConsoleDisplaySurface(
+                QWidget * parent,
+                Kernel * kernel
+            );
+        virtual ~KernelConsoleDisplaySurface();
+
+        //////////
+        //  emuone::core::DisplaySurface
+    public:
+        virtual auto    component() const -> Kernel * { return _kernel; }
+
+        //////////
+        //  Implementation
+    private:
+        Kernel *const   _kernel;
+
+        //////////
+        //  Controls
+    private:
+        Ui::KernelConsoleDisplaySurface *const  _ui;
     };
 }
 

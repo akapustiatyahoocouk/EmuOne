@@ -177,6 +177,13 @@ void ExternalFileSystem::stop() noexcept
 }
 
 //////////
+//  emuone::core::IComponent (runtime)
+auto ExternalFileSystem::createUi() -> IUi *
+{
+    return nullptr; //  No UI!
+}
+
+//////////
 //  emuone::core::IDevice
 auto ExternalFileSystem::sendCommand(
         IDevice::Command * command
