@@ -27,6 +27,8 @@ namespace emuone::hades::kernel
         friend class Kernel;
         friend class NativeExecutor;
         friend class ExecutionEnvironment;
+        friend class Thread;
+        friend class NativeThread;
 
         //////////
         //  All members are private - for Kernel only

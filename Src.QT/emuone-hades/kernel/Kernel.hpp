@@ -37,6 +37,8 @@ namespace emuone::hades::kernel
         friend class NativeExecutor;
         friend class ExecutionEnvironment;
         friend class Process;
+        friend class Thread;
+        friend class NativeThread;
 
         //////////
         //  Constants
@@ -221,6 +223,20 @@ namespace emuone::hades::kernel
                                 const QString & currentDirectory,
                                 PNativeProcess & nativeProcess
                             );
+        StatusCode      startProcess(Process * process);
+
+        //////////
+        //  Operations (process management)
+    public:
+        StatusCode      createNativeThread(
+                                Identity * owner,
+                                NativeProcess * process,
+                                PriorityClass priorityClass,
+                                const QString name,
+                                NativeThreadRunner * runner,
+                                PNativeThread & nativeThread
+                            );
+        StatusCode      startThread(Thread * thread);
 
         //////////
         //  Implementation
@@ -260,6 +276,7 @@ namespace emuone::hades::kernel
         QMap<QString, Executor*>    _executors;
         QMap<QString, ExecutionEnvironment*>    _executionEnvironments;
         QMap<Oid, Process*>         _processes;
+        NativeThreads               _nativeThreads;
     };
 
     namespace Ui { class KernelEditor; }

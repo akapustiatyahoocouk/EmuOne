@@ -144,7 +144,9 @@ namespace emuone
         void            _onActionExit();
         void            _onActionStart();
         void            _onActionStop();
+        void            _onActionReset();
         void            _onActionConfigure();
+        void            _onActionFullScreen();
         void            _onActionAbout();
     };
 }

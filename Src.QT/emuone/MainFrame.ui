@@ -575,6 +575,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionReset</sender>
+   <signal>triggered()</signal>
+   <receiver>emuone::MainFrame</receiver>
+   <slot>_onActionReset()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>252</x>
+     <y>171</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionFullScreen</sender>
+   <signal>triggered()</signal>
+   <receiver>emuone::MainFrame</receiver>
+   <slot>_onActionFullScreen()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>252</x>
+     <y>171</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>_onActionExit()</slot>
@@ -585,5 +617,7 @@
   <slot>_onActionStop()</slot>
   <slot>_onActionConfigure()</slot>
   <slot>_onActionAbout()</slot>
+  <slot>_onActionReset()</slot>
+  <slot>_onActionFullScreen()</slot>
  </slots>
 </ui>

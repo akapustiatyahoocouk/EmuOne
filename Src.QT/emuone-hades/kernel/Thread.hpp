@@ -25,6 +25,7 @@ namespace emuone::hades::kernel
         EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Thread)
 
         friend class Kernel;
+        friend class NativeThread;
 
         //////////
         //  All members are private - for Kernel only
@@ -75,10 +76,11 @@ namespace emuone::hades::kernel
         //////////
         //  Construction/destruction
         Thread(Kernel * kernel, const Oid & oid, Identity * owner,
+               Process * process,
                PriorityClass priorityClass,
                const QString name,
-               Process * process,
-               const Executors & affinity);
+               const Executors & affinity
+            );
         virtual ~Thread();
 
         //////////
@@ -91,17 +93,22 @@ namespace emuone::hades::kernel
         bool            isDaemon = false;   //  always starts off as non-daemon
         uint32_t        suspendCount = 0;
         std::optional<uint32_t> exitCode;
+        bool            reaped = false;     //  somebody did wait() on this Thread
 
+        //////////
+        //  Associations
+        Process *       process;    //  never nullptr
+        Executors       affinity;   //  count as "references"
+
+        //////////
+        //  Operations
         int             dynamicPriority() const
         {
             return std::max(int(Min),
                             std::min(int(Max), priority + priorityBoost));
         }
 
-        //////////
-        //  Associations
-        Process *       process;    //  never nullptr
-        Executors       affinity;   //  count as "references"
+        static int      prioriryFromClass(PriorityClass priorityClass);
     };
 
     /// \class NativeThreadRunner emuone-hades/API.hpp
@@ -110,11 +117,14 @@ namespace emuone::hades::kernel
     {
         EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(NativeThreadRunner)
 
+        friend class Kernel;
+        friend class NativeThread;
+
         //////////
         //  Construction/destruction
     protected:
-        NativeThreadRunner();
-        virtual ~NativeThreadRunner();
+        NativeThreadRunner() = default;
+        virtual ~NativeThreadRunner() = default;
 
         //////////
         //  Operations
@@ -149,10 +159,11 @@ namespace emuone::hades::kernel
         //  Construction/destruction
         NativeThread(
                 Kernel * kernel, const Oid & oid, Identity * owner,
+                NativeProcess * process,
                 PriorityClass priorityClass,
                 const QString name,
-                NativeProcess * process,
-                NativeThreadRunner * runner);
+                NativeThreadRunner * runner
+            );
         virtual ~NativeThread();
 
         //////////
@@ -183,7 +194,7 @@ namespace emuone::hades::kernel
         private:
             NativeThread *  _nativeThread;
         };
-        _RunnerThread * _runnerThread;
+        _RunnerThread * _runnerThread = nullptr;
     };
 }
 

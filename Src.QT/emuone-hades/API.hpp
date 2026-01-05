@@ -46,6 +46,9 @@
 #include "emuone-hades/kernel/Process.hpp"
 #include "emuone-hades/kernel/Thread.hpp"
 
+//  Processes
+#include "emuone-hades/processes/init/InitRunner.hpp"
+
 //  Miscellaneous
 #include "emuone-hades/VirtualMachine.hpp"
 

@@ -26,6 +26,8 @@ Identity::Identity(
         //  Properties
         name(name)
 {
+    Q_ASSERT(kernel->kernelGuard.isLockedByCurrentThread());
+
     //  Add to kernel secondary cache(s)
     //  All of them do not count as "references"
     Q_ASSERT(!kernel->_identities.contains(name));
@@ -34,6 +36,8 @@ Identity::Identity(
 
 Identity::~Identity()
 {
+    Q_ASSERT(kernel->kernelGuard.isLockedByCurrentThread());
+
     //  Remove from kernel secondary cache(s)
     //  All of them do not count as "references"
     Q_ASSERT(kernel->_identities.value(name, nullptr) == this);

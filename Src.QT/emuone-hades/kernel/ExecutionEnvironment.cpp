@@ -56,7 +56,7 @@ ExecutionEnvironment::~ExecutionEnvironment()
         //  All Proxcesses must die first!
         Q_ASSERT(processes.isEmpty());
         //  Un-link ExecutionEnvironment from Executors
-        for (auto e : affinity)
+        for (auto e : std::as_const(affinity))
         {
             Q_ASSERT(e->executionEnvironments.contains(this));
             Q_ASSERT(e->referenceCount > 0);

@@ -439,6 +439,11 @@ void MainFrame::_onActionStop()
     }
 }
 
+void MainFrame::_onActionReset()
+{
+    QMessageBox::critical(this, "ERROR", "Not yet implemented");
+}
+
 void MainFrame::_onActionConfigure()
 {
     if (auto vm = currentVirtualMachine();
@@ -449,6 +454,11 @@ void MainFrame::_onActionConfigure()
         {   //  TODO ?
         }
     }   //  else do nothing
+}
+
+void MainFrame::_onActionFullScreen()
+{
+    QMessageBox::critical(this, "ERROR", "Not yet implemented");
 }
 
 void MainFrame::_onActionAbout()

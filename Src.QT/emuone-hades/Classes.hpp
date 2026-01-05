@@ -40,6 +40,7 @@ namespace emuone::hades::kernel
     class NativeProcess;
     class Thread;
     class NativeThread;
+    class NativeThreadRunner;
 
     //  Pointers (used as output parameters in Kernel services)
     using PSystemIdentity = SystemIdentity*;
@@ -69,6 +70,7 @@ namespace emuone::hades::kernel
     using ProcessorCores = QSet<ProcessorCore*>;
     using Processes = QSet<Process*>;
     using Threads = QSet<Thread*>;
+    using NativeThreads = QSet<NativeThread*>;
 }
 
 //  End of emuone-hades/Classes.hpp

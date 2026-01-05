@@ -408,6 +408,23 @@ void VirtualMachine::resume()
     Q_ASSERT(false);
 }
 
+void VirtualMachine::reset()
+{
+    emuone::util::Lock _(_guard);
+    //  TODO implement
+    Q_ASSERT(false);
+}
+
+void VirtualMachine::restart()
+{
+    emuone::util::Lock _(_guard);
+    if (_state == State::Running)
+    {
+        stop();     //  noexcpt
+        start();    //  may throw
+    }
+}
+
 //////////
 //  Operations (persistency)
 void VirtualMachine::save()

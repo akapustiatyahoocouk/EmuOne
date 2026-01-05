@@ -41,7 +41,7 @@ StatusCode Kernel::createNativeProcess(
     Q_ASSERT((parent == nullptr) ||
              (parent->kernel == this &&
               _objects.value(parent->oid, nullptr) == parent));
-    //  Create Processor
+    //  Create Native Process
     nativeProcess =
         new NativeProcess(
             this,
@@ -54,8 +54,35 @@ StatusCode Kernel::createNativeProcess(
             command,
             commandLine,
             currentDirectory);
-    Q_ASSERT(_processes.value(nativeProcess->oid, nullptr) == nativeProcess);
     Q_ASSERT(_objects.value(nativeProcess->oid, nullptr) == nativeProcess);
+    Q_ASSERT(_processes.value(nativeProcess->oid, nullptr) == nativeProcess);
+    return StatusCode::Success;
+}
+
+StatusCode Kernel::startProcess(Process * process)
+{
+    Q_ASSERT(kernelGuard.isLockedByCurrentThread());
+    Q_ASSERT(process != nullptr && process->kernel == this);
+
+    //  A process cannot be started more than once
+    if (process->state != Process::State::Created)
+    {   //  OOPS! Can't!
+        return StatusCode::InvalidArgument;
+    }
+    //  Starting a Process with suspendCount > 0 just
+    //  makes it Suspended...
+    if (process->suspendCount > 0)
+    {   //  ...and so is the case
+        Q_ASSERT(false);    //  TODO implement
+        return StatusCode::InvalidArgument;
+    }
+    //  Starting a Process means startiung all its Threads
+    process->state = Process::State::Running;
+    for (auto thread : process->threads)
+    {
+        startThread(thread);
+    }
+    //  We're done
     return StatusCode::Success;
 }
 

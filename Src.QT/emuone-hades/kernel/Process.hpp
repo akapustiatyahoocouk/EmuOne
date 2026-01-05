@@ -26,6 +26,8 @@ namespace emuone::hades::kernel
 
         friend class Kernel;
         friend class NativeProcess;
+        friend class Thread;
+        friend class NativeThread;
 
         //////////
         //  All members are private - for Kernel only
@@ -58,12 +60,13 @@ namespace emuone::hades::kernel
         //  Properties
         State           state = State::Created;
         PriorityClass   priorityClass;
-        QString         name;
-        QString         command;
-        QString         commandLine;
+        QString         name;               //  process name as known to Kernel
+        QString         command;            //  the executable that runs the Process
+        QString         commandLine;        //  1st [quoted] word is argv[0], etc.
         QString         currentDirectory;   //  "" == not known
         uint32_t        suspendCount = 0;
         std::optional<uint32_t> exitCode;
+        bool            reaped = false;     //  somebody did wait() on this Process
 
         //////////
         //  Associations

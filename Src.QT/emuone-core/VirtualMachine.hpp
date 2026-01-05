@@ -368,14 +368,53 @@ namespace emuone::core
         ///         persistency, the call is an error.
         ///     -   If the VM is not Suspended, the call has no effect.
         ///     -   This method can be safely called from any thread.
+        /// \exception VirtualMachineException
+        ///     If an error occurs.
         void            resume();
+
+        /// \brief
+        ///     Performs a soft reset of a Running VM.
+        /// \details
+        ///     If this VM is not Running, the call has no effect.
+        /// \exception VirtualMachineException
+        ///     If an error occurs.
+        void            reset();
+
+        /// \brief
+        ///     Performs a restart (hard reset) of a Running VM.
+        /// \details
+        ///     If this VM is not Running, the call has no effect.
+        /// \exception VirtualMachineException
+        ///     If an error occurs.
+        void            restart();
 
     signals:
         /// \brief
         ///     Emitted when the State of this VM changes.
         /// \param virtualMachine
         ///     The VM whose state has changed.
-        void            stateChanged(emuone::core::VirtualMachine * virtualMachine);
+        void            stateChanged(VirtualMachine * virtualMachine);
+
+        /// \brief
+        ///     Emitted when the VM itself expresses a wish
+        ///     to be stopped.
+        /// \param virtualMachine
+        ///     The VM making the wish.
+        void            stopRequired(VirtualMachine * virtualMachine);
+
+        /// \brief
+        ///     Emitted when the VM itself expresses a wish
+        ///     to be restarted (hard reset).
+        /// \param virtualMachine
+        ///     The VM making the wish.
+        void            restartRequired(VirtualMachine * virtualMachine);
+
+        /// \brief
+        ///     Emitted when the VM itself expresses a wish
+        ///     to perform a soft reset.
+        /// \param virtualMachine
+        ///     The VM making the wish.
+        void            resetRequired(VirtualMachine * virtualMachine);
 
         //////////
         //  Operations (persistency)

@@ -24,18 +24,22 @@ SOURCES += \
     kernel/Kernel.IdentityManagement.cpp \
     kernel/Kernel.ObjectManagement.cpp \
     kernel/Kernel.ProcessManagement.cpp \
+    kernel/Kernel.ThreadManagement.cpp \
     kernel/Kernel.cpp \
     kernel/KernelConsoleDisplaySurface.cpp \
     kernel/KernelEditor.cpp \
     kernel/NativeExecutionEnvironment.cpp \
     kernel/NativeExecutor.cpp \
     kernel/NativeProcess.cpp \
+    kernel/NativeThread.cpp \
     kernel/Object.cpp \
     kernel/Oid.cpp \
     kernel/Process.cpp \
     kernel/Processor.cpp \
     kernel/ProcessorCore.cpp \
-    kernel/SystemIdentity.cpp
+    kernel/SystemIdentity.cpp \
+    kernel/Thread.cpp \
+    processes/init/InitRunner.cpp
 
 HEADERS += \
     API.hpp \
@@ -55,7 +59,8 @@ HEADERS += \
     kernel/Kernel.hpp \
     kernel/Object.hpp \
     kernel/Process.hpp \
-    kernel/Thread.hpp
+    kernel/Thread.hpp \
+    processes/init/InitRunner.hpp
 
 PRECOMPILED_HEADER = API.hpp
 

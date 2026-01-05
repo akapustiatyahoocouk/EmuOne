@@ -237,17 +237,27 @@ void Kernel::start()
             nativeExecutionEnvironment,
             nullptr,
             PriorityClass::Normal,
-            "init",
-            "init",
-            "iniy",
-            "",
+            "SYSTEM:/bin/init", //  name TODO named constant
+            "SYSTEM:/bin/init", //  command TODO named constant
+            "SYSTEM:/bin/init", //  command line TODO named constant
+            "SYSTEM:/",         //  current directory TODO named constant
             initProcess);
         Q_ASSERT(initProcess != nullptr &&
                  initProcess->state == Process::State::Created);
-        //  TODO
 
-        //  5.  And start that init thread
-        //  TODO
+        NativeThread * initThread = nullptr;
+        createNativeThread(
+            systemIdentity,
+            initProcess,
+            initProcess->priorityClass,
+            initProcess->name,
+            new processes::init::InitRunner(),
+            initThread);
+        Q_ASSERT(initThread != nullptr &&
+                 initThread->state == Thread::State::Created);
+
+        //  5.  And start that init process/thread
+        startProcess(initProcess);
     }
 
     //  Perform state change
@@ -264,8 +274,32 @@ void Kernel::stop() noexcept
         return;
     }
 
-    //  Terminate all native threads, politrly if
-    //  possible, forcibly otherwise
+    //  Send SIGTERM to all Processes.
+    for (auto p : _processes.values())  //  shallow list
+    {   //  TODO
+    }
+
+    //  Wait for Processes to react to SIGTERM.
+    //  IMPORTANT: We cannot do this in Kernel mode!!!
+    stateGuard.release();
+
+    //  TODO wait for Processes to become Finished
+
+    stateGuard.grab();
+    //  Force-terminate all native threads if the corresponding
+    //  Process did not respect the SIGKILL.
+    //  We're back to Kernel mode...
+    for (auto t : std::as_const(_nativeThreads))
+    {   //  ...so no mr nice guy
+        if (t->_runnerThread != nullptr)
+        {
+            t->_runnerThread->terminate();
+            t->_runnerThread->wait(_GraceBeforeKillMs);
+            //  Assume killed
+            delete t->_runnerThread;
+            t->_runnerThread = nullptr;
+        }
+    }
     //  TODO
 
     //  Destroy all kernel objects and clear the
