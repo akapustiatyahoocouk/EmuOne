@@ -36,6 +36,9 @@ NativeThread::NativeThread(
     Q_ASSERT(kernel->kernelGuard.isLockedByCurrentThread());
     Q_ASSERT(_runner != nullptr && _runner->_nativeThread == nullptr);
 
+    //  Take over the Runner
+    _runner->_nativeThread = this;
+
     //  Add to secondary Kernel caches
     kernel->_nativeThreads.insert(this);
 }
@@ -44,7 +47,7 @@ NativeThread::~NativeThread()
 {
     Q_ASSERT(kernel->kernelGuard.isLockedByCurrentThread());
 
-    Q_ASSERT(_runner != nullptr && _runner->_nativeThread == nullptr);
+    Q_ASSERT(_runner != nullptr);
     delete _runner;
 
     Q_ASSERT(_runnerThread == nullptr ||
@@ -57,6 +60,12 @@ NativeThread::~NativeThread()
 
 //////////
 //  NativeThread::_RunnerThread
+NativeThread::_RunnerThread::_RunnerThread(NativeThread * nativeThread)
+    :   _nativeThread(nativeThread)
+{
+    Q_ASSERT(_nativeThread != nullptr);
+}
+
 void NativeThread::_RunnerThread::run()
 {
     Q_ASSERT(_nativeThread != nullptr &&
@@ -73,10 +82,15 @@ void NativeThread::_RunnerThread::run()
         exitCode = 0xFFFFFFFF;
     }
     catch (const emuone::util::Error & ex)
-    {   //  OIOPS! Log & exit thread
+    {   //  OOPS! Log & exit thread
         qCritical() << ex;
         exitCode = 0xFFFFFFFF;
     }
+    catch (uint32_t ec)
+    {   //  Exit thread
+        exitCode = ec;
+    }
+    //  TODO what about "exit process" ?
     catch (...)
     {   //  OOPS! Can't log, but must still exit thread
         exitCode = 0xFFFFFFFF;

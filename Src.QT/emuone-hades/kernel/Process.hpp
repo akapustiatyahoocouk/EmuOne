@@ -28,6 +28,7 @@ namespace emuone::hades::kernel
         friend class NativeProcess;
         friend class Thread;
         friend class NativeThread;
+        friend class SystemCalls;
 
         //////////
         //  All members are private - for Kernel only
@@ -68,7 +69,8 @@ namespace emuone::hades::kernel
         std::optional<uint32_t> exitCode;
         bool            reaped = false;     //  somebody did wait() on this Process
 
-        uint32_t        pendingSignals = 0; //  bitmask, bit (1 << signal) == signal pending
+        K_sigset_t      signalMask = 0;     //  bitmask, bit (1 << signal) == signal blocked
+        K_sigset_t      pendingSignals = 0; //  bitmask, bit (1 << signal) == signal pending
 
         //////////
         //  Associations
@@ -88,6 +90,7 @@ namespace emuone::hades::kernel
         EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(NativeProcess)
 
         friend class Kernel;
+        friend class SystemCalls;
 
         //////////
         //  All members are private - for Kernel only
@@ -106,6 +109,12 @@ namespace emuone::hades::kernel
                 const QString & currentDirectory
             );
         virtual ~NativeProcess();
+
+        //////////
+        //  Signal handling
+        SignalDisposition   defaultSignalDispositions[K_NSIG];
+        SignalDisposition   signalDispositions[K_NSIG];
+        NativeSignalHandler nativeSignalHandlers[K_NSIG];   //  used for K_SIG_UDF entries
     };
 }
 

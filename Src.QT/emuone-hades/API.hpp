@@ -43,11 +43,13 @@
 #include "emuone-hades/kernel/ExecutionEnvironment.hpp"
 #include "emuone-hades/kernel/DeviceType.hpp"
 #include "emuone-hades/kernel/Device.hpp"
-#include "emuone-hades/kernel/Process.hpp"
+#include "emuone-hades/kernel/NativeThreadRunner.hpp"
 #include "emuone-hades/kernel/Thread.hpp"
+#include "emuone-hades/kernel/Process.hpp"
 
-//  Processes
-#include "emuone-hades/processes/init/InitProcess.hpp"
+//  System processes
+#include "emuone-hades/SystemProcess.hpp"
+#include "emuone-hades/systemprocesses/Init.hpp"
 
 //  Miscellaneous
 #include "emuone-hades/VirtualMachine.hpp"

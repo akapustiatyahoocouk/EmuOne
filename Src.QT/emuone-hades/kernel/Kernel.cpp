@@ -237,10 +237,10 @@ void Kernel::start()
             nativeExecutionEnvironment,
             nullptr,
             PriorityClass::Normal,
-            processes::init::InitProcess::ProcessName,  //  name
-            processes::init::InitProcess::VirtuaPath,   //  command
-            processes::init::InitProcess::VirtuaPath,   //  command line
-            processes::init::InitProcess::CurrentDirectory,
+            systemprocesses::Init::ProcessName,  //  name
+            systemprocesses::Init::VirtuaPath,   //  command
+            systemprocesses::Init::VirtuaPath,   //  command line
+            systemprocesses::Init::CurrentDirectory,
             initProcess);
         Q_ASSERT(initProcess != nullptr &&
                  initProcess->state == Process::State::Created);
@@ -251,7 +251,7 @@ void Kernel::start()
             initProcess,
             initProcess->priorityClass,
             initProcess->name,
-            new processes::init::InitProcess::Runner(),
+            systemprocesses::Init::instance()->createRunner(),
             initThread);
         Q_ASSERT(initThread != nullptr &&
                  initThread->state == Thread::State::Created);

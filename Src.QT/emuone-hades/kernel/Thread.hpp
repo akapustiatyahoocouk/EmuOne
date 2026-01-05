@@ -26,6 +26,7 @@ namespace emuone::hades::kernel
 
         friend class Kernel;
         friend class NativeThread;
+        friend class SystemCalls;
 
         //////////
         //  All members are private - for Kernel only
@@ -95,6 +96,8 @@ namespace emuone::hades::kernel
         std::optional<uint32_t> exitCode;
         bool            reaped = false;     //  somebody did wait() on this Thread
 
+        K_sigset_t      signalMask;         //  bitmask, bit (1 << signal) == signal blocked
+
         //////////
         //  Associations
         Process *       process;    //  never nullptr
@@ -109,37 +112,6 @@ namespace emuone::hades::kernel
         }
 
         static int      prioriryFromClass(PriorityClass priorityClass);
-    };
-
-    /// \class NativeThreadRunner emuone-hades/API.hpp
-    /// \brief An agent that implements a NativeThread.
-    class EMUONE_HADES_PUBLIC NativeThreadRunner
-    {
-        EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(NativeThreadRunner)
-
-        friend class Kernel;
-        friend class NativeThread;
-
-        //////////
-        //  Construction/destruction
-    protected:
-        NativeThreadRunner() = default;
-        virtual ~NativeThreadRunner() = default;
-
-        //////////
-        //  Operations
-    protected:
-        /// \brief
-        ///     Runs the native thread toi completion.
-        /// \exception Exception
-        ///     If an error occurs; the NativeThread
-        ///     stops abnormally.
-        virtual uint32_t    run() = 0;
-
-        //////////
-        //  Implementation
-    private:
-        NativeThread *  _nativeThread = nullptr;
     };
 
     /// \class NativeThread emuone-hades/API.hpp
@@ -181,8 +153,7 @@ namespace emuone::hades::kernel
             //////////
             //  Construction/destruction
         public:
-            explicit _RunnerThread(NativeThread * nativeThread)
-                :   _nativeThread(nativeThread) { Q_ASSERT(_nativeThread != nullptr); }
+            explicit _RunnerThread(NativeThread * nativeThread);
 
             //////////
             //  QThread

@@ -27,7 +27,7 @@ QSet<AbstractSetting*> Settings::settings() const
 
 AbstractSetting * Settings::findSetting(const QString & mnemonic) const
 {
-    return _settings.contains(mnemonic) ? _settings[mnemonic] : nullptr;
+    return _settings.value(mnemonic, nullptr);
 }
 
 //  End of emuone-util/Settings.cpp

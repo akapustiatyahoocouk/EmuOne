@@ -1,5 +1,5 @@
 //
-//  emuone-hades/processes/init/InitRunner.hpp - The "init" process
+//  emuone-hades/systemprocesses/Init.hpp - The "init" process
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -15,13 +15,14 @@
 //  GNU General Public License for more details.
 //////////
 
-namespace emuone::hades::processes::init
+namespace emuone::hades::systemprocesses
 {
-    /// \class InitProcess emuone-hades/API.hpp
+    /// \class Init emuone-hades/API.hpp
     /// \brief The "init" process.
-    class EMUONE_HADES_PUBLIC InitProcess final
+    class EMUONE_HADES_PUBLIC Init final
+        :   public virtual ISystemProcess
     {
-        EMUONE_UTILITY_CLASS(InitProcess)
+        EMUONE_DECLARE_SINGLETON(Init)
 
         //////////
         //  Constants
@@ -31,20 +32,25 @@ namespace emuone::hades::processes::init
         inline static const QString CurrentDirectory = "SYSTEM:/";
 
         //////////
-        //  Types
+        //  ISystemProcess
     public:
-        /// \class InitRunner emuone-hades/API.hpp
-        /// \brief The runner for the "init"'s main thread.
-        class EMUONE_HADES_PUBLIC Runner final
+        virtual QString virtualPath() const override;
+        virtual QString processName() const override;
+        virtual Runner *createRunner() override;
+
+        //////////
+        //  Implementation
+    private:
+        class _Runner final
             :   public emuone::hades::kernel::NativeThreadRunner
         {
-            EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Runner)
+            EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(_Runner)
 
             //////////
             //  Construction/destruction
         public:
-            Runner();
-            virtual ~Runner();
+            _Runner() = default;
+            virtual ~_Runner() = default;
 
             //////////
             //  emuone::hades::kernel::NativeThreadRunner
@@ -54,4 +60,4 @@ namespace emuone::hades::processes::init
     };
 }
 
-//  End of emuone-hades/processes/init/InitRunner.hpp
+//  End of emuone-hades/systemprocesses/Init.hpp

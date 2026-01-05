@@ -1,5 +1,5 @@
 //
-//  emuone-hades/processes/init/InitProcess.cpp - emuone::hades::processes::init::InitProcess class implementation
+//  emuone-hades/systemprocesses/Init.cpp - emuone::hades::systemprocesses::Init class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -15,26 +15,43 @@
 //  GNU General Public License for more details.
 //////////
 #include "emuone-hades/API.hpp"
-using namespace emuone::hades::processes::init;
+using namespace emuone::hades::systemprocesses;
 
 //////////
-//  Construction/destruction
-InitProcess::Runner::Runner()
+//  Singleton
+EMUONE_IMPLEMENT_SINGLETON(Init)
+Init::Init() {}
+Init::~Init() {}
+
+//////////
+//  ISystemProcess
+QString Init::virtualPath() const
 {
+    return "SYSTEM:/bin/init";
 }
 
-InitProcess::Runner::~Runner()
+QString Init::processName() const
 {
+    return "init";
+}
+
+auto Init::createRunner() -> Runner *
+{
+    return new _Runner();
 }
 
 //////////
-//  emuone::hades::kernel::NativeThreadRunner
-uint32_t InitProcess::Runner::run()
+//  Init::_Runner
+uint32_t Init::_Runner::run()
 {
+    //  Respect signals from the Kernel
     //  TODO implement
-    for(; ; );
+    for(; ; )
+    {
+        systemCalls.yield();
+    }
 
     return 0;
 }
 
-//  End of emuone-hades/processes/init/InitProcess.cpp
+//  End of emuone-hades/systemprocesses/Init.cpp

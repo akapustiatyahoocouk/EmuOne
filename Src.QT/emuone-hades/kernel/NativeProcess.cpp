@@ -38,6 +38,33 @@ NativeProcess::NativeProcess(
             commandLine,
             currentDirectory)
 {
+    //  Set up standard signal dispositions
+    for (int i = 0; i < K_NSIG; i++)
+    {
+        defaultSignalDispositions[i] = K_SIG_IGN;
+    }
+    defaultSignalDispositions[K_SIGHUP]   = K_SIG_TRM;
+    defaultSignalDispositions[K_SIGINT]   = K_SIG_TRM;
+    defaultSignalDispositions[K_SIGQUIT]  = K_SIG_TRD;
+    defaultSignalDispositions[K_SIGILL]   = K_SIG_TRD;
+    defaultSignalDispositions[K_SIGABRT]  = K_SIG_TRD;
+    defaultSignalDispositions[K_SIGFPE]   = K_SIG_TRD;
+    defaultSignalDispositions[K_SIGKILL]  = K_SIG_TRM;
+    defaultSignalDispositions[K_SIGUSR1]  = K_SIG_TRM;
+    defaultSignalDispositions[K_SIGSEGV]  = K_SIG_TRD;
+    defaultSignalDispositions[K_SIGUSR2]  = K_SIG_TRM;
+    defaultSignalDispositions[K_SIGPIPE]  = K_SIG_TRM;
+    defaultSignalDispositions[K_SIGALRM]  = K_SIG_TRM;
+    defaultSignalDispositions[K_SIGTERM]  = K_SIG_TRM;
+    defaultSignalDispositions[K_SIGCHLD]  = K_SIG_IGN;
+    defaultSignalDispositions[K_SIGCONT]  = K_SIG_CNT;
+    defaultSignalDispositions[K_SIGSTOP]  = K_SIG_STP;
+    defaultSignalDispositions[K_SIGTSTP]  = K_SIG_STP;
+    defaultSignalDispositions[K_SIGBREAK] = K_SIG_TRM;
+    for (int i = 0; i < K_NSIG; i++)
+    {
+        signalDispositions[i] = defaultSignalDispositions[i];
+    }
 }
 
 NativeProcess::~NativeProcess()

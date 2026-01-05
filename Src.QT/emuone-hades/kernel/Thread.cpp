@@ -30,6 +30,7 @@ Thread::Thread(
         priorityClass(priorityClass),
         priority(prioriryFromClass(priorityClass)),
         name(name),
+        signalMask((assert(process != nullptr), process->signalMask)),
         //  Associations
         process(process),
         affinity(affinity)
@@ -69,7 +70,7 @@ Thread::~Thread()
         process->referenceCount--;
         this->referenceCount--;
         //  Un-link Thread from Executors
-        for (auto e : affinity)
+        for (auto e : std::as_const(affinity))
         {
             Q_ASSERT(e->affineThreads.contains(this));
             Q_ASSERT(e->referenceCount > 0);

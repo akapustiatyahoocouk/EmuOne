@@ -15,6 +15,15 @@
 //  GNU General Public License for more details.
 //////////
 
+namespace emuone::hades
+{
+    //  Objects
+    class ISystemProcess;
+
+    //  Collections
+    using SystemProcesses = QSet<ISystemProcess*>;
+}
+
 namespace emuone::hades::kernel
 {
     //  Objects

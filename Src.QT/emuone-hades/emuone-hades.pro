@@ -6,6 +6,8 @@ DEFINES += EMUONE_HADES_LIBRARY
 SOURCES += \
     Architecture.cpp \
     Component.cpp \
+    ISystemProcess.cpp \
+    SystemProcessManager.cpp \
     VirtualMachine.cpp \
     devices/ExternalFileSystem.cpp \
     devices/ExternalFileSystemEditor.cpp \
@@ -37,9 +39,10 @@ SOURCES += \
     kernel/Process.cpp \
     kernel/Processor.cpp \
     kernel/ProcessorCore.cpp \
+    kernel/SystemCalls.cpp \
     kernel/SystemIdentity.cpp \
     kernel/Thread.cpp \
-    processes/init/InitProcess.cpp
+    systemprocesses/Init.cpp
 
 HEADERS += \
     API.hpp \
@@ -47,6 +50,7 @@ HEADERS += \
     Classes.hpp \
     Component.hpp \
     Linkage.hpp \
+    SystemProcess.hpp \
     VirtualMachine.hpp \
     devices/ExternalFileSystem.hpp \
     devices/TextTerminal.hpp \
@@ -57,10 +61,11 @@ HEADERS += \
     kernel/Executor.hpp \
     kernel/Identity.hpp \
     kernel/Kernel.hpp \
+    kernel/NativeThreadRunner.hpp \
     kernel/Object.hpp \
     kernel/Process.hpp \
     kernel/Thread.hpp \
-    processes/init/InitProcess.hpp
+    systemprocesses/Init.hpp
 
 PRECOMPILED_HEADER = API.hpp
 

@@ -108,7 +108,9 @@ namespace emuone::hades::kernel
         K_SIGINT    = 2,    //  Interrupt signal (commonly initiated by Ctrl+C).
         K_SIGQUIT   = 3,    //  Quit signal (commonly initiated by Ctrl+\).
         K_SIGILL    = 4,    //  Illegal instruction.
+        K_SIGTRAP   = 5,    //  Trace/breakpoint trap
         K_SIGABRT   = 6,    //  Abnormal termination (raised by the abort() system call).
+        K_SIGBUS    = 7,    //  Bus error
         K_SIGFPE    = 8,    //  Floating-point exception (e.g., division by zero).
         K_SIGKILL   = 9,    //  Forcefully terminate a process. This signal cannot be caught, ignored, or handled.
         K_SIGUSR1   = 10,   //  User-defined signal 1.
@@ -120,8 +122,15 @@ namespace emuone::hades::kernel
         K_SIGCHLD   = 17,   //  Child process terminated or stopped.
         K_SIGCONT   = 18,   //  Continue executing if stopped.
         K_SIGSTOP   = 19,   //  Stop process execution. Cannot be caught or ignored.
-        K_SIGTSTP   = 20    //  Stop process initiated from terminal (commonly Ctrl+Z; can be handled or ignored).
+        K_SIGTSTP   = 20,   //  Stop process initiated from terminal (commonly Ctrl+Z; can be handled or ignored).
+        K_SIGBREAK  = 21,   //  Ctrl-Break sequence
+        K_NSIG      = 22    //  maximum signal number + 1
     };
+    using K_sigset_t = uint32_t;
+    inline K_sigset_t K_sigmask(int signal)
+    {
+        return K_sigset_t(1) << signal;
+    }
 
     /// \class Id emuone-hades/API.hpp
     /// \brief A generic ID of something within ght kernel.
@@ -236,6 +245,18 @@ namespace emuone::hades::kernel
         Realtime        ///< Never preempt until it yields.
     };
 
+    typedef void (NativeThreadRunner::*NativeSignalHandler)(int);
+    enum SignalDisposition  //  Not "enum class" for better syntax
+    {
+        K_SIG_TRM,  ///< Terminate process.
+        K_SIG_IGN,  ///< Ignore the signal
+        K_SIG_TRD,  ///< Terminate process, dump core.
+        K_SIG_STP,  ///< Stop process.
+        K_SIG_CNT,  ///< Continue process if stopped.
+        //  Special values for signal() function
+        K_SIG_DFL,  ///< Revert to default.
+        K_SIG_UDF   ///< User-defined function.
+    };
 }
 
 //  End of emuone-hades/kernel/DataTypes.hpp

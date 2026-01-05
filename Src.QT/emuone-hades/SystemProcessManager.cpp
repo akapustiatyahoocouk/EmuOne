@@ -1,5 +1,5 @@
 //
-//  emuone-core/ComponentCategoryManager.cpp - emuone::core::ComponentCategoryManager class implementation
+//  emuone-hades/SystemProcessManager.cpp - emuone::hades::SystemProcessManager class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -14,66 +14,64 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 //////////
-#include "emuone-core/API.hpp"
-using namespace emuone::core;
+#include "emuone-hades/API.hpp"
+using namespace emuone::hades;
 
-struct ComponentCategoryManager::_Impl
+struct SystemProcessManager::_Impl
 {
-    using Registry = QMap<QString, IComponentCategory*>;
-
-    _Impl()
-    {
-        for (auto cc : StandardComponentCategories::all())
-        {
-            Q_ASSERT(!registry.contains(cc->mnemonic()));
-            registry[cc->mnemonic()] = cc;
-        }
-    }
+    using Registry = QMap<QString, ISystemProcess*>;
 
     emuone::util::Mutex guard;
     Registry            registry;   //  mnemonic -> VAT
+
+    _Impl()
+    {
+#define EMUONE_REGISTER_SYSTEM_PROCESS(P)   \
+        registry[systemprocesses::P::instance()->mnemonic()] = systemprocesses::P::instance();
+        EMUONE_REGISTER_SYSTEM_PROCESS(Init)
+    }
 };
 
 //////////
 //  Operations
-auto ComponentCategoryManager::all() -> ComponentCategories
+auto SystemProcessManager::all() -> SystemProcesses
 {
     _Impl * impl = _impl();
     emuone::util::Lock _(impl->guard);
 
     auto result = impl->registry.values();
-    return ComponentCategories(result.cbegin(), result.cend());
+    return SystemProcesses(result.cbegin(), result.cend());
 }
 
-bool ComponentCategoryManager::register(IComponentCategory * componentCategory)
+bool SystemProcessManager::register(ISystemProcess * systemProcess)
 {
-    Q_ASSERT(componentCategory != nullptr);
+    Q_ASSERT(systemProcess != nullptr);
 
     _Impl * impl = _impl();
     emuone::util::Lock _(impl->guard);
 
-    auto key = componentCategory->mnemonic();
+    auto key = systemProcess->mnemonic();
     if (impl->registry.contains(key))
     {   //  Repeated registration is a kind of "success"
         auto registered = impl->registry[key];
-        return componentCategory == registered;
+        return systemProcess == registered;
     }
-    impl->registry[key] = componentCategory;
+    impl->registry[key] = systemProcess;
     return true;
 }
 
-bool ComponentCategoryManager::unregister(IComponentCategory * componentCategory)
+bool SystemProcessManager::unregister(ISystemProcess * systemProcess)
 {
-    Q_ASSERT(componentCategory != nullptr);
+    Q_ASSERT(systemProcess != nullptr);
 
     _Impl * impl = _impl();
     emuone::util::Lock _(impl->guard);
 
-    auto key = componentCategory->mnemonic();
+    auto key = systemProcess->mnemonic();
     if (impl->registry.contains(key))
     {
         auto registered = impl->registry[key];
-        if (componentCategory == registered)
+        if (systemProcess == registered)
         {   //  We're not trying to un-register an impersonator
             impl->registry.remove(key);
             return true;
@@ -82,7 +80,7 @@ bool ComponentCategoryManager::unregister(IComponentCategory * componentCategory
     return false;
 }
 
-auto ComponentCategoryManager::find(const QString & mnemonic) -> IComponentCategory *
+auto SystemProcessManager::find(const QString & mnemonic) -> ISystemProcess *
 {
     _Impl * impl = _impl();
     emuone::util::Lock _(impl->guard);
@@ -92,10 +90,10 @@ auto ComponentCategoryManager::find(const QString & mnemonic) -> IComponentCateg
 
 //////////
 //  Implementation
-auto ComponentCategoryManager::_impl() -> _Impl *
+auto SystemProcessManager::_impl() -> _Impl *
 {
     static _Impl impl;
     return &impl;
 }
 
-//  End of emuone-core/ComponentCategoryManager.cpp
+//  End of emuone-hades/SystemProcessManager.cpp

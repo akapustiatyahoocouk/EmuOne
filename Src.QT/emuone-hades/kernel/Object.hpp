@@ -37,6 +37,7 @@ namespace emuone::hades::kernel
         friend class Process;
         friend class Thread;
         friend class NativeThread;
+        friend class SystemCalls;
 
         //////////
         //  All members are private - for Kernel only

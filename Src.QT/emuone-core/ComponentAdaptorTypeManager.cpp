@@ -78,9 +78,7 @@ auto ComponentAdaptorTypeManager::find(const QString & mnemonic) -> IComponentAd
     _Impl * impl = _impl();
     emuone::util::Lock _(impl->guard);
 
-    return impl->registry.contains(mnemonic) ?
-               impl->registry[mnemonic] :
-               nullptr;
+    return impl->registry.value(mnemonic, nullptr);
 }
 
 auto ComponentAdaptorTypeManager::find(
