@@ -19,7 +19,7 @@ using namespace emuone::hades::kernel;
 
 //////////
 //  Operations (process management)
-StatusCode Kernel::createNativeProcess(
+KErrno Kernel::createNativeProcess(
         Identity * owner,
         NativeExecutionEnvironment * executionEnvironment,
         Process * parent,
@@ -56,10 +56,10 @@ StatusCode Kernel::createNativeProcess(
             currentDirectory);
     Q_ASSERT(_objects.value(nativeProcess->oid, nullptr) == nativeProcess);
     Q_ASSERT(_processes.value(nativeProcess->oid, nullptr) == nativeProcess);
-    return StatusCode::Success;
+    return K_EOK;
 }
 
-StatusCode Kernel::startProcess(Process * process)
+KErrno Kernel::startProcess(Process * process)
 {
     Q_ASSERT(kernelGuard.isLockedByCurrentThread());
     Q_ASSERT(process != nullptr && process->kernel == this);
@@ -67,14 +67,14 @@ StatusCode Kernel::startProcess(Process * process)
     //  A process cannot be started more than once
     if (process->state != Process::State::Created)
     {   //  OOPS! Can't!
-        return StatusCode::InvalidArgument;
+        return K_ENOTSUP;
     }
     //  Starting a Process with suspendCount > 0 just
     //  makes it Suspended...
     if (process->suspendCount > 0)
     {   //  ...and so is the case
         Q_ASSERT(false);    //  TODO implement
-        return StatusCode::InvalidArgument;
+        return K_ENOTSUP;
     }
     //  Starting a Process means startiung all its Threads
     process->state = Process::State::Running;
@@ -83,7 +83,7 @@ StatusCode Kernel::startProcess(Process * process)
         startThread(thread);
     }
     //  We're done
-    return StatusCode::Success;
+    return K_EOK;
 }
 
 //  End of emuone-hades/kernel/Kernel.ProcessManagement.cpp

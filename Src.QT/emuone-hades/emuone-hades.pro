@@ -39,7 +39,7 @@ SOURCES += \
     kernel/ProcessorCore.cpp \
     kernel/SystemIdentity.cpp \
     kernel/Thread.cpp \
-    processes/init/InitRunner.cpp
+    processes/init/InitProcess.cpp
 
 HEADERS += \
     API.hpp \
@@ -60,7 +60,7 @@ HEADERS += \
     kernel/Object.hpp \
     kernel/Process.hpp \
     kernel/Thread.hpp \
-    processes/init/InitRunner.hpp
+    processes/init/InitProcess.hpp
 
 PRECOMPILED_HEADER = API.hpp
 

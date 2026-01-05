@@ -237,10 +237,10 @@ void Kernel::start()
             nativeExecutionEnvironment,
             nullptr,
             PriorityClass::Normal,
-            "SYSTEM:/bin/init", //  name TODO named constant
-            "SYSTEM:/bin/init", //  command TODO named constant
-            "SYSTEM:/bin/init", //  command line TODO named constant
-            "SYSTEM:/",         //  current directory TODO named constant
+            processes::init::InitProcess::ProcessName,  //  name
+            processes::init::InitProcess::VirtuaPath,   //  command
+            processes::init::InitProcess::VirtuaPath,   //  command line
+            processes::init::InitProcess::CurrentDirectory,
             initProcess);
         Q_ASSERT(initProcess != nullptr &&
                  initProcess->state == Process::State::Created);
@@ -251,7 +251,7 @@ void Kernel::start()
             initProcess,
             initProcess->priorityClass,
             initProcess->name,
-            new processes::init::InitRunner(),
+            new processes::init::InitProcess::Runner(),
             initThread);
         Q_ASSERT(initThread != nullptr &&
                  initThread->state == Thread::State::Created);
@@ -275,52 +275,88 @@ void Kernel::stop() noexcept
     }
 
     //  Send SIGTERM to all Processes.
-    for (auto p : _processes.values())  //  shallow list
-    {   //  TODO
+    {   //  We're manipulating Kernel's data structures
+        emuone::util::Lock _1(kernelGuard);
+        for (auto p : _processes.values())  //  shallow list
+        {
+            p->pendingSignals |= (1 << K_SIGTERM);
+            //  TODO Result suspended Process or its Suspended Threads
+        }
     }
 
     //  Wait for Processes to react to SIGTERM.
     //  IMPORTANT: We cannot do this in Kernel mode!!!
-    stateGuard.release();
+    stateGuard.release();   //  TODO do we NEED to ?
 
-    //  TODO wait for Processes to become Finished
+    //  Wait for NativeProcesses to become Finished
+    bool forceTerminationRequired = true;
+    for (auto startForcedTerminationAt = QDateTime::currentDateTimeUtc().addMSecs(_GraceBeforeKillMs);
+         QDateTime::currentDateTimeUtc() < startForcedTerminationAt;)
+    {   //  Did all NativeProcesses tfinish ?
+        bool nativeProcessesStillRunning = false;
+        {
+            emuone::util::Lock _2(kernelGuard);
+            for (auto p : _processes.values())
+            {
+                if (auto np =
+                    dynamic_cast<NativeProcess*>(p))
+                {
+                    if (np->state == Process::State::Running)
+                    {
+                        nativeProcessesStillRunning = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (!nativeProcessesStillRunning)
+        {
+            forceTerminationRequired = false;
+            break;
+        }
+        //  No - wait for a bit, giving them the chances
+        QThread::msleep(250);
+    }
 
     stateGuard.grab();
-    //  Force-terminate all native threads if the corresponding
-    //  Process did not respect the SIGKILL.
-    //  We're back to Kernel mode...
-    for (auto t : std::as_const(_nativeThreads))
-    {   //  ...so no mr nice guy
-        if (t->_runnerThread != nullptr)
-        {
-            t->_runnerThread->terminate();
-            t->_runnerThread->wait(_GraceBeforeKillMs);
-            //  Assume killed
-            delete t->_runnerThread;
-            t->_runnerThread = nullptr;
-        }
-    }
-    //  TODO
-
-    //  Destroy all kernel objects and clear the
-    //  primary and secondary caches
-    {
+    //  Force-terminate all NativeThreads if the
+    //  NativeProcesses did not respect the SIGKILL
+    if (forceTerminationRequired)
+    {   //  We're manipulating Kernel's data structures
         emuone::util::Lock _1(kernelGuard);
-        _shutdownInProgress = true; //  we're killing EVERYTHING!
-        for (Object * object : _objects.values())   //  shallow clone
-        {
-            delete object;
+        for (auto t : std::as_const(_nativeThreads))
+        {   //  ...so no mr nice guy
+            if (t->_runnerThread != nullptr)
+            {
+                t->_runnerThread->terminate();
+                t->_runnerThread->wait(_GraceBeforeKillMs);
+                //  Assume killed
+                delete t->_runnerThread;
+                t->_runnerThread = nullptr;
+            }
         }
-        Q_ASSERT(_objects.isEmpty());
-        Q_ASSERT(_identities.isEmpty());
-        Q_ASSERT(_systemIdentity == nullptr);
-        Q_ASSERT(_deviceTypes.isEmpty());
-        Q_ASSERT(_processors.isEmpty());
-        Q_ASSERT(_executors.isEmpty());
-        Q_ASSERT(_executionEnvironments.isEmpty());
-        Q_ASSERT(_processes.isEmpty());
-        //  TODO other secondary caches
-        _shutdownInProgress = false;    //  we're done shutting down the Kernel
+        //  TODO
+
+        //  Destroy all kernel objects and clear the
+        //  primary and secondary caches
+        {
+            emuone::util::Lock _1(kernelGuard);
+            _shutdownInProgress = true; //  we're killing EVERYTHING!
+            for (Object * object : _objects.values())   //  shallow clone
+            {
+                delete object;
+            }
+            Q_ASSERT(_objects.isEmpty());
+            Q_ASSERT(_identities.isEmpty());
+            Q_ASSERT(_systemIdentity == nullptr);
+            Q_ASSERT(_deviceTypes.isEmpty());
+            Q_ASSERT(_processors.isEmpty());
+            Q_ASSERT(_executors.isEmpty());
+            Q_ASSERT(_executionEnvironments.isEmpty());
+            Q_ASSERT(_processes.isEmpty());
+            //  TODO other secondary caches
+            _shutdownInProgress = false;    //  we're done shutting down the Kernel
+        }
     }
 
     //  Perform state change

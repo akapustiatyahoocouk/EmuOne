@@ -19,7 +19,7 @@ using namespace emuone::hades::kernel;
 
 //////////
 //  Operations (device type management)
-StatusCode Kernel::createDeviceType(
+KErrno Kernel::createDeviceType(
         Identity * owner,
         DeviceTypeId deviceTypeId,
         const QString & name,
@@ -33,7 +33,7 @@ StatusCode Kernel::createDeviceType(
     if (_deviceTypes.contains(deviceTypeId))
     {   //  OOPS!
         deviceType = nullptr;
-        return StatusCode::AlreadyExists;
+        return K_EEXIST;
     }
 
     //  Create new DeviceType.
@@ -46,7 +46,7 @@ StatusCode Kernel::createDeviceType(
             name);
     Q_ASSERT(_deviceTypes.value(deviceTypeId) == deviceType);
     Q_ASSERT(_objects.value(deviceType->oid, nullptr) == deviceType);
-    return StatusCode::Success;
+    return K_EOK;
 }
 
 QString Kernel::defaultDeviceTypeName(DeviceTypeId deviceTypeId)

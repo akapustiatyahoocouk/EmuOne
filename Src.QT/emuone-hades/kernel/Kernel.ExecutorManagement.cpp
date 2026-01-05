@@ -19,7 +19,7 @@ using namespace emuone::hades::kernel;
 
 //////////
 //  Operations (executor management)
-StatusCode Kernel::createNativeExecutor(
+KErrno Kernel::createNativeExecutor(
         Identity * owner,
         ProcessorCore * processorCore,
         PNativeExecutor & nativeExecutor
@@ -38,7 +38,7 @@ StatusCode Kernel::createNativeExecutor(
     if (_executors.contains(processorCore->name))
     {   //  OOPS!
         nativeExecutor = nullptr;
-        return StatusCode::AlreadyExists;
+        return K_EEXIST;
     }
 
     //  Create new Executor
@@ -50,7 +50,7 @@ StatusCode Kernel::createNativeExecutor(
             processorCore);
     Q_ASSERT(_executors.value(nativeExecutor->name) == nativeExecutor);
     Q_ASSERT(_objects.value(nativeExecutor->oid, nullptr) == nativeExecutor);
-    return StatusCode::Success;
+    return K_EOK;
 }
 
 //  End of emuone-hades/kernel/Kernel.ExecutorManagement.cpp

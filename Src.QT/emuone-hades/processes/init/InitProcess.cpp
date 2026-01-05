@@ -1,5 +1,5 @@
 //
-//  emuone-hades/processes/init/InitRunner.cpp - emuone::hades::processes::init::InitRunner class implementation
+//  emuone-hades/processes/init/InitProcess.cpp - emuone::hades::processes::init::InitProcess class implementation
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -19,21 +19,22 @@ using namespace emuone::hades::processes::init;
 
 //////////
 //  Construction/destruction
-InitRunner::InitRunner()
+InitProcess::Runner::Runner()
 {
 }
 
-InitRunner::~InitRunner()
+InitProcess::Runner::~Runner()
 {
 }
 
 //////////
 //  emuone::hades::kernel::NativeThreadRunner
-uint32_t InitRunner::run()
+uint32_t InitProcess::Runner::run()
 {
     //  TODO implement
+    for(; ; );
 
     return 0;
 }
 
-//  End of emuone-hades/processes/init/InitRunner.cpp
+//  End of emuone-hades/processes/init/InitProcess.cpp

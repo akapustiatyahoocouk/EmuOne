@@ -68,6 +68,8 @@ namespace emuone::hades::kernel
         std::optional<uint32_t> exitCode;
         bool            reaped = false;     //  somebody did wait() on this Process
 
+        uint32_t        pendingSignals = 0; //  bitmask, bit (1 << signal) == signal pending
+
         //////////
         //  Associations
         ExecutionEnvironment *  executionEnvironment;   //  counts as "reference"

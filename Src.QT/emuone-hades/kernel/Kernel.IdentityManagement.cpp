@@ -19,7 +19,7 @@ using namespace emuone::hades::kernel;
 
 //////////
 //  Operations (identity management)
-StatusCode Kernel::createSystemIdentity(
+KErrno Kernel::createSystemIdentity(
         PSystemIdentity & systemIdentity
     )
 {
@@ -30,7 +30,7 @@ StatusCode Kernel::createSystemIdentity(
     systemIdentity = new SystemIdentity(this, generateUnusedOid());
     Q_ASSERT(systemIdentity == _systemIdentity);
     Q_ASSERT(_objects.value(systemIdentity->oid, nullptr) == systemIdentity);
-    return StatusCode::Success;
+    return K_EOK;
 }
 
 //  End of emuone-hades/kernel/Kernel.IdentityManagement.cpp

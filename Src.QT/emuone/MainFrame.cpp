@@ -413,12 +413,19 @@ void MainFrame::_onActionStart()
     {
         try
         {
+            QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
             vm->start();
+            QGuiApplication::restoreOverrideCursor();
         }
         catch (const emuone::util::Exception & ex)
         {
+            QGuiApplication::restoreOverrideCursor();
             qCritical() << ex;
             QMessageBox::critical(this, "ERROR", ex.errorMessage());
+        }
+        catch (...)
+        {   //  Must still clean up
+            QGuiApplication::restoreOverrideCursor();
         }
     }
 }
@@ -429,12 +436,19 @@ void MainFrame::_onActionStop()
     {
         try
         {
+            QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
             vm->stop();
+            QGuiApplication::restoreOverrideCursor();
         }
         catch (const emuone::util::Exception & ex)
         {
+            QGuiApplication::restoreOverrideCursor();
             qCritical() << ex;
             QMessageBox::critical(this, "ERROR", ex.errorMessage());
+        }
+        catch (...)
+        {   //  Must still clean up
+            QGuiApplication::restoreOverrideCursor();
         }
     }
 }

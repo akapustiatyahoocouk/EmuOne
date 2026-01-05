@@ -19,7 +19,7 @@ using namespace emuone::hades::kernel;
 
 //////////
 //  Operations (execution environment management)
-StatusCode Kernel::createNativeExecutionEnvironment(
+KErrno Kernel::createNativeExecutionEnvironment(
         Identity * owner,
         const QString & name,
         const NativeExecutors & nativeExecutors,
@@ -42,7 +42,7 @@ StatusCode Kernel::createNativeExecutionEnvironment(
     if (_executionEnvironments.contains(name))
     {   //  OOPS!
         nativeExecutionEnvironment = nullptr;
-        return StatusCode::AlreadyExists;
+        return K_EEXIST;
     }
 
     //  Create new Execution Environment
@@ -55,7 +55,7 @@ StatusCode Kernel::createNativeExecutionEnvironment(
             nativeExecutors);
     Q_ASSERT(_executionEnvironments.value(nativeExecutionEnvironment->name) == nativeExecutionEnvironment);
     Q_ASSERT(_objects.value(nativeExecutionEnvironment->oid, nullptr) == nativeExecutionEnvironment);
-    return StatusCode::Success;
+    return K_EOK;
 }
 
 //  End of emuone-hades/kernel/Kernel.ExecutionEnvironmentManagement.cpp

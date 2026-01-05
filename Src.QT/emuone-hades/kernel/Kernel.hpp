@@ -151,14 +151,14 @@ namespace emuone::hades::kernel
         //////////
         //  Operations (identity management)
     public:
-        StatusCode      createSystemIdentity(
+        KErrno          createSystemIdentity(
                                 PSystemIdentity & systemIdentity
                             );
 
         //////////
         //  Operations (device type management)
     public:
-        StatusCode      createDeviceType(
+        KErrno          createDeviceType(
                                 Identity * owner,
                                 DeviceTypeId deviceTypeId,
                                 const QString & name,
@@ -169,20 +169,20 @@ namespace emuone::hades::kernel
         //////////
         //  Operations (device management)
     public:
-        StatusCode      createDevice(
+        KErrno          createDevice(
                                 Identity * owner,
                                 DeviceType * deviceType,
                                 uint16_t deviceId,
                                 const QString & name,
                                 PDevice & device
                             );
-        StatusCode      createProcessor(
+        KErrno          createProcessor(
                                 Identity * owner,
                                 DeviceType * deviceType,
                                 ProcessorId processorId,
                                 PProcessor & processor
                             );
-        StatusCode      createProcessorCore(
+        KErrno          createProcessorCore(
                                 Identity * owner,
                                 DeviceType * deviceType,
                                 Processor * processor,
@@ -193,7 +193,7 @@ namespace emuone::hades::kernel
         //////////
         //  Operations (executor management)
     public:
-        StatusCode      createNativeExecutor(
+        KErrno          createNativeExecutor(
                                 Identity * owner,
                                 ProcessorCore * processorCore,
                                 PNativeExecutor & nativeExecutor
@@ -202,7 +202,7 @@ namespace emuone::hades::kernel
         //////////
         //  Operations (execution environment management)
     public:
-        StatusCode      createNativeExecutionEnvironment(
+        KErrno          createNativeExecutionEnvironment(
                                 Identity * owner,
                                 const QString & name,
                                 const NativeExecutors & nativeExecutors,
@@ -212,7 +212,7 @@ namespace emuone::hades::kernel
         //////////
         //  Operations (process management)
     public:
-        StatusCode      createNativeProcess(
+        KErrno          createNativeProcess(
                                 Identity * owner,
                                 NativeExecutionEnvironment * executionEnvironment,
                                 Process * parent,
@@ -223,12 +223,12 @@ namespace emuone::hades::kernel
                                 const QString & currentDirectory,
                                 PNativeProcess & nativeProcess
                             );
-        StatusCode      startProcess(Process * process);
+        KErrno          startProcess(Process * process);
 
         //////////
         //  Operations (process management)
     public:
-        StatusCode      createNativeThread(
+        KErrno          createNativeThread(
                                 Identity * owner,
                                 NativeProcess * process,
                                 PriorityClass priorityClass,
@@ -236,7 +236,7 @@ namespace emuone::hades::kernel
                                 NativeThreadRunner * runner,
                                 PNativeThread & nativeThread
                             );
-        StatusCode      startThread(Thread * thread);
+        KErrno          startThread(Thread * thread);
 
         //////////
         //  Implementation

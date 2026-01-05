@@ -19,7 +19,7 @@ using namespace emuone::hades::kernel;
 
 //////////
 //  Operations (device management)
-StatusCode Kernel::createProcessor(
+KErrno Kernel::createProcessor(
         Identity * owner,
         DeviceType * deviceType,
         ProcessorId processorId,
@@ -40,7 +40,7 @@ StatusCode Kernel::createProcessor(
     if (_processors.contains(processorId))
     {   //  OOPS!
         processor = nullptr;
-        return StatusCode::AlreadyExists;
+        return K_EEXIST;
     }
 
     //  Create Processor
@@ -53,10 +53,10 @@ StatusCode Kernel::createProcessor(
             processorId);
     Q_ASSERT(_processors.value(processorId) == processor);
     Q_ASSERT(_objects.value(processor->oid, nullptr) == processor);
-    return StatusCode::Success;
+    return K_EOK;
 }
 
-StatusCode Kernel::createProcessorCore(
+KErrno Kernel::createProcessorCore(
         Identity * owner,
         DeviceType * deviceType,
         Processor * processor,
@@ -91,7 +91,7 @@ StatusCode Kernel::createProcessorCore(
             emuone::util::ByteOrder::Host);
     //  TODO Q_ASSERT(_processorCores.value(coreId) == processorCore);
     Q_ASSERT(_objects.value(processor->oid, nullptr) == processor);
-    return StatusCode::Success;
+    return K_EOK;
 }
 
 //  End of emuone-hades/kernel/Kernel.DeviceManagement.cpp

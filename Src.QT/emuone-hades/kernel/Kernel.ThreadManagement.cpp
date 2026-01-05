@@ -19,7 +19,7 @@ using namespace emuone::hades::kernel;
 
 //////////
 //  Operations (process management)
-StatusCode Kernel::createNativeThread(
+KErrno Kernel::createNativeThread(
         Identity * owner,
         NativeProcess * process,
         PriorityClass priorityClass,
@@ -48,10 +48,10 @@ StatusCode Kernel::createNativeThread(
             name,
             runner);
     Q_ASSERT(_objects.value(nativeThread->oid, nullptr) == nativeThread);
-    return StatusCode::Success;
+    return K_EOK;
 }
 
-StatusCode Kernel::startThread(Thread * thread)
+KErrno Kernel::startThread(Thread * thread)
 {
     Q_ASSERT(kernelGuard.isLockedByCurrentThread());
     Q_ASSERT(thread != nullptr && thread->kernel == this);
@@ -59,12 +59,12 @@ StatusCode Kernel::startThread(Thread * thread)
     //  A Thread must belong to a Running (TODO or Suspended) process
     if (thread->process->state != Process::State::Running)  //  TODO or suspended
     {
-        return StatusCode::InvalidArgument;
+        return K_ENOTSUP;
     }
     //  A thread cannot be started more than once
     if (thread->state != Thread::State::Created)
     {   //  OOPS! Can't!
-        return StatusCode::InvalidArgument;
+        return K_ENOTSUP;
     }
     //  Starting a Process with suspendCount > 0 just
     //  makes it Suspended...
@@ -72,7 +72,7 @@ StatusCode Kernel::startThread(Thread * thread)
         thread->process->suspendCount > 0)
     {   //  ...and so is the case
         Q_ASSERT(false);    //  TODO implement
-        return StatusCode::InvalidArgument;
+        return K_ENOTSUP;
     }
     //  We can now start the Thread
     if (auto nativeThread =
@@ -90,7 +90,7 @@ StatusCode Kernel::startThread(Thread * thread)
         thread->state = Thread::State::Waiting;
     }
     //  All done
-    return StatusCode::Success;
+    return K_EOK;
 }
 
 //  End of emuone-hades/kernel/Kernel.ThreadManagement.cpp
