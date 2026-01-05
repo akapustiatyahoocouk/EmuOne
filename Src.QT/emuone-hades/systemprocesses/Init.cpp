@@ -45,6 +45,9 @@ auto Init::createRunner() -> Runner *
 uint32_t Init::_Runner::run()
 {
     //  Respect signals from the Kernel
+    systemCalls.signal(kernel::K_SIGTERM,
+                       [this](int sig) { this->_sighandler(sig); });
+
     //  TODO implement
     for(; ; )
     {
@@ -52,6 +55,13 @@ uint32_t Init::_Runner::run()
     }
 
     return 0;
+}
+
+//////////
+//  Implementation helpers
+void Init::_Runner::_sighandler(int /*sig*/)
+{
+    throw uint32_t(0);  //  TODO use exit(0) system call
 }
 
 //  End of emuone-hades/systemprocesses/Init.cpp

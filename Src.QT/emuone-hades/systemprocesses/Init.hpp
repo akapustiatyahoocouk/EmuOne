@@ -56,6 +56,12 @@ namespace emuone::hades::systemprocesses
             //  emuone::hades::kernel::NativeThreadRunner
         protected:
             virtual uint32_t    run() override;
+
+            //////////
+            //  Implementation
+        private:
+            //  Helpers
+            void            _sighandler(int sig);
         };
     };
 }

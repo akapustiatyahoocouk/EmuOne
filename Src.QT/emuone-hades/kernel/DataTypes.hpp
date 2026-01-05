@@ -245,7 +245,7 @@ namespace emuone::hades::kernel
         Realtime        ///< Never preempt until it yields.
     };
 
-    typedef void (NativeThreadRunner::*NativeSignalHandler)(int);
+    using NativeSignalHandler = std::function<void(int)>;
     enum SignalDisposition  //  Not "enum class" for better syntax
     {
         K_SIG_TRM,  ///< Terminate process.

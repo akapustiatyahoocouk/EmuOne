@@ -112,8 +112,24 @@ void NativeThread::_RunnerThread::run()
     }
     _nativeThread->affinity.clear();
     //  If all non-daemon Threada of a Process have
-    //  Finished, the Process itself has Finished
-    //  TODO implement that
+    //  Finished, the Process itself has Finished and
+    //  the remaining daemon Threads must be killed
+    bool liveThreadsExist = false;
+    for (auto t : _nativeThread->process->threads)
+    {
+        Q_ASSERT(!t->isDaemon); //  TODO implement
+        if (t->state != Thread::State::Created &&
+            t->state != Thread::State::Finished)
+        {
+            liveThreadsExist = true;
+            break;
+        }
+    }
+    if (!liveThreadsExist)
+    {
+        _nativeThread->process->state = Process::State::Finished;
+        //  TODO finish the implementation - close handles, etc.
+    }
 }
 
 //  End of emuone-hades/kernel/NativeThread.cpp

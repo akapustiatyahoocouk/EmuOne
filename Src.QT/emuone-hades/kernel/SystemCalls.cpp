@@ -20,6 +20,55 @@ using namespace emuone::hades::kernel;
 //////////
 //  System calls
 //  TODO organize into groups
+void SystemCalls::signal(int sig, kernel::SignalDisposition handler)
+{
+    emuone::util::Lock _(_runner->_nativeThread->kernel->kernelGuard);
+
+    auto process = dynamic_cast<NativeProcess*>(_runner->_nativeThread->process);
+    Q_ASSERT(process != nullptr);
+
+    if (sig > 0 && sig < kernel::K_NSIG)
+    {
+        switch (handler)
+        {
+            case kernel::K_SIG_TRM:
+            case kernel::K_SIG_IGN:
+            case kernel::K_SIG_TRD:
+            case kernel::K_SIG_STP:
+            case kernel::K_SIG_CNT:
+                process->signalDispositions[sig] = handler;
+                break;
+            case kernel::K_SIG_DFL:
+                process->signalDispositions[sig] = process->defaultSignalDispositions[sig];
+                break;
+            default:
+                //  Be defensive in release mode
+                break;
+        }
+    }
+}
+
+void SystemCalls::signal(int sig, kernel::NativeSignalHandler handler)
+{
+    emuone::util::Lock _(_runner->_nativeThread->kernel->kernelGuard);
+
+    auto process = dynamic_cast<NativeProcess*>(_runner->_nativeThread->process);
+    Q_ASSERT(process != nullptr);
+
+    if (sig > 0 && sig < kernel::K_NSIG)
+    {
+        if (handler != nullptr)
+        {   //  Use the "handler"
+            process->signalDispositions[sig] = kernel::K_SIG_UDF;
+            process->nativeSignalHandlers[sig] = handler;
+        }
+        else
+        {   //  Revert to default
+            process->signalDispositions[sig] = process->defaultSignalDispositions[sig];
+        }
+    }
+}
+
 void SystemCalls::yield()
 {
     emuone::util::Lock _(_runner->_nativeThread->kernel->kernelGuard);
@@ -41,7 +90,7 @@ void SystemCalls::_processPendngSignals()
 
     //  Sone signals are special
     if (process->pendingSignals & K_sigmask(K_SIGKILL))
-    {   //  Don't "process" SIGKILL - let other threads see it
+    {   //  There's no way to drop a pending SIGKILL
         throw uint32_t(128 + K_SIGKILL);    //  force thread exit
     }
     //  Other signals can be masked
@@ -60,11 +109,13 @@ void SystemCalls::_processPendngSignals()
                 throw uint32_t(128 + sig);
             case K_SIG_STP: //  TODO implement
                 Q_ASSERT(false);
+                break;
             case K_SIG_CNT: //  TODO implement
                 Q_ASSERT(false);
+                break;
             //  Special values for signal() function
             case K_SIG_UDF:
-                (_runner->*process->nativeSignalHandlers[sig])(sig);
+                process->nativeSignalHandlers[sig](sig);
                 break;
             default:    //  Be defensive in release mode
             case K_SIG_DFL:

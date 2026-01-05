@@ -319,11 +319,12 @@ void Kernel::stop() noexcept
     }
 
     stateGuard.grab();
+    //  We're manipulating Kernel's data structures
+    emuone::util::Lock _1(kernelGuard);
     //  Force-terminate all NativeThreads if the
     //  NativeProcesses did not respect the SIGKILL
     if (forceTerminationRequired)
-    {   //  We're manipulating Kernel's data structures
-        emuone::util::Lock _1(kernelGuard);
+    {
         for (auto t : std::as_const(_nativeThreads))
         {   //  ...so no mr nice guy
             if (t->_runnerThread != nullptr)
@@ -336,28 +337,24 @@ void Kernel::stop() noexcept
             }
         }
         //  TODO
-
-        //  Destroy all kernel objects and clear the
-        //  primary and secondary caches
-        {
-            emuone::util::Lock _1(kernelGuard);
-            _shutdownInProgress = true; //  we're killing EVERYTHING!
-            for (Object * object : _objects.values())   //  shallow clone
-            {
-                delete object;
-            }
-            Q_ASSERT(_objects.isEmpty());
-            Q_ASSERT(_identities.isEmpty());
-            Q_ASSERT(_systemIdentity == nullptr);
-            Q_ASSERT(_deviceTypes.isEmpty());
-            Q_ASSERT(_processors.isEmpty());
-            Q_ASSERT(_executors.isEmpty());
-            Q_ASSERT(_executionEnvironments.isEmpty());
-            Q_ASSERT(_processes.isEmpty());
-            //  TODO other secondary caches
-            _shutdownInProgress = false;    //  we're done shutting down the Kernel
-        }
     }
+    //  Destroy all kernel objects and clear the
+    //  primary and secondary caches
+    _shutdownInProgress = true; //  we're killing EVERYTHING!
+    for (Object * object : _objects.values())   //  shallow clone
+    {
+        delete object;
+    }
+    Q_ASSERT(_objects.isEmpty());
+    Q_ASSERT(_identities.isEmpty());
+    Q_ASSERT(_systemIdentity == nullptr);
+    Q_ASSERT(_deviceTypes.isEmpty());
+    Q_ASSERT(_processors.isEmpty());
+    Q_ASSERT(_executors.isEmpty());
+    Q_ASSERT(_executionEnvironments.isEmpty());
+    Q_ASSERT(_processes.isEmpty());
+    //  TODO other secondary caches
+    _shutdownInProgress = false;    //  we're done shutting down the Kernel
 
     //  Perform state change
     _state = State::Initialized;

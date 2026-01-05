@@ -36,6 +36,8 @@ namespace emuone::hades::kernel
         //  System calls
         //  TODO organize into groups
     public:
+        void            signal(int sig, kernel::SignalDisposition handler);
+        void            signal(int sig, kernel::NativeSignalHandler handler);
         void            yield();
 
         //////////
