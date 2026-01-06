@@ -224,6 +224,7 @@ namespace emuone::hades::kernel
                                 PNativeProcess & nativeProcess
                             );
         KErrno          startProcess(Process * process);
+        bool            isReadyToDie(Process * process);
 
         //////////
         //  Operations (process management)
@@ -237,6 +238,7 @@ namespace emuone::hades::kernel
                                 PNativeThread & nativeThread
                             );
         KErrno          startThread(Thread * thread);
+        KErrno          terminateThread(Thread * thread, uint32_t exitCode);
 
         //////////
         //  Implementation

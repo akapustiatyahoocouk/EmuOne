@@ -114,21 +114,11 @@ void NativeThread::_RunnerThread::run()
     //  If all non-daemon Threada of a Process have
     //  Finished, the Process itself has Finished and
     //  the remaining daemon Threads must be killed
-    bool liveThreadsExist = false;
-    for (auto t : _nativeThread->process->threads)
-    {
-        Q_ASSERT(!t->isDaemon); //  TODO implement
-        if (t->state != Thread::State::Created &&
-            t->state != Thread::State::Finished)
-        {
-            liveThreadsExist = true;
-            break;
-        }
-    }
-    if (!liveThreadsExist)
+    if (_nativeThread->kernel->isReadyToDie(_nativeThread->process))
     {
         _nativeThread->process->state = Process::State::Finished;
-        //  TODO finish the implementation - close handles, etc.
+        //  TODO finish the implementation - kill daemon threads,
+        //  close handles, etc.
     }
 }
 

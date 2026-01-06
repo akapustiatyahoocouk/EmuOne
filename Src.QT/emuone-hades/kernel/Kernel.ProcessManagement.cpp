@@ -78,12 +78,31 @@ KErrno Kernel::startProcess(Process * process)
     }
     //  Starting a Process means startiung all its Threads
     process->state = Process::State::Running;
-    for (auto thread : process->threads)
+    for (auto thread : std::as_const(process->threads))
     {
         startThread(thread);
     }
     //  We're done
     return K_EOK;
+}
+
+bool Kernel::isReadyToDie(Process * process)
+{
+    Q_ASSERT(kernelGuard.isLockedByCurrentThread());
+    Q_ASSERT(process != nullptr && process->kernel == this);
+
+    //  A Process is ready to die when it has no Running or
+    //  Suspended non-daemon Threads
+    for (auto t : std::as_const(process->threads))
+    {
+        Q_ASSERT(!t->isDaemon); //  TODO implement
+        if (t->state != Thread::State::Created &&
+            t->state != Thread::State::Finished)
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 //  End of emuone-hades/kernel/Kernel.ProcessManagement.cpp

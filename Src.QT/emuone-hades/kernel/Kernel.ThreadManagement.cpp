@@ -93,4 +93,43 @@ KErrno Kernel::startThread(Thread * thread)
     return K_EOK;
 }
 
+KErrno Kernel::terminateThread(Thread * thread, uint32_t exitCode)
+{
+    Q_ASSERT(kernelGuard.isLockedByCurrentThread());
+    Q_ASSERT(thread != nullptr && thread->kernel == this);
+
+    if (auto nativeThread =
+        dynamic_cast<NativeThread*>(thread))
+    {   //  If there is a QThread, kill it
+        if (nativeThread->_runnerThread != nullptr)
+        {
+            nativeThread->_runnerThread->terminate();
+            delete nativeThread->_runnerThread;
+            nativeThread->_runnerThread = nullptr;
+        }
+    }
+
+    //  Lose the Thread's "affinity"
+    for (auto e : Executors(thread->affinity))   //  Shallow clone
+    {
+        Q_ASSERT(e->affineThreads.contains(thread));
+        Q_ASSERT(e->referenceCount > 0);
+        Q_ASSERT(thread->referenceCount > 0);
+        e->affineThreads.remove(thread);
+        e->referenceCount--;
+        thread->referenceCount--;
+    }
+    thread->affinity.clear();
+
+    //  TODO other cleanup
+    //  TODO what can we join with the cleanup code
+    //  at the end of NativeThread::_RunnerThread::run() ?
+
+    //  The Thread is now Finished
+    thread->state = Thread::State::Finished;
+    thread->exitCode = exitCode;
+    return K_EOK;
+}
+
 //  End of emuone-hades/kernel/Kernel.ThreadManagement.cpp
+
