@@ -51,6 +51,9 @@ namespace emuone::hades::kernel
     class NativeThread;
     class NativeThreadRunner;
 
+    class Atom;
+    class ProcessInterestInAtom;
+
     //  Pointers (used as output parameters in Kernel services)
     using PSystemIdentity = SystemIdentity*;
     using PUserIdentity = UserIdentity*;
@@ -69,6 +72,8 @@ namespace emuone::hades::kernel
     using PNativeProcess = NativeProcess*;
     using PNativeThread = NativeThread*;
 
+    using PAtom = Atom*;
+
     //  Collections
     using Objects = QSet<Object*>;
     using Executors = QSet<Executor*>;
@@ -80,6 +85,20 @@ namespace emuone::hades::kernel
     using Processes = QSet<Process*>;
     using Threads = QSet<Thread*>;
     using NativeThreads = QSet<NativeThread*>;
+}
+
+namespace emuone::hades::devicedrivers
+{
+    class IDeviceDriver;
+
+    //  Collections
+    using DeviceDrivers = QSet<IDeviceDriver*>;
+}
+
+namespace emuone::hades::systemprocesses
+{
+    class Init;
+    class DeviceManager;
 }
 
 //  End of emuone-hades/Classes.hpp

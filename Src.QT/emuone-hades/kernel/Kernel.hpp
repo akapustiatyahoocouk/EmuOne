@@ -19,6 +19,8 @@
 
 namespace emuone::hades::kernel
 {
+    class KernelConsoleDisplaySurface;
+
     /// \class Kernel emuone-hades/API.hpp
     /// \brief The HADES OS Kernel.
     class EMUONE_HADES_PUBLIC Kernel final
@@ -26,6 +28,7 @@ namespace emuone::hades::kernel
     {
         EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(Kernel)
 
+        friend class KernelConsoleDisplaySurface;
         friend class Object;
         friend class Identity;
         friend class SystemIdentity;
@@ -39,6 +42,10 @@ namespace emuone::hades::kernel
         friend class Process;
         friend class Thread;
         friend class NativeThread;
+        friend class Atom;
+        friend class ProcessInterestInAtom;
+        friend class SystemCalls;
+        friend class systemprocesses::Init;
 
         //////////
         //  Constants
@@ -233,12 +240,23 @@ namespace emuone::hades::kernel
                                 Identity * owner,
                                 NativeProcess * process,
                                 PriorityClass priorityClass,
-                                const QString name,
+                                const QString & name,
                                 NativeThreadRunner * runner,
                                 PNativeThread & nativeThread
                             );
         KErrno          startThread(Thread * thread);
         KErrno          terminateThread(Thread * thread, uint32_t exitCode);
+
+        //////////
+        //  Operations (atom management)
+    public:
+        KErrno          getAtom(Process * process,
+                                const QString & value,
+                                PAtom & atom);
+        KErrno          releaseAtom(
+                                Process * process,
+                                Atom * atom
+                            );
 
         //////////
         //  Implementation
@@ -279,6 +297,13 @@ namespace emuone::hades::kernel
         QMap<QString, ExecutionEnvironment*>    _executionEnvironments;
         QMap<Oid, Process*>         _processes;
         NativeThreads               _nativeThreads;
+        QMap<QString, Atom*>        _atoms; //  value -> Atom
+
+        //////////
+        //  UI
+    private:
+        QSet<KernelConsoleDisplaySurface*>  _kernelConsoleDisplaySurfaces;
+        QStringList     _kernelConsoleContent;
     };
 
     namespace Ui { class KernelEditor; }
@@ -342,6 +367,8 @@ namespace emuone::hades::kernel
         Q_OBJECT
         EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(KernelConsoleDisplaySurface)
 
+        friend class SystemCalls;
+
         //////////
         //  Construction/destruction
     public:
@@ -361,14 +388,20 @@ namespace emuone::hades::kernel
     private:
         Kernel *const   _kernel;
 
+        QString         _penfingOutput;
+        emuone::util::Mutex _penfingOutputGuard;
+
         //////////
         //  Controls
     private:
         Ui::KernelConsoleDisplaySurface *const  _ui;
+        QTimer      _refreshTimer;
+
+        //////////
+        //  Signal handlers
+    private slots:
+        void        _refreshTimerTimeout();
     };
 }
-
-//  Macro required to allow MOC compiler to do its work
-#define EMUONE_HADED_SHARED_FOLDER_DEFINED
 
 //  End of emuone-hades/kernel/Kernel.hpp

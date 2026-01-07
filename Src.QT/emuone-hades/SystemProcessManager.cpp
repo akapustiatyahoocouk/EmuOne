@@ -27,8 +27,9 @@ struct SystemProcessManager::_Impl
     _Impl()
     {
 #define EMUONE_REGISTER_SYSTEM_PROCESS(P)   \
-        registry[systemprocesses::P::instance()->mnemonic()] = systemprocesses::P::instance();
+    registry[systemprocesses::P::instance()->mnemonic()] = systemprocesses::P::instance();
         EMUONE_REGISTER_SYSTEM_PROCESS(Init)
+        EMUONE_REGISTER_SYSTEM_PROCESS(DeviceManager)
     }
 };
 

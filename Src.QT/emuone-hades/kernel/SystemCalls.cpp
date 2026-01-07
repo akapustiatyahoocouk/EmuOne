@@ -20,7 +20,27 @@ using namespace emuone::hades::kernel;
 //////////
 //  System calls
 //  TODO organize into groups
-void SystemCalls::signal(int sig, kernel::SignalDisposition handler)
+KErrno SystemCalls::kwrite(const QString & s)
+{
+    emuone::util::Lock _(_runner->_nativeThread->kernel->kernelGuard);
+
+    //  Write to Kernel Console line-by-line
+    for (QChar c : s)
+    {
+        if (c == '\n')
+        {   //  flush
+            _runner->_nativeThread->kernel->_kernelConsoleContent.append(_kernelConsoleBuffer);
+            _kernelConsoleBuffer.clear();
+        }
+        else
+        {   //  Accumulate
+            _kernelConsoleBuffer += c;
+        }
+    }
+    return K_EOK;
+}
+
+KErrno SystemCalls::signal(int sig, kernel::SignalDisposition handler)
 {
     emuone::util::Lock _(_runner->_nativeThread->kernel->kernelGuard);
 
@@ -46,9 +66,10 @@ void SystemCalls::signal(int sig, kernel::SignalDisposition handler)
                 break;
         }
     }
+    return K_EOK;
 }
 
-void SystemCalls::signal(int sig, kernel::NativeSignalHandler handler)
+KErrno SystemCalls::signal(int sig, kernel::NativeSignalHandler handler)
 {
     emuone::util::Lock _(_runner->_nativeThread->kernel->kernelGuard);
 
@@ -67,14 +88,54 @@ void SystemCalls::signal(int sig, kernel::NativeSignalHandler handler)
             process->signalDispositions[sig] = process->defaultSignalDispositions[sig];
         }
     }
+    return K_EOK;
 }
 
-void SystemCalls::yield()
+KErrno SystemCalls::getAtom(const QString & value, Atom & atom)
 {
     emuone::util::Lock _(_runner->_nativeThread->kernel->kernelGuard);
+    _processPendngSignals();
+
+    kernel::Atom * a = nullptr;
+    KErrno err =
+        _runner->_nativeThread->kernel->getAtom(
+            _runner->_nativeThread->process,
+            value,
+            a);
+    if (err != kernel::KErrno::K_EOK)
+    {
+        return err;
+    }
+    atom.oid = uint32_t(a->oid);
+    return kernel::KErrno::K_EOK;
+}
+
+KErrno SystemCalls::releaseAtom(Atom atom)
+{
+    emuone::util::Lock _(_runner->_nativeThread->kernel->kernelGuard);
+    _processPendngSignals();
+
+    kernel::Oid oid {atom.oid};
+    auto a =
+        dynamic_cast<kernel::Atom*>(
+            _runner->_nativeThread->kernel->_objects.value(oid, nullptr));
+    if (a == nullptr ||
+        !_runner->_nativeThread->process->interestingAtoms.contains(a))
+    {   //  OOPS! No such Atom or current Process not interested
+        return K_EINVAL;
+    }
+    return _runner->_nativeThread->kernel->releaseAtom(
+                _runner->_nativeThread->process,
+                a);
+}
+
+KErrno SystemCalls::yield()
+{
+    emuone::util::Lock _(_runner->_nativeThread->kernel->kernelGuard);
+    _processPendngSignals();
 
     QThread::yieldCurrentThread();
-    _processPendngSignals();
+    return K_EOK;
 }
 
 //////////
@@ -121,6 +182,14 @@ void SystemCalls::_processPendngSignals()
             case K_SIG_DFL:
                 break;
         }
+    }
+
+    //  A QThread's interruption can be requected ONLY
+    //  when the Kernel wants that QThread to exit ASAP
+    Q_ASSERT(thread->_runnerThread == QThread::currentThread());
+    if (thread->_runnerThread->isInterruptionRequested())
+    {   //  Terminate thread voluntarily...
+        throw uint32_t(128 + K_SIGKILL);   //  ...as if by a SIGKILL
     }
 }
 

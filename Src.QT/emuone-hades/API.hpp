@@ -30,6 +30,9 @@
 //  Stock objects
 #include "emuone-hades/Architecture.hpp"
 
+//  Device drivers
+#include "emuone-hades/devicedrivers/DeviceDriver.hpp"
+
 //  Devices
 #include "emuone-hades/devices/ExternalFileSystem.hpp"
 #include "emuone-hades/devices/TextTerminal.hpp"
@@ -43,13 +46,16 @@
 #include "emuone-hades/kernel/ExecutionEnvironment.hpp"
 #include "emuone-hades/kernel/DeviceType.hpp"
 #include "emuone-hades/kernel/Device.hpp"
+#include "emuone-hades/kernel/SystemCalls.hpp"
 #include "emuone-hades/kernel/NativeThreadRunner.hpp"
 #include "emuone-hades/kernel/Thread.hpp"
 #include "emuone-hades/kernel/Process.hpp"
+#include "emuone-hades/kernel/Atom.hpp"
 
 //  System processes
 #include "emuone-hades/SystemProcess.hpp"
 #include "emuone-hades/systemprocesses/Init.hpp"
+#include "emuone-hades/systemprocesses/DeviceManager.hpp"
 
 //  Miscellaneous
 #include "emuone-hades/VirtualMachine.hpp"

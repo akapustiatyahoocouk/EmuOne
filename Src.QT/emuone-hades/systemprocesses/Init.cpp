@@ -27,12 +27,12 @@ Init::~Init() {}
 //  ISystemProcess
 QString Init::virtualPath() const
 {
-    return "SYSTEM:/bin/init";
+    return VirtuaPath;
 }
 
 QString Init::processName() const
 {
-    return "init";
+    return ProcessName;
 }
 
 auto Init::createRunner() -> Runner *
@@ -44,14 +44,62 @@ auto Init::createRunner() -> Runner *
 //  Init::_Runner
 uint32_t Init::_Runner::run()
 {
+    systemCalls.kwrite("HADES Kernel " + Component::instance()->version().toString() + "\n");
+
+    //  We'll need SystemIdentity and a
+    //  NativeExecutionEnvironment
+    _systemIdentity = _nativeThread->kernel->_systemIdentity;
+    _executionEnvironment =
+        dynamic_cast<kernel::NativeExecutionEnvironment*>(
+            _nativeThread->process->executionEnvironment);
+    Q_ASSERT(_executionEnvironment != nullptr);
+
     //  Respect signals from the Kernel
-    systemCalls.signal(kernel::K_SIGTERM,
-                       [this](int sig) { this->_sighandler(sig); });
+    systemCalls.signal(
+        kernel::K_SIGTERM,
+        [this](int sig) { this->_sighandler(sig); });
+
+    //  Start the "device manager" process.
+    //  NOTE, that it will be some time before
+    //  the standard messaging mechanisms could
+    //  be used
+    {   //  We're manipulating Kernel data structures directly!
+        emuone::util::Lock _(_nativeThread->kernel->kernelGuard);
+
+        kernel::NativeProcess * deviceManagerProcess = nullptr;
+        _nativeThread->kernel->createNativeProcess(
+            _systemIdentity,
+            _executionEnvironment,
+            _nativeThread->process,
+            kernel::PriorityClass::Normal,
+            systemprocesses::DeviceManager::ProcessName,  //  name
+            systemprocesses::DeviceManager::VirtuaPath,   //  command
+            systemprocesses::DeviceManager::VirtuaPath,   //  command line
+            systemprocesses::DeviceManager::CurrentDirectory,
+            deviceManagerProcess);
+        Q_ASSERT(deviceManagerProcess != nullptr &&
+                 deviceManagerProcess->state == kernel::Process::State::Created);
+
+        kernel::NativeThread * deviceManagerThread = nullptr;
+        _nativeThread->kernel->createNativeThread(
+            _systemIdentity,
+            deviceManagerProcess,
+            deviceManagerProcess->priorityClass,
+            deviceManagerProcess->name,
+            systemprocesses::DeviceManager::instance()->createRunner(),
+            deviceManagerThread);
+        Q_ASSERT(deviceManagerThread != nullptr &&
+                 deviceManagerThread->state == kernel::Thread::State::Created);
+
+        _nativeThread->kernel->startProcess(deviceManagerProcess);
+    }
+
 
     //  TODO implement
     for(; ; )
     {
         systemCalls.yield();
+        QThread::msleep(500);
     }
 
     return 0;

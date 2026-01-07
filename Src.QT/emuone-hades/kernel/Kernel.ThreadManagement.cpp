@@ -23,7 +23,7 @@ KErrno Kernel::createNativeThread(
         Identity * owner,
         NativeProcess * process,
         PriorityClass priorityClass,
-        const QString name,
+        const QString & name,
         NativeThreadRunner * runner,
         PNativeThread & nativeThread
     )
@@ -101,8 +101,11 @@ KErrno Kernel::terminateThread(Thread * thread, uint32_t exitCode)
     if (auto nativeThread =
         dynamic_cast<NativeThread*>(thread))
     {   //  If there is a QThread, kill it
-        if (nativeThread->_runnerThread != nullptr)
-        {
+        if (nativeThread->_runnerThread != nullptr &&
+            nativeThread->_runnerThread != QThread::currentThread())
+        {   //  We need the 2md condition in case a NativeThread
+            //  decides to terminate itself by e.g. returning from
+            //  its thread function
             nativeThread->_runnerThread->terminate();
             delete nativeThread->_runnerThread;
             nativeThread->_runnerThread = nullptr;
@@ -128,6 +131,19 @@ KErrno Kernel::terminateThread(Thread * thread, uint32_t exitCode)
     //  The Thread is now Finished
     thread->state = Thread::State::Finished;
     thread->exitCode = exitCode;
+
+    //  If all non-daemon Threada of a Process have
+    //  Finished, the Process itself has Finished and
+    //  the remaining daemon Threads must be killed
+    if (isReadyToDie(thread->process))
+    {
+        thread->process->state = Process::State::Finished;
+        thread->process->exitCode = exitCode;
+        //  TODO finish the implementation - kill daemon threads,
+        //  close handles, etc.
+    }
+
+    //  Done
     return K_EOK;
 }
 

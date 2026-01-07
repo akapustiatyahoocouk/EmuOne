@@ -25,14 +25,46 @@ KernelConsoleDisplaySurface::KernelConsoleDisplaySurface(
         Kernel * kernel
     ) : emuone::core::DisplaySurface(parent, kernel),
         _kernel(kernel),
-        _ui(new Ui::KernelConsoleDisplaySurface)
+        _ui(new Ui::KernelConsoleDisplaySurface),
+        _refreshTimer(this)
 {
     _ui->setupUi(this);
+    _kernel->_kernelConsoleDisplaySurfaces.insert(this);
+
+    //  Use fixed-size font for console
+    QFont fixedFont = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+    _ui->plainTextEdit->setFont(fixedFont);
+
+    //  Handle refreshes
+    connect(&_refreshTimer,
+            &QTimer::timeout,
+            this,
+            &KernelConsoleDisplaySurface::_refreshTimerTimeout);
+    _refreshTimer.start(250);
 }
 
 KernelConsoleDisplaySurface::~KernelConsoleDisplaySurface()
 {
     delete _ui;
+    _kernel->_kernelConsoleDisplaySurfaces.remove(this);
+}
+
+//////////
+//  Signal handlers
+void KernelConsoleDisplaySurface::_refreshTimerTimeout()
+{   //  TODO use some sort of "update sequence number" to
+    //  avoid the full text compare on each timer tick
+    QString s;
+    {
+        emuone::util::Lock _(_kernel->kernelGuard);
+        s = _kernel->_kernelConsoleContent.join('\n') + '\n';
+    }
+    if (_ui->plainTextEdit->toPlainText() != s)
+    {
+        _ui->plainTextEdit->setPlainText(s);
+        _ui->plainTextEdit->moveCursor(QTextCursor::End);
+        _ui->plainTextEdit->ensureCursorVisible(); // Optional: ensures visibility, though End operation usually handles this
+    }
 }
 
 //  End of emuone-hades/KernelConsoleDisplaySurface.cpp

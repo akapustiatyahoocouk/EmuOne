@@ -27,6 +27,7 @@ namespace emuone::hades::kernel
         friend class Kernel;
         friend class NativeThread;
         friend class SystemCalls;
+        friend class systemprocesses::Init;
 
         //////////
         //  All members are private - for Kernel only
@@ -122,6 +123,7 @@ namespace emuone::hades::kernel
         EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(NativeThread)
 
         friend class Kernel;
+        friend class SystemCalls;
 
         //////////
         //  All members are private - for Kernel only

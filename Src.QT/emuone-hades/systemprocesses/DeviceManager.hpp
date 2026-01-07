@@ -1,5 +1,5 @@
 //
-//  emuone-hades/systemprocesses/Init.hpp - The "init" process
+//  emuone-hades/systemprocesses/DeviceManager.hpp - The "DeviceManager" process
 //
 //  EmuOne
 //  Copyright (C) 2026, Andrey Kapustin
@@ -17,19 +17,22 @@
 
 namespace emuone::hades::systemprocesses
 {
-    /// \class Init emuone-hades/API.hpp
-    /// \brief The "init" process.
-    class EMUONE_HADES_PUBLIC Init final
+    /// \class DeviceManager emuone-hades/API.hpp
+    /// \brief The "DeviceManager" process.
+    class EMUONE_HADES_PUBLIC DeviceManager final
         :   public virtual ISystemProcess
     {
-        EMUONE_DECLARE_SINGLETON(Init)
+        EMUONE_DECLARE_SINGLETON(DeviceManager)
 
         //////////
         //  Constants
     public:
-        inline static const QString ProcessName = "init";
-        inline static const QString VirtuaPath = "SYSTEM:/bin/init";
+        inline static const QString ProcessName = "devmgr";
+        inline static const QString VirtuaPath = "SYSTEM:/bin/devmgr";
         inline static const QString CurrentDirectory = "SYSTEM:/";
+
+        inline static const QString ServerName = "System.DeviceManager";
+        inline static const int ServerVersion = 1;
 
         //////////
         //  ISystemProcess
@@ -60,13 +63,10 @@ namespace emuone::hades::systemprocesses
             //////////
             //  Implementation
         private:
-            kernel::SystemIdentity *        _systemIdentity = nullptr;
-            kernel::NativeExecutionEnvironment *_executionEnvironment = nullptr;
-
             //  Helpers
             void            _sighandler(int sig);
         };
     };
 }
 
-//  End of emuone-hades/systemprocesses/Init.hpp
+//  End of emuone-hades/systemprocesses/DeviceManager.hpp

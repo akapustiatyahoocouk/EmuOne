@@ -68,10 +68,10 @@ Process::Process(
 Process::~Process()
 {
     Q_ASSERT(kernel->kernelGuard.isLockedByCurrentThread());
-    Q_ASSERT(children.isEmpty());   //  Children mjst die first!
 
     if (!kernel->_shutdownInProgress)
     {   //  On shutdown everything will be force-destroyed
+        Q_ASSERT(children.isEmpty());   //  Children mjst die first!
         //  Un-link Process from ExecutionEnvironment
         Q_ASSERT(executionEnvironment->processes.contains(this));
         executionEnvironment->processes.remove(this);

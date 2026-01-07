@@ -71,6 +71,7 @@ void NativeThread::_RunnerThread::run()
     Q_ASSERT(_nativeThread != nullptr &&
              _nativeThread->_runner != nullptr);
 
+    _nativeThread->_runner->moveToThread(QThread::currentThread());
     uint32_t exitCode;
     try
     {
@@ -79,12 +80,12 @@ void NativeThread::_RunnerThread::run()
     catch (const emuone::util::Exception & ex)
     {   //  OIOPS! Log & exit thread
         qCritical() << ex;
-        exitCode = 0xFFFFFFFF;
+        exitCode = 128 + K_EOTHER;  //  as if unknown signal caused termination
     }
     catch (const emuone::util::Error & ex)
     {   //  OOPS! Log & exit thread
         qCritical() << ex;
-        exitCode = 0xFFFFFFFF;
+        exitCode = 128 + K_EOTHER;  //  as if unknown signal caused termination
     }
     catch (uint32_t ec)
     {   //  Exit thread
@@ -93,33 +94,12 @@ void NativeThread::_RunnerThread::run()
     //  TODO what about "exit process" ?
     catch (...)
     {   //  OOPS! Can't log, but must still exit thread
-        exitCode = 0xFFFFFFFF;
+        exitCode = 128 + K_EOTHER;  //  as if unknown signal caused termination
     }
     //  The NativeThread has now Finished
     //  We need to make state change in Kernel mode
     emuone::util::Lock _(_nativeThread->kernel->kernelGuard);
-    _nativeThread->state = Thread::State::Finished;
-    _nativeThread->exitCode = exitCode;
-    //  Lose the NativeThread's "affinity"
-    for (auto e : Executors(_nativeThread->affinity))   //  Shallow clone
-    {
-        Q_ASSERT(e->affineThreads.contains(_nativeThread));
-        Q_ASSERT(e->referenceCount > 0);
-        Q_ASSERT(_nativeThread->referenceCount > 0);
-        e->affineThreads.remove(_nativeThread);
-        e->referenceCount--;
-        _nativeThread->referenceCount--;
-    }
-    _nativeThread->affinity.clear();
-    //  If all non-daemon Threada of a Process have
-    //  Finished, the Process itself has Finished and
-    //  the remaining daemon Threads must be killed
-    if (_nativeThread->kernel->isReadyToDie(_nativeThread->process))
-    {
-        _nativeThread->process->state = Process::State::Finished;
-        //  TODO finish the implementation - kill daemon threads,
-        //  close handles, etc.
-    }
+    _nativeThread->kernel->terminateThread(_nativeThread, exitCode);
 }
 
 //  End of emuone-hades/kernel/NativeThread.cpp

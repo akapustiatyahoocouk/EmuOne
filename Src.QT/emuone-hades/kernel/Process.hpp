@@ -28,7 +28,9 @@ namespace emuone::hades::kernel
         friend class NativeProcess;
         friend class Thread;
         friend class NativeThread;
+        friend class ProcessInterestInAtom;
         friend class SystemCalls;
+        friend class systemprocesses::Init;
 
         //////////
         //  All members are private - for Kernel only
@@ -80,6 +82,9 @@ namespace emuone::hades::kernel
 
         Threads         threads;    //  count as "references"
         Thread *        mainThread = nullptr;   //  counts as "reference"
+
+        QMap<Atom*, ProcessInterestInAtom*>
+                        interestingAtoms;   //  Atom -> this Process' interest in it
     };
 
     /// \class NativeProcess emuone-hades/API.hpp

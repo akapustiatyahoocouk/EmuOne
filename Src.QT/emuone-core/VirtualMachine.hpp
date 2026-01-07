@@ -260,6 +260,20 @@ namespace emuone::core
         auto            componentsOfType() const -> QSet<T*>;
 
         /// \brief
+        ///     Finds all native components that are of the specified type.
+        /// \return
+        ///     The set of all native VM components of the specified type.
+        template <class T>
+        auto            nativeComponentsOfType() const -> QSet<T*>;
+
+        /// \brief
+        ///     Finds all adaptors that are of the specified type.
+        /// \return
+        ///     The set of all adaptors of the specified type.
+        template <class T>
+        auto            adaptorsOfType() const -> QSet<T*>;
+
+        /// \brief
         ///     Adds an unbound Component to this VM, creating
         ///     a corresponding ComponentAdaptor if necessary.
         /// \details

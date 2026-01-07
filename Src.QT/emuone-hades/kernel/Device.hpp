@@ -119,4 +119,4 @@ namespace emuone::hades::kernel
     };
 }
 
-//  End of emuone-hades/kernel/DeviceType.hpp
+//  End of emuone-hades/kernel/Device.hpp

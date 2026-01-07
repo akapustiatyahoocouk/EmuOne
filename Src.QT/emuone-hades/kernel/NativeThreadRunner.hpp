@@ -14,50 +14,24 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 //////////
+#pragma once
+#include "emuone-hades/API.hpp"
 
 namespace emuone::hades::kernel
 {
-    /// \class SystemCalls emuone-hades/API.hpp
-    /// \brief The system calls PI for a NativeThread.
-    class EMUONE_HADES_PUBLIC SystemCalls final
-    {
-        EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(SystemCalls)
-
-        friend class NativeThreadRunner;
-
-        //////////
-        //  Construction/destruction
-    private:
-        explicit SystemCalls(NativeThreadRunner * runner)
-            :   _runner(runner) { Q_ASSERT(_runner != nullptr); }
-        ~SystemCalls() = default;
-
-        //////////
-        //  System calls
-        //  TODO organize into groups
-    public:
-        void            signal(int sig, kernel::SignalDisposition handler);
-        void            signal(int sig, kernel::NativeSignalHandler handler);
-        void            yield();
-
-        //////////
-        //  Implementation
-    private:
-        NativeThreadRunner *    _runner;
-
-        //  Helpers
-        void            _processPendngSignals();
-    };
-
     /// \class NativeThreadRunner emuone-hades/API.hpp
     /// \brief An agent that implements a NativeThread.
     class EMUONE_HADES_PUBLIC NativeThreadRunner
+        :   public QObject
     {
+        Q_OBJECT
         EMUONE_CANNOT_ASSIGN_OR_COPY_CONSTRUCT(NativeThreadRunner)
 
         friend class Kernel;
         friend class NativeThread;
         friend class SystemCalls;
+        friend class systemprocesses::Init;
+        friend class systemprocesses::DeviceManager;
 
         //////////
         //  Construction/destruction
@@ -81,6 +55,16 @@ namespace emuone::hades::kernel
         ///     If an error occurs; the NativeThread
         ///     stops abnormally.
         virtual uint32_t    run() = 0;
+
+        //////////
+        //  Signals
+    signals:
+        /// \brief
+        ///     Emitted when new output is sent to the
+        ///     Kernel Console.
+        /// \param output
+        ///     The new output sent to the Kernel Console.
+        void            kernelConsoleOutput(QString output);
 
         //////////
         //  Implementation

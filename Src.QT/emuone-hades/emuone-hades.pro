@@ -9,16 +9,19 @@ SOURCES += \
     ISystemProcess.cpp \
     SystemProcessManager.cpp \
     VirtualMachine.cpp \
+    devicedrivers/IDeviceDriver.cpp \
     devices/ExternalFileSystem.cpp \
     devices/ExternalFileSystemEditor.cpp \
     devices/TextTerminal.cpp \
     devices/TextTerminalEditor.cpp \
+    kernel/Atom.cpp \
     kernel/Device.cpp \
     kernel/DeviceType.cpp \
     kernel/DeviceTypeId.cpp \
     kernel/ExecutionEnvironment.cpp \
     kernel/Executor.cpp \
     kernel/Identity.cpp \
+    kernel/Kernel.AtomManagement.cpp \
     kernel/Kernel.DeviceManagement.cpp \
     kernel/Kernel.DeviceTypeManagement.cpp \
     kernel/Kernel.ExecutionEnvironmentManagement.cpp \
@@ -37,11 +40,13 @@ SOURCES += \
     kernel/Object.cpp \
     kernel/Oid.cpp \
     kernel/Process.cpp \
+    kernel/ProcessInterestInAtom.cpp \
     kernel/Processor.cpp \
     kernel/ProcessorCore.cpp \
     kernel/SystemCalls.cpp \
     kernel/SystemIdentity.cpp \
     kernel/Thread.cpp \
+    systemprocesses/DeviceManager.cpp \
     systemprocesses/Init.cpp
 
 HEADERS += \
@@ -52,8 +57,10 @@ HEADERS += \
     Linkage.hpp \
     SystemProcess.hpp \
     VirtualMachine.hpp \
+    devicedrivers/DeviceDriver.hpp \
     devices/ExternalFileSystem.hpp \
     devices/TextTerminal.hpp \
+    kernel/Atom.hpp \
     kernel/DataTypes.hpp \
     kernel/Device.hpp \
     kernel/DeviceType.hpp \
@@ -64,7 +71,9 @@ HEADERS += \
     kernel/NativeThreadRunner.hpp \
     kernel/Object.hpp \
     kernel/Process.hpp \
+    kernel/SystemCalls.hpp \
     kernel/Thread.hpp \
+    systemprocesses/DeviceManager.hpp \
     systemprocesses/Init.hpp
 
 PRECOMPILED_HEADER = API.hpp
